@@ -1,6 +1,6 @@
 # Netris1
 
-![Netris1](/assets/Netris1.jpg)
+![Netris1](https://github.com/WIKA-Group/javascript_parsers/assets/150794150/18bf07e2-02a9-4eb6-8485-b66a7f836706)
 
 #### Description of the device
 
