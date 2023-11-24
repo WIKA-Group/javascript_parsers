@@ -1,6 +1,7 @@
 # FLRU + Netris3
 
-![FLRU_Netris3](/assets/FLRU_Netris3.jpg)
+![FLRU_Netris3](https://github.com/WIKA-Group/javascript_parsers/assets/150794150/e142b3fd-96d7-4918-b90f-8c7ae95ff659)
+
 
 #### Description of the device
 
