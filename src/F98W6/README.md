@@ -1,6 +1,7 @@
 # F98W6
 
-![F98W6](/assets/F98W6.jpg)
+![F98W6](https://github.com/WIKA-Group/javascript_parsers/assets/150794150/e268186e-d800-44a8-bf79-de52c505fa74)
+
 
 #### Description of the device
 

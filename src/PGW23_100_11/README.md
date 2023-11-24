@@ -1,6 +1,6 @@
 # PGW2x.100
 
-![PGW](/assets/PGW.jpg)
+![PGW](https://github.com/WIKA-Group/javascript_parsers/assets/150794150/00ca4f44-a0cd-4390-964d-eea576c0fa09)
 
 #### Description of the device
 

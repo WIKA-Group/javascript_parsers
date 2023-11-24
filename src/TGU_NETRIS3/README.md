@@ -1,6 +1,6 @@
 # TGU + Netris3
 
-![TGU_Netris3](/assets/TGU_Netris3.jpg)
+![TGU_Netris3](https://github.com/WIKA-Group/javascript_parsers/assets/150794150/b6cbdd60-1139-4051-9ee3-33fafb801040)
 
 #### Description of the device
 

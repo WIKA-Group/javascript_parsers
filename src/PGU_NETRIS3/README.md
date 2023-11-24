@@ -1,6 +1,7 @@
 # PGU + Netris3
 
-![PGU_Netris3](/assets/PGU_Netris3.jpg)
+![PGU_Netris3](https://github.com/WIKA-Group/javascript_parsers/assets/150794150/14f7c6c9-bd2f-4e44-99c4-218bd051e92a)
+
 
 #### Description of the device
 
