@@ -1,6 +1,6 @@
 # TRU + Netris3
 
-![TRU_Netris3](/assets/TRU_Netris3.jpg)
+![TRU_Netris3](https://github.com/WIKA-Group/javascript_parsers/assets/150794150/ebb86641-bebd-42be-b446-c0271b65e8dc)
 
 #### Description of the device
 
