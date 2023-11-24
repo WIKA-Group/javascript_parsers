@@ -1,6 +1,6 @@
 # PEW-1x00
 
-![PEW](/assets/PEW.jpg)
+![PEW](https://github.com/WIKA-Group/javascript_parsers/assets/150794150/cccfcd4f-578d-4dfe-9572-48d79670ec8a)
 
 #### Description of the device
 
