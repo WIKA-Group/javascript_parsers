@@ -1,0 +1,504 @@
+[
+    {
+        "type": "uplink",
+        "description": "GoodCase data message: Uplink example for 01 data message with 2 active measurement channels and battery voltage",
+        "input": {
+            "bytes": [
+                1,
+                0,
+                35,
+                9,
+                185,
+                34,
+                110
+            ],
+            "fPort": 1,
+            "recvTime": "1992-12-22T17:00:00+01:00"
+        },
+        "output": {
+            "data": {
+                "messageType": 1,
+                "configurationId": 0,
+                "measurement": {
+                    "channels": [
+                        {
+                            "channelId": 0,
+                            "channelName": "pressure",
+                            "value": -0.011
+                        },
+                        {
+                            "channelId": 1,
+                            "channelName": "device temperature",
+                            "value": 23.14
+                        },
+                        {
+                            "channelId": 2,
+                            "channelName": "battery voltage",
+                            "value": 3.5
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    {
+        "type": "uplink",
+        "description": "GoodCase data message: Uplink example for 02 data message with 2 active measurement channels with alarm present",
+        "input": {
+            "bytes": [
+                2,
+                0,
+                35,
+                9,
+                185,
+                34,
+                110
+            ],
+            "fPort": 1,
+            "recvTime": "1992-12-22T17:00:00+01:00"
+        },
+        "output": {
+            "data": {
+                "messageType": 2,
+                "configurationId": 0,
+                "measurement": {
+                    "channels": [
+                        {
+                            "channelId": 0,
+                            "channelName": "pressure",
+                            "value": -0.011
+                        },
+                        {
+                            "channelId": 1,
+                            "channelName": "device temperature",
+                            "value": 23.14
+                        },
+                        {
+                            "channelId": 2,
+                            "channelName": "battery voltage",
+                            "value": 3.5
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    {
+        "type": "uplink",
+        "description": "BadCase data message: Uplink example for 00 data message",
+        "input": {
+            "bytes": [
+                0,
+                0,
+                0,
+                46,
+                151,
+                18,
+                83
+            ],
+            "fPort": 1,
+            "recvTime": "1992-12-22T17:00:00+01:00"
+        },
+        "output": {
+            "data": {},
+            "errors": [
+                "PGW23.100.11 (JS): Data message type 00 not supported"
+            ]
+        }
+    },
+    {
+        "type": "uplink",
+        "description": "BadCase data message: Uplink example for no data",
+        "input": {
+            "bytes": [
+                1,
+                0,
+                0
+            ],
+            "fPort": 1,
+            "recvTime": "1992-12-22T17:00:00+01:00"
+        },
+        "output": {
+            "data": {},
+            "errors": [
+                "PGW23.100.11 (JS): Data message 01/02 needs 7 bytes but got 3"
+            ]
+        }
+    },
+    {
+        "type": "uplink",
+        "description": "GoodCase process alarm message: Uplink example for alert message rising threshold",
+        "input": {
+            "bytes": [
+                3,
+                0,
+                1,
+                25,
+                180
+            ],
+            "fPort": 1,
+            "recvTime": "1992-12-22T17:00:00+01:00"
+        },
+        "output": {
+            "data": {
+                "messageType": 3,
+                "configurationId": 0,
+                "processAlarms": [
+                    {
+                        "channelId": 0,
+                        "channelName": "pressure",
+                        "event": 0,
+                        "eventName": "triggered",
+                        "alarmType": 1,
+                        "alarmTypeName": "high threshold",
+                        "value": 4.08
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "type": "uplink",
+        "description": "GoodCase technical message: Uplink example for alert message general instrument error",
+        "input": {
+            "bytes": [
+                4,
+                0,
+                1,
+                25,
+                180,
+                9,
+                50,
+                200
+            ],
+            "fPort": 1,
+            "recvTime": "1992-12-22T17:00:00+01:00"
+        },
+        "output": {
+            "data": {
+                "messageType": 4,
+                "configurationId": 0,
+                "technicalAlarms": [
+                    {
+                        "causeOfFailure": 1,
+                        "causeOfFailureName": "general failure",
+                        "event": 0,
+                        "eventName": "triggered",
+                        "channelId": 0,
+                        "channelName": "pressure",
+                        "value": 4.08
+                    },
+                    {
+                        "causeOfFailure": 1,
+                        "causeOfFailureName": "general failure",
+                        "event": 0,
+                        "eventName": "triggered",
+                        "channelId": 1,
+                        "channelName": "device temperature",
+                        "value": 65
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "type": "uplink",
+        "description": "GoodCase technical message: Uplink example for alert message general instrument error disappearance",
+        "input": {
+            "bytes": [
+                4,
+                0,
+                128,
+                25,
+                180,
+                136,
+                34,
+                110
+            ],
+            "fPort": 1,
+            "recvTime": "1992-12-22T17:00:00+01:00"
+        },
+        "output": {
+            "data": {
+                "messageType": 4,
+                "configurationId": 0,
+                "technicalAlarms": [
+                    {
+                        "causeOfFailure": 0,
+                        "causeOfFailureName": "",
+                        "event": 1,
+                        "eventName": "disappeared",
+                        "channelId": 0,
+                        "channelName": "pressure",
+                        "value": 4.08
+                    },
+                    {
+                        "causeOfFailure": 0,
+                        "causeOfFailureName": "",
+                        "event": 1,
+                        "eventName": "disappeared",
+                        "channelId": 1,
+                        "channelName": "device temperature",
+                        "value": 23.14
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "type": "uplink",
+        "description": "GoodCase device alarm message: Uplink example for low temperature",
+        "input": {
+            "bytes": [
+                5,
+                0,
+                64,
+                236
+            ],
+            "fPort": 1,
+            "recvTime": "1992-12-22T17:00:00+01:00"
+        },
+        "output": {
+            "data": {
+                "messageType": 5,
+                "configurationId": 0,
+                "deviceAlarm": {
+                    "event": 0,
+                    "eventName": "triggered",
+                    "alarmType": 0,
+                    "alarmTypeName": "low temperature alarm",
+                    "causeOfFailure": 1,
+                    "causeOfFailureName": "device dependent",
+                    "value": -20
+                }
+            }
+        }
+    },
+    {
+        "type": "uplink",
+        "description": "GoodCase configuration status message: Uplink example for configuration successful",
+        "input": {
+            "bytes": [
+                6,
+                15,
+                32
+            ],
+            "fPort": 1,
+            "recvTime": "1992-12-22T17:00:00+01:00"
+        },
+        "output": {
+            "data": {},
+            "errors": [
+                "PGW23.100.11 (JS): Data message type 06 not supported"
+            ]
+        }
+    },
+    {
+        "type": "uplink",
+        "description": "GoodCase device identification message: Uplink example for metrology information message",
+        "input": {
+            "bytes": [
+                7,
+                0,
+                10,
+                2,
+                0,
+                1,
+                0,
+                5,
+                0,
+                1,
+                0,
+                80,
+                72,
+                79,
+                69,
+                78,
+                73,
+                88,
+                95,
+                70,
+                66,
+                0,
+                2,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                32,
+                65,
+                0,
+                0,
+                32,
+                194,
+                0,
+                0,
+                112,
+                66,
+                7,
+                32
+            ],
+            "fPort": 1,
+            "recvTime": "1992-12-22T17:00:00+01:00"
+        },
+        "output": {
+            "data": {
+                "messageType": 7,
+                "configurationId": 0,
+                "deviceInformation": {
+                    "productIdName": "PGW23.100.11",
+                    "productId": 10,
+                    "wirelessModuleFirmwareVersion": "0.2.0",
+                    "wirelessModuleHardwareVersion": "0.1.0",
+                    "sensorModuleFirmwareVersion": "0.5.0",
+                    "sensorModuleHardwareVersion": "0.1.0",
+                    "serialNumber": "PHOENIX_FB",
+                    "pressureType": "relative",
+                    "measurementRangeStartPressure": 0,
+                    "measurementRangeEndPressure": 10,
+                    "measurementRangeStartDeviceTemperature": -40,
+                    "measurementRangeEndDeviceTemperature": 60,
+                    "pressureUnit": 7,
+                    "pressureUnitName": "bar",
+                    "deviceTemperatureUnit": 32,
+                    "deviceTemperatureUnitName": "°C"
+                }
+            }
+        }
+    },
+    {
+        "type": "uplink",
+        "description": "GoodCase keep-alive message: Uplink example for keep alive",
+        "input": {
+            "bytes": [
+                8,
+                0,
+                63
+            ],
+            "fPort": 1,
+            "recvTime": "1992-12-22T17:00:00+01:00"
+        },
+        "output": {
+            "data": {
+                "messageType": 8,
+                "configurationId": 0,
+                "deviceStatistic": {
+                    "batteryLevelNewEvent": false,
+                    "batteryLevelPercent": 63
+                }
+            }
+        }
+    },
+    {
+        "type": "uplink",
+        "description": "GoodCase keep-alive message: Uplink example for keep alive",
+        "input": {
+            "bytes": [
+                8,
+                0,
+                130
+            ],
+            "fPort": 1,
+            "recvTime": "1992-12-22T17:00:00+01:00"
+        },
+        "output": {
+            "data": {
+                "messageType": 8,
+                "configurationId": 0,
+                "deviceStatistic": {
+                    "batteryLevelNewEvent": true,
+                    "batteryLevelPercent": 2
+                }
+            }
+        }
+    },
+    {
+        "type": "uplink",
+        "description": "GoodCase keep-alive message: Uplink example for keep alive",
+        "input": {
+            "bytes": [
+                9,
+                0,
+                130
+            ],
+            "fPort": 1,
+            "recvTime": "1992-12-22T17:00:00+01:00"
+        },
+        "output": {
+            "data": {},
+            "errors": [
+                "PGW23.100.11 (JS): Data message type 09 not supported"
+            ]
+        }
+    },
+    {
+        "type": "uplink_hex",
+        "description": "GoodCase data message: Uplink example for 01 data message with 2 active measurement channels (hex)",
+        "input": {
+            "bytes": "0x01 00 23 09B9 226E",
+            "fPort": 1,
+            "recvTime": "1992-12-22T17:00:00+01:00"
+        },
+        "output": {
+            "data": {
+                "messageType": 1,
+                "configurationId": 0,
+                "measurement": {
+                    "channels": [
+                        {
+                            "channelId": 0,
+                            "channelName": "pressure",
+                            "value": -0.011
+                        },
+                        {
+                            "channelId": 1,
+                            "channelName": "device temperature",
+                            "value": 23.14
+                        },
+                        {
+                            "channelId": 2,
+                            "channelName": "battery voltage",
+                            "value": 3.5
+                        }
+                    ]		    
+                }
+            }
+        }
+    },
+    {
+        "type": "uplink_base64",
+        "description": "GoodCase data message: Uplink example for 01 data message with 2 active measurement channels (base64)",
+        "input": {
+            "bytes": "AQAjCbkibg==",
+            "fPort": 1,
+            "recvTime": "1992-12-22T17:00:00+01:00"
+        },
+        "output": {
+            "data": {
+                "messageType": 1,
+                "configurationId": 0,
+                "measurement": {
+                    "channels": [
+                        {
+                            "channelId": 0,
+                            "channelName": "pressure",
+                            "value": -0.011
+                        },
+                        {
+                            "channelId": 1,
+                            "channelName": "device temperature",
+                            "value": 23.14
+                        },
+                        {
+                            "channelId": 2,
+                            "channelName": "battery voltage",
+                            "value": 3.5
+                        }
+                    ]
+                }
+            }
+        }
+    }
+]

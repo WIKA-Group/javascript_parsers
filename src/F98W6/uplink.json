@@ -1,0 +1,76 @@
+{
+    "$schema": "./uplink.schema.json",
+    "data": {
+        "messageType": 1,
+        "configurationId": 0,
+        "measurement": {
+            "channels": [
+                {
+                    "channelId": 0,
+                    "channelName": "strain",
+                    "value": -0.011
+                },
+                {
+                    "channelId": 1,
+                    "channelName": "device temperature",
+                    "value": 23.14
+                },
+                {
+                    "channelId": 2,
+                    "channelName": "battery voltage",
+                    "value": 3.5
+                }
+            ]
+        },
+        "processAlarms": [
+            {
+                "channelId": 0,
+                "channelName": "strain",
+                "event": 0,
+                "eventName": "triggered",
+                "alarmType": 1,
+                "alarmTypeName": "high threshold",
+                "value": 4.08
+            }
+        ],
+        "technicalAlarms": [
+            {
+                "alarmTypeName": "Punctual sensor error",
+                "alarmType": 1,
+                "event": 0,
+                "eventName": "triggered"
+            }
+        ],
+        "deviceAlarm": {
+            "event": 0,
+            "eventName": "triggered",
+            "alarmType": 0,
+            "alarmTypeName": "duty cycle alarm",
+            "causeOfFailure": 0,
+            "causeOfFailureName": "generic",
+            "batteryValue": 2
+        },
+        "deviceInformation": {
+            "productIdName": "PEW",
+            "productId": 11,
+            "productSubId": 0,
+            "productSubIdName": "LoRaWAN",
+            "wirelessModuleFirmwareVersion": "0.2.0",
+            "wirelessModuleHardwareVersion": "0.1.0",
+            "serialNumber": "PEWSAMPLE01",
+            "strainType": "absolute",
+            "measurementRangeStartStrain": 0,
+            "measurementRangeEndStrain": 10,
+            "measurementRangeStartDeviceTemperature": -45,
+            "measurementRangeEndDeviceTemperature": 110,
+            "strainUnit": 7,
+            "strainUnitName": "bar",
+            "deviceTemperatureUnit": 32,
+            "deviceTemperatureUnitName": "°C"
+        },
+        "deviceStatistic": {
+            "batteryLevelNewEvent": false,
+            "batteryLevelPercent": 63
+        }
+    }
+}

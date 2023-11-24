@@ -1,0 +1,669 @@
+[
+    {
+        "type": "uplink",
+        "description": "GoodCase data message: Uplink example for 01 data message with 2 active measurement channels",
+        "input": {
+            "bytes": [
+                1,
+                0,
+                0,
+                46,
+                151,
+                18,
+                83
+            ],
+            "fPort": 1,
+            "recvTime": "1992-12-22T17:00:00+01:00"
+        },
+        "output": {
+            "data": {
+                "messageType": 1,
+                "configurationId": 0,
+                "measurement": {
+                    "channels": [
+                        {
+                            "channelId": 0,
+                            "channelName": "pressure",
+                            "value": 9.427
+                        },
+                        {
+                            "channelId": 1,
+                            "channelName": "device temperature",
+                            "value": -18.09
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    {
+        "type": "uplink",
+        "description": "GoodCase data message: Uplink example for 01 data message with 1 active measurement channels",
+        "input": {
+            "bytes": [
+                1,
+                0,
+                0,
+                0,
+                1
+            ],
+            "fPort": 1,
+            "recvTime": "1992-12-22T17:00:00+01:00"
+        },
+        "output": {
+            "data": {
+                "messageType": 1,
+                "configurationId": 0,
+                "measurement": {
+                    "channels": [
+                        {
+                            "channelId": 0,
+                            "channelName": "pressure",
+                            "value": -2.499
+                        }
+                    ]
+                }
+            },
+            "warnings": [
+                "PGU+NETRIS3 (JS): Not enough data to decode channel (temperature). Payload must has a length of 4 bytes, input data length: 5"
+            ]
+        }
+    },
+    {
+        "type": "uplink",
+        "description": "GoodCase data message: Uplink example for 02 data message with 1 active measurement channels",
+        "input": {
+            "bytes": [
+                2,
+                7,
+                0,
+                30,
+                176
+            ],
+            "fPort": 1,
+            "recvTime": "1992-12-22T17:00:00+01:00"
+        },
+        "output": {
+            "data": {
+                "messageType": 2,
+                "configurationId": 7,
+                "measurement": {
+                    "channels": [
+                        {
+                            "channelId": 0,
+                            "channelName": "pressure",
+                            "value": 5.356
+                        }
+                    ]
+                }
+            },
+            "warnings": [
+                "PGU+NETRIS3 (JS): Not enough data to decode channel (temperature). Payload must has a length of 4 bytes, input data length: 5"
+            ]
+        }
+    },
+    {
+        "type": "uplink",
+        "description": "BadCase data message: Uplink example for 00 data message",
+        "input": {
+            "bytes": [
+                0,
+                0,
+                0,
+                46,
+                151,
+                18,
+                83
+            ],
+            "fPort": 1,
+            "recvTime": "1992-12-22T17:00:00+01:00"
+        },
+        "output": {
+            "data": {},
+            "errors": [
+                "PGU+NETRIS3 (JS): Data message type 00 not supported"
+            ]
+        }
+    },
+    {
+        "type": "uplink",
+        "description": "BadCase data message: Uplink example for no data",
+        "input": {
+            "bytes": [
+                1,
+                0,
+                0
+            ],
+            "fPort": 1,
+            "recvTime": "1992-12-22T17:00:00+01:00"
+        },
+        "output": {
+            "data": {},
+            "errors": [
+                "PGU+NETRIS3 (JS): Data message 01/02 needs at least 4 and maximum 11 bytes but got 3"
+            ]
+        }
+    },
+    {
+        "type": "uplink",
+        "description": "BadCase data message: Uplink example for not enough data",
+        "input": {
+            "bytes": [
+                1,
+                0,
+                0,
+                46
+            ],
+            "fPort": 1,
+            "recvTime": "1992-12-22T17:00:00+01:00"
+        },
+        "output": {
+            "data": {
+                "messageType": 1,
+                "configurationId": 0,
+                "measurement": {
+                    "channels": []
+                }
+            },
+            "warnings": [
+                "PGU+NETRIS3 (JS): Not enough data to decode channel (pressure). Payload must has a length of 2 bytes, input data length: 4",
+                "PGU+NETRIS3 (JS): Not enough data to decode channel (temperature). Payload must has a length of 4 bytes, input data length: 4"
+            ]
+        }
+    },
+    {
+        "type": "uplink",
+        "description": "GoodCase process alarm message: Uplink example for alert message low threshold",
+        "input": {
+            "bytes": [
+                3,
+                17,
+                0,
+                0,
+                13,
+                115
+            ],
+            "fPort": 1,
+            "recvTime": "1992-12-22T17:00:00+01:00"
+        },
+        "output": {
+            "data": {
+                "messageType": 3,
+                "configurationId": 17,
+                "processAlarms": [
+                    {
+                        "channelId": 0,
+                        "channelName": "pressure",
+                        "event": 0,
+                        "eventName": "triggered",
+                        "alarmType": 0,
+                        "alarmTypeName": "low threshold",
+                        "value": 0.943
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "type": "uplink",
+        "description": "GoodCase process alarm message: Uplink example for alert message rising slope",
+        "input": {
+            "bytes": [
+                3,
+                15,
+                0,
+                139,
+                0,
+                217
+            ],
+            "fPort": 1,
+            "recvTime": "1992-12-22T17:00:00+01:00"
+        },
+        "output": {
+            "data": {
+                "messageType": 3,
+                "configurationId": 15,
+                "processAlarms": [
+                    {
+                        "channelId": 1,
+                        "channelName": "device temperature",
+                        "event": 1,
+                        "eventName": "disappeared",
+                        "alarmType": 3,
+                        "alarmTypeName": "rising slope",
+                        "value": -37.83
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "type": "uplink",
+        "description": "GoodCase process alarm message: Uplink example for alert message high threshold with delay for channel pressure and high threshold for channel temperature",
+        "input": {
+            "bytes": [
+                3,
+                15,
+                0,
+                5,
+                44,
+                168,
+                9,
+                38,
+                184
+            ],
+            "fPort": 1,
+            "recvTime": "1992-12-22T17:00:00+01:00"
+        },
+        "output": {
+            "data": {
+                "messageType": 3,
+                "configurationId": 15,
+                "processAlarms": [
+                    {
+                        "channelId": 0,
+                        "channelName": "pressure",
+                        "event": 0,
+                        "eventName": "triggered",
+                        "alarmType": 5,
+                        "alarmTypeName": "high threshold with delay",
+                        "value": 8.932
+                    },
+                    {
+                        "channelId": 1,
+                        "channelName": "device temperature",
+                        "event": 0,
+                        "eventName": "triggered",
+                        "alarmType": 1,
+                        "alarmTypeName": "high threshold",
+                        "value": 34.12
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "type": "uplink",
+        "description": "GoodCase technical message: Uplink example for alert message general instrument error",
+        "input": {
+            "bytes": [
+                4,
+                0,
+                0,
+                4,
+                0,
+                1
+            ],
+            "fPort": 1,
+            "recvTime": "1992-12-22T17:00:00+01:00"
+        },
+        "output": {
+            "data": {
+                "messageType": 4,
+                "configurationId": 0,
+                "technicalAlarms": [
+                    {
+                        "alarmType": 4,
+                        "alarmTypeName": "STAT_DEV",
+                        "causeOfFailure": 1,
+                        "causeOfFailureName": "STAT_DEV_ERROR"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "type": "uplink",
+        "description": "GoodCase technical message: Uplink example for different channel alert",
+        "input": {
+            "bytes": [
+                4,
+                3,
+                0,
+                0,
+                0,
+                1,
+                1,
+                0,
+                2
+            ],
+            "fPort": 1,
+            "recvTime": "1992-12-22T17:00:00+01:00"
+        },
+        "output": {
+            "data": {
+                "messageType": 4,
+                "configurationId": 3,
+                "technicalAlarms": [
+                    {
+                        "alarmType": 0,
+                        "alarmTypeName": "MV_STAT channel 0",
+                        "causeOfFailure": 1,
+                        "causeOfFailureName": "MV_STAT_ERROR"
+                    },
+                    {
+                        "alarmType": 1,
+                        "alarmTypeName": "MV_STAT channel 1",
+                        "causeOfFailure": 2,
+                        "causeOfFailureName": "MV_STAT_WARNING"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "type": "uplink",
+        "description": "GoodCase radio unit message: Uplink example for Battery is low and RF duty-cycle limit was exceeded",
+        "input": {
+            "bytes": [
+                5,
+                13,
+                0,
+                5
+            ],
+            "fPort": 1,
+            "recvTime": "1992-12-22T17:00:00+01:00"
+        },
+        "output": {
+            "data": {
+                "messageType": 5,
+                "configurationId": 13,
+                "deviceAlarm": {
+                    "alarmStatus": 5,
+                    "alarmStatusNames": [
+                        "low battery",
+                        "duty cycle alarm"
+                    ]
+                }
+            }
+        }
+    },
+    {
+        "type": "uplink",
+        "description": "GoodCase radio unit message: Uplink example for UART communication error",
+        "input": {
+            "bytes": [
+                5,
+                3,
+                1,
+                0
+            ],
+            "fPort": 1,
+            "recvTime": "1992-12-22T17:00:00+01:00"
+        },
+        "output": {
+            "data": {
+                "messageType": 5,
+                "configurationId": 3,
+                "deviceAlarm": {
+                    "alarmStatus": 256,
+                    "alarmStatusNames": [
+                        "UART alarm"
+                    ]
+                }
+            }
+        }
+    },
+    {
+        "type": "uplink",
+        "description": "GoodCase configuration status message: Uplink example for configuration successful",
+        "input": {
+            "bytes": [
+                6,
+                15,
+                32
+            ],
+            "fPort": 1,
+            "recvTime": "1992-12-22T17:00:00+01:00"
+        },
+        "output": {
+            "data": {},
+            "errors": [
+                "PGU+NETRIS3 (JS): Data message type 06 not supported"
+            ]
+        }
+    },
+    {
+        "type": "uplink",
+        "description": "GoodCase configuration status message: Uplink example for configuration rejected",
+        "input": {
+            "bytes": [
+                6,
+                10,
+                48
+            ],
+            "fPort": 1,
+            "recvTime": "1992-12-22T17:00:00+01:00"
+        },
+        "output": {
+            "data": {},
+            "errors": [
+                "PGU+NETRIS3 (JS): Data message type 06 not supported"
+            ]
+        }
+    },
+    {
+        "type": "uplink",
+        "description": "GoodCase Radio unit identification message: Uplink example for metrology information message",
+        "input": {
+            "bytes": [
+                7,
+                17,
+                15,
+                0,
+                0,
+                21,
+                3,
+                0,
+                0,
+                0,
+                0,
+                65,
+                32,
+                0,
+                0,
+                7,
+                1,
+                194,
+                32,
+                0,
+                0,
+                66,
+                112,
+                0,
+                0,
+                1
+            ],
+            "fPort": 1,
+            "recvTime": "1992-12-22T17:00:00+01:00"
+        },
+        "output": {
+            "data": {
+                "messageType": 7,
+                "configurationId": 17,
+                "deviceInformation": {
+                    "productId": 15,
+                    "productIdName": "NETRIS3",
+                    "productSubId": 0,
+                    "productSubIdName": "LoRaWAN",
+                    "sensorDeviceTypeId": 21,
+                    "channelConfigurations": [
+                        {
+                            "measurand": 3,
+                            "measurandName": "Pressure (gauge)",
+                            "measurementRangeStart": 0.0,
+                            "measurementRangeEnd": 10.0,
+                            "unit": 7,
+                            "unitName": "bar"
+                        },
+                        {
+                            "measurand": 1,
+                            "measurandName": "Temperature",
+                            "measurementRangeStart": -40.0,
+                            "measurementRangeEnd": 60.0,
+                            "unit": 1,
+                            "unitName": "°C"
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    {
+        "type": "uplink",
+        "description": "GoodCase keep-alive message: Uplink example for keep alive",
+        "input": {
+            "bytes": [
+                8,
+                31,
+                0,
+                199,
+                129,
+                161,
+                0,
+                108,
+                164,
+                248
+            ],
+            "fPort": 1,
+            "recvTime": "1992-12-22T17:00:00+01:00"
+        },
+        "output": {
+            "data": {
+                "messageType": 8,
+                "configurationId": 31,
+                "deviceStatistic": {
+                    "numberOfMeasurements": 13074849,
+                    "numberOfTransmissions": 7120120
+                }
+            }
+        }
+    },
+    {
+        "type": "uplink",
+        "description": "GoodCase Extended identification message: Uplink example for extended radio unit & instrument identification",
+        "input": {
+            "bytes": [
+                9,
+                10,
+                15,
+                80,
+                72,
+                79,
+                69,
+                78,
+                73,
+                88,
+                95,
+                70,
+                78,
+                66,
+                78,
+                0,
+                188,
+                97,
+                78,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                8,
+                0,
+                53,
+                62,
+                78,
+                78,
+                54,
+                69,
+                85,
+                83,
+                88,
+                50,
+                3,
+                1,
+                6
+            ],
+            "fPort": 1,
+            "recvTime": "1992-12-22T17:00:00+01:00"
+        },
+        "output": {
+            "data": {
+                "messageType": 9,
+                "configurationId": 10,
+                "extendedDeviceInformation": {
+                    "optionalFieldsMask": 15,
+                    "wikaSensorSerialNumber": "PHOENIX_FNBN",
+                    "sensorLUID": 12345678,
+                    "sensorHardwareVersion": "0.0.0",
+                    "deviceHardwareVersion": "0.0.1",
+                    "sensorFirmwareVersion": "0.0.8",
+                    "deviceSerialNumber": "N013630",
+                    "deviceProductCode": "N6EUSX2",
+                    "deviceFirmwareVersion": "3.1.6"
+                }
+            }
+        }
+    },
+    {
+        "type": "uplink_hex",
+        "description": "GoodCase data message: Uplink example for 01 data message with 2 active measurement channels (hex)",
+        "input": {
+            "bytes": "0x01 00 00 2E97 1253",
+            "fPort": 1,
+            "recvTime": "1992-12-22T17:00:00+01:00"
+        },
+        "output": {
+            "data": {
+                "messageType": 1,
+                "configurationId": 0,
+                "measurement": {
+                    "channels": [
+                        {
+                            "channelId": 0,
+                            "channelName": "pressure",
+                            "value": 9.427
+                        },
+                        {
+                            "channelId": 1,
+                            "channelName": "device temperature",
+                            "value": -18.09
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    {
+        "type": "uplink_base64",
+        "description": "GoodCase data message: Uplink example for 01 data message with 2 active measurement channels (base64)",
+        "input": {
+            "bytes": "AQAALpcSUw==",
+            "fPort": 1,
+            "recvTime": "1992-12-22T17:00:00+01:00"
+        },
+        "output": {
+            "data": {
+                "messageType": 1,
+                "configurationId": 0,
+                "measurement": {
+                    "channels": [
+                        {
+                            "channelId": 0,
+                            "channelName": "pressure",
+                            "value": 9.427
+                        },
+                        {
+                            "channelId": 1,
+                            "channelName": "device temperature",
+                            "value": -18.09
+                        }
+                    ]
+                }
+            }
+        }
+    }
+]
