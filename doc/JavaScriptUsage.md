@@ -5,7 +5,7 @@ This article describes how to use the JavaScript parser in a network server with
    - Device Extended Unique Identifier (Dev EUI) is a 16-character alphanumeric string. 
    - Application Extended Unique Identifier (App EUI or JoinEUI) is a 16-character alphanumeric string. 
    - Application Key (App Key) is an alphanumeric string of 32 characters. The App Key is a secret and should never be shared.\
-   ![Quick-Start-Guide-Card](https://github.com/WIKA-Group/javascript_parsers/assets/150794150/481f101f-63b2-4a60-8a12-cc21d1cd7df2)
+   ![Quick Start Guide Card](/assets/Quick-Start-Guide-Card.png)
 2. You will need to know the measuring range of the device. The measuring ranges can be found on the model label of your sensor and in the sensor data sheet.
 3. You have downloaded the correct parser for your device. In this example we using TRU+NETRIS3.
 4. Open the network server section of your gateway and navigate to the Device Registration page.
@@ -15,9 +15,9 @@ This article describes how to use the JavaScript parser in a network server with
     - Device Filter node,
     - Function node,
     - some Debug nodes.\
-    ![Node-Red-Flow](https://github.com/WIKA-Group/javascript_parsers/assets/150794150/1f7b29cc-29a0-4ff4-9acc-c12b40d84ecc)
+    ![Node-Red Flow](/assets/Node-Red-Flow.png)
 7. Set the Dev EUI on Device Filter node.
-8. Open the index.js file and add the measuring ranges ot the top of the parser file (index.js).
+8. Open the index.js file and add the measuring ranges to the top of the parser file (index.js).
     ```JavaScript
     /**
      * The starting value of the temperature range.
@@ -40,5 +40,5 @@ This article describes how to use the JavaScript parser in a network server with
 10. Copy and Paste the content of the index.js file into the Function node.
 11. Save and deploy your Node-RED flow.
 12. Active your device.\
-    ![Node-Red-Flow-Output](https://github.com/WIKA-Group/javascript_parsers/assets/150794150/b3307325-610f-48e0-9413-20eae2a10129)
+    ![Node-Red Flow](/assets/Node-Red-Flow-Output.png)
 13. Done.

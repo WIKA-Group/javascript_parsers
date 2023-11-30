@@ -24,7 +24,7 @@ Each folder for each device contains the following files:
 * examples.json -> contains some input and output payload examples for unit testing
 * index.json -> contains source code of the payload parser
 * metadata.json -> contains some meta information about the parser
-* package.json -> contains meta information and dependencies
+* package.json -> contains more meta information and dependencies
 * uplink.json -> contains a complete object example
 * uplink.schema.json -> contains the output object specification
 * README.md -> contains information about the sensor
@@ -104,3 +104,6 @@ console.log(output);
 **/
 ```
 For more information about parser using see [JavaScript Parser Usage](/doc/JavaScriptUsage.md)
+
+# Release Notes
+2.0.0 First Release

@@ -1,7 +1,6 @@
 # F98W6
 
-![F98W6](https://github.com/WIKA-Group/javascript_parsers/assets/150794150/e268186e-d800-44a8-bf79-de52c505fa74)
-
+![F98W6](/assets/F98W6.jpg)
 
 #### Description of the device
 
@@ -10,14 +9,6 @@ The strain transducer is fastened with four screws to an area
 of the structure where the relevant strain occurs. Combined 
 strain transducers can be connected directly to a junction box 
 that contains an amplifier for system control.
-
-#### Measuring ranges
-
-µε |
----|
-0 … ±200 |
-0 … ±500 |
-0 … ±1,000 |
 
 ---
 

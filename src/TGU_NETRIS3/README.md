@@ -1,6 +1,6 @@
 # TGU + Netris3
 
-![TGU_Netris3](https://github.com/WIKA-Group/javascript_parsers/assets/150794150/b6cbdd60-1139-4051-9ee3-33fafb801040)
+![TGU_Netris3](/assets/TGU_Netris3.jpg)
 
 #### Description of the device
 
@@ -10,33 +10,6 @@ This allows a condition-based and preventive maintenance through centralised big
 The WIKA measuring instrument TGU73.100 is part of the 
 WIKA IIoT solution. With this, WIKA offers a holistic solution 
 for your digitalisation strategy
-
-#### Measuring ranges
-
-°C | °F 
----|---
--170 ... +20 | 20 ... 180
--170 ... +70 | 30 ... 220
--60 ... +40 | 50 ... 450
--50 ... +30 |
--30 ... +50 |
--20 ... +40 |
--10 ... +50 |
--10 ... +70 |
-0 ... 100 |
-0 ... 120 |
-10 ... 50 |
-10 ... 70 |
-10 ... 90 |
-10 ... 110 |
-20 ... 140 |
-20 ... 180 |
-30 ... 220 |
-30 ... 270 |
-50 ... 350 |
-50 ... 450 |
-100 ... 500 |
-100 ... 600 |
 
 ---
 
