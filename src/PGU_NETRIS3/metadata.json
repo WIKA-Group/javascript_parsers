@@ -1,6 +1,6 @@
 {
   "name": "wika-pgu-netris3-decoder",
-  "version": "1.0.0-DEV-20231130-3",
+  "version": "2.0.0",
   "main": "index.js",
   "description": "WIKA PGU+NETRIS3 LoRaWAN decoder",
   "codecId": "0001",
