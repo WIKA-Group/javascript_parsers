@@ -1,6 +1,6 @@
 # PEW-1x00
 
-![PEW](/assets/PEW.jpg)
+![PEW](/assets/PEW.png)
 
 #### Description of the device
 
