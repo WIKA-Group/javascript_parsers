@@ -1,6 +1,6 @@
 # TRU + Netris3
 
-![TRU_Netris3](/assets/TRU_Netris3.jpg)
+![TRU_Netris3](/assets/TRU_Netris3.png)
 
 #### Description of the device
 
