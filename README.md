@@ -30,7 +30,12 @@ Each folder for each device contains the following files:
 * README.md -> contains information about the sensor
 
 ## Usage
-> ! Attention: You must modify the index.js file before you can use the JavaScript parsers !
+---
+**ATTENTION**
+
+!!! You must modify the index.js file before you can use the JavaScript parsers !!!
+
+---
 
 Each payload parser file starts with a public section. Here you have to enter your the measuring ranges of the sensor your are using. The measuring ranges can be found on the model label of your sensor and in the data sheet of the sensor.
 
