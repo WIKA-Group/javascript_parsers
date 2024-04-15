@@ -1,0 +1,186 @@
+
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>javascript_parsers | This repository contains the JavaScript parser for WIKA LPWAN devices.</title>
+<meta name="generator" content="Jekyll v3.9.5" />
+<meta property="og:title" content="javascript_parsers" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="This repository contains the JavaScript parser for WIKA LPWAN devices." />
+<meta property="og:description" content="This repository contains the JavaScript parser for WIKA LPWAN devices." />
+<link rel="canonical" href="https://wika-group.github.io/javascript_parsers/" />
+<meta property="og:url" content="https://wika-group.github.io/javascript_parsers/" />
+<meta property="og:site_name" content="javascript_parsers" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="javascript_parsers" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","description":"This repository contains the JavaScript parser for WIKA LPWAN devices.","headline":"javascript_parsers","name":"javascript_parsers","url":"https://wika-group.github.io/javascript_parsers/"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/javascript_parsers/assets/css/style.css?v=60b809231ef020c849a1a91cdfca6c797d696c77">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/javascript_parsers/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="https://wika-group.github.io/javascript_parsers/">javascript_parsers</a></h1>
+      
+
+      <p><img src="/assets/logo_wika.svg" alt="WIKA" title="WIKA" /></p>
+
+<h1 id="welcome-to-the-wika-lpwan-device-parser-repo">Welcome to the WIKA LPWAN device parser repo</h1>
+
+<p>This repository contains the JavaScript parser for our LPWAN devices:</p>
+
+<ul>
+  <li><a href="src/PEW/">PEW</a></li>
+  <li><a href="src/PGU_NETRIS3/">PGU+NETRIS3</a></li>
+  <li><a href="src/FLRU_NETRIS3/">FLRU+NETRIS3</a></li>
+  <li><a href="src/TGU_NETRIS3/">TGU+NETRIS3</a></li>
+  <li><a href="src/TRU_NETRIS3/">TRU+NETRIS3</a></li>
+  <li><a href="src/NETRIS1/">NETRIS1</a></li>
+  <li><a href="src/PGW23_100_11/">PGW23</a></li>
+  <li><a href="src/F98W6/">F98W6</a></li>
+  <li><a href="src/A2G/">A2G</a></li>
+  <li><a href="src/TRW/">TRW</a></li>
+</ul>
+
+<p>The JavaScript parser converts the raw byte payload of our devices into a JavaScript object (defined in the uplink.schema.json file).</p>
+
+<p>All our JavaScript parser scripts follow the specification LoRaWAN® Payload Codec API Specification TS013-1.0.0.</p>
+
+<h2 id="repository-structure">Repository Structure</h2>
+<p>Each folder for each device contains the following files:</p>
+<ul>
+  <li>driver-examples.spec.js -&gt; contains the test driver for unit testing</li>
+  <li>driver.yaml -&gt; contains some meta information</li>
+  <li>examples.json -&gt; contains some input and output payload examples for unit testing</li>
+  <li>index.json -&gt; contains source code of the payload parser</li>
+  <li>metadata.json -&gt; contains some meta information about the parser</li>
+  <li>package.json -&gt; contains more meta information and dependencies</li>
+  <li>uplink.json -&gt; contains a complete object example</li>
+  <li>uplink.schema.json -&gt; contains the output object specification</li>
+  <li>README.md -&gt; contains information about the sensor</li>
+</ul>
+
+<h2 id="usage">Usage</h2>
+<hr />
+<p><strong>ATTENTION</strong></p>
+
+<p>!!! You must modify the index.js file before you can use the JavaScript parsers !!!</p>
+
+<hr />
+
+<p>Each payload parser file starts with a public section. Here you have to enter your the measuring ranges of the sensor your are using. The measuring ranges can be found on the model label of your sensor and in the data sheet of the sensor.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// PGU with NETRIS3  </span>
+<span class="cm">/**
+ * The starting value of the pressure range.
+ * @type {number}
+ */</span>
+<span class="kd">var</span> <span class="nx">PRESSURE_RANGE_START</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">// bar</span>
+
+<span class="cm">/**
+ * The ending value of the pressure range.
+ * @type {number}
+ */</span>
+<span class="kd">var</span> <span class="nx">PRESSURE_RANGE_END</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span> <span class="c1">// bar</span>
+
+<span class="cm">/**
+ * The starting value of the device temperature range.
+ * @type {number}
+ */</span>
+<span class="kd">var</span> <span class="nx">DEVICE_TEMPERATURE_RANGE_START</span> <span class="o">=</span> <span class="o">-</span><span class="mi">40</span><span class="p">;</span> <span class="c1">// °C</span>
+
+<span class="cm">/**
+ * The ending value of the device temperature range.
+ * @type {number}
+ */</span>
+<span class="kd">var</span> <span class="nx">DEVICE_TEMPERATURE_RANGE_END</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span> <span class="c1">// °C</span>
+</code></pre></div></div>
+
+<p>After the modification, you can use the index.js file on your network server.</p>
+
+<h3 id="calling-the-parsing-function">Calling the parsing function</h3>
+<p>The parser exposes three functions to decode raw byte messages:</p>
+<ul>
+  <li>output = decodeUplink(input)</li>
+  <li>output = decodeHexString(fPort, hexEncodedString)</li>
+  <li>output = decodeBase64String(fPort, base64EncodedString)</li>
+</ul>
+
+<pre><code class="language-JavaScript">/**
+ * "input": {
+ *      "bytes": [1, 0, 0, 46, 151, 18, 83],
+ *          "fPort": 1,
+ *          "recvTime": "2023-11-11T13:37:00+02:00"
+ *  }
+ **/
+const parser = require("index.js");
+const output = parser.decodeUplink(input);
+console.log(output);
+/**
+ *   "output": {
+ *        "data": {
+ *            "messageType": 1,
+ *            "configurationId": 0,
+ *            "measurement": {
+ *                "channels": [
+ *                    {
+ *                        "channelId": 0,
+ *                        "channelName": "pressure",
+ *                        "value": 9.427
+ *                    },
+ *                    {
+ *                        "channelId": 1,
+ *                        "channelName": "device temperature",
+ *                        "value": -18.09
+ *                    }
+ *                ]
+ *            }
+ *        }
+ *    }
+**/
+</code></pre>
+<p>For more information about parser using see <a href="/javascript_parsers/doc/JavaScriptUsage.html">JavaScript Parser Usage</a></p>
+
+<h1 id="release-notes">Release Notes</h1>
+<p>2.1.0</p>
+<ul>
+  <li>Fixed an issue where the use of the function padStart affected the ES5 compatibility.</li>
+  <li>Added the parser for A2G.</li>
+  <li>Added the parser for TRW.</li>
+</ul>
+
+<p>2.0.0</p>
+<ul>
+  <li>First Release</li>
+</ul>
+
+
+      
+      <div class="footer border-top border-gray-light mt-5 pt-3 text-right text-gray">
+        This site is open source. <a href="https://github.com/WIKA-Group/javascript_parsers/edit/main/README.md">Improve this page</a>.
+      </div>
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+  </body>
+</html>
