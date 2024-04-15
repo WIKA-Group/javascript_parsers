@@ -8,10 +8,12 @@ This repository contains the JavaScript parser for our LPWAN devices:
 * [PGU+NETRIS3](src/PGU_NETRIS3/)
 * [FLRU+NETRIS3](src/FLRU_NETRIS3/) 
 * [TGU+NETRIS3](src/TGU_NETRIS3/)
-* [TGU+NETRIS3](src/TRU_NETRIS3/) 
+* [TRU+NETRIS3](src/TRU_NETRIS3/) 
 * [NETRIS1](src/NETRIS1/) 
 * [PGW23](src/PGW23_100_11/)
 * [F98W6](src/F98W6/) 
+* [A2G](src/A2G/)
+* [TRW](src/TRW/)
 
 The JavaScript parser converts the raw byte payload of our devices into a JavaScript object (defined in the uplink.schema.json file).
 
@@ -111,4 +113,10 @@ console.log(output);
 For more information about parser using see [JavaScript Parser Usage](/doc/JavaScriptUsage.md)
 
 # Release Notes
-2.0.0 First Release
+2.1.0 
+ - Fixed an issue where the use of the function padStart affected the ES5 compatibility.
+ - Added the parser for A2G.
+ - Added the parser for TRW.
+
+2.0.0 
+ - First Release

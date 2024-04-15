@@ -1,6 +1,6 @@
 {
   "name": "wika-pgw23.100.11-driver",
-  "version": "1.0.0",
+  "version": "2.1.0",
   "description": "PGW23.100.11 LoRaWAN driver",
   "main": "index.js",
   "scripts": {

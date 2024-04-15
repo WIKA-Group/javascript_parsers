@@ -1,6 +1,6 @@
 {
   "name": "wika-pgu-netris3-driver",
-  "version": "1.0.0",
+  "version": "2.1.0",
   "description": "WIKA PGU+NETRIS3 LoRaWAN driver",
   "main": "index.js",
   "scripts": {

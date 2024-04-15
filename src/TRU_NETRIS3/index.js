@@ -24,7 +24,7 @@
  * SPDX-License-Identifier: MIT
  * 
  * SPDX-FileName: index.js
- * SPDX-PackageVersion: 2.0.0
+ * SPDX-PackageVersion: 2.1.0
  *  
 */
 
@@ -168,6 +168,26 @@ var TECHNICAL_ALARM_TYPE_NAMES_DICTIONARY = ['MV_STAT channel 0', 'MV_STAT chann
  * @type {{[key: number]: string}} = { 1: "low battery", 2: "temperature alarm", 4: "duty cycle alarm", 256: "UART alarm" }
  */
 var ALARM_STATUS_TYPE_NAMES_DICTIONARY = { 1: "low battery", 2: "temperature alarm", 4: "duty cycle alarm", 256: "UART alarm" };
+
+/**
+ * The padStart() method of String values pads this string with another string (multiple times, if needed) until the resulting string reaches the given length.
+ * The function is reimplemented to support ES5.
+ * @access private
+ * @param   {number}     targetLength - The length of the returned string
+ * @param   {string}     padString - The string to modify
+ * @returns {string}          - The decoded object
+ */
+String.prototype.padStart = function (targetLength, padString) {
+
+    var tempString = this.valueOf();
+
+    for(var i = this.length; i < targetLength; ++i)
+    {
+        tempString = padString + tempString;
+    }
+
+    return tempString; 
+ };
 
 /**
  * To decode the uplink data

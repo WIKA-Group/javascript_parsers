@@ -1,0 +1,295 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+        "$schema": {
+            "type": "string"
+        },
+        "data": {
+            "$ref": "#/definitions/Data"
+        },
+        "errors": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "warnings": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        }
+    },
+    "additionalProperties": false,
+    "required": [],
+    "definitions": {
+        "Data": {
+            "type": "object",
+            "properties": {
+                "messageType": {
+                    "type": "integer",
+                    "enum": [
+                        1,
+                        7,
+                        8
+                    ]
+                },
+                "configurationId": {
+                    "type": "integer"
+                },
+                "measurement": {
+                    "type": "object",
+                    "properties": {
+                        "channels": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Channel"
+                            }
+                        }
+                    },
+                    "additionalProperties": false,
+                    "required": [
+                        "channels"
+                    ]
+                },
+                "deviceInformation": {
+                    "$ref": "#/definitions/RadioUnitIdentification"
+                },
+                "deviceStatistic": {
+                    "$ref": "#/definitions/KeepAlive"
+                }
+            },
+            "additionalProperties": false,
+            "required": []
+        },
+        "Channel": {
+            "type": "object",
+            "properties": {
+                "value": {
+                    "type": "number"
+                },
+                "channelId": {
+                    "type": "integer",
+                    "maximum": 7,
+                    "minimum": 0
+                },
+                "channelName": {
+                    "type": "string",
+                    "enum": [
+                        "pressure",
+                        "flow",
+                        "input_1",
+                        "input_2",
+                        "input_3",
+                        "input_4",
+                        "relay_status_1",
+                        "relay_status_2"
+                    ]
+                }
+            },
+            "additionalProperties": false,
+            "required": [
+                "value",
+                "channelId",
+                "channelName"
+            ]
+        },
+        "RadioUnitIdentification": {
+            "type": "object",
+            "properties": {
+                "productId": {
+                    "type": "integer",
+                    "maximum": 13,
+                    "minimum": 13
+                },
+                "productIdName": {
+                    "type": "string",
+                    "enum": [
+                        "A2G"
+                    ]
+                },
+                "productSubId": {
+                    "type": "integer",
+                    "maximum": 1,
+                    "minimum": 0
+                },
+                "productSubIdName": {
+                    "type": "string",
+                    "enum": [
+                        "LoRaWAN",
+                        "MIOTY",
+                        "Unknown"
+                    ]
+                },
+                "sensorFirmwareVersion": {
+                    "type": "string"
+                },
+                "sensorHardwareVersion": {
+                    "type": "string"
+                },
+                "hardwareAssemblyTypeId": {
+                    "type": "integer",
+                    "enum": [
+                        0,
+                        1,
+                        2,
+                        3,
+                        128,
+                        129,
+                        130
+                    ] 
+                },
+                "hardwareAssemblyTypeName": {
+                    "type": "string",
+                    "enum": [
+                        "A2G HE0 Full Assembly",
+                        "A2G HE1 1AO Assembly",
+                        "A2G HE2 Modbus Assembly",
+                        "A2G HE3 Modular Assembly",
+                        "A2G LC1 LC1VAO",
+                        "A2G LC2 CT",
+                        "A2G LC3 BAT"
+                    ]
+                },
+                "serialNumber": {
+                    "type": "string"
+                },
+                "channelConfigurations": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ChannelConfiguration"
+                    }
+                }
+            },
+            "additionalProperties": false,
+            "required": [
+                "productIdName",
+                "productId",
+                "productSubId",
+                "productSubIdName",
+                "serialNumber",
+                "hardwareAssemblyTypeName",
+                "hardwareAssemblyTypeId",
+                "sensorHardwareVersion",
+                "sensorFirmwareVersion",
+                "channelConfigurations"
+            ]
+        },
+        "ChannelConfiguration": {
+            "type": "object",
+            "properties": {
+                "measurand": {
+                    "type": "integer"
+                },
+                "measurandName": {
+                    "type": "string",
+                    "enum": [
+                        "Temperature",
+                        "Temperature difference",
+                        "Pressure (gauge)",
+                        "Pressure (absolute)",
+                        "Pressure (differential)",
+                        "Flow (vol.)",
+                        "Flow (mass)",
+                        "Force",
+                        "Mass",
+                        "Level",
+                        "Length",
+                        "Volume",
+                        "Current",
+                        "Voltage",
+                        "Resistance",
+                        "Capacitance",
+                        "Inductance",
+                        "Relative",
+                        "Time",
+                        "Frequency",
+                        "Speed",
+                        "Acceleration",
+                        "Density",
+                        "Density (gauge pressure at 20 °C)",
+                        "Density (absolute pressure at 20 °C)",
+                        "Humidity (relative)",
+                        "Humidity (absolute)",
+                        "Angle of rotation / inclination",
+                        "Device specific",
+                        "Input 1",
+                        "Input 2",
+                        "Input 3",
+                        "Input 4",
+                        "Relay Status 1",
+                        "Relay Status 2"
+                    ]
+                },
+                "measurementRangeStart": {
+                    "type": "number"
+                },
+                "measurementRangeEnd": {
+                    "type": "number"
+                },
+                "unit": {
+                    "type": "integer"
+                },
+                "unitName": {
+                    "type": "string",
+                    "enum": [
+                        "None",
+                        "Pa",
+                        "kPa",
+                        "mbar",
+                        "mmWC",
+                        "inWC",
+                        "[m³/s] cubic metre per second",
+                        "[m³/h] cubic metre per hour (cbm/h)",
+                        "[l/s] litre per second",
+                        "[cfm] cubic feet per minute",
+                        "[m/s]",
+                        "[ft/min]",
+                        "% rH",
+                        "[g/m³]",
+                        "[g/ft³]",
+                        "[kJ/kg]",
+                        "[BTU/lb]",
+                        "normalized",
+                        "ppm",
+                        "[%] percent",
+                        "°C",
+                        "°F",
+                        "V",
+                        "bin"
+                    ]
+                }
+            },
+            "additionalProperties": false,
+            "required": [
+                "measurand",
+                "measurandName",
+                "unit",
+                "unitName"
+            ]
+        },
+        "KeepAlive": {
+            "type": "object",
+            "properties": {
+                "batteryLevelNewEvent": {
+                    "type": "boolean",
+                    "enum": [
+                        false,
+                        true
+                    ]
+                },
+                "batteryLevelPercent": {
+                    "type": "integer",
+                    "maximum": 100,
+                    "minimum": 0
+                }
+            },
+            "additionalProperties": false,
+            "required": [
+                "batteryLevelNewEvent",
+                "batteryLevelPercent"
+            ]
+        }
+    }
+}

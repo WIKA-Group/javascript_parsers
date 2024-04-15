@@ -24,7 +24,7 @@
  * SPDX-License-Identifier: MIT
  * 
  * SPDX-FileName: index.js
- * SPDX-PackageVersion: 2.0.0
+ * SPDX-PackageVersion: 2.1.0
  *  
 */
 
@@ -174,6 +174,26 @@ var DEVICE_ALARM_TYPE_NAMES_DICTIONARY = { 1: "low battery error", 4: "duty cycl
 * @type {{[key: number]: string}} = { 1: "MV_STAT_ERROR", 2: "MV_STAT_WARNING", 4: "MV_STAT_LIM_HI", 8: "MV_STAT_LIM_LO", 16: "MV_STAT_WARNING_2" }
 */
 var MEASUREMENT_ALARM_TYPE_NAMES_DICTIONARY = { 1: "MV_STAT_ERROR", 2: "MV_STAT_WARNING", 4: "MV_STAT_LIM_HI", 8: "MV_STAT_LIM_LO", 16: "MV_STAT_WARNING_2" };
+
+/**
+ * The padStart() method of String values pads this string with another string (multiple times, if needed) until the resulting string reaches the given length.
+ * The function is reimplemented to support ES5.
+ * @access private
+ * @param   {number}     targetLength - The length of the returned string
+ * @param   {string}     padString - The string to modify
+ * @returns {string}          - The decoded object
+ */
+String.prototype.padStart = function (targetLength, padString) {
+
+    var tempString = this.valueOf();
+
+    for(var i = this.length; i < targetLength; ++i)
+    {
+        tempString = padString + tempString;
+    }
+
+    return tempString; 
+ };
 
 /**
  * To decode the uplink data
@@ -615,7 +635,7 @@ function decodeDeviceIdentification(input) {
             break;
 
         case 0x02:
-            output.data.deviceInformation.productSubIdName += " TEW";
+            output.data.deviceInformation.productSubIdName += " TRW";
             break;
 
         default:
