@@ -1,4 +1,4 @@
-# FLRU + Netris3
+# A2G
 
 ![A2G](../../assets/A2G.png)
 
