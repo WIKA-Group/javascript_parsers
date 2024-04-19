@@ -1,4 +1,4 @@
-![WIKA](/assets/logo_wika.svg "WIKA")
+![WIKA](assets/logo_wika.svg "WIKA")
 
 # Welcome to the WIKA LPWAN device parser repo
 
