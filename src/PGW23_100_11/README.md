@@ -1,6 +1,6 @@
 # PGW2x.100
 
-![PGW](/assets/PGW.png)
+![PGW](../../assets/PGW.png)
 
 #### Description of the device
 
