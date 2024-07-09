@@ -116,6 +116,7 @@ For more information about parser using see [JavaScript Parser Usage](/doc/JavaS
 # Release Notes
 2.2.0 
  - Added the parser for NETRIS2.
+
 2.1.0 
  - Fixed an issue where the use of the function padStart affected the ES5 compatibility.
  - Added the parser for A2G.
