@@ -1,6 +1,6 @@
 # Netris2
 
-![Netris2](../../assets/NETRIS2.png)
+![Netris2](../../assets/Netris2.png)
 
 #### Description of the device
 
