@@ -18,4 +18,4 @@ The construction of the A2G-520 is robust and weather-proof (IP65). The case can
 
 ---
 
-For more information see [product site](https://www.wika.com/en-en/a2g_520.WIKA?highlightedText=a2G) or [datasheet](https://www.wika.com/media/Data-sheets/Pressure/Pressure-sensors/ds_pe8806_en_co.pdf).
+For more information see [product site](https://www.wika.com/en-en/a2g_520.WIKA).

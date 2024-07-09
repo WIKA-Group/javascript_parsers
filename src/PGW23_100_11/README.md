@@ -12,4 +12,4 @@ WIKA manufactures and qualifies the pressure gauge in accordance with the requir
 
 ---
 
-For more information see [product site](https://www.wika.com/en-en/pgw23_100_pgw26_100.WIKA?highlightedText=PGW) or [datasheet](https://www.wika.com/media/Data-sheets/Pressure/Pressure-gauges-with-output-signal/ds_pv4202_en_co.pdf).
+For more information see [product site](https://www.wika.com/en-en/pgw23_100_pgw26_100.WIKA).

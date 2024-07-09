@@ -12,4 +12,4 @@ The resistance thermometer model TRU is part of the WIKA IIoT solution. With thi
 
 ---
 
-For more information see [product site](https://www.wika.com/en-en/tru.WIKA?highlightedText=TRU) or [datasheet](https://www.wika.com/media/Data-sheets/Temperature/Resistance-thermometers/ds_te6303_en_co.pdf).
+For more information see [product site](https://www.wika.com/en-en/tru.WIKA).

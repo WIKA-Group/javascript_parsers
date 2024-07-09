@@ -1,6 +1,6 @@
 {
   "name": "wika-f98w6-driver",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "WIKA F98W6 LoRaWAN driver",
   "main": "index.js",
   "scripts": {

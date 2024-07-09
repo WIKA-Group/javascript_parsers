@@ -12,4 +12,4 @@ that contains an amplifier for system control.
 
 ---
 
-For more information see [product site](https://www.wika.com/en-en/f9846.WIKA?highlightedText=F98W6) or [datasheet](https://www.wika.com/media/Data-sheets/Force/Special-force-trandsducers/ds_fo5417_en_co.pdf).
+For more information see [product site](https://www.wika.com/en-en/f9846.WIKA).

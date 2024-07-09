@@ -13,4 +13,4 @@ for your digitalisation strategy
 
 ---
 
-For more information see [product site](https://www.wika.com/en-en/tgu73_100.WIKA?highlightedText=TGU) or [datasheet](https://www.wika.com/media/Data-sheets/Temperature/Dial-thermometers/ds_tv1713_en_co.pdf).
+For more information see [product site](https://www.wika.com/en-en/tgu73_100.WIKA).

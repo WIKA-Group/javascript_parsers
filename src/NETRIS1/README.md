@@ -15,4 +15,4 @@ digitalisation strategy.
 
 ---
 
-For more information see [product site](https://www.wika.com/en-en/netris1.WIKA?highlightedText=Netris1) or [datasheet](https://www.wika.com/media/Data-sheets/ds_ac4001_en_co.pdf).
+For more information see [product site](https://www.wika.com/en-en/netris1.WIKA).

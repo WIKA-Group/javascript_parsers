@@ -14,4 +14,4 @@ for your digitalisation strategy.
 
 ---
 
-For more information see [product site](https://www.wika.com/en-en/pgu23_100_pgu26_100.WIKA?highlightedText=PGU) or [datasheet](https://www.wika.com/media/Data-sheets/Pressure/Pressure-gauges-with-output-signal/ds_pv4203_en_co.pdf).
+For more information see [product site](https://www.wika.com/en-en/pgu23_100_pgu26_100.WIKA).

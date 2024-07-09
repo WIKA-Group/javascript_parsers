@@ -2,7 +2,7 @@
 
 # Welcome to the WIKA LPWAN device parser repo
 
-This repository contains the JavaScript parser for our LPWAN devices:
+This repository ['java_script parsers'](https://github.com/WIKA-Group/javascript_parsers) contains the JavaScript parser for our LPWAN devices:
 
 * [PEW](src/PEW/) 
 * [PGU+NETRIS3](src/PGU_NETRIS3/)
@@ -14,6 +14,7 @@ This repository contains the JavaScript parser for our LPWAN devices:
 * [F98W6](src/F98W6/) 
 * [A2G](src/A2G/)
 * [TRW](src/TRW/)
+* [NETRIS2](src/NETRIS2/)
 
 The JavaScript parser converts the raw byte payload of our devices into a JavaScript object (defined in the uplink.schema.json file).
 
@@ -113,6 +114,8 @@ console.log(output);
 For more information about parser using see [JavaScript Parser Usage](/doc/JavaScriptUsage.md)
 
 # Release Notes
+2.2.0 
+ - Added the parser for NETRIS2.
 2.1.0 
  - Fixed an issue where the use of the function padStart affected the ES5 compatibility.
  - Added the parser for A2G.

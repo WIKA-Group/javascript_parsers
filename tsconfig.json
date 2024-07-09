@@ -1,13 +1,13 @@
 {
-    "compilerOptions": {
-      "target": "es5",
-      "module": "commonjs",
-      "allowJs": true,
-      "checkJs": true,
-      "noEmit": true,
-      "strict": true,
-    },
-    "include": [
-      "./src/**/index.js"
-    ]
-  }
+	"compilerOptions": {
+		"target": "es5",
+		"module": "commonjs",
+		"strict": true,
+		"esModuleInterop": true,
+		"skipLibCheck": true,
+		"forceConsistentCasingInFileNames": true,
+		"strictNullChecks": true,
+		"noUncheckedIndexedAccess": true
+	},
+	"include": ["./**/index.ts"]
+}

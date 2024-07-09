@@ -1,6 +1,6 @@
 {
   "name": "wika-pew-1000-driver",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "PEW-1000 LoRaWAN driver",
   "main": "index.js",
   "scripts": {

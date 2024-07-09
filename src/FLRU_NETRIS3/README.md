@@ -13,4 +13,4 @@ digitalisation strategy
 
 ---
 
-For more information see [product site](https://www.wika.com/en-en/flru.WIKA?highlightedText=FLRU) or [datasheet](https://www.wika.com/media/Data-sheets/Level/Continuous-measurement-with-float/ds_lm2013_en_co.pdf).
+For more information see [product site](https://www.wika.com/en-en/flru_sfi.WIKA).

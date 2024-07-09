@@ -13,4 +13,4 @@ The sensor enables simple condition monitoring. A temperature indication, in add
 
 ---
 
-For more information see [product site](https://www.wika.com/de-de/_pew_1000_pew_1200.WIKA?highlightedText=PEWEW) or [datasheet](https://www.wika.com/media/Data-sheets/Pressure/Pressure-sensors/ds_pe8723_en_co.pdf).
+For more information see [product site](https://www.wika.com/de-de/pew_1000.WIKA).
