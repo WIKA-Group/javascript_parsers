@@ -15,6 +15,7 @@ This repository ['java_script parsers'](https://github.com/WIKA-Group/javascript
 * [A2G](src/A2G/)
 * [TRW](src/TRW/)
 * [NETRIS2](src/NETRIS2/)
+* [PEU+NETRIS3](src/PEU_NETRIS3/)
 
 The JavaScript parser converts the raw byte payload of our devices into a JavaScript object (defined in the uplink.schema.json file).
 
@@ -25,7 +26,7 @@ Each folder for each device contains the following files:
 * driver-examples.spec.js -> contains the test driver for unit testing
 * driver.yaml -> contains some meta information
 * examples.json -> contains some input and output payload examples for unit testing
-* index.json -> contains source code of the payload parser
+* index.js -> contains source code of the payload parser
 * metadata.json -> contains some meta information about the parser
 * package.json -> contains more meta information and dependencies
 * uplink.json -> contains a complete object example
@@ -114,6 +115,9 @@ console.log(output);
 For more information about parser using see [JavaScript Parser Usage](/doc/JavaScriptUsage.md)
 
 # Release Notes
+2.3.0 
+ - Added the parser for PEU+NETRIS3.
+
 2.2.0 
  - Added the parser for NETRIS2.
 

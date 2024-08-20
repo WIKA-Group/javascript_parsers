@@ -1,6 +1,6 @@
 {
   "name": "wika-tru-netris3-driver",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "WIKA TRU+NETRIS3 LoRaWAN driver",
   "main": "index.js",
   "scripts": {

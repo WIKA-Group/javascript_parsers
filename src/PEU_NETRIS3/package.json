@@ -1,7 +1,7 @@
 {
-  "name": "wika-f98w6-driver",
+  "name": "wika-peu-netris3-driver",
   "version": "2.3.0",
-  "description": "WIKA F98W6 LoRaWAN driver",
+  "description": "WIKA PEU+NETRIS3 LoRaWAN driver",
   "main": "index.js",
   "scripts": {
     "test": "jest --collectCoverage"
