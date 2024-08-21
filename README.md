@@ -1,21 +1,21 @@
-![WIKA](assets/logo_wika.svg "WIKA")
+![WIKA](assets/logo_wika.png "WIKA")
 
 # Welcome to the WIKA LPWAN device parser repo
 
 This repository ['java_script parsers'](https://github.com/WIKA-Group/javascript_parsers) contains the JavaScript parser for our LPWAN devices:
 
-* [PEW](src/PEW/) 
-* [PGU+NETRIS3](src/PGU_NETRIS3/)
+* [A2G](src/A2G/)
+* [F98W6](src/F98W6/) 
+* [NETRIS1](src/NETRIS1/) 
+* [NETRIS2](src/NETRIS2/)
 * [FLRU+NETRIS3](src/FLRU_NETRIS3/) 
+* [PEU+NETRIS3](src/PEU_NETRIS3/)
+* [PGU+NETRIS3](src/PGU_NETRIS3/)
 * [TGU+NETRIS3](src/TGU_NETRIS3/)
 * [TRU+NETRIS3](src/TRU_NETRIS3/) 
-* [NETRIS1](src/NETRIS1/) 
+* [PEW](src/PEW/) 
 * [PGW23](src/PGW23_100_11/)
-* [F98W6](src/F98W6/) 
-* [A2G](src/A2G/)
 * [TRW](src/TRW/)
-* [NETRIS2](src/NETRIS2/)
-* [PEU+NETRIS3](src/PEU_NETRIS3/)
 
 The JavaScript parser converts the raw byte payload of our devices into a JavaScript object (defined in the uplink.schema.json file).
 
