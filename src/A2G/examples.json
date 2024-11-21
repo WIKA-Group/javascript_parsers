@@ -88,6 +88,38 @@
     },
     {
         "type": "uplink",
+        "description": "GoodCase data message: Uplink example for 01 data message only 1 measurement channel (only pressure for longer battery life)",
+        "input": {
+            "bytes": [
+                1,
+                1,
+                23,
+                190,
+                92,
+                249,
+                76
+            ],
+            "fPort": 1,
+            "recvTime": "1992-12-22T17:00:00+01:00"
+        },
+        "output": {
+            "data": {
+                "messageType": 1,
+                "configurationId": 1,
+                "measurement": {
+                    "channels": [
+                        {
+                            "value": -0.2158,
+                            "channelId": 0,
+                            "channelName": "pressure"
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    {
+        "type": "uplink",
         "description": "GoodCase data message: Uplink example for 01 data message with 2 active measurement channels (small value)",
         "input": {
             "bytes": [
@@ -533,7 +565,7 @@
         "output": {
             "data": {},
             "errors": [
-                "A2G (JS): Data message 01 needs at 27 bytes but got 3"
+                "A2G (JS): Data message 01 needs 7 or 27 bytes but got 3"
             ]
         }
     },
@@ -553,7 +585,7 @@
         "output": {
             "data": {},
             "errors": [
-                "A2G (JS): Data message 01 needs at 27 bytes but got 4"
+                "A2G (JS): Data message 01 needs 7 or 27 bytes but got 4"
             ]
         }
     },
@@ -725,6 +757,47 @@
                             "measurandName": "Input 4",
                             "unit": 46,
                             "unitName": "bin"
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    {
+        "type": "uplink",
+        "description": "GoodCase Radio unit identification message low power version: Uplink example for metrology information message",
+        "input": {
+            "bytes": [
+                7,  1, 13,  0, 18,  3,   5,  0, 50,
+               89, 48, 48, 48, 48, 49,  72, 71, 72,
+               90,  0,  0,  0,  0,  0, 197, 28, 64,
+                0, 69, 28, 64,  0,  1
+             ],
+            "fPort": 1,
+            "recvTime": "1992-12-22T17:00:00+01:00"
+        },
+        "output": {
+            "data": {
+                "messageType": 7,
+                "configurationId": 1,
+                "deviceInformation": {
+                    "productIdName": "A2G",
+                    "productId": 13,
+                    "productSubId": 0,
+                    "productSubIdName": "LoRaWAN",
+                    "serialNumber": "2Y00001HGHZ",
+                    "hardwareAssemblyTypeName": "A2G HE0 Full Assembly",
+                    "hardwareAssemblyTypeId": 0,
+                    "sensorHardwareVersion": "5",
+                    "sensorFirmwareVersion": "1.2.3",
+                    "channelConfigurations": [
+                        {
+                            "measurand": 3,
+                            "measurandName": "Pressure (gauge)",
+                            "unit": 1,
+                            "unitName": "Pa",
+                            "measurementRangeStart": -2500,
+                            "measurementRangeEnd": 2500
                         }
                     ]
                 }

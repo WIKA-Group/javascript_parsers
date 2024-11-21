@@ -1,0 +1,127 @@
+{
+  "data": {
+    "messageType": 1,
+    "configurationId": 4,
+    "errors": [],
+    "warnings": [],
+    "measurements": {
+      "channels": [
+        {
+          "channelId": 0,
+          "value": 7.507
+        },
+        {
+          "channelId": 1,
+          "value": 13.602
+        },
+        {
+          "channelId": 4,
+          "value": 9.555
+        }
+      ]
+    },
+    "processAlarms": [
+      {
+        "channelId": 0,
+        "alarmType": 0,
+        "alarmTypeName": "low threshold",
+        "event": 0,
+        "eventName": "triggered",
+        "value": 3.992
+      }
+    ],
+    "sensorTechnicalAlarms": [
+      {
+        "channelId": 0,
+        "alarmType": 10,
+        "alarmDescription": "recurring modbus communication error"
+      }
+    ],
+    "deviceAlarms": [
+      {
+        "alarmType": 0,
+        "alarmDescription": "low battery"
+      }
+    ],
+    "configurationStatus": {
+      "status": 2,
+      "statusDescription": "configuration successful",
+      "commandType": 4,
+      "mainConfiguration": {
+        "acquisitionTimeAlarmsOff": 60,
+        "publicationTimeFactorAlarmsOff": 5,
+        "acquisitionTimeAlarmsOn": 60,
+        "publicationTimeFactorAlarmsOn": 1
+      }
+    },
+    "deviceIdentification": {
+      "productId": 21,
+      "productSubId": 64,
+      "wirelessModuleFirmwareVersion": "0.2.0",
+      "wirelessModuleHardwareVersion": "0.1.0",
+      "serialNumber": "PHOENIX_FB",
+      "channels": {
+        "channel0": {
+          "measurand": "Pressure absolute",
+          "unit": "bar"
+        },
+        "channel1": {
+          "measurand": "Pressure gauge",
+          "unit": "Pa"
+        },
+        "channel2": {
+          "measurand": "Temperature",
+          "unit": "°C"
+        },
+        "channel3": {
+          "measurand": "Density",
+          "unit": "kg/m³"
+        },
+        "channel4": {
+          "measurand": "Pressure absolute",
+          "unit": "kPa"
+        },
+        "channel5": {
+          "measurand": "Pressure gauge",
+          "unit": "bar"
+        }
+      },
+      "gasMixtures": {
+        "Ar": 0,
+        "CF4": 0,
+        "He": 0,
+        "N2": 0,
+        "Novec4710": 0,
+        "O2": 0,
+        "SF6": 100,
+        "C02": 0
+      }
+    },
+    "channelRanges": {
+      "channel0": {
+        "min": 0,
+        "max": 12
+      },
+      "channel1": {
+        "min": 0,
+        "max": 200000
+      },
+      "channel2": {
+        "min": -40,
+        "max": 80
+      },
+      "channel3": {
+        "min": 0,
+        "max": 10
+      },
+      "channel4": {
+        "min": 0,
+        "max": 200
+      },
+      "channel5": {
+        "min": -1,
+        "max": 1
+      }
+    }
+  }
+}

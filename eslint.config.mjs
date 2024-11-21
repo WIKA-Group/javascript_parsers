@@ -4,7 +4,7 @@ import tseslint from 'typescript-eslint'
 
 export default [
 	{
-		files: ['**/*.js'],
+		files: ['**/*.js', '**/*.ts'],
 		languageOptions: {
 			sourceType: 'commonjs',
 			ecmaVersion: 5, // Specify ECMAScript version to 5

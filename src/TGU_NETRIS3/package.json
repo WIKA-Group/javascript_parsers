@@ -1,6 +1,6 @@
 {
   "name": "wika-tgu-netris3-driver",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "WIKA TGU+NETRIS3 LoRaWAN driver",
   "main": "index.js",
   "scripts": {

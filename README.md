@@ -6,6 +6,7 @@ This repository ['java_script parsers'](https://github.com/WIKA-Group/javascript
 
 * [A2G](src/A2G/)
 * [F98W6](src/F98W6/) 
+* [GD20W](src/GD20W/)
 * [NETRIS1](src/NETRIS1/) 
 * [NETRIS2](src/NETRIS2/)
 * [FLRU+NETRIS3](src/FLRU_NETRIS3/) 
@@ -27,6 +28,7 @@ Each folder for each device contains the following files:
 * driver.yaml -> contains some meta information
 * examples.json -> contains some input and output payload examples for unit testing
 * index.js -> contains source code of the payload parser
+* index.ts -> contains source code of the payload parser which gets transpiled to index.js file
 * metadata.json -> contains some meta information about the parser
 * package.json -> contains more meta information and dependencies
 * uplink.json -> contains a complete object example
@@ -115,6 +117,11 @@ console.log(output);
 For more information about parser using see [JavaScript Parser Usage](/doc/JavaScriptUsage.md)
 
 # Release Notes
+
+2.4.0
+ - Added the parser for GD20W
+ - Added support for A2G low power messages.
+
 2.3.0 
  - Added the parser for PEU+NETRIS3.
 

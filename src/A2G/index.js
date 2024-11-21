@@ -24,7 +24,7 @@
  * SPDX-License-Identifier: MIT
  * 
  * SPDX-FileName: index.js
- * SPDX-PackageVersion: 2.3.0
+ * SPDX-PackageVersion: 2.4.0
  *  
 */
 
@@ -173,26 +173,26 @@ function decode(input) {
         /* Data message */
         case 0x01:
             /* Check if all bytes needed for decoding are there */
-            if (input.bytes.length == 27) {
+            if (input.bytes.length === 27 || input.bytes.length === 7) {
                 // decode
                 output = decodeDataMessage(input);
             }
             else {
                 // Error, not enough bytes                
-                output = addErrorMessage(output, "Data message 01 needs at 27 bytes but got " + input.bytes.length);
+                output = addErrorMessage(output, "Data message 01 needs 7 or 27 bytes but got " + input.bytes.length);
             }
             break;
 
         /* Device identification */
         case 0x07:
             /* Check if all bytes needed for decoding are there */
-            if (input.bytes.length == 38) {
+            if (input.bytes.length == 38 || input.bytes.length == 33) {
                 // decode
                 output = decodeDeviceIdentification(input);
             }
             else {
                 // Error, not enough bytes                
-                output = addErrorMessage(output, "Identification message 07 needs 38 bytes, but got " + input.bytes.length);
+                output = addErrorMessage(output, "Identification message 07 needs 33 or 38 bytes, but got " + input.bytes.length);
             }
             break;
 
@@ -235,6 +235,18 @@ function decodeDataMessage(input) {
     output.data.measurement = {};
     output.data.measurement.channels = [];
     var measurementData;
+
+    if(input.bytes.length === 7){
+        var pressureData = input.bytes[3].toString(16).padStart(2, "0") + input.bytes[4].toString(16).padStart(2, "0") + input.bytes[5].toString(16).padStart(2, "0") + input.bytes[6].toString(16).padStart(2, "0");
+        pressureData = convertHexToFloatIEEE754(pressureData);
+        pressureData = Number(pressureData.toFixed(4));
+        output = addChannelData(output, pressureData, 0, CHANNEL_MEASURAND_CONFIGURATION_DEFAULT_ORDER[0]);
+        if (output.errors) {
+            // delete data from output
+            output.data = {}
+        }
+        return output;
+    }
 
     // channels 
     for (var byteIndex = 2, channelNumber = 0; byteIndex < input.bytes.length - 1; byteIndex += 4, channelNumber++) {
@@ -372,6 +384,12 @@ function decodeDeviceIdentification(input) {
 
     output.data.deviceInformation.channelConfigurations[0].unit = input.bytes[32];
     output.data.deviceInformation.channelConfigurations[0].unitName = lppReturnUnitFromId(output.data.deviceInformation.channelConfigurations[0].unit);
+
+    // if it is a low power uplink version, return the output
+    if(input.bytes.length === 33){
+        return output;
+    }
+
 
     // Channel 1 - Flow
     output.data.deviceInformation.channelConfigurations[1] = {};

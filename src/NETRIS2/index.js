@@ -1,4 +1,3 @@
-"use strict";
 /*&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&#    &&&
 &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&#    &&&
 &&&                                                                                               &&#    &&&
@@ -24,13 +23,12 @@
  * SPDX-License-Identifier: MIT
  *
  * SPDX-FileName: index.js
- * SPDX-PackageVersion: 2.3.0
+ * SPDX-PackageVersion: 2.4.0
  *
  */
 // ***********************************************************************************
 // Public Decoding Section
 // ***********************************************************************************
-Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * ! These ranges are always 4 ma - 20 ma according to the NETRIS2 device specification. Changing these values will result in incorrect decoding.
  */

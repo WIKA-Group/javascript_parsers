@@ -4,7 +4,8 @@
 	"description": "WIKA LoRaWAN driver npm packaged",
 	"main": "index.js",
 	"scripts": {
-		"build": "tsc",
+		"build": "tsc && find src -type f -name 'index.js' -exec sed -i '/Object\\.defineProperty(exports, \"__esModule\", { value: true });/d; /\"use strict\";/d' {} +",
+		"build:powershell": "tsc && Get-ChildItem -Path 'src' -Recurse -Filter 'index.js' | ForEach-Object { $Content = (Get-Content -Encoding UTF8 $_.FullName) ; $Content2 = $Content.replace('Object.defineProperty(exports, \"__esModule\", { value: true });', '');  $Content2.replace('\"use strict\";', '') | Out-File -Encoding utf8 $_.FullName}",
 		"test": "jest --collectCoverage",
 		"lint": "eslint src/**/index.js --no-ignore"
 	},

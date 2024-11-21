@@ -1,8 +1,8 @@
 {
-	"name": "wika-netris2-decoder",
+	"name": "wika-gd20w-decoder",
 	"version": "2.4.0",
 	"main": "index.js",
-	"description": "WIKA NETRIS2 LoRaWAN decoder",
+	"description": "WIKA GD20W LoRaWAN decoder",
 	"codecId": "0001",
 	"sourceUrl": "",
 	"vendorId": "02A3",
