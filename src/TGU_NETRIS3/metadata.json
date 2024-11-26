@@ -1,6 +1,6 @@
 {
   "name": "wika-tgu-netris3-decoder",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "main": "index.js",
   "description": "WIKA TGU+NETRIS3 LoRaWAN decoder",
   "codecId": "0001",

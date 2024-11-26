@@ -118,6 +118,9 @@ For more information about parser using see [JavaScript Parser Usage](/doc/JavaS
 
 # Release Notes
 
+2.4.1
+ - Fix GD20W image 
+
 2.4.0
  - Added the parser for GD20W
  - Added support for A2G low power messages.
