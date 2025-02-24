@@ -93,7 +93,6 @@
             "bytes": [
                 1,
                 1,
-                23,
                 190,
                 92,
                 249,
@@ -565,7 +564,7 @@
         "output": {
             "data": {},
             "errors": [
-                "A2G (JS): Data message 01 needs 7 or 27 bytes but got 3"
+                "A2G (JS): Data message 01 needs 6 or 27 bytes but got 3"
             ]
         }
     },
@@ -585,7 +584,7 @@
         "output": {
             "data": {},
             "errors": [
-                "A2G (JS): Data message 01 needs 7 or 27 bytes but got 4"
+                "A2G (JS): Data message 01 needs 6 or 27 bytes but got 4"
             ]
         }
     },
@@ -634,14 +633,96 @@
     },
     {
         "type": "uplink",
-        "description": "BadCase technical message: Unsupported message",
+        "description": "GoodCase technical message: Uplink example for 04 data message",
         "input": {
             "bytes": [
                 4,
                 0,
-                0,
+                15
+            ],
+            "fPort": 1,
+            "recvTime": "1992-12-22T17:00:00+01:00"
+        },
+        "output": {
+            "data": {
+                "messageType": 4,
+                "configurationId": 0,
+                "technicalAlarms": {
+                    "TemperatureInput4SignalOverload": false,
+                    "TemperatureInput3SignalOverload": false,
+                    "VoltageInput2SignalOverload": false,
+                    "VoltageInput1SignalOverload": false,
+                    "ModbusCommunicationError": true,
+                    "AnalogOutput2SignalOverload": true,
+                    "AnalogOutput1SignalOverload": true,
+                    "PressureSignalOverload": true
+                }
+            }
+        }
+    },
+    {
+        "type": "uplink",
+        "description": "BadCase technical message: Uplink example for 04 data message with incorrect length",
+        "input": {
+            "bytes": [
                 4,
-                0,
+                0
+            ],
+            "fPort": 1,
+            "recvTime": "1992-12-22T17:00:00+01:00"
+        },
+        "output": {
+            "data": {},
+            "errors": [
+                "A2G (JS): Alarm message 04 needs 3 bytes but got 2"
+            ]
+        }
+    },
+    {
+        "type": "uplink",
+        "description": "GoodCase radio unit message: Uplink example for 05 data message",
+        "input": {
+            "bytes": [
+                5,
+                13,
+                1,
+                2
+            ],
+            "fPort": 1,
+            "recvTime": "1992-12-22T17:00:00+01:00"
+        },
+        "output": {
+            "data": {
+                "messageType": 5,
+                "configurationId": 13,
+                "deviceAlarms": {
+                    "ADCConverterError": false,
+                    "PressureSensorNoResponseError": false,
+                    "PressureSensorTimeoutError": false,
+                    "FactoryOptionsWriteError": false,
+                    "FactoryOptionsDeleteError": false,
+                    "InvalidFactoryOptionsError": false,
+                    "UserSettingsInvalidError": false,
+                    "UserSettingsReadWriteError": true,
+                    "ZeroOffsetOverRangeError": false,
+                    "InvalidSignalSourceSpecifiedError": false,
+                    "AnalogOutput2OverTemperatureError": false,
+                    "AnalogOutput2LoadFaultError": false,
+                    "AnalogOutput2OverRangeError": false,
+                    "AnalogOutput1OverTemperatureError": false,
+                    "AnalogOutput1LoadFaultError": true,
+                    "AnalogOutput1OverRangeError": false
+                }
+            }
+        }
+    },
+    {
+        "type": "uplink",
+        "description": "BadCase radio unit message: Uplink example for 05 data message with incorrect length",
+        "input": {
+            "bytes": [
+                5,
+                13,
                 1
             ],
             "fPort": 1,
@@ -650,27 +731,7 @@
         "output": {
             "data": {},
             "errors": [
-                "A2G (JS): Data message type 04 not supported"
-            ]
-        }
-    },
-    {
-        "type": "uplink",
-        "description": "BadCase radio unit message: Unsupported message",
-        "input": {
-            "bytes": [
-                5,
-                13,
-                0,
-                5
-            ],
-            "fPort": 1,
-            "recvTime": "1992-12-22T17:00:00+01:00"
-        },
-        "output": {
-            "data": {},
-            "errors": [
-                "A2G (JS): Data message type 05 not supported"
+                "A2G (JS): Alarm message 05 needs 4 bytes but got 3"
             ]
         }
     },

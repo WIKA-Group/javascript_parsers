@@ -24,7 +24,7 @@
  * SPDX-License-Identifier: MIT
  * 
  * SPDX-FileName: index.js
- * SPDX-PackageVersion: 2.4.1
+ * SPDX-PackageVersion: 2.5.0
  *  
 */
 
@@ -123,6 +123,7 @@ var CHANNEL_MEASURAND_CONFIGURATION_DEFAULT_ORDER = ["pressure", "flow", "input_
 */
 var HARDWARE_ASSEMBLY_TYPE_NAME = { 0: "A2G HE0 Full Assembly", 1: "A2G HE1 1AO Assembly", 2: "A2G HE2 Modbus Assembly", 3: "A2G HE3 Modular Assembly", 128: "A2G LC1 LC1VAO", 129: "A2G LC2 CT", 130: "A2G LC3 BAT" };
 
+
 /**
  * The padStart() method of String values pads this string with another string (multiple times, if needed) until the resulting string reaches the given length.
  * The function is reimplemented to support ES5.
@@ -161,8 +162,6 @@ function decode(input) {
         case 0x00: // Message zero does not exist
         case 0x02: // Data message is not supported
         case 0x03: // Process alarm message is not supported
-        case 0x04: // Technical alarm message is not supported
-        case 0x05: // Device alarm message is not supported
         case 0x06: // Configuration status message is not supported
         case 0x09: // Extended device identification is not supported
 
@@ -173,15 +172,40 @@ function decode(input) {
         /* Data message */
         case 0x01:
             /* Check if all bytes needed for decoding are there */
-            if (input.bytes.length === 27 || input.bytes.length === 7) {
+            if (input.bytes.length === 27 || input.bytes.length === 6) {
                 // decode
                 output = decodeDataMessage(input);
             }
             else {
                 // Error, not enough bytes                
-                output = addErrorMessage(output, "Data message 01 needs 7 or 27 bytes but got " + input.bytes.length);
+                output = addErrorMessage(output, "Data message 01 needs 6 or 27 bytes but got " + input.bytes.length);
             }
             break;
+
+        /* Technical Alarm Message */
+        case 0x04: 
+            if(input.bytes.length === 3){
+                output = decodeTechnicalAlarmMessage(input);
+            }
+            else {
+                // Error, not enough bytes                
+                output = addErrorMessage(output, "Alarm message 04 needs 3 bytes but got " + input.bytes.length);
+            }
+            break;
+
+        /* Device alarm message */
+        case 0x05:
+            /* Check if all bytes needed for decoding are there */
+            if (input.bytes.length == 4) {
+                // decode
+                output = decodeDeviceAlarmMessage(input);
+            }
+            else {
+                // Error, not enough bytes                
+                output = addErrorMessage(output, "Alarm message 05 needs 4 bytes but got " + input.bytes.length);
+            }
+            break
+
 
         /* Device identification */
         case 0x07:
@@ -236,8 +260,8 @@ function decodeDataMessage(input) {
     output.data.measurement.channels = [];
     var measurementData;
 
-    if(input.bytes.length === 7){
-        var pressureData = input.bytes[3].toString(16).padStart(2, "0") + input.bytes[4].toString(16).padStart(2, "0") + input.bytes[5].toString(16).padStart(2, "0") + input.bytes[6].toString(16).padStart(2, "0");
+    if(input.bytes.length === 6){
+        var pressureData = input.bytes[2].toString(16).padStart(2, "0") + input.bytes[3].toString(16).padStart(2, "0") + input.bytes[4].toString(16).padStart(2, "0") + input.bytes[5].toString(16).padStart(2, "0");
         pressureData = convertHexToFloatIEEE754(pressureData);
         pressureData = Number(pressureData.toFixed(4));
         output = addChannelData(output, pressureData, 0, CHANNEL_MEASURAND_CONFIGURATION_DEFAULT_ORDER[0]);
@@ -264,6 +288,189 @@ function decodeDataMessage(input) {
     if (output.errors) {
         // delete data from output
         output.data = {}
+    }
+
+    return output;
+}
+
+/**
+ * Decodes an alarm message 04 into an object
+ * @access private
+ * @param {Object}              input           - An object provided by the IoT Flow framework
+ * @param {number[]}            input.bytes     - Array of bytes represented as numbers as it has been sent from the device
+ * @param {number}              input.fPort     - The Port Field on which the uplink has been sent
+ * @param {Date}                input.recvTime  - The uplink message time recorded by the LoRaWAN network server
+ * @returns {output}                     - The decoded object
+ */
+function decodeTechnicalAlarmMessage(input) {
+    // Output
+    var output = createOutputObject();
+
+    // data message type
+    output.data.messageType = input.bytes[0];
+
+    // current configuration id
+    output.data.configurationId = input.bytes[1];
+
+    var alarmByte = input.bytes[2];
+
+    output.data.technicalAlarms = {
+        "TemperatureInput4SignalOverload": false,
+        "TemperatureInput3SignalOverload": false,
+        "VoltageInput2SignalOverload": false,
+        "VoltageInput1SignalOverload": false,
+        "ModbusCommunicationError": false,
+        "AnalogOutput2SignalOverload": false,
+        "AnalogOutput1SignalOverload": false,
+        "PressureSignalOverload": false
+    }
+
+    if (alarmByte === 0x00){
+        return output;
+    }
+
+    if(alarmByte & 0b0000_0001){
+        output.data.technicalAlarms.PressureSignalOverload = true;
+    }
+
+    if(alarmByte & 0b0000_0010){
+        output.data.technicalAlarms.AnalogOutput1SignalOverload = true;
+    }
+
+    if(alarmByte & 0b0000_0100){
+        output.data.technicalAlarms.AnalogOutput2SignalOverload = true;
+    }
+
+    if(alarmByte & 0b0000_1000){
+        output.data.technicalAlarms.ModbusCommunicationError = true;
+    }
+
+    if(alarmByte & 0b0001_0000){
+        output.data.technicalAlarms.VoltageInput1SignalOverload = true;
+    }
+
+    if(alarmByte & 0b0010_0000){
+        output.data.technicalAlarms.VoltageInput2SignalOverload = true;
+    }
+
+    if(alarmByte & 0b0100_0000){
+        output.data.technicalAlarms.TemperatureInput3SignalOverload = true;
+    }
+
+    if(alarmByte & 0b1000_0000){
+        output.data.technicalAlarms.TemperatureInput4SignalOverload = true;
+    }
+
+    return output;
+}
+
+/**
+ * Decodes an alarm message 04 into an object
+ * @access private
+ * @param {Object}              input           - An object provided by the IoT Flow framework
+ * @param {number[]}            input.bytes     - Array of bytes represented as numbers as it has been sent from the device
+ * @param {number}              input.fPort     - The Port Field on which the uplink has been sent
+ * @param {Date}                input.recvTime  - The uplink message time recorded by the LoRaWAN network server
+ * @returns {output}                     - The decoded object
+ */
+function decodeDeviceAlarmMessage(input) {
+    // Output
+    var output = createOutputObject();
+
+    // data message type
+    output.data.messageType = input.bytes[0];
+
+    // current configuration id
+    output.data.configurationId = input.bytes[1];
+
+    var alarmByte1 = input.bytes[2];
+    var alarmByte2 = input.bytes[3];
+
+    output.data.deviceAlarms = {
+        "ADCConverterError": false,
+        "PressureSensorNoResponseError": false,
+        "PressureSensorTimeoutError": false,
+        "FactoryOptionsWriteError": false,
+        "FactoryOptionsDeleteError": false,
+        "InvalidFactoryOptionsError": false,
+        "UserSettingsInvalidError": false,
+        "UserSettingsReadWriteError": false,
+        "ZeroOffsetOverRangeError": false,
+        "InvalidSignalSourceSpecifiedError": false,
+        "AnalogOutput2OverTemperatureError": false,
+        "AnalogOutput2LoadFaultError": false,
+        "AnalogOutput2OverRangeError": false,
+        "AnalogOutput1OverTemperatureError": false,
+        "AnalogOutput1LoadFaultError": false,
+        "AnalogOutput1OverRangeError": false
+    }
+
+    if (alarmByte1 === 0x00 && alarmByte2 === 0x00){
+        return output;
+    }
+
+    if(alarmByte1 & 0b1000_0000){
+        output.data.deviceAlarms.ADCConverterError = true;
+    }
+
+    if(alarmByte1 & 0b0100_0000){
+        output.data.deviceAlarms.PressureSensorNoResponseError = true;
+    }
+
+    if(alarmByte1 & 0b0010_0000){
+        output.data.deviceAlarms.PressureSensorTimeoutError = true;
+    }
+
+    if(alarmByte1 & 0b0001_0000){
+        output.data.deviceAlarms.FactoryOptionsWriteError = true;
+    }
+
+    if(alarmByte1 & 0b0000_1000){
+        output.data.deviceAlarms.FactoryOptionsDeleteError = true;
+    }
+
+    if(alarmByte1 & 0b0000_0100){
+        output.data.deviceAlarms.InvalidFactoryOptionsError = true;
+    }
+
+    if(alarmByte1 & 0b0000_0010){
+        output.data.deviceAlarms.UserSettingsInvalidError = true;
+    }
+
+    if(alarmByte1 & 0b0000_0001){
+        output.data.deviceAlarms.UserSettingsReadWriteError = true;
+    }
+
+    if(alarmByte2 & 0b1000_0000){
+        output.data.deviceAlarms.ZeroOffsetOverRangeError = true;
+    }
+
+    if(alarmByte2 & 0b0100_0000){
+        output.data.deviceAlarms.InvalidSignalSourceSpecifiedError = true;
+    }
+
+    if(alarmByte2 & 0b0010_0000){
+        output.data.deviceAlarms.AnalogOutput2OverTemperatureError = true;
+    }
+
+    if(alarmByte2 & 0b0001_0000){
+        output.data.deviceAlarms.AnalogOutput2LoadFaultError = true;
+    }
+
+    if(alarmByte2 & 0b0000_1000){
+        output.data.deviceAlarms.AnalogOutput2OverRangeError = true;
+    }
+
+    if(alarmByte2 & 0b0000_0100){
+        output.data.deviceAlarms.AnalogOutput1OverTemperatureError = true;
+    }
+
+    if(alarmByte2 & 0b0000_0010){
+        output.data.deviceAlarms.AnalogOutput1LoadFaultError = true;
+    }
+
+    if(alarmByte2 & 0b0000_0001){
+        output.data.deviceAlarms.AnalogOutput1OverRangeError = true;
     }
 
     return output;

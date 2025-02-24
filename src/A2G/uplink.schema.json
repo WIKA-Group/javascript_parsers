@@ -31,6 +31,8 @@
                     "type": "integer",
                     "enum": [
                         1,
+                        4,
+                        5,
                         7,
                         8
                     ]
@@ -58,6 +60,12 @@
                 },
                 "deviceStatistic": {
                     "$ref": "#/definitions/KeepAlive"
+                },
+                "technicalAlarms": {
+                    "$ref": "#/definitions/TechnicalAlarm"
+                },
+                "deviceAlarms": {
+                    "$ref": "#/definitions/DeviceAlarm"
                 }
             },
             "additionalProperties": false,
@@ -289,6 +297,70 @@
             "required": [
                 "batteryLevelNewEvent",
                 "batteryLevelPercent"
+            ]
+        },
+        "TechnicalAlarm": {
+            "type": "object",
+            "properties": {
+                "TemperatureInput4SignalOverload": { "type": "boolean" },
+                "TemperatureInput3SignalOverload": { "type": "boolean" },
+                "VoltageInput2SignalOverload": { "type": "boolean" },
+                "VoltageInput1SignalOverload": { "type": "boolean" },
+                "ModbusCommunicationError": { "type": "boolean" },
+                "AnalogOutput2SignalOverload": { "type": "boolean" },
+                "AnalogOutput1SignalOverload": { "type": "boolean" },
+                "PressureSignalOverload": { "type": "boolean" }
+            },
+            "additionalProperties": false,
+            "required": [
+                "TemperatureInput4SignalOverload",
+                "TemperatureInput3SignalOverload",
+                "VoltageInput2SignalOverload",
+                "VoltageInput1SignalOverload",
+                "ModbusCommunicationError",
+                "AnalogOutput2SignalOverload",
+                "AnalogOutput1SignalOverload",
+                "PressureSignalOverload"
+            ]
+        },
+        "DeviceAlarm": {
+            "type": "object",
+            "properties": {
+                "ADCConverterError": { "type": "boolean" },
+                "PressureSensorNoResponseError": { "type": "boolean" },
+                "PressureSensorTimeoutError": { "type": "boolean" },
+                "FactoryOptionsWriteError": { "type": "boolean" },
+                "FactoryOptionsDeleteError": { "type": "boolean" },
+                "InvalidFactoryOptionsError": { "type": "boolean" },
+                "UserSettingsInvalidError": { "type": "boolean" },
+                "UserSettingsReadWriteError": { "type": "boolean" },
+                "ZeroOffsetOverRangeError": { "type": "boolean" },
+                "InvalidSignalSourceSpecifiedError": { "type": "boolean" },
+                "AnalogOutput2OverTemperatureError": { "type": "boolean" },
+                "AnalogOutput2LoadFaultError": { "type": "boolean" },
+                "AnalogOutput2OverRangeError": { "type": "boolean" },
+                "AnalogOutput1OverTemperatureError": { "type": "boolean" },
+                "AnalogOutput1LoadFaultError": { "type": "boolean" },
+                "AnalogOutput1OverRangeError": { "type": "boolean" }
+            },
+            "additionalProperties": false,
+            "required": [
+                "ADCConverterError",
+                "PressureSensorNoResponseError",
+                "PressureSensorTimeoutError",
+                "FactoryOptionsWriteError",
+                "FactoryOptionsDeleteError",
+                "InvalidFactoryOptionsError",
+                "UserSettingsInvalidError",
+                "UserSettingsReadWriteError",
+                "ZeroOffsetOverRangeError",
+                "InvalidSignalSourceSpecifiedError",
+                "AnalogOutput2OverTemperatureError",
+                "AnalogOutput2LoadFaultError",
+                "AnalogOutput2OverRangeError",
+                "AnalogOutput1OverTemperatureError",
+                "AnalogOutput1LoadFaultError",
+                "AnalogOutput1OverRangeError"
             ]
         }
     }

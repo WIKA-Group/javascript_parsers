@@ -117,6 +117,10 @@ console.log(output);
 For more information about parser using see [JavaScript Parser Usage](/doc/JavaScriptUsage.md)
 
 # Release Notes
+2.5.0
+ - Added parsing for the A2G alarm messages
+ - Fixed an issue A2G low power messages
+ - Fixed an issue GD20W schema and examples
 
 2.4.1
  - Fix GD20W image 

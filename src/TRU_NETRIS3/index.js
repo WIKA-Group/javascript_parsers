@@ -24,7 +24,7 @@
  * SPDX-License-Identifier: MIT
  * 
  * SPDX-FileName: index.js
- * SPDX-PackageVersion: 2.4.1
+ * SPDX-PackageVersion: 2.5.0
  *  
 */
 

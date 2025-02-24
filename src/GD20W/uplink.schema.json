@@ -828,12 +828,6 @@
                 "batteryPresent": {
                   "type": "boolean"
                 },
-                "numberOfMeasurements": {
-                  "type": "number"
-                },
-                "numberOfTransmissions": {
-                  "type": "number"
-                },
                 "restartedSinceLastKeepAlive": {
                   "type": "boolean"
                 }
@@ -842,9 +836,7 @@
                 "restartedSinceLastKeepAlive",
                 "batteryLevelPercent",
                 "batteryLevelCalculationError",
-                "batteryPresent",
-                "numberOfTransmissions",
-                "numberOfMeasurements"
+                "batteryPresent"
               ],
               "type": "object"
             },
