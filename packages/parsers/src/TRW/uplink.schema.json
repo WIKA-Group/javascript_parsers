@@ -1,0 +1,517 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+        "$schema": {
+            "type": "string"
+        },
+        "data": {
+            "$ref": "#/definitions/Data"
+        },
+        "errors": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "warnings": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        }
+    },
+    "additionalProperties": false,
+    "required": [],
+    "definitions": {
+        "Data": {
+            "type": "object",
+            "properties": {
+                "messageType": {
+                    "type": "integer",
+                    "maximum": 9,
+                    "minimum": 1
+                },
+                "configurationId": {
+                    "type": "integer"
+                },
+                "measurement": {
+                    "type": "object",
+                    "properties": {
+                        "channels": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Channel"
+                            }
+                        }
+                    },
+                    "additionalProperties": false,
+                    "required": [
+                        "channels"
+                    ]
+                },
+                "processAlarms": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ProcessAlarm"
+                    }
+                },
+                "technicalAlarms": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/TechnicalAlarm"
+                    }
+                },
+                "deviceAlarm": {
+                    "$ref": "#/definitions/DeviceAlarm"
+                },
+                "deviceInformation": {
+                    "$ref": "#/definitions/DeviceIdentification"
+                },
+                "deviceStatistic": {
+                    "$ref": "#/definitions/KeepAlive"
+                },
+                "channelFailureAlarm": {
+                    "$ref": "#/definitions/MeasurementInputFailure"
+                }
+            },
+            "additionalProperties": false,
+            "required": []
+        },
+        "measurement": {
+            "type": "object",
+            "properties": {
+                "batteryVoltage": {
+                    "type": "number"
+                },
+                "NewProperty": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Channel"
+                    }
+                }
+            },
+            "additionalProperties": false
+        },
+        "Channel": {
+            "type": "object",
+            "properties": {
+                "channelId": {
+                    "type": "integer",
+                    "maximum": 2,
+                    "minimum": 0
+                },
+                "channelName": {
+                    "type": "string",
+                    "enum": [
+                        "temperature"
+                    ]
+                },
+                "value": {
+                    "type": "number"
+                }
+            },
+            "additionalProperties": false,
+            "required": [
+                "channelId",
+                "channelName",
+                "value"
+            ]
+        },
+        "ProcessAlarm": {
+            "type": "object",
+            "properties": {
+                "channelId": {
+                    "type": "integer",
+                    "maximum": 1,
+                    "minimum": 0
+                },
+                "channelName": {
+                    "type": "string",
+                    "enum": [
+                        "temperature"
+                    ]
+                },
+                "event": {
+                    "type": "integer",
+                    "maximum": 1,
+                    "minimum": 0
+                },
+                "eventName": {
+                    "type": "string",
+                    "enum": [
+                        "triggered",
+                        "disappeared"
+                    ]
+                },
+                "alarmType": {
+                    "type": "integer"
+                },
+                "alarmTypeName": {
+                    "type": "string",
+                    "enum": [
+                        "low threshold",
+                        "high threshold",
+                        "falling slope",
+                        "rising slope",
+                        "low threshold with delay",
+                        "high threshold with delay"
+                    ]
+                },
+                "value": {
+                    "type": "number"
+                },
+                "sensorId": {
+                    "type": "integer"
+                }
+            },
+            "additionalProperties": false,
+            "required": [
+                "channelId",
+                "value",
+                "channelName",
+                "event",
+                "eventName",
+                "alarmType",
+                "alarmTypeName",
+                "sensorId"
+            ]
+        },
+        "TechnicalAlarm": {
+            "type": "object",
+            "properties": {
+                "alarmType": {
+                    "type": "integer"
+                },
+                "alarmTypeNames": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "SSM communication error",
+                            "SSM identity error"
+                        ]
+                    }
+                },
+                "sensorId": {
+                    "type": "integer"
+                }
+            },
+            "additionalProperties": false,
+            "required": [
+                "alarmTypeNames",
+                "alarmType",
+                "sensorId"
+            ]
+        },
+        "DeviceAlarm": {
+            "type": "object",
+            "properties": {
+                "alarmTypeNames": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "low battery error",
+                            "duty cycle alarm",
+                            "configuration error"
+                        ]
+                    }
+                },
+                "alarmType": {
+                    "type": "integer"
+                }
+            },
+            "additionalProperties": false,
+            "required": [
+                "alarmTypeNames",
+                "alarmType"
+            ]
+        },
+        "DeviceIdentification": {
+            "type": "object",
+            "properties": {
+                "productId": {
+                    "type": "integer",
+                    "maximum": 16,
+                    "minimum": 16
+                },
+                "productIdName": {
+                    "type": "string",
+                    "enum": [
+                        "NETRIS©1 BLE+LPWAN",
+                        "NETRIS©1 BLE",
+                        "Unknown"
+                    ]
+                },
+                "productSubId": {
+                    "type": "integer"
+                },
+                "productSubIdName": {
+                    "type": "string"
+                },
+                "wirelessModuleFirmwareVersion": {
+                    "type": "string"
+                },
+                "wirelessModuleHardwareVersion": {
+                    "type": "string"
+                },
+                "serialNumber": {
+                    "type": "string"
+                },
+                "measurementRangeStart": {
+                    "type": "integer"
+                },
+                "measurementRangeEnd": {
+                    "type": "number"
+                },
+                "measurand": {
+                    "type": "number"
+                },
+                "measurandName": {
+                    "type": "string",
+                    "enum": [
+                        "Temperature",
+                        "Temperature difference",
+                        "Pressure (gauge)",
+                        "Pressure (absolute)",
+                        "Pressure (differential)",
+                        "Flow (vol.)",
+                        "Flow (mass)",
+                        "Force",
+                        "Mass",
+                        "Level",
+                        "Length",
+                        "Volume",
+                        "Current",
+                        "Voltage",
+                        "Resistance",
+                        "Capacitance",
+                        "Inductance",
+                        "Relative",
+                        "Time",
+                        "Frequency",
+                        "Speed",
+                        "Acceleration",
+                        "Density",
+                        "Density (gauge pressure at 20 °C)",
+                        "Density (absolute pressure at 20 °C)",
+                        "Humidity (relative)",
+                        "Humidity (absolute)",
+                        "Angle of rotation / inclination",
+                        "Device specific",
+                        "Unknown",
+                        "[pF] picofarad",
+                        "[mH] millihenry",
+                        "[μH] henry",
+                        "[%] percent",
+                        "[‰] per mille",
+                        "[ppm]",
+                        "[°] degree",
+                        "[rad] radian",
+                        "counts, counter value",
+                        "[kg/m³]",
+                        "[g/m³]",
+                        "[mg/m³]",
+                        "[μg/m³]",
+                        "[kg/l]",
+                        "[g/l]",
+                        "[lb/ft³]",
+                        "[l/min] litre per minute",
+                        "[l/s] litre per second",
+                        "[m³/h] cubic metre per hour (cbm/h)",
+                        "[m³/s] cubic metre per second",
+                        "[cfm] cubic feet per minute",
+                        "[kg/s]",
+                        "[kg/h]",
+                        "[s]",
+                        "[min]",
+                        "[h] hour",
+                        "[d] day",
+                        "[Hz]",
+                        "[kHz]",
+                        "[m/s]",
+                        "[cm/s]",
+                        "[ft/min]",
+                        "[ft/s]",
+                        "[m/s²]",
+                        "[ft/s²]"
+                    ]
+                },
+                "unit": {
+                    "type": "number"
+                },
+                "unitName": {
+                    "type": "string",
+                    "enum": [
+                        "°C",
+                        "°F",
+                        "K",
+                        "°R",
+                        "bar",
+                        "mbar",
+                        "µbar",
+                        "Pa",
+                        "hPa",
+                        "kPa",
+                        "MPa",
+                        "psi",
+                        "lbf/ft²",
+                        "kN/m²",
+                        "N/cm²",
+                        "atm",
+                        "kg/cm²",
+                        "kg/mm²",
+                        "µmHg",
+                        "mmHg",
+                        "cmHg",
+                        "inHg",
+                        "mmH2O",
+                        "mH2O",
+                        "inH2O",
+                        "ftH2O",
+                        "N",
+                        "daN",
+                        "kN",
+                        "MN",
+                        "kp",
+                        "lbf",
+                        "ozf",
+                        "dyn",
+                        "kg",
+                        "g",
+                        "mg",
+                        "lb",
+                        "mm",
+                        "cm",
+                        "m",
+                        "µm",
+                        "ft",
+                        "in",
+                        "l",
+                        "ml",
+                        "m³",
+                        "gal (UK)",
+                        "gal (US)",
+                        "ft³",
+                        "in³",
+                        "mΩ",
+                        "Ω",
+                        "[kΩ] kiloohm",
+                        "μV",
+                        "mV",
+                        "V",
+                        "mA",
+                        "μA",
+                        "[μF] microfarad",
+                        "[nF] nanofarad",
+                        "[pF] picofarad",
+                        "[mH] millihenry",
+                        "[μH] henry",
+                        "[%] percent",
+                        "[‰] per mille",
+                        "[ppm]",
+                        "[°] degree",
+                        "[rad] radian",
+                        "counts, counter value",
+                        "[kg/m³]",
+                        "[g/m³]",
+                        "[mg/m³]",
+                        "[μg/m³]",
+                        "[kg/l]",
+                        "[g/l]",
+                        "[lb/ft³]",
+                        "[l/min] litre per minute",
+                        "[l/s] litre per second",
+                        "[m³/h] cubic metre per hour (cbm/h)",
+                        "[m³/s] cubic metre per second",
+                        "[cfm] cubic feet per minute",
+                        "[kg/s]",
+                        "[kg/h]",
+                        "[s]",
+                        "[min]",
+                        "[h] hour",
+                        "[d] day",
+                        "[Hz]",
+                        "[kHz]",
+                        "[m/s]",
+                        "[cm/s]",
+                        "[ft/min]",
+                        "[ft/s]",
+                        "[m/s²]",
+                        "[ft/s²]",
+                        "Unknown"
+                    ]
+                }
+            },
+            "additionalProperties": false,
+            "required": [
+                "productIdName",
+                "productId",
+                "wirelessModuleFirmwareVersion",
+                "wirelessModuleHardwareVersion",
+                "serialNumber",
+                "productSubId",
+                "productSubIdName",
+                "measurementRangeStart",
+                "measurementRangeEnd",
+                "unitName",
+                "unit",
+                "measurandName",
+                "measurand"
+            ]
+        },
+        "KeepAlive": {
+            "type": "object",
+            "properties": {
+                "batteryLevelNewEvent": {
+                    "type": "boolean"
+                },
+                "batteryLevelPercent": {
+                    "type": "integer"
+                }
+            },
+            "additionalProperties": false,
+            "required": [
+                "batteryLevelNewEvent",
+                "batteryLevelPercent"
+            ]
+        },
+        "MeasurementInputFailure": {
+            "type": "object",
+            "properties": {
+                "sensorId": {
+                    "type": "integer"
+                },
+                "channelId": {
+                    "type": "integer",
+                    "maximum": 1,
+                    "minimum": 0
+                },
+                "channelName": {
+                    "type": "string",
+                    "enum": [
+                        "temperature"
+                    ]
+                },
+                "alarmTypeNames": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "MV_STAT_ERROR",
+                            "MV_STAT_WARNING",
+                            "MV_STAT_LIM_HI",
+                            "MV_STAT_LIM_LO",
+                            "MV_STAT_WARNING_2"
+                        ]
+                    }
+                },
+                "alarmType": {
+                    "type": "integer"
+                }
+            },
+            "additionalProperties": false
+        }
+    }
+}

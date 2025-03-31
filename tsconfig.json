@@ -1,13 +1,27 @@
 {
-	"compilerOptions": {
-		"target": "es5",
-		"module": "commonjs",
-		"strict": true,
-		"esModuleInterop": true,
-		"skipLibCheck": true,
-		"forceConsistentCasingInFileNames": true,
-		"strictNullChecks": true,
-		"noUncheckedIndexedAccess": true
-	},
-	"include": ["./**/index.ts"]
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "paths": {
+      "@w2a-iiot/javascript-parsers": ["./packages/parsers/dist/index"],
+      "@w2a-iiot/javascript-parsers/*": ["./packages/parsers/dist/*/index"],
+      "@w2a-iiot/parsers": ["./packages/library/dist/index"]
+    },
+    "resolveJsonModule": true,
+    "strict": true,
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "noUncheckedIndexedAccess": true,
+    "declaration": true,
+    // We use tsup/vite instead of tsc to build the package, so we don't need to care about this option.
+    // Add outDir option to avoid tsconfig error in monorepo.
+    "esModuleInterop": true
+  },
+  "exclude": [
+    "**/dist/**",
+    "**/node_modules/**",
+    "**/**/*.js",
+    "./examples/**/*"
+  ]
 }

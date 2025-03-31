@@ -1,0 +1,17 @@
+{
+  "private": true,
+  "scripts": {
+    "build": "nitro build",
+    "request": "jiti ./scripts/request.ts",
+    "dev": "nitro dev",
+    "prepare": "nitro prepare",
+    "preview": "node .output/server/index.mjs"
+  },
+  "dependencies": {
+    "@w2a-iiot/parsers": "workspace:^"
+  },
+  "devDependencies": {
+    "consola": "^3.2.3",
+    "nitropack": "latest"
+  }
+}

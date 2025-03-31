@@ -1,0 +1,497 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$ref": "#/definitions/UplinkOutput",
+  "definitions": {
+    "UplinkOutput": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "warnings": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/OutputWarning"
+              }
+            },
+            "data": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "measurements": {
+                  "type": "object",
+                  "properties": {
+                    "channels": {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/definitions/ChannelMeasurement"
+                          },
+                          "minItems": 1,
+                          "maxItems": 1
+                        },
+                        {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/definitions/ChannelMeasurement"
+                          },
+                          "minItems": 2,
+                          "maxItems": 2
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "channels"
+                  ],
+                  "additionalProperties": false
+                },
+                "messageType": {
+                  "type": "number",
+                  "enum": [
+                    1,
+                    2
+                  ]
+                },
+                "configurationId": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "configurationId",
+                "measurements",
+                "messageType"
+              ]
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "warnings": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/OutputWarning"
+              }
+            },
+            "data": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "processAlarms": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "channelId": {
+                        "type": "number"
+                      },
+                      "channelName": {
+                        "type": "string"
+                      },
+                      "event": {
+                        "type": "number",
+                        "enum": [
+                          0,
+                          1
+                        ]
+                      },
+                      "eventName": {
+                        "type": "string",
+                        "enum": [
+                          "triggered",
+                          "disappeared"
+                        ]
+                      },
+                      "alarmType": {
+                        "type": "number"
+                      },
+                      "alarmTypeName": {
+                        "type": "string",
+                        "enum": [
+                          "low threshold",
+                          "high threshold",
+                          "falling slope",
+                          "rising slope",
+                          "low threshold with delay",
+                          "high threshold with delay"
+                        ]
+                      },
+                      "value": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "channelId",
+                      "channelName",
+                      "event",
+                      "eventName",
+                      "alarmType",
+                      "alarmTypeName",
+                      "value"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "messageType": {
+                  "type": "number",
+                  "const": 3
+                },
+                "configurationId": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "configurationId",
+                "messageType",
+                "processAlarms"
+              ]
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "warnings": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/OutputWarning"
+              }
+            },
+            "data": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "technicalAlarms": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "channelId": {
+                        "type": "number"
+                      },
+                      "channelName": {
+                        "type": "string"
+                      },
+                      "event": {
+                        "type": "number",
+                        "enum": [
+                          0,
+                          1
+                        ]
+                      },
+                      "eventName": {
+                        "type": "string",
+                        "enum": [
+                          "triggered",
+                          "disappeared"
+                        ]
+                      },
+                      "causeOfFailure": {
+                        "type": "number",
+                        "enum": [
+                          0,
+                          1,
+                          2,
+                          3,
+                          4,
+                          5
+                        ]
+                      },
+                      "causeOfFailureName": {
+                        "type": "string",
+                        "enum": [
+                          "no alarm",
+                          "open condition",
+                          "short condition",
+                          "saturated low",
+                          "saturated high",
+                          "ADC communication error"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "channelId",
+                      "channelName",
+                      "event",
+                      "eventName",
+                      "causeOfFailure",
+                      "causeOfFailureName"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "messageType": {
+                  "type": "number",
+                  "const": 4
+                },
+                "configurationId": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "configurationId",
+                "messageType",
+                "technicalAlarms"
+              ]
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "warnings": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/OutputWarning"
+              }
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "messageType": {
+                  "type": "number",
+                  "const": 6
+                },
+                "configurationStatus": {
+                  "type": "object",
+                  "properties": {
+                    "configurationId": {
+                      "type": "number"
+                    },
+                    "statusId": {
+                      "type": "string",
+                      "enum": [
+                        "0x20",
+                        "0x30",
+                        "0x60",
+                        "0x70"
+                      ]
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "configuration successful",
+                        "configuration rejected",
+                        "command successful",
+                        "command failed"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "configurationId",
+                    "statusId",
+                    "status"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "messageType",
+                "configurationStatus"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "warnings": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/OutputWarning"
+              }
+            },
+            "data": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "radioUnitIdentification": {
+                  "type": "object",
+                  "properties": {
+                    "productId": {
+                      "type": "number",
+                      "const": 14
+                    },
+                    "productSubId": {
+                      "type": "number",
+                      "const": 0
+                    },
+                    "radioUnitModemFirmwareVersion": {
+                      "type": "string"
+                    },
+                    "radioUnitModemHardwareVersion": {
+                      "type": "string"
+                    },
+                    "radioUnitFirmwareVersion": {
+                      "type": "string"
+                    },
+                    "radioUnitHardwareVersion": {
+                      "type": "string"
+                    },
+                    "serialNumber": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "productId",
+                    "productSubId",
+                    "radioUnitModemFirmwareVersion",
+                    "radioUnitModemHardwareVersion",
+                    "radioUnitFirmwareVersion",
+                    "radioUnitHardwareVersion",
+                    "serialNumber"
+                  ],
+                  "additionalProperties": false
+                },
+                "messageType": {
+                  "type": "number",
+                  "const": 7
+                },
+                "configurationId": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "configurationId",
+                "messageType",
+                "radioUnitIdentification"
+              ]
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "warnings": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/OutputWarning"
+              }
+            },
+            "data": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "deviceStatistic": {
+                  "type": "object",
+                  "properties": {
+                    "numberOfMeasurements": {
+                      "type": "number"
+                    },
+                    "numberOfTransmissions": {
+                      "type": "number"
+                    },
+                    "batteryResetSinceLastKeepAlive": {
+                      "type": "boolean"
+                    },
+                    "estimatedBatteryPercent": {
+                      "type": "number"
+                    },
+                    "batteryCalculationError": {
+                      "type": "boolean"
+                    },
+                    "radioUnitTemperatureLevel_C": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "numberOfMeasurements",
+                    "numberOfTransmissions",
+                    "batteryResetSinceLastKeepAlive",
+                    "estimatedBatteryPercent",
+                    "batteryCalculationError",
+                    "radioUnitTemperatureLevel_C"
+                  ],
+                  "additionalProperties": false
+                },
+                "messageType": {
+                  "type": "number",
+                  "const": 8
+                },
+                "configurationId": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "configurationId",
+                "deviceStatistic",
+                "messageType"
+              ]
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "$ref": "#/definitions/OutputFailure"
+        }
+      ]
+    },
+    "OutputWarning": {
+      "type": "string"
+    },
+    "ChannelMeasurement": {
+      "type": "object",
+      "properties": {
+        "channelId": {
+          "type": "number"
+        },
+        "value": {
+          "type": "number"
+        },
+        "channelName": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "channelId",
+        "value",
+        "channelName"
+      ],
+      "additionalProperties": false
+    },
+    "OutputFailure": {
+      "type": "object",
+      "properties": {
+        "errors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OutputError"
+          },
+          "description": "A list of error messages while decoding the provided payload."
+        }
+      },
+      "required": [
+        "errors"
+      ],
+      "additionalProperties": false
+    },
+    "OutputError": {
+      "type": "string"
+    }
+  }
+}

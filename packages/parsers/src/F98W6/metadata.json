@@ -1,0 +1,16 @@
+{
+  "name": "wika-f98w6-decoder",
+  "version": "3.0.0",
+  "main": "index.js",
+  "description": "WIKA F98W6 LoRaWAN decoder",
+  "codecId": "0001",
+  "sourceUrl": "https://github.com/WIKA-Group/javascript_parsers",
+  "vendorId": "02A3",
+  "specVersion": "1.0.0",
+  "codec": {
+    "encodeDownlink": false,
+    "decodeDownlink": false,
+    "examples": true,
+    "jsonSchemas": true
+  }
+}

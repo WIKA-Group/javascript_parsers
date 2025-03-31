@@ -1,0 +1,28 @@
+{
+  "name": "@w2a-iiot/raw-javascript-parsers",
+  "type": "module",
+  "version": "3.0.0",
+  "author": "WIKA Alexander Wiegand SE & Co. KG",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WIKA-Group/javascript_parsers.git"
+  },
+  "main": "./dist/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js"
+    },
+    "./*": {
+      "import": "./dist/*/index.js"
+    }
+  },
+  "scripts": {
+  },
+  "peerDependencies": {
+
+  },
+  "devDependencies": {
+
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "name": "@w2a-iiot/javascript-parsers",
+  "type": "module",
+  "version": "3.0.0",
+  "author": "WIKA Alexander Wiegand SE & Co. KG",
+  "license": "MIT",
+  "repository": {
+    "directory": "packages/parsers",
+    "type": "git",
+    "url": "git+https://github.com/WIKA-Group/javascript_parsers.git"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./*": {
+      "types": "./dist/*/index.d.ts",
+      "import": "./dist/*/index.js"
+    }
+  },
+  "scripts": {
+    "build:lib": "tsup --clean --splitting",
+    "build:parsers": "tsup --config tsup.parsers.config.ts",
+    "schema": "pnpm dlx jiti ./scripts/schema.ts",
+    "test:shared": "vitest ./src/shared.spec.ts",
+    "stub:lib": "tsup --clean --splitting --watch --onSuccess 'tsup --dts-only'"
+  },
+  "peerDependencies": {
+    "valibot": "^0.42.1"
+  },
+  "devDependencies": {
+    "ajv": "^8.12.0",
+    "better-ajv-errors": "^1.2.0",
+    "fast-glob": "^3.3.2",
+    "fs-extra": "^11.1.1",
+    "jiti": "^2.4.0",
+    "jszip": "^3.10.1",
+    "ts-json-schema-generator": "^2.0.0"
+  }
+
+}

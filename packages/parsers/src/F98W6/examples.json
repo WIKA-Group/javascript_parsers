@@ -1,0 +1,600 @@
+[
+  {
+    "type": "uplink",
+    "description": "GoodCase data message: Uplink example for 01 data message with 2 active measurement channels",
+    "input": {
+      "bytes": [
+        1,
+        65,
+        38,
+        28,
+        48,
+        26,
+        136
+      ],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 1,
+        "configurationId": 65,
+        "measurement": {
+          "channels": [
+            {
+              "channelId": 0,
+              "channelName": "strain",
+              "value": -17.75
+            },
+            {
+              "channelId": 1,
+              "channelName": "device temperature",
+              "value": 21.526
+            },
+            {
+              "channelId": 2,
+              "channelName": "battery voltage",
+              "value": 3.8
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase data message: Uplink example for 01 data message with 1 active measurement channels",
+    "input": {
+      "bytes": [
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1
+      ],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 1,
+        "configurationId": 0,
+        "measurement": {
+          "channels": [
+            {
+              "channelId": 0,
+              "channelName": "strain",
+              "value": -468.687
+            },
+            {
+              "channelId": 1,
+              "channelName": "device temperature",
+              "value": -83.734
+            },
+            {
+              "channelId": 2,
+              "channelName": "battery voltage",
+              "value": 0.1
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase data message: Uplink example for 02 data message with 2 active measurement channels",
+    "input": {
+      "bytes": [
+        2,
+        0,
+        35,
+        9,
+        185,
+        26,
+        240
+      ],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 2,
+        "configurationId": 0,
+        "measurement": {
+          "channels": [
+            {
+              "channelId": 0,
+              "channelName": "strain",
+              "value": -313.187
+            },
+            {
+              "channelId": 1,
+              "channelName": "device temperature",
+              "value": 23.138
+            },
+            {
+              "channelId": 2,
+              "channelName": "battery voltage",
+              "value": 3.5
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "BadCase data message: Uplink example for 00 data message",
+    "input": {
+      "bytes": [
+        0,
+        0,
+        0,
+        46,
+        151,
+        18,
+        83
+      ],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {},
+      "errors": [
+        "F98W6 (JS): Data message type 00 not supported"
+      ]
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "BadCase data message: Uplink example for no data",
+    "input": {
+      "bytes": [
+        1,
+        0,
+        0
+      ],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {},
+      "errors": [
+        "F98W6 (JS): Data message 01/02 needs 7 bytes but got 3"
+      ]
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase process alarm message: Uplink example for alert message low threshold",
+    "input": {
+      "bytes": [
+        3,
+        0,
+        1,
+        25,
+        180
+      ],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 3,
+        "configurationId": 0,
+        "processAlarms": [
+          {
+            "channelId": 0,
+            "channelName": "strain",
+            "event": 0,
+            "eventName": "triggered",
+            "alarmType": 1,
+            "alarmTypeName": "high threshold",
+            "value": -57.5
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase process alarm message: Uplink example for alert message rising slope",
+    "input": {
+      "bytes": [
+        3,
+        0,
+        139,
+        0,
+        127
+      ],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 3,
+        "configurationId": 0,
+        "processAlarms": [
+          {
+            "channelId": 1,
+            "channelName": "device temperature",
+            "event": 1,
+            "eventName": "disappeared",
+            "alarmType": 3,
+            "alarmTypeName": "rising slope",
+            "value": -43.031
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase process alarm message: Uplink example for alert message high threshold with delay for channel strain",
+    "input": {
+      "bytes": [
+        3,
+        15,
+        5,
+        5,
+        44
+      ],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 3,
+        "configurationId": 15,
+        "processAlarms": [
+          {
+            "channelId": 0,
+            "channelName": "strain",
+            "event": 0,
+            "eventName": "triggered",
+            "alarmType": 5,
+            "alarmTypeName": "high threshold with delay",
+            "value": -386
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase technical message: Uplink example for alert message general instrument error",
+    "input": {
+      "bytes": [
+        4,
+        0,
+        1
+      ],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 4,
+        "configurationId": 0,
+        "technicalAlarms": [
+          {
+            "alarmTypeName": "Punctual sensor error",
+            "alarmType": 1,
+            "event": 0,
+            "eventName": "triggered"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase technical message: Uplink example for channel alert",
+    "input": {
+      "bytes": [
+        4,
+        0,
+        129
+      ],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 4,
+        "configurationId": 0,
+        "technicalAlarms": [
+          {
+            "alarmTypeName": "Punctual sensor error",
+            "alarmType": 1,
+            "event": 1,
+            "eventName": "disappeared"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase radio unit message: Uplink example for Battery is low",
+    "input": {
+      "bytes": [
+        5,
+        0,
+        0,
+        28
+      ],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 5,
+        "configurationId": 0,
+        "deviceAlarm": {
+          "event": 0,
+          "eventName": "triggered",
+          "alarmType": 0,
+          "alarmTypeName": "low battery alarm",
+          "causeOfFailure": 0,
+          "causeOfFailureName": "generic",
+          "batteryValue": 2.8
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase radio unit message: Uplink example for UART communication error",
+    "input": {
+      "bytes": [
+        5,
+        0,
+        4
+      ],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 5,
+        "configurationId": 0,
+        "deviceAlarm": {
+          "event": 0,
+          "eventName": "triggered",
+          "alarmType": 4,
+          "alarmTypeName": "duty cycle alarm",
+          "causeOfFailure": 0,
+          "causeOfFailureName": "generic"
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase configuration status message: Uplink example for configuration successful",
+    "input": {
+      "bytes": [
+        6,
+        15,
+        32
+      ],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {},
+      "errors": [
+        "F98W6 (JS): Data message type 06 not supported"
+      ]
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase configuration status message: Uplink example for configuration rejected",
+    "input": {
+      "bytes": [
+        6,
+        10,
+        48
+      ],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {},
+      "errors": [
+        "F98W6 (JS): Data message type 06 not supported"
+      ]
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase Radio unit identification message: Uplink example for metrology information message",
+    "input": {
+      "bytes": [
+        7,
+        65,
+        18,
+        0,
+        2,
+        0,
+        1,
+        0,
+        50,
+        50,
+        48,
+        49,
+        48,
+        56,
+        48,
+        50,
+        52,
+        55,
+        0,
+        2,
+        195,
+        156,
+        64,
+        0,
+        67,
+        156,
+        64,
+        0,
+        194,
+        52,
+        0,
+        0,
+        66,
+        220,
+        0,
+        0,
+        185,
+        32
+      ],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 7,
+        "configurationId": 65,
+        "deviceInformation": {
+          "productIdName": "F98W6",
+          "productId": 18,
+          "productSubId": 0,
+          "productSubIdName": "LoRaWAN",
+          "wirelessModuleFirmwareVersion": "0.2.0",
+          "wirelessModuleHardwareVersion": "0.1.0",
+          "serialNumber": "2201080247",
+          "strainType": "gauge / relative",
+          "measurementRangeStartStrain": -312.5,
+          "measurementRangeEndStrain": 312.5,
+          "measurementRangeStartDeviceTemperature": -45.0,
+          "measurementRangeEndDeviceTemperature": 110.0,
+          "strainUnit": 185,
+          "strainUnitName": "µeps",
+          "deviceTemperatureUnit": 32,
+          "deviceTemperatureUnitName": "°C"
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase keep-alive message: Uplink example for keep alive",
+    "input": {
+      "bytes": [
+        8,
+        0,
+        63
+      ],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 8,
+        "configurationId": 0,
+        "deviceStatistic": {
+          "batteryLevelNewEvent": false,
+          "batteryLevelPercent": 63
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase keep-alive message: Uplink example for keep alive",
+    "input": {
+      "bytes": [
+        8,
+        0,
+        130
+      ],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 8,
+        "configurationId": 0,
+        "deviceStatistic": {
+          "batteryLevelNewEvent": true,
+          "batteryLevelPercent": 2
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink_hex",
+    "description": "GoodCase data message: Uplink example for 01 data message with 2 active measurement channels (hex)",
+    "input": {
+      "bytes": "0x 01 41 26 1c30 1a88",
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 1,
+        "configurationId": 65,
+        "measurement": {
+          "channels": [
+            {
+              "channelId": 0,
+              "channelName": "strain",
+              "value": -17.75
+            },
+            {
+              "channelId": 1,
+              "channelName": "device temperature",
+              "value": 21.526
+            },
+            {
+              "channelId": 2,
+              "channelName": "battery voltage",
+              "value": 3.8
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink_base64",
+    "description": "GoodCase data message: Uplink example for 01 data message with 2 active measurement channels (base64)",
+    "input": {
+      "bytes": "AUEmHDAaiA==",
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 1,
+        "configurationId": 65,
+        "measurement": {
+          "channels": [
+            {
+              "channelId": 0,
+              "channelName": "strain",
+              "value": -17.75
+            },
+            {
+              "channelId": 1,
+              "channelName": "device temperature",
+              "value": 21.526
+            },
+            {
+              "channelId": 2,
+              "channelName": "battery voltage",
+              "value": 3.8
+            }
+          ]
+        }
+      }
+    }
+  }
+]

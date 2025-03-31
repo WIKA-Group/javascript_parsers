@@ -1,0 +1,810 @@
+[
+  {
+    "type": "uplink",
+    "description": "GoodCase data message: Uplink example with 1 data message and no ongoing alarm",
+    "input": {
+      "bytes": [1, 32, 1, 24, 7],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "configurationId": 32,
+        "messageType": 1,
+        "measurements": {
+          "channels": [
+            {
+              "channelId": 0,
+              "channelName": "Electrical current",
+              "value": 9.8416
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase data message: Uplink example with 1 data message and no ongoing alarm with too many bytes",
+    "input": {
+      "bytes": [1, 32, 1, 24, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "configurationId": 32,
+        "messageType": 1,
+        "measurements": {
+          "channels": [
+            {
+              "channelId": 0,
+              "channelName": "Electrical current",
+              "value": 9.8416
+            }
+          ]
+        }
+      },
+      "warnings": [
+        "NETRIS2 (JS): Data message contains more than 7 bytes. Data might been decoded incorrectly. Contains 15 bytes."
+      ]
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase data message: Uplink example with 2 data messages and at least one ongoing alarm",
+    "input": {
+      "bytes": [2, 0, 3, 8, 211, 31, 144],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "configurationId": 0,
+        "messageType": 2,
+        "measurements": {
+          "channels": [
+            {
+              "channelId": 0,
+              "channelName": "Electrical current",
+              "value": 3.6144
+            },
+            {
+              "channelId": 1,
+              "channelName": "Electrical current",
+              "value": 12.928
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "BadCase data message: Uplink example for 00 data message",
+    "input": {
+      "bytes": [0, 0, 0, 46, 151, 18, 83],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "errors": ["NETRIS2 (JS): Data message type 0 is not supported"]
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "BadCase data message: Uplink example for no data",
+    "input": {
+      "bytes": [1, 0, 0],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "errors": ["NETRIS2 (JS): Data message 1 must contain at least 5 bytes. Contains 3 bytes."]
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "BadCase data message: Uplink example for not enough data",
+    "input": {
+      "bytes": [1, 0, 0, 46],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "errors": ["NETRIS2 (JS): Data message 1 must contain at least 5 bytes. Contains 4 bytes."]
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase process alarm message: Uplink example for alarm message low threshold",
+    "input": {
+      "bytes": [3, 17, 0, 0, 13, 115],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "configurationId": 17,
+        "messageType": 3,
+        "processAlarms": [
+          {
+            "channelId": 0,
+            "channelName": "Electrical current",
+            "alarmType": 0,
+            "alarmTypeName": "low threshold",
+            "eventName": "triggered",
+            "event": 0,
+            "value": 5.5088
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase process alarm message: Uplink example for alarm message rising slope",
+    "input": {
+      "bytes": [3, 15, 0, 139, 0, 217],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 3,
+        "configurationId": 15,
+        "processAlarms": [
+          {
+            "channelId": 1,
+            "channelName": "Electrical current",
+            "alarmType": 3,
+            "alarmTypeName": "rising slope",
+            "event": 1,
+            "eventName": "disappeared",
+            "value": 0.3472
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase process alarm message: Uplink example for alarm message triggered on channel 0 and 1 for high threshold with delay and high threshold",
+    "input": {
+      "bytes": [3, 1, 0, 5, 44, 168, 9, 38, 184],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 3,
+        "configurationId": 1,
+        "processAlarms": [
+          {
+            "channelId": 0,
+            "channelName": "Electrical current",
+            "alarmType": 5,
+            "alarmTypeName": "high threshold with delay",
+            "event": 0,
+            "eventName": "triggered",
+            "value": 18.2912
+          },
+          {
+            "channelId": 1,
+            "channelName": "Electrical current",
+            "alarmType": 1,
+            "alarmTypeName": "high threshold",
+            "event": 0,
+            "eventName": "triggered",
+            "value": 15.8592
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "BadCase process alarm message: Uplink example for alarm message with too few bytes (4)",
+    "input": {
+      "bytes": [3, 1, 0, 5],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "errors": ["NETRIS2 (JS): Process alarm message must contain at least 6 bytes. Contains 4 bytes."]
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "BadCase process alarm message: Uplink example for alarm message with not full process alarm message (bytes % 3 == 0)",
+    "input": {
+      "bytes": [3, 1, 0, 5, 44, 168, 9, 38],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "errors": ["NETRIS2 (JS): Process alarm message must contain a multiple of 3 bytes."]
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase technical alarm message: Uplink example for short condition on channel 0 and open condition on channel 1",
+    "input": {
+      "bytes": [4, 0, 3, 2, 1],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "configurationId": 0,
+        "messageType": 4,
+        "technicalAlarms": [
+          {
+            "channelId": 0,
+            "channelName": "Electrical current",
+            "event": 0,
+            "eventName": "triggered",
+            "causeOfFailure": 2,
+            "causeOfFailureName": "short condition"
+          },
+          {
+            "channelId": 1,
+            "channelName": "Electrical current",
+            "event": 0,
+            "eventName": "triggered",
+            "causeOfFailure": 1,
+            "causeOfFailureName": "open condition"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase technical alarm message: Uplink example for alarm disappeared on channel 1",
+    "input": {
+      "bytes": [4, 6, 2, 128],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "configurationId": 6,
+        "messageType": 4,
+        "technicalAlarms": [
+          {
+            "channelId": 1,
+            "channelName": "Electrical current",
+            "event": 1,
+            "eventName": "disappeared",
+            "causeOfFailure": 0,
+            "causeOfFailureName": "no alarm"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "BaseCase technical alarm message: Invalid causeOfFailure in technical alarm",
+    "input": {
+      "bytes": [4, 6, 2, 63],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "errors": ["NETRIS2 (JS): Invalid causeOfFailure in technical alarm: 7"]
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase configuration status message: Uplink example for configuration status message",
+    "input": {
+      "bytes": [6, 1, 32],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 6,
+        "configurationStatus": {
+          "configurationId": 1,
+          "statusId": 32,
+          "status": "configuration successful"
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase configuration status message: Uplink example for configuration status message",
+    "input": {
+      "bytes": [6, 23, 48],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 6,
+        "configurationStatus": {
+          "configurationId": 23,
+          "statusId": 48,
+          "status": "configuration rejected"
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "BadCase configuration status message: Uplink example for configuration status message with unsupported status",
+    "input": {
+      "bytes": [6, 1, 33],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "errors": ["NETRIS2 (JS): Configuration status message contains an invalid status: 33"]
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase radio unit identification message: Uplink example for radio unit identification message",
+    "input": {
+      "bytes": [7, 0, 14, 0, 1, 6, 0, 1, 16, 0, 0, 1, 49, 65, 49, 51, 55, 85, 57, 84, 48, 54, 75, 0],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 7,
+        "configurationId": 0,
+        "radioUnitIdentification": {
+          "productId": 14,
+          "productSubId": 0,
+          "radioUnitModemFirmwareVersion": "0.1.6",
+          "radioUnitModemHardwareVersion": "0.0.1",
+          "radioUnitFirmwareVersion": "1.0.0",
+          "radioUnitHardwareVersion": "0.0.1",
+          "serialNumber": "1A137U9T06K"
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "BadCase radio unit identification message: Uplink example for radio unit identification message with not enough bytes",
+    "input": {
+      "bytes": [7, 0, 14, 0, 1, 6, 0, 1, 16, 0, 0, 1, 49, 65, 49, 51, 55, 85, 57, 84],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "errors": [
+        "NETRIS2 (JS): Radio unit identification message must contain at least 24 bytes. Contains 20 bytes."
+      ]
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "BadCase radio unit identification message: Uplink example for radio unit identification message with invalid product id",
+    "input": {
+      "bytes": [7, 0, 0, 0, 1, 6, 0, 1, 16, 0, 0, 1, 49, 65, 49, 51, 55, 85, 57, 84, 48, 54, 75, 0],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "errors": [
+        "NETRIS2 (JS): Radio unit identification message contains an invalid product ID: 0, expected 0x0e (14)."
+      ]
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "BadCase radio unit identification message: Uplink example for radio unit identification message with invalid product sub id",
+    "input": {
+      "bytes": [7, 0, 14, 10, 1, 6, 0, 1, 16, 0, 0, 1, 49, 65, 49, 51, 55, 85, 57, 84, 48, 54, 75, 0],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "errors": [
+        "NETRIS2 (JS): Radio unit identification message contains an invalid product sub ID: 10, expected 0x00 (0)."
+      ]
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase keep alive message: Uplink example for keep alive message",
+    "input": {
+      "bytes": [8, 12, 0, 0, 0, 19, 0, 0, 0, 32, 99, 26],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 8,
+        "configurationId": 12,
+        "deviceStatistic": {
+          "numberOfMeasurements": 19,
+          "numberOfTransmissions": 32,
+          "batteryResetSinceLastKeepAlive": false,
+          "estimatedBatteryPercent": 99,
+          "batteryCalculationError": false,
+          "radioUnitTemperatureLevel_C": 26
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "BadCase keep alive message: Uplink example for keep alive message with not enough bytes",
+    "input": {
+      "bytes": [8, 12, 0, 0, 0, 19, 0, 0, 0, 32],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "errors": ["NETRIS2 (JS): Keep alive message must contain at least 12 bytes. Contains 10 bytes."]
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase downlink encoding of a factory reset",
+    "input": {
+      "deviceAction": "resetToFactory"
+    },
+    "output": {
+      "fPort": 10,
+      "bytes": [0, 1]
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase downlink encoding of a main configuration",
+    "input": {
+      "deviceAction": "setMainConfiguration",
+      "configurationId": 18,
+      "configuration": {
+        "measuringRateWhenNoAlarm": 3600,
+        "publicationFactorWhenNoAlarm": 2,
+        "measuringRateWhenAlarm": 600,
+        "publicationFactorWhenAlarm": 12
+      }
+    },
+    "output": {
+      "fPort": 10,
+      "bytes": [18, 2, 0, 0, 14, 16, 0, 2, 0, 0, 2, 88, 0, 12]
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "BadCase downlink encoding of a main configuration with wrong transaction id 0",
+    "input": {
+      "deviceAction": "setMainConfiguration",
+      "configurationId": 0,
+      "configuration": {
+        "measuringRateWhenNoAlarm": 3600,
+        "publicationFactorWhenNoAlarm": 2,
+        "measuringRateWhenAlarm": 600,
+        "publicationFactorWhenAlarm": 12
+      }
+    },
+    "output": {
+      "errors": ["NETRIS2 (JS): configurationId needs to be at least 1"]
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "BadCase downlink encoding of a main configuration with wrong transaction id 40",
+    "input": {
+      "deviceAction": "setMainConfiguration",
+      "configurationId": 40,
+      "configuration": {
+        "measuringRateWhenNoAlarm": 3600,
+        "publicationFactorWhenNoAlarm": 2,
+        "measuringRateWhenAlarm": 600,
+        "publicationFactorWhenAlarm": 12
+      }
+    },
+    "output": {
+      "errors": ["NETRIS2 (JS): configurationId needs to be at most 31"]
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "BadCase downlink encoding of a main configuration with too high 'measuringRateWhenNoAlarm'",
+    "input": {
+      "deviceAction": "setMainConfiguration",
+      "configurationId": 18,
+      "configuration": {
+        "measuringRateWhenNoAlarm": 100000,
+        "publicationFactorWhenNoAlarm": 2,
+        "measuringRateWhenAlarm": 600,
+        "publicationFactorWhenAlarm": 12
+      }
+    },
+    "output": {
+      "errors": [
+        "NETRIS2 (JS): measuringRateWhenNoAlarm needs to be at most 86,400"
+      ]
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "BadCase downlink encoding of a main configuration with'measuringRateWhenNoAlarm' * 'publicationFactorWhenNoAlarm' is more than 172800",
+    "input": {
+      "deviceAction": "setMainConfiguration",
+      "configurationId": 18,
+      "configuration": {
+        "measuringRateWhenNoAlarm": 80000,
+        "publicationFactorWhenNoAlarm": 2800,
+        "measuringRateWhenAlarm": 600,
+        "publicationFactorWhenAlarm": 12
+      }
+    },
+    "output": {
+      "errors": [
+        "NETRIS2 (JS): Measuring rate when no alarm * publication factor must be less than or equal to 172800"
+      ]
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase downlink encoding of a battery indicator",
+    "input": {
+      "deviceAction": "resetBatteryIndicator",
+      "configurationId": 25
+
+    },
+    "output": {
+      "fPort": 10,
+      "bytes": [25, 5]
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase downlink encoding of a battery indicator",
+    "input": {
+      "deviceAction": "resetBatteryIndicator",
+      "configurationId": 25
+    },
+    "output": {
+      "fPort": 10,
+      "bytes": [25, 5]
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase downlink encoding with disable channel1",
+    "input": {
+      "deviceAction": "disableChannel",
+      "configurationId": 11,
+      "configuration": {
+        "channel1": {
+          "disable": true
+        }
+      }
+    },
+    "output": {
+      "fPort": 10,
+      "bytes": [11, 17, 2]
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "BadCase downlink encoding with no channels",
+    "input": {
+      "deviceAction": "disableChannel",
+      "configurationId": 11,
+      "configuration": {
+      }
+    },
+    "output": {
+      "errors": [
+        "NETRIS2 (JS): At least one channel must be present when disabling channels"
+      ]
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase downlink encoding with set process alarm message for channel0",
+    "input": {
+      "deviceAction": "setProcessAlarmConfiguration",
+      "configurationId": 24,
+      "configuration": {
+        "channel0": {
+          "deadBand": 0.5,
+          "alarms": {
+            "lowThreshold": 23.58
+          }
+        }
+      }
+    },
+    "output": {
+      "fPort": 10,
+      "bytes": [24, 32, 0, 0, 0, 50, 128, 18, 250]
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase downlink encoding of process alarms with both channels",
+    "input": {
+      "deviceAction": "setProcessAlarmConfiguration",
+      "configurationId": 15,
+      "configuration": {
+        "channel0": {
+          "deadBand": 0,
+          "alarms": {
+            "highThreshold": 95,
+            "risingSlope": 1,
+            "fallingSlope": 7.2
+          }
+        },
+        "channel1": {
+          "deadBand": 0.5,
+          "alarms": {
+            "lowThresholdWithDelay": {
+              "value": 40,
+              "delay": 1800
+            }
+          }
+        }
+      }
+    },
+    "output": {
+      "fPort": 10,
+      "bytes": [
+        15,
+        32,
+        0,
+        0,
+        0,
+        0,
+        112,
+        46,
+        224,
+        2,
+        208,
+        0,
+        100,
+        32,
+        0,
+        1,
+        0,
+        50,
+        8,
+        25,
+        100,
+        7,
+        8
+      ]
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "BadCase downlink encoding of process alarms with both channels is invalid",
+    "input": {
+      "deviceAction": "setProcessAlarmConfiguration",
+      "configurationId": 24,
+      "configuration": {
+
+      }
+    },
+    "output": {
+      "errors": [
+        "NETRIS2 (JS): At least one channel must be present when configuring process alarms"
+      ]
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase downlink encoding of setting measurement offset",
+    "input": {
+      "deviceAction": "setMeasureOffsetConfiguration",
+      "configurationId": 4,
+      "configuration": {
+        "channel0": { "measureOffset": -0.23 },
+        "channel1": { "measureOffset": 0 }
+      }
+    },
+    "output": {
+      "fPort": 10,
+      "bytes": [
+        4,
+        48,
+        3,
+        255,
+        233,
+        0,
+        0
+      ]
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "BadCase downlink encoding of setting measurement offset with no channels",
+    "input": {
+      "deviceAction": "setMeasureOffsetConfiguration",
+      "configurationId": 4,
+      "configuration": {
+      }
+    },
+    "output": {
+      "errors": [
+        "NETRIS2 (JS): At least one channel offset must be present when configuring offsets"
+      ]
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "BadCase downlink encoding of setting measruement offset but channel0 has invalid offset",
+    "input": {
+      "deviceAction": "setMeasureOffsetConfiguration",
+      "configurationId": 4,
+      "configuration": {
+        "channel0": { "measureOffset": 10.23 }
+      }
+    },
+    "output": {
+      "errors": [
+        "NETRIS2 (JS): measureOffset of channel0 needs to be at most 5"
+      ]
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase downlink encoding of setting startUp time",
+    "input": {
+      "deviceAction": "setStartUpTimeConfiguration",
+      "configurationId": 1,
+      "configuration": {
+        "channel0": { "startUpTime": 4 },
+        "channel1": { "startUpTime": 0.1 }
+      }
+    },
+    "output": {
+      "fPort": 10,
+      "bytes": [
+        1,
+        96,
+        3,
+        0,
+        40,
+        0,
+        1
+      ]
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "BadCase downlink encoding of setting startUp time with invalid channel0StartUpTime",
+    "input": {
+      "deviceAction": "setStartUpTimeConfiguration",
+      "configurationId": 1,
+      "configuration": {
+        "channel0": { "startUpTime": 200 },
+        "channel1": { "startUpTime": 0.1 }
+      }
+    },
+    "output": {
+      "errors": [
+        "NETRIS2 (JS): startUpTime of channel0 needs to be at most 15"
+      ]
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "BadCase downlink encoding of setting startUp time with no channels",
+    "input": {
+      "deviceAction": "setStartUpTimeConfiguration",
+      "configurationId": 1,
+      "configuration": {
+      }
+    },
+    "output": {
+      "errors": [
+        "NETRIS2 (JS): At least one channel start up time must be present when configuring start up times"
+      ]
+    }
+  }
+]

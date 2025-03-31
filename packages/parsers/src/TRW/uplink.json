@@ -1,0 +1,88 @@
+{
+  "$schema": "./uplink.schema.json",
+  "data": {
+    "messageType": 1,
+    "configurationId": 0,
+    "measurement": {
+      "channels": [
+        {
+          "channelId": 0,
+          "channelName": "temperature",
+          "value": 0.751
+        }
+      ]
+    },
+    "processAlarms": [
+      {
+        "channelId": 0,
+        "channelName": "temperature",
+        "event": 0,
+        "eventName": "triggered",
+        "alarmType": 5,
+        "alarmTypeName": "high threshold with delay",
+        "sensorId": 0,
+        "value": 8.932
+      },
+      {
+        "channelId": 0,
+        "channelName": "temperature",
+        "event": 0,
+        "eventName": "triggered",
+        "alarmType": 1,
+        "alarmTypeName": "high threshold",
+        "sensorId": 0,
+        "value": 7.412
+      }
+    ],
+    "technicalAlarms": [{
+      "alarmType": 129,
+      "sensorId": 0,
+      "alarmTypeNames": [
+        "SSM communication error",
+        "SSM identity error"
+      ]
+    }],
+    "deviceAlarm": {
+      "alarmType": 13,
+      "alarmTypeNames": [
+        "low battery error",
+        "duty cycle alarm",
+        "configuration error"
+      ]
+    },
+    "deviceInformation": {
+      "productIdName": "NETRIS©1 BLE+LPWAN",
+      "productId": 16,
+      "wirelessModuleFirmwareVersion": "0.2.0",
+      "wirelessModuleHardwareVersion": "0.1.0",
+      "serialNumber": "1A2B3C4D5E6",
+      "productSubId": 64,
+      "productSubIdName": "LoRa TRW",
+      "measurementRangeStart": 0,
+      "measurementRangeEnd": 10,
+      "measurand": 14,
+      "measurandName": "Temperature",
+      "unit": 88,
+      "unitName": "°C"
+    },
+    "deviceStatistic": {
+      "batteryLevelNewEvent": false,
+      "batteryLevelPercent": 63
+    },
+    "channelFailureAlarm": {
+      "sensorId": 0,
+      "channelId": 0,
+      "channelName": "temperature",
+      "alarmType": 31,
+      "alarmTypeNames": [
+        "MV_STAT_ERROR",
+        "MV_STAT_WARNING",
+        "MV_STAT_LIM_HI",
+        "MV_STAT_LIM_LO",
+        "MV_STAT_WARNING_2"
+      ]
+    }
+  },
+  "errors": [],
+  "warnings": []
+}

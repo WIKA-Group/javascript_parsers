@@ -1,0 +1,16 @@
+{
+  "name": "wika-gd20w-decoder",
+  "version": "3.0.0",
+  "main": "index.js",
+  "description": "WIKA GD20W LoRaWAN decoder",
+  "codecId": "0001",
+  "sourceUrl": "https://github.com/WIKA-Group/javascript_parsers",
+  "vendorId": "02A3",
+  "specVersion": "1.0.0",
+  "codec": {
+    "encodeDownlink": false,
+    "decodeDownlink": false,
+    "examples": true,
+    "jsonSchemas": true
+  }
+}

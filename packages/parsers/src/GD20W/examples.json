@@ -1,0 +1,368 @@
+[
+  {
+    "type": "uplink",
+    "description": "Good case uplink - data message with channels 1,2 and 5 and no ongoing alarm",
+    "input": {
+      "fPort": 1,
+      "bytes": [
+        1,
+        4,
+        0,
+        18,
+        84,
+        1,
+        33,
+        53,
+        4,
+        23,
+        84
+      ],
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 1,
+        "configurationId": 4,
+        "measurements": {
+          "channels": [
+            {
+              "channelId": 0,
+              "value": 7.507
+            },
+            {
+              "channelId": 1,
+              "value": 13.602
+            },
+            {
+              "channelId": 4,
+              "value": 9.555
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "Good case uplink- process alarm message for channel 0 with high threshold alarm",
+    "input": {
+      "fPort": 1,
+      "bytes": [3, 7, 0, 0, 9, 191],
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 3,
+        "configurationId": 7,
+        "processAlarms": [
+          {
+            "channelId": 0,
+            "alarmType": 0,
+            "alarmTypeName": "low threshold",
+            "event": 0,
+            "eventName": "triggered",
+            "value": 3.992
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "Good case uplink - sensor technical alarm message for channel 0 with alarmtype 0400",
+    "input": {
+      "fPort": 1,
+      "bytes": [4, 5, 0, 4, 0],
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 4,
+        "configurationId": 5,
+        "sensorTechnicalAlarms": [
+          {
+            "channelId": 0,
+            "alarmType": 10,
+            "alarmDescription": "recurring modbus communication error"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "Good case uplink - Device alarm message with battery low alarm triggered",
+    "input": {
+      "fPort": 1,
+      "bytes": [5, 2, 0, 1],
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 5,
+        "configurationId": 2,
+        "deviceAlarms": [
+          {
+            "alarmType": 0,
+            "alarmDescription": "low battery"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "Good case uplink - Configuration status message with main configuration",
+    "input": {
+      "fPort": 1,
+      "bytes": [
+        6,
+        1,
+        32,
+        4,
+        0,
+        0,
+        0,
+        60,
+        0,
+        5,
+        0,
+        0,
+        0,
+        60,
+        0,
+        1,
+        0
+      ],
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 6,
+        "configurationId": 1,
+        "configurationStatus": {
+          "status": 2,
+          "statusDescription": "configuration successful",
+          "commandType": 4,
+          "mainConfiguration": {
+            "acquisitionTimeAlarmsOff": 60,
+            "publicationTimeFactorAlarmsOff": 5,
+            "acquisitionTimeAlarmsOn": 60,
+            "publicationTimeFactorAlarmsOn": 1
+          }
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "Good case uplink - Device identification message",
+    "input": {
+      "fPort": 1,
+      "bytes": [
+        7,
+        0,
+        21,
+        64,
+        2,
+        0,
+        1,
+        0,
+        80,
+        72,
+        79,
+        69,
+        78,
+        73,
+        88,
+        95,
+        70,
+        66,
+        0,
+        4,
+        7,
+        3,
+        10,
+        1,
+        1,
+        23,
+        110,
+        4,
+        12,
+        3,
+        7,
+        100,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 7,
+        "configurationId": 0,
+        "deviceIdentification": {
+          "productId": 21,
+          "productSubId": 64,
+          "wirelessModuleFirmwareVersion": "0.2.0",
+          "wirelessModuleHardwareVersion": "0.1.0",
+          "serialNumber": "PHOENIX_FB",
+          "channels": {
+            "channel0": {
+              "measurand": "Pressure absolute",
+              "unit": "bar"
+            },
+            "channel1": {
+              "measurand": "Pressure gauge",
+              "unit": "Pa"
+            },
+            "channel2": {
+              "measurand": "Temperature",
+              "unit": "°C"
+            },
+            "channel3": {
+              "measurand": "Density",
+              "unit": "kg/m³"
+            },
+            "channel4": {
+              "measurand": "Pressure absolute",
+              "unit": "kPa"
+            },
+            "channel5": {
+              "measurand": "Pressure gauge",
+              "unit": "bar"
+            }
+          },
+          "gasMixtures": {
+            "Ar": 0,
+            "CF4": 0,
+            "He": 0,
+            "N2": 0,
+            "Novec4710": 0,
+            "O2": 0,
+            "SF6": 100,
+            "C02": 0
+          }
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "Good case uplink - Keep alive message with restart event and 99% battery estimation",
+    "input": {
+      "fPort": 1,
+      "bytes": [8, 0, 99],
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 8,
+        "configurationId": 0,
+        "batteryLevelIndicator": {
+          "batteryLevelPercent": 99,
+          "batteryLevelCalculationError": false,
+          "batteryPresent": true,
+          "restartedSinceLastKeepAlive": false
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "Good case uplink - Extended device identification message with measuring ranges",
+    "input": {
+      "fPort": 1,
+      "bytes": [
+        9,
+        0,
+        0,
+        0,
+        0,
+        0,
+        65,
+        64,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        72,
+        67,
+        80,
+        0,
+        194,
+        32,
+        0,
+        0,
+        66,
+        160,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        65,
+        32,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        67,
+        72,
+        0,
+        0,
+        191,
+        128,
+        0,
+        0,
+        63,
+        128,
+        0,
+        0
+      ],
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 9,
+        "configurationId": 0,
+        "channelRanges": {
+          "channel0": {
+            "min": 0,
+            "max": 12
+          },
+          "channel1": {
+            "min": 0,
+            "max": 200000
+          },
+          "channel2": {
+            "min": -40,
+            "max": 80
+          },
+          "channel3": {
+            "min": 0,
+            "max": 10
+          },
+          "channel4": {
+            "min": 0,
+            "max": 200
+          },
+          "channel5": {
+            "min": -1,
+            "max": 1
+          }
+        }
+      }
+    }
+  }
+]

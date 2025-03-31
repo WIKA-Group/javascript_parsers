@@ -1,0 +1,75 @@
+{
+  "$schema": "./uplink.schema.json",
+  "data": {
+    "messageType": 1,
+    "configurationId": 0,
+    "measurement": {
+      "channels": [
+        {
+          "channelId": 0,
+          "channelName": "temperature",
+          "value": 94.27
+
+        }
+      ]
+    },
+    "processAlarms": [
+      {
+        "channelId": 0,
+        "channelName": "temperature",
+        "event": 0,
+        "eventName": "triggered",
+        "alarmType": 0,
+        "alarmTypeName": "low threshold",
+        "value": 94.3
+      }
+    ],
+    "technicalAlarms": [
+      {
+        "alarmType": 4,
+        "alarmTypeName": "STAT_DEV",
+        "causeOfFailure": 1,
+        "causeOfFailureName": "STAT_DEV_ERROR"
+      }
+    ],
+    "deviceAlarm": {
+      "alarmStatus": 5,
+      "alarmStatusNames": [
+        "low battery",
+        "duty cycle alarm"
+      ]
+    },
+    "deviceInformation": {
+      "productId": 15,
+      "productIdName": "NETRIS3",
+      "productSubId": 0,
+      "productSubIdName": "LoRaWAN",
+      "sensorDeviceTypeId": 20,
+      "channelConfigurations": [
+        {
+          "measurand": 10,
+          "measurandName": "Level",
+          "measurementRangeStart": 0.0,
+          "measurementRangeEnd": 1000.0,
+          "unit": 60,
+          "unitName": "mm"
+        }
+      ]
+    },
+    "deviceStatistic": {
+      "numberOfMeasurements": 13074849,
+      "numberOfTransmissions": 7120120
+    },
+    "extendedDeviceInformation": {
+      "optionalFieldsMask": 15,
+      "wikaSensorSerialNumber": "ReedMuster-1",
+      "sensorLUID": 12345678,
+      "sensorHardwareVersion": "0.3.0",
+      "deviceHardwareVersion": "1.0.0",
+      "sensorFirmwareVersion": "0.4.2",
+      "deviceSerialNumber": "N013630",
+      "deviceProductCode": "N6EUSX2",
+      "deviceFirmwareVersion": "3.1.6"
+    }
+  }
+}
