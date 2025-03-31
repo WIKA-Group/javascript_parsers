@@ -1,5 +1,0 @@
-# Ignore all JavaScript files
-*.js
-
-# Allow index.js files in any directory
-!**/index.js
