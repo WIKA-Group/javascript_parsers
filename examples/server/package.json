@@ -1,7 +1,6 @@
 {
   "private": true,
   "scripts": {
-    "build": "nitro build",
     "request": "jiti ./scripts/request.ts",
     "dev": "nitro dev",
     "prepare": "nitro prepare",

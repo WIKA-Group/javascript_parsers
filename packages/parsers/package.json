@@ -1,7 +1,7 @@
 {
-  "name": "@w2a-iiot/javascript-parsers",
+  "name": "@w2a-iiot/raw-javascript-parsers",
   "type": "module",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "author": "WIKA Alexander Wiegand SE & Co. KG",
   "license": "MIT",
   "repository": {
@@ -9,6 +9,11 @@
     "type": "git",
     "url": "git+https://github.com/WIKA-Group/javascript_parsers.git"
   },
+  "keywords": [
+    "WIKA",
+    "IIoT",
+    "javascript-parsers"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -19,15 +24,14 @@
       "import": "./dist/*/index.js"
     }
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "build:lib": "tsup --clean --splitting",
-    "build:parsers": "tsup --config tsup.parsers.config.ts",
+    "build": "tsup --clean --splitting",
     "schema": "pnpm dlx jiti ./scripts/schema.ts",
     "test:shared": "vitest ./src/shared.spec.ts",
     "stub:lib": "tsup --clean --splitting --watch --onSuccess 'tsup --dts-only'"
-  },
-  "peerDependencies": {
-    "valibot": "^0.42.1"
   },
   "devDependencies": {
     "ajv": "^8.12.0",
@@ -36,7 +40,8 @@
     "fs-extra": "^11.1.1",
     "jiti": "^2.4.0",
     "jszip": "^3.10.1",
-    "ts-json-schema-generator": "^2.0.0"
+    "ts-json-schema-generator": "^2.0.0",
+    "valibot": "^0.42.1"
   }
 
 }

@@ -1,12 +1,12 @@
 import type {
   DownlinkInput,
   DownlinkOutput,
-} from '@w2a-iiot/javascript-parsers/NETRIS2'
+} from '../../../parsers/src/NETRIS2/parser'
 import type { DownlinkOutputSuccessful } from '../../../parsers/src/shared'
 import type { Frame } from '../shared'
 import
 useParser
-  from '@w2a-iiot/javascript-parsers/NETRIS2'
+  from '../../../parsers/src/NETRIS2/parser'
 import { ParserError } from '../parserError'
 import { concatFrames } from '../shared'
 

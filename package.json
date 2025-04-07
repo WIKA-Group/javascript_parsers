@@ -1,7 +1,8 @@
 {
   "name": "wika-driver-monorepo",
   "type": "module",
-  "version": "3.0.0",
+  "version": "3.0.1",
+  "private": "true",
   "packageManager": "pnpm@10.7.0",
   "description": "WIKA LoRaWAN driver npm packaged",
   "author": "WIKA Alexander Wiegand SE & Co. KG",
@@ -9,7 +10,7 @@
   "scripts": {
     "test": "vitest",
     "coverage": "vitest run --coverage",
-    "build": "pnpm --filter='@w2a-iiot/javascript-parsers' schema && pnpm --filter='@w2a-iiot/javascript-parsers' build:lib && pnpm --filter='@w2a-iiot/javascript-parsers' build:parsers && pnpm --filter='@w2a-iiot/parsers' build",
+    "build": "pnpm -r schema && pnpm -r build",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
     "typecheck": "tsc --noEmit"

@@ -1,18 +1,7 @@
-# Javascript parsers
+# @w2a-iiot/raw-javascript-parsers
 
-This package contains the javascript parsers for the WIKA devices. The parsers are being rewritten in typescript.
+This packages contain the raw built javascript parsers for WIKA's IIoT devices.
 
-This package is not released and only used in this monorepo.
+These are intended to be used in the WIKA toolbox and are not intended to be used as standalone packages.
 
-## Build
-
-The parsers will be built into 3 separate packages:
-1. Workspace package to be used in the library packages. There they will be wrapped and later released to the npm registry.
-2. A zip package for the github release. As the parsers may be used in a network server or gateway they will be transformed to be self-contained.
-3. For the web Toolbox, the parser will also be needed to be available as a single file. This will be release as an internal package so that the parser can be imported raw in the toolbox and adjusted for the users needs. Only rewritten parsers will be included in this package.
-
-To build all 3 packages, run the following command in the root directory of the repository:
-
-```bash
-pnpm build:parsers
-```
+If you are looking for a way to include javascript parsers in your project, please refer to the `@w2a-iiot/parsers` package or the [documentation](https://wika-group.github.io/javascript_parsers/).

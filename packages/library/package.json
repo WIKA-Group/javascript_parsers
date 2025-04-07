@@ -1,7 +1,7 @@
 {
   "name": "@w2a-iiot/parsers",
   "type": "module",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "WIKA JavaScript parsers",
   "author": "WIKA Alexander Wiegand SE & Co. KG",
   "license": "MIT",
@@ -10,6 +10,11 @@
     "type": "git",
     "url": "git+https://github.com/WIKA-Group/javascript_parsers.git"
   },
+  "keywords": [
+    "WIKA",
+    "IIoT",
+    "javascript-parsers"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -24,7 +29,7 @@
     "build": "tsup --clean --splitting",
     "stub": "tsup --watch"
   },
-  "dependencies": {
-    "@w2a-iiot/javascript-parsers": "workspace:^"
+  "peerDependencies": {
+    "valibot": "^0.42.1"
   }
 }

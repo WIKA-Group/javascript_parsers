@@ -3,11 +3,6 @@
     "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "paths": {
-      "@w2a-iiot/javascript-parsers": ["./packages/parsers/dist/index"],
-      "@w2a-iiot/javascript-parsers/*": ["./packages/parsers/dist/*/index"],
-      "@w2a-iiot/parsers": ["./packages/library/dist/index"]
-    },
     "resolveJsonModule": true,
     "strict": true,
     "strictNullChecks": true,

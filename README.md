@@ -197,6 +197,9 @@ For more information about parser using see the [Legacy JavaScript Parser Usage]
 
 # Release Notes
 
+3.0.1
+ - correctly release built packages and simplify build process
+
 3.0.0
  - Enhanced repository structure
  - Added the parser for NETRIS2
