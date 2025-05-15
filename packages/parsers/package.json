@@ -41,7 +41,6 @@
     "jiti": "^2.4.0",
     "jszip": "^3.10.1",
     "ts-json-schema-generator": "^2.0.0",
-    "valibot": "^0.42.1"
+    "valibot": "^1.1.0"
   }
-
 }
