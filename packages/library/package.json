@@ -30,6 +30,6 @@
     "stub": "tsup --watch"
   },
   "peerDependencies": {
-    "valibot": "^0.42.1"
+    "valibot": "^1.1.0"
   }
 }
