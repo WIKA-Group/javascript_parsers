@@ -109,6 +109,25 @@ export function numberToIntArray(value: number, byteLength: number): number[] {
   return arr
 }
 
+export function hexStringToIntArray(hexString: string): number[] | null {
+  let adjustedString = hexString.replaceAll(' ', '')
+  adjustedString = adjustedString.startsWith('0x') ? adjustedString.slice(2) : adjustedString
+
+  const schema = v.pipe(v.string(), v.hexadecimal())
+  const result = v.safeParse(schema, adjustedString)
+  if (!result.success) {
+    return null
+  }
+  const intArray: number[] = []
+
+  for (let i = 0; i < result.output.length; i += 2) {
+    const byte = Number.parseInt(result.output.slice(i, i + 2), 16)
+    intArray.push(byte)
+  }
+
+  return intArray
+}
+
 export interface Channel {
   name: string
   start: number

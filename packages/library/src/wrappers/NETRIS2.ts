@@ -93,6 +93,7 @@ export function NETRIS2Parser() {
   const {
     adjustRoundingDecimals,
     decodeUplink,
+    decodeHexUplink,
     ...parser
   } = useParser()
 
@@ -241,6 +242,7 @@ export function NETRIS2Parser() {
   return {
     encodeDownlink,
     decodeUplink,
+    decodeHexUplink,
     adjustRoundingDecimals,
   }
 }

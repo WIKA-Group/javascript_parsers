@@ -24,6 +24,30 @@
     }
   },
   {
+    "type": "hexUplink",
+    "description": "GoodCase data message: Hex Uplink example with 1 data message and no ongoing alarm",
+    "input": {
+      "bytes": " 0x01 20 01 1807",
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "configurationId": 32,
+        "messageType": 1,
+        "measurements": {
+          "channels": [
+            {
+              "channelId": 0,
+              "channelName": "Electrical current",
+              "value": 9.8416
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
     "type": "uplink",
     "description": "GoodCase data message: Uplink example with 1 data message and no ongoing alarm with too many bytes",
     "input": {

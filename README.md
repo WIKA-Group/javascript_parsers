@@ -196,9 +196,12 @@ console.log(output);
 For more information about parser using see the [Legacy JavaScript Parser Usage](/doc/LegacyJavaScriptUsage.md)
 
 # Release Notes
+3.1.0
+ - Added functionality to decode hex strings to new parsers
+ - Bumped valibot dependency to 1.1.0
 
 3.0.1
- - correctly release built packages and simplify build process
+ - Correctly release built packages and simplify build process
 
 3.0.0
  - Enhanced repository structure

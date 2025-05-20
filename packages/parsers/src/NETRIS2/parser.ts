@@ -10,7 +10,7 @@ import type {
 } from '../shared'
 import * as v from 'valibot'
 
-import { numberToIntArray, useBaseParser } from '../shared'
+import { hexStringToIntArray, numberToIntArray, useBaseParser } from '../shared'
 
 const ALARM_EVENT_NAMES_DICTIONARY = ['triggered', 'disappeared'] as const
 const PROCESS_ALARM_TYPE_NAMES_DICTIONARY = [
@@ -398,6 +398,22 @@ export default function useParser() {
 
   function decodeUplink(input: UplinkInput): UplinkOutput {
     return decode(input)
+  }
+
+  function decodeHexUplink(input: Omit<UplinkInput, 'bytes'> & { bytes: string }): UplinkOutput {
+    const intArray = hexStringToIntArray(input.bytes)
+
+    if (!intArray) {
+      return createErrorMessage([
+        `Invalid hex string: ${input.bytes}`,
+      ])
+    }
+
+    return decodeUplink({
+      bytes: intArray,
+      fPort: input.fPort,
+      recvTime: input.recvTime,
+    })
   }
 
   function encodeDownlink(input: DownlinkInput): DownlinkOutput {
@@ -1693,6 +1709,7 @@ export default function useParser() {
   // ***********************************************************************************
   return {
     decodeUplink,
+    decodeHexUplink,
     encodeDownlink,
     adjustRoundingDecimals,
   }
