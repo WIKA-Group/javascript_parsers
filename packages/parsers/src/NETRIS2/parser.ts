@@ -1050,7 +1050,7 @@ export default function useParser() {
   //
 
   const DEFAULT_DOWNLINK_FPORT = 10
-  const DEFAULT_TRANSACTION_ID = 1
+  const DEFAULT_CONFIGURATION_ID = 1
 
   function encode(input: DownlinkInput): DownlinkOutput {
     const parsedInput = validateDownlinkInput(input)
@@ -1094,7 +1094,7 @@ export default function useParser() {
       v.minValue(1, 'configurationId needs to be at least 1'),
       v.maxValue(31, 'configurationId needs to be at most 31'),
     ),
-    DEFAULT_TRANSACTION_ID,
+    DEFAULT_CONFIGURATION_ID,
   )
 
   const resetToFactorySchema = v.object({
@@ -1391,7 +1391,7 @@ export default function useParser() {
   function encodeResetToFactory(
     _input: v.InferOutput<typeof resetToFactorySchema>,
   ): DownlinkOutput {
-    // here transaction id is alway 0x00
+    // here configuration id is alway 0x00
     return { bytes: [0x00, 0x01], fPort: DEFAULT_DOWNLINK_FPORT }
   }
 

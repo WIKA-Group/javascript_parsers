@@ -22,6 +22,10 @@ type ChannelConfig = (Required<Extract<DownlinkInput, { deviceAction: 'setProces
 type MainConfig = Required<Extract<DownlinkInput, { deviceAction: 'setMainConfiguration' }>['configuration']>
 interface DownlinkConfigurationFrame {
   deviceAction: 'downlinkConfiguration'
+  configurationId?: number
+  /**
+   * @deprecated This field is deprecated and will be removed in the future. Use `configurationId` instead.
+   */
   transactionId?: number
   /**
    * The spreading factor to use.
@@ -231,7 +235,7 @@ export function NETRIS2Parser() {
         }
 
         // concat the frames
-        return concatFrames(frames.map(frame => (frame as DownlinkOutputSuccessful).bytes), byteLimit, input.transactionId ?? 1, 31)
+        return concatFrames(frames.map(frame => (frame as DownlinkOutputSuccessful).bytes), byteLimit, input.configurationId ?? input.transactionId ?? 1, 31)
       }
 
       default:

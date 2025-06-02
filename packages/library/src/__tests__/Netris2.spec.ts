@@ -23,7 +23,7 @@ describe('nETRIS2 Parser', () => {
   it('should encode downlinkConfiguration with enabled channels', () => {
     const input: NETRIS2DownlinkInput = {
       deviceAction: 'downlinkConfiguration',
-      transactionId: 0x06,
+      configurationId: 0x06,
       configuration: {
         channel0: true,
         channel1: true,
@@ -104,7 +104,7 @@ describe('nETRIS2 Parser', () => {
 
   it('should split the downlink frames into multiple frames, increment and roll over the configurationId if multiple frames are present', () => {
     const input: NETRIS2DownlinkInput = {
-      transactionId: 31,
+      configurationId: 31,
       deviceAction: 'downlinkConfiguration',
       configuration: {
         mainConfiguration: {

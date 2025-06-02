@@ -40,7 +40,7 @@
     }
   ],
   "configurationStatus": {
-    "transactionId": 1,
+    "configurationId": 1,
     "statusId": 32,
     "status": "configuration successful"
   },

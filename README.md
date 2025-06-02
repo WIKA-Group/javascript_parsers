@@ -196,6 +196,9 @@ console.log(output);
 For more information about parser using see the [Legacy JavaScript Parser Usage](/doc/LegacyJavaScriptUsage.md)
 
 # Release Notes
+3.1.1
+ - use configurationId in favor of transactionId in downlink
+
 3.1.0
  - Added functionality to decode hex strings to new parsers
  - Bumped valibot dependency to 1.1.0
