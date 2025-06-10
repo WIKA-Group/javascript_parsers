@@ -8,16 +8,13 @@ describe('nETRIS2 Parser', () => {
   it('should encode resetToFactory action', () => {
     const input: NETRIS2DownlinkInput = { deviceAction: 'resetToFactory' }
     const result = parser.encodeDownlink(input)
-    expect(result).toEqual([[0x00, 0x01]])
+    expect(result).toEqual({ success: true, data: { frames: [[0x00, 0x01]] } })
   })
 
   it('should encode resetBatteryIndicator action', () => {
     const input: NETRIS2DownlinkInput = { deviceAction: 'resetBatteryIndicator' }
     const result = parser.encodeDownlink(input)
-    expect(result).toEqual([[
-      0x01,
-      0x05,
-    ]])
+    expect(result).toEqual({ success: true, data: { frames: [[0x01, 0x05]] } })
   })
 
   it('should encode downlinkConfiguration with enabled channels', () => {
@@ -30,21 +27,26 @@ describe('nETRIS2 Parser', () => {
       },
     }
     const result = parser.encodeDownlink(input)
-    expect(result).toEqual([[
-      0x06,
-      0x20,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x00,
-      0x20,
-      0x00,
-      0x01,
-      0x00,
-      0x00,
-      0x00,
-    ]])
+    expect(result).toEqual({
+      success: true,
+      data: {
+        frames: [[
+          0x06,
+          0x20,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x00,
+          0x20,
+          0x00,
+          0x01,
+          0x00,
+          0x00,
+          0x00,
+        ]],
+      },
+    })
   })
 
   it('should encode downlinkConfiguration with disabled channels', () => {
@@ -55,11 +57,16 @@ describe('nETRIS2 Parser', () => {
       },
     }
     const result = parser.encodeDownlink(input)
-    expect(result).toEqual([[
-      0x01,
-      0x11,
-      0x02,
-    ]])
+    expect(result).toEqual({
+      success: true,
+      data: {
+        frames: [[
+          0x01,
+          0x11,
+          0x02,
+        ]],
+      },
+    })
   })
 
   it('should encode downlinkConfiguration with configured channels', () => {
@@ -73,7 +80,6 @@ describe('nETRIS2 Parser', () => {
           alarms: {},
         },
         channel1: {
-
           deadBand: 15,
           alarms: {
             fallingSlope: 20,
@@ -90,16 +96,24 @@ describe('nETRIS2 Parser', () => {
             },
           },
         },
-
       },
     }
     const result = parser.encodeDownlink(input)
-    expect(result).toEqual([[1, 32, 0, 0, 7, 208, 0, 32, 0, 1, 5, 220, 252, 13, 172, 10, 40, 7, 208, 8, 152, 29, 76, 0, 20, 25, 100, 0, 20, 48, 1, 0, 200, 96, 1, 0, 100]])
+    expect(result).toEqual({
+      success: true,
+      data: {
+        frames: [[1, 32, 0, 0, 7, 208, 0, 32, 0, 1, 5, 220, 252, 13, 172, 10, 40, 7, 208, 8, 152, 29, 76, 0, 20, 25, 100, 0, 20, 48, 1, 0, 200, 96, 1, 0, 100]],
+      },
+    })
   })
 
-  it('should throw an error for unknown device action', () => {
+  it('should return error for unknown device action', () => {
     const input: NETRIS2DownlinkInput = { deviceAction: 'unknownAction' as any }
-    expect(() => parser.encodeDownlink(input)).toThrow('Unknown device action: unknownAction')
+    const result = parser.encodeDownlink(input)
+    expect(result).toEqual({
+      success: false,
+      errors: ['Unknown device action: unknownAction'],
+    })
   })
 
   it('should split the downlink frames into multiple frames, increment and roll over the configurationId if multiple frames are present', () => {
@@ -151,11 +165,11 @@ describe('nETRIS2 Parser', () => {
             },
           },
         },
-
       },
     }
     const result = parser.encodeDownlink(input)
-    expect(result.length).toEqual(2)
+    expect(result.success).toBe(true)
+    expect(result.data?.frames.length).toEqual(2)
     const mainConfigBytes = 13
     const disabledChannelBytes = 0 // here because none are disabled
     const configurationBytesChannel0 = 22
@@ -168,8 +182,8 @@ describe('nETRIS2 Parser', () => {
 
     const fullLength = mainConfigBytes + disabledChannelBytes + configurationBytesChannel0 + configurationBytesChannel1 + offsetBytes + startUpBytes + configurationIds
 
-    expect(result[0]!.length + result[1]!.length).toEqual(fullLength)
-    expect(result[0]![0]).toEqual(31)
-    expect(result[1]![0]).toEqual(1)
+    expect(result.data!.frames[0]!.length + result.data!.frames[1]!.length).toEqual(fullLength)
+    expect(result.data!.frames[0]![0]).toEqual(31)
+    expect(result.data!.frames[1]![0]).toEqual(1)
   })
 })

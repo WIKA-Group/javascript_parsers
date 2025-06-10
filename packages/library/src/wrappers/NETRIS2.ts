@@ -7,7 +7,6 @@ import type { Frame } from '../shared'
 import
 useParser
   from '../../../parsers/src/NETRIS2/parser'
-import { ParserError } from '../parserError'
 import { concatFrames } from '../shared'
 
 type DownlinkActions = Extract<DownlinkInput, { deviceAction: 'resetToFactory' | 'resetBatteryIndicator' }>
@@ -42,6 +41,18 @@ interface DownlinkConfigurationFrame {
 }
 
 export type NETRIS2DownlinkInput = DownlinkActions | DownlinkConfigurationFrame
+
+export type NETRIS2DownlinkOutput = {
+  success: true
+  data: {
+    frames: Frame[]
+  }
+  errors?: undefined
+} | {
+  success: false
+  data?: undefined
+  errors: string[]
+}
 
 // eslint-disable-next-line ts/explicit-function-return-type
 function getNecessaryFrames(input: DownlinkConfigurationFrame) {
@@ -204,17 +215,17 @@ export function NETRIS2Parser() {
   /**
    * Encodes the downlink input.
    * @param input The downlink input.
-   * @throws When the input could not be encoded or the input is invalid.
+   * @returns An object with frames and optional errors.
    */
-  function encodeDownlink(input: NETRIS2DownlinkInput): Frame[] {
+  function encodeDownlink(input: NETRIS2DownlinkInput): NETRIS2DownlinkOutput {
     switch (input.deviceAction) {
       case 'resetToFactory':
       case 'resetBatteryIndicator': {
         const res = parser.encodeDownlink(input)
         if ('errors' in res) {
-          throw new ParserError(res.errors)
+          return { success: false, errors: res.errors }
         }
-        return [res.bytes]
+        return { success: true, data: { frames: [res.bytes] } }
       }
       case 'downlinkConfiguration': {
         const byteLimit = spreadingFactorLookUp[input.spreadingFactor ?? 'SF12']
@@ -231,15 +242,19 @@ export function NETRIS2Parser() {
 
         const errors = frames.map(frame => 'errors' in frame ? frame.errors : []).flat()
         if (errors.length > 0) {
-          throw new ParserError(errors)
+          return { success: false, errors }
         }
 
         // concat the frames
-        return concatFrames(frames.map(frame => (frame as DownlinkOutputSuccessful).bytes), byteLimit, input.configurationId ?? input.transactionId ?? 1, 31)
+        return {
+          success: true,
+          data: {
+            frames: concatFrames(frames.map(frame => (frame as DownlinkOutputSuccessful).bytes), byteLimit, input.configurationId ?? input.transactionId ?? 1, 31),
+          },
+        }
       }
-
       default:
-        throw new Error(`Unknown device action: ${(input as NETRIS2DownlinkInput).deviceAction}`)
+        return { success: false, errors: [`Unknown device action: ${(input as NETRIS2DownlinkInput).deviceAction}`] }
     }
   }
 
