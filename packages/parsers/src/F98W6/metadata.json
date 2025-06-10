@@ -1,6 +1,6 @@
 {
   "name": "wika-f98w6-decoder",
-  "version": "3.1.1",
+  "version": "3.2.0",
   "main": "index.js",
   "description": "WIKA F98W6 LoRaWAN decoder",
   "codecId": "0001",
