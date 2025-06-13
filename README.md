@@ -196,6 +196,9 @@ console.log(output);
 For more information about parser using see the [Legacy JavaScript Parser Usage](/doc/LegacyJavaScriptUsage.md)
 
 # Release Notes
+3.2.1
+ - parsers: correctly validate hex string in `decodeHexUplink`
+
 3.2.0
  - library: updated NETRIS2 `encodeDownlink` to use `configurationId` instead of `transactionId`
  - library: updated NETRIS2 `decodeUplink` to return structured output instead of raw frames

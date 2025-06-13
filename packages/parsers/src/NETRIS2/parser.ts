@@ -435,19 +435,38 @@ export default function useParser() {
     return decode(input)
   }
 
-  function decodeHexUplink(input: Omit<UplinkInput, 'bytes'> & { bytes: string }): UplinkOutput {
-    const intArray = hexStringToIntArray(input.bytes)
+  function decodeHexUplink(input: Omit<UplinkInput, 'bytes'> & { bytes: unknown }): UplinkOutput {
+    // First, validate input is an object with a `bytes` property using valibot
+    const inputSchema = v.object({
+      bytes: v.unknown(),
+    })
+
+    const inputParseResult = v.safeParse(inputSchema, input)
+    if (!inputParseResult.success) {
+      return createErrorMessage(['Input must be an object with a `bytes` property'])
+    }
+
+    // Now validate the bytes property itself
+    const bytesSchema = v.union([
+      v.string('Input `bytes` must be a hex string'),
+    ])
+
+    const parseResult = v.safeParse(bytesSchema, inputParseResult.output.bytes)
+    if (!parseResult.success) {
+      return createErrorMessage(['`bytes` must either be a hex string or an array of hex strings'])
+    }
+
+    const intArray = hexStringToIntArray(parseResult.output)
 
     if (!intArray) {
       return createErrorMessage([
-        `Invalid hex string: ${input.bytes}`,
+        `Invalid hex string: ${inputParseResult.output.bytes}`,
       ])
     }
 
     return decodeUplink({
+      ...input,
       bytes: intArray,
-      fPort: input.fPort,
-      recvTime: input.recvTime,
     })
   }
 

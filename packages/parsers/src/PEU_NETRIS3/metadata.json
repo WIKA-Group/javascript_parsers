@@ -1,6 +1,6 @@
 {
   "name": "wika-pEu-netris3-decoder",
-  "version": "3.2.0",
+  "version": "3.2.1",
   "main": "index.js",
   "description": "WIKA PEU+NETRIS3 LoRaWAN decoder",
   "codecId": "0001",

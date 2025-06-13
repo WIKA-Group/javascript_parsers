@@ -1,7 +1,7 @@
 {
   "name": "@w2a-iiot/parsers",
   "type": "module",
-  "version": "3.2.0",
+  "version": "3.2.1",
   "description": "WIKA JavaScript parsers",
   "author": "WIKA Alexander Wiegand SE & Co. KG",
   "license": "MIT",
