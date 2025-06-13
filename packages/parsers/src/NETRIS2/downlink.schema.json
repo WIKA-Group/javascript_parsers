@@ -172,13 +172,19 @@
                       "properties": {
                         "lowThreshold": {
                           "type": "number",
-                          "description": "High threshold alarm appears for a measurement above threshold + dead band and disappears for a measurement below threshold - dead band. Only uses the first 2 decimal places.",
+                          "description": "High threshold alarm appears for a measurement above threshold + dead band and disappears for a measurement below threshold - dead band. In percent (%) of the measuring range. Only uses the first 2 decimal places.",
+                          "examples": [
+                            75.75
+                          ],
                           "minimum": 0,
                           "maximum": 100
                         },
                         "highThreshold": {
                           "type": "number",
-                          "description": "High threshold alarm appears for a measurement above threshold + dead band and disappears for a measurement below threshold - dead band. Only uses the first 2 decimal places.",
+                          "description": "High threshold alarm appears for a measurement above threshold + dead band and disappears for a measurement below threshold - dead band. In percent (%) of the measuring range. Only uses the first 2 decimal places.",
+                          "examples": [
+                            80.8
+                          ],
                           "minimum": 0,
                           "maximum": 100
                         },
@@ -187,13 +193,16 @@
                           "properties": {
                             "value": {
                               "type": "number",
-                              "description": "Value for low threshold with delay. Only uses the first 2 decimal places.",
+                              "description": "Value for low threshold with delay. Only uses the first 2 decimal places. In percent (%) of the measuring range.",
+                              "examples": [
+                                10.1
+                              ],
                               "minimum": 0,
                               "maximum": 100
                             },
                             "delay": {
                               "type": "integer",
-                              "description": "Delay in seconds. Must be a multiple of both the measurement period without alarm and the measurement period with alarm.",
+                              "description": "Delay in seconds (s). Must be a multiple of both the measurement period without alarm and the measurement period with alarm.",
                               "minimum": 0,
                               "maximum": 65535
                             }
@@ -209,13 +218,16 @@
                           "properties": {
                             "value": {
                               "type": "number",
-                              "description": "Value for high threshold with delay. Only uses the first 2 decimal places.",
+                              "description": "Value for high threshold with delay in percent (%). Only uses the first 2 decimal places. In percent (%) of the measuring range.",
+                              "examples": [
+                                90.9
+                              ],
                               "minimum": 0,
                               "maximum": 100
                             },
                             "delay": {
                               "type": "integer",
-                              "description": "Delay in seconds. Must be a multiple of both the measurement period without alarm and the measurement period with alarm.",
+                              "description": "Delay in seconds (s). Must be a multiple of both the measurement period without alarm and the measurement period with alarm.",
                               "minimum": 0,
                               "maximum": 65535
                             }
@@ -228,13 +240,19 @@
                         },
                         "risingSlope": {
                           "type": "number",
-                          "description": "Rising slope alarm value. Slope alarms can only be configured for a maximum of 50% of the radio unit measuring range.",
+                          "description": "Rising slope alarm value in percent (%). Slope alarms can only be configured for a maximum of 50% of the radio unit measuring range. Only uses the first 2 decimal places.",
+                          "examples": [
+                            25.25
+                          ],
                           "minimum": 0,
                           "maximum": 50
                         },
                         "fallingSlope": {
                           "type": "number",
-                          "description": "Falling slope alarm value. Slope alarms can only be configured for a maximum of 50% of the radio unit measuring range.",
+                          "description": "Falling slope alarm value in percent (%). Slope alarms can only be configured for a maximum of 50% of the radio unit measuring range. Only uses the first 2 decimal places.",
+                          "examples": [
+                            25.25
+                          ],
                           "minimum": 0,
                           "maximum": 50
                         }
@@ -261,13 +279,19 @@
                       "properties": {
                         "lowThreshold": {
                           "type": "number",
-                          "description": "High threshold alarm appears for a measurement above threshold + dead band and disappears for a measurement below threshold - dead band. Only uses the first 2 decimal places.",
+                          "description": "High threshold alarm appears for a measurement above threshold + dead band and disappears for a measurement below threshold - dead band. In percent (%) of the measuring range. Only uses the first 2 decimal places.",
+                          "examples": [
+                            75.75
+                          ],
                           "minimum": 0,
                           "maximum": 100
                         },
                         "highThreshold": {
                           "type": "number",
-                          "description": "High threshold alarm appears for a measurement above threshold + dead band and disappears for a measurement below threshold - dead band. Only uses the first 2 decimal places.",
+                          "description": "High threshold alarm appears for a measurement above threshold + dead band and disappears for a measurement below threshold - dead band. In percent (%) of the measuring range. Only uses the first 2 decimal places.",
+                          "examples": [
+                            80.8
+                          ],
                           "minimum": 0,
                           "maximum": 100
                         },
@@ -276,13 +300,16 @@
                           "properties": {
                             "value": {
                               "type": "number",
-                              "description": "Value for low threshold with delay. Only uses the first 2 decimal places.",
+                              "description": "Value for low threshold with delay. Only uses the first 2 decimal places. In percent (%) of the measuring range.",
+                              "examples": [
+                                10.1
+                              ],
                               "minimum": 0,
                               "maximum": 100
                             },
                             "delay": {
                               "type": "integer",
-                              "description": "Delay in seconds. Must be a multiple of both the measurement period without alarm and the measurement period with alarm.",
+                              "description": "Delay in seconds (s). Must be a multiple of both the measurement period without alarm and the measurement period with alarm.",
                               "minimum": 0,
                               "maximum": 65535
                             }
@@ -298,13 +325,16 @@
                           "properties": {
                             "value": {
                               "type": "number",
-                              "description": "Value for high threshold with delay. Only uses the first 2 decimal places.",
+                              "description": "Value for high threshold with delay in percent (%). Only uses the first 2 decimal places. In percent (%) of the measuring range.",
+                              "examples": [
+                                90.9
+                              ],
                               "minimum": 0,
                               "maximum": 100
                             },
                             "delay": {
                               "type": "integer",
-                              "description": "Delay in seconds. Must be a multiple of both the measurement period without alarm and the measurement period with alarm.",
+                              "description": "Delay in seconds (s). Must be a multiple of both the measurement period without alarm and the measurement period with alarm.",
                               "minimum": 0,
                               "maximum": 65535
                             }
@@ -317,13 +347,19 @@
                         },
                         "risingSlope": {
                           "type": "number",
-                          "description": "Rising slope alarm value. Slope alarms can only be configured for a maximum of 50% of the radio unit measuring range.",
+                          "description": "Rising slope alarm value in percent (%). Slope alarms can only be configured for a maximum of 50% of the radio unit measuring range. Only uses the first 2 decimal places.",
+                          "examples": [
+                            25.25
+                          ],
                           "minimum": 0,
                           "maximum": 50
                         },
                         "fallingSlope": {
                           "type": "number",
-                          "description": "Falling slope alarm value. Slope alarms can only be configured for a maximum of 50% of the radio unit measuring range.",
+                          "description": "Falling slope alarm value in percent (%). Slope alarms can only be configured for a maximum of 50% of the radio unit measuring range. Only uses the first 2 decimal places.",
+                          "examples": [
+                            25.25
+                          ],
                           "minimum": 0,
                           "maximum": 50
                         }
@@ -367,7 +403,10 @@
                   "properties": {
                     "measureOffset": {
                       "type": "number",
-                      "description": "Only uses the first 2 decimal places.",
+                      "description": "Offset value for measurement correction. Only uses the first 2 decimal places. Unit: percent (%)",
+                      "examples": [
+                        2.75
+                      ],
                       "minimum": -5,
                       "maximum": 5
                     }
@@ -382,7 +421,10 @@
                   "properties": {
                     "measureOffset": {
                       "type": "number",
-                      "description": "Only uses the first 2 decimal places.",
+                      "description": "Offset value for measurement correction. Only uses the first 2 decimal places. Unit: percent (%)",
+                      "examples": [
+                        2.75
+                      ],
                       "minimum": -5,
                       "maximum": 5
                     }
@@ -423,7 +465,7 @@
                   "properties": {
                     "startUpTime": {
                       "type": "number",
-                      "description": "Time in seconds. Only uses the first decimal place.",
+                      "description": "Start-up time in seconds (s). Only uses the first decimal place.",
                       "minimum": 0.1,
                       "maximum": 15
                     }
@@ -431,14 +473,15 @@
                   "required": [
                     "startUpTime"
                   ],
-                  "additionalProperties": false
+                  "additionalProperties": false,
+                  "description": "Start-up time for channel 0 in seconds (s). Only uses the first decimal place."
                 },
                 "channel1": {
                   "type": "object",
                   "properties": {
                     "startUpTime": {
                       "type": "number",
-                      "description": "Time in seconds. Only uses the first decimal place.",
+                      "description": "Start-up time in seconds (s). Only uses the first decimal place.",
                       "minimum": 0.1,
                       "maximum": 15
                     }
@@ -446,7 +489,8 @@
                   "required": [
                     "startUpTime"
                   ],
-                  "additionalProperties": false
+                  "additionalProperties": false,
+                  "description": "Start-up time for channel 1 in seconds (s). Only uses the first decimal place."
                 }
               },
               "additionalProperties": false
