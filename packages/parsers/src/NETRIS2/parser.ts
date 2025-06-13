@@ -229,9 +229,13 @@ interface DownlinkInputSetProcessAlarmConfiguration {
 }
 
 /**
+ * Offset value for measurement correction.
  * Only uses the first 2 decimal places.
+ * Unit: percent (%)
  * @minimum -5
  * @maximum 5
+ * @example 2.75
+ * @unit percent
  */
 type Offset = number
 
@@ -251,10 +255,11 @@ interface DownlinkInputSetMeasureOffsetConfiguration {
 }
 
 /**
- * Time in seconds.
+ * Start-up time in seconds (s).
  * Only uses the first decimal place.
  * @minimum 0.1
  * @maximum 15
+ * @unit seconds
  */
 type StartUpTime = number
 
@@ -268,7 +273,17 @@ interface DownlinkInputsetStartUpTimeConfiguration {
   configurationId?: number
   deviceAction: 'setStartUpTimeConfiguration'
   configuration: {
+    /**
+     * Start-up time for channel 0 in seconds (s).
+     * Only uses the first decimal place.
+     * @unit seconds
+     */
     channel0?: { startUpTime: StartUpTime }
+    /**
+     * Start-up time for channel 1 in seconds (s).
+     * Only uses the first decimal place.
+     * @unit seconds
+     */
     channel1?: { startUpTime: StartUpTime }
   }
 }
@@ -286,65 +301,85 @@ interface ChannelConfig {
     /**
      * High threshold alarm appears for a measurement above threshold + dead band
      * and disappears for a measurement below threshold - dead band.
+     * In percent (%) of the measuring range.
      * Only uses the first 2 decimal places.
      * @minimum 0
      * @maximum 100
+     * @example 75.75
+     * @unit percent
      */
     lowThreshold?: number
     /**
      * High threshold alarm appears for a measurement above threshold + dead band
      * and disappears for a measurement below threshold - dead band.
+     * In percent (%) of the measuring range.
      * Only uses the first 2 decimal places.
      * @minimum 0
      * @maximum 100
+     * @example 80.80
+     * @unit percent
      */
     highThreshold?: number
     lowThresholdWithDelay?: {
       /**
        * Value for low threshold with delay.
        * Only uses the first 2 decimal places.
+       * In percent (%) of the measuring range.
        * @minimum 0
        * @maximum 100
+       * @example 10.10
+       * @unit percent
        */
       value: number
       /**
-       * Delay in seconds. Must be a multiple of both the measurement period without alarm
+       * Delay in seconds (s). Must be a multiple of both the measurement period without alarm
        * and the measurement period with alarm.
        * @asType integer
        * @minimum 0
        * @maximum 65535
+       * @unit seconds
        */
       delay: number
     }
     highThresholdWithDelay?: {
       /**
-       * Value for high threshold with delay.
+       * Value for high threshold with delay in percent (%).
        * Only uses the first 2 decimal places.
+       * In percent (%) of the measuring range.
        * @minimum 0
        * @maximum 100
+       * @example 90.90
+       * @unit percent
        */
       value: number
       /**
-       * Delay in seconds. Must be a multiple of both the measurement period without alarm
+       * Delay in seconds (s). Must be a multiple of both the measurement period without alarm
        * and the measurement period with alarm.
        * @asType integer
        * @minimum 0
        * @maximum 65535
+       * @unit seconds
        */
       delay: number
     }
     /**
-     * Rising slope alarm value. Slope alarms can only be configured for a maximum of 50%
+     * Rising slope alarm value in percent (%). Slope alarms can only be configured for a maximum of 50%
      * of the radio unit measuring range.
+     * Only uses the first 2 decimal places.
      * @minimum 0
      * @maximum 50
+     * @example 25.25
+     * @unit percent
      */
     risingSlope?: number
     /**
-     * Falling slope alarm value. Slope alarms can only be configured for a maximum of 50%
+     * Falling slope alarm value in percent (%). Slope alarms can only be configured for a maximum of 50%
      * of the radio unit measuring range.
+     * Only uses the first 2 decimal places.
      * @minimum 0
      * @maximum 50
+     * @example 25.25
+     * @unit percent
      */
     fallingSlope?: number
   }
