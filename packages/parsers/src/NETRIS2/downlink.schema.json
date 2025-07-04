@@ -172,7 +172,7 @@
                       "properties": {
                         "lowThreshold": {
                           "type": "number",
-                          "description": "High threshold alarm appears for a measurement above threshold + dead band and disappears for a measurement below threshold - dead band. In percent (%) of the measuring range. Only uses the first 2 decimal places.",
+                          "description": "High threshold alarm appears for a measurement above threshold + dead band and disappears for a measurement below threshold - dead band. In percent (%). Corresponds to the lower limit of the measuring range, 100% corresponds to the upper limit of the measuring range. Only uses the first 2 decimal places.",
                           "examples": [
                             75.75
                           ],
@@ -181,7 +181,7 @@
                         },
                         "highThreshold": {
                           "type": "number",
-                          "description": "High threshold alarm appears for a measurement above threshold + dead band and disappears for a measurement below threshold - dead band. In percent (%) of the measuring range. Only uses the first 2 decimal places.",
+                          "description": "High threshold alarm appears for a measurement above threshold + dead band and disappears for a measurement below threshold - dead band. In percent (%). Corresponds to the lower limit of the measuring range, 100% corresponds to the upper limit of the measuring range. Only uses the first 2 decimal places.",
                           "examples": [
                             80.8
                           ],
@@ -193,7 +193,7 @@
                           "properties": {
                             "value": {
                               "type": "number",
-                              "description": "Value for low threshold with delay. Only uses the first 2 decimal places. In percent (%) of the measuring range.",
+                              "description": "Value for low threshold with delay. Only uses the first 2 decimal places. In percent (%). Corresponds to the lower limit of the measuring range, 100% corresponds to the upper limit of the measuring range.",
                               "examples": [
                                 10.1
                               ],
@@ -218,7 +218,7 @@
                           "properties": {
                             "value": {
                               "type": "number",
-                              "description": "Value for high threshold with delay in percent (%). Only uses the first 2 decimal places. In percent (%) of the measuring range.",
+                              "description": "Value for high threshold with delay in percent (%). Only uses the first 2 decimal places. In percent (%). Corresponds to the lower limit of the measuring range, 100% corresponds to the upper limit of the measuring range.",
                               "examples": [
                                 90.9
                               ],
@@ -279,7 +279,7 @@
                       "properties": {
                         "lowThreshold": {
                           "type": "number",
-                          "description": "High threshold alarm appears for a measurement above threshold + dead band and disappears for a measurement below threshold - dead band. In percent (%) of the measuring range. Only uses the first 2 decimal places.",
+                          "description": "High threshold alarm appears for a measurement above threshold + dead band and disappears for a measurement below threshold - dead band. In percent (%). Corresponds to the lower limit of the measuring range, 100% corresponds to the upper limit of the measuring range. Only uses the first 2 decimal places.",
                           "examples": [
                             75.75
                           ],
@@ -288,7 +288,7 @@
                         },
                         "highThreshold": {
                           "type": "number",
-                          "description": "High threshold alarm appears for a measurement above threshold + dead band and disappears for a measurement below threshold - dead band. In percent (%) of the measuring range. Only uses the first 2 decimal places.",
+                          "description": "High threshold alarm appears for a measurement above threshold + dead band and disappears for a measurement below threshold - dead band. In percent (%). Corresponds to the lower limit of the measuring range, 100% corresponds to the upper limit of the measuring range. Only uses the first 2 decimal places.",
                           "examples": [
                             80.8
                           ],
@@ -300,7 +300,7 @@
                           "properties": {
                             "value": {
                               "type": "number",
-                              "description": "Value for low threshold with delay. Only uses the first 2 decimal places. In percent (%) of the measuring range.",
+                              "description": "Value for low threshold with delay. Only uses the first 2 decimal places. In percent (%). Corresponds to the lower limit of the measuring range, 100% corresponds to the upper limit of the measuring range.",
                               "examples": [
                                 10.1
                               ],
@@ -325,7 +325,7 @@
                           "properties": {
                             "value": {
                               "type": "number",
-                              "description": "Value for high threshold with delay in percent (%). Only uses the first 2 decimal places. In percent (%) of the measuring range.",
+                              "description": "Value for high threshold with delay in percent (%). Only uses the first 2 decimal places. In percent (%). Corresponds to the lower limit of the measuring range, 100% corresponds to the upper limit of the measuring range.",
                               "examples": [
                                 90.9
                               ],

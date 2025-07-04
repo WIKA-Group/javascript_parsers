@@ -260,17 +260,11 @@
             },
             "data": {
               "type": "object",
+              "additionalProperties": false,
               "properties": {
-                "messageType": {
-                  "type": "number",
-                  "const": 6
-                },
                 "configurationStatus": {
                   "type": "object",
                   "properties": {
-                    "configurationId": {
-                      "type": "number"
-                    },
                     "statusId": {
                       "type": "string",
                       "enum": [
@@ -291,18 +285,24 @@
                     }
                   },
                   "required": [
-                    "configurationId",
                     "statusId",
                     "status"
                   ],
                   "additionalProperties": false
+                },
+                "messageType": {
+                  "type": "number",
+                  "const": 6
+                },
+                "configurationId": {
+                  "type": "number"
                 }
               },
               "required": [
-                "messageType",
-                "configurationStatus"
-              ],
-              "additionalProperties": false
+                "configurationId",
+                "configurationStatus",
+                "messageType"
+              ]
             }
           },
           "required": [

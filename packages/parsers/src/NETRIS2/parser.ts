@@ -86,10 +86,8 @@ interface UplinkOutputSuccessfulTechnicalAlarms extends BaseMessage {
 }
 
 interface UplinkOutputSuccessfulConfigurationStatus extends BaseMessage {
-  data: {
-    messageType: 0x06
+  data: BaseData<0x06> & {
     configurationStatus: {
-      configurationId: number
       statusId: keyof typeof CONFIGURATION_STATUS_NAMES_DICTIONARY
       status: (typeof CONFIGURATION_STATUS_NAMES_DICTIONARY)[
         keyof typeof CONFIGURATION_STATUS_NAMES_DICTIONARY
@@ -263,7 +261,7 @@ interface DownlinkInputSetMeasureOffsetConfiguration {
  */
 type StartUpTime = number
 
-interface DownlinkInputsetStartUpTimeConfiguration {
+interface DownlinkInputSetStartUpTimeConfiguration {
   /**
    * @asType integer
    * @minimum 1
@@ -301,7 +299,8 @@ interface ChannelConfig {
     /**
      * High threshold alarm appears for a measurement above threshold + dead band
      * and disappears for a measurement below threshold - dead band.
-     * In percent (%) of the measuring range.
+     * In percent (%).
+     * Corresponds to the lower limit of the measuring range, 100% corresponds to the upper limit of the measuring range.
      * Only uses the first 2 decimal places.
      * @minimum 0
      * @maximum 100
@@ -312,7 +311,8 @@ interface ChannelConfig {
     /**
      * High threshold alarm appears for a measurement above threshold + dead band
      * and disappears for a measurement below threshold - dead band.
-     * In percent (%) of the measuring range.
+     * In percent (%).
+     * Corresponds to the lower limit of the measuring range, 100% corresponds to the upper limit of the measuring range.
      * Only uses the first 2 decimal places.
      * @minimum 0
      * @maximum 100
@@ -324,7 +324,8 @@ interface ChannelConfig {
       /**
        * Value for low threshold with delay.
        * Only uses the first 2 decimal places.
-       * In percent (%) of the measuring range.
+       * In percent (%).
+       * Corresponds to the lower limit of the measuring range, 100% corresponds to the upper limit of the measuring range.
        * @minimum 0
        * @maximum 100
        * @example 10.10
@@ -345,7 +346,8 @@ interface ChannelConfig {
       /**
        * Value for high threshold with delay in percent (%).
        * Only uses the first 2 decimal places.
-       * In percent (%) of the measuring range.
+       * In percent (%).
+       * Corresponds to the lower limit of the measuring range, 100% corresponds to the upper limit of the measuring range.
        * @minimum 0
        * @maximum 100
        * @example 90.90
@@ -392,7 +394,7 @@ export type DownlinkInput =
   | DownlinkInputMainConfiguration
   | DownlinkInputSetProcessAlarmConfiguration
   | DownlinkInputSetMeasureOffsetConfiguration
-  | DownlinkInputsetStartUpTimeConfiguration
+  | DownlinkInputSetStartUpTimeConfiguration
 
 export type DownlinkOutput = DownlinkOutputSuccessful | OutputFailure
 
@@ -868,8 +870,8 @@ export default function useParser() {
     const res: UplinkOutputSuccessfulConfigurationStatus = {
       data: {
         messageType,
+        configurationId,
         configurationStatus: {
-          configurationId,
           statusId: status,
           status: CONFIGURATION_STATUS_NAMES_DICTIONARY[status],
         },

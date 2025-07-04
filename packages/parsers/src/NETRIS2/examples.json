@@ -331,8 +331,8 @@
     "output": {
       "data": {
         "messageType": 6,
+        "configurationId": 1,
         "configurationStatus": {
-          "configurationId": 1,
           "statusId": 32,
           "status": "configuration successful"
         }
@@ -350,8 +350,8 @@
     "output": {
       "data": {
         "messageType": 6,
+        "configurationId": 23,
         "configurationStatus": {
-          "configurationId": 23,
           "statusId": 48,
           "status": "configuration rejected"
         }
