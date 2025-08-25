@@ -1,7 +1,7 @@
 import type {
   DownlinkInput,
   DownlinkOutput,
-} from '../../../parsers/src/NETRIS2/parser'
+} from '../../../parsers/src/NETRIS2/schemas'
 import type { DownlinkOutputSuccessful } from '../../../parsers/src/shared'
 import type { Frame } from '../shared'
 import

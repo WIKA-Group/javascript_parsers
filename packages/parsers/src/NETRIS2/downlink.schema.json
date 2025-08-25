@@ -1,508 +1,424 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$ref": "#/definitions/DownlinkInput",
-  "definitions": {
-    "DownlinkInput": {
-      "anyOf": [
-        {
-          "type": "object",
-          "properties": {
-            "deviceAction": {
-              "type": "string",
-              "const": "resetToFactory"
-            }
-          },
-          "required": [
-            "deviceAction"
-          ],
-          "additionalProperties": false
+  "anyOf": [
+    {
+      "type": "object",
+      "properties": {
+        "deviceAction": {
+          "const": "resetToFactory",
+          "description": "Resets the device to factory settings."
+        }
+      },
+      "required": [
+        "deviceAction"
+      ]
+    },
+    {
+      "type": "object",
+      "properties": {
+        "configurationId": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 31,
+          "description": "The configuration ID. Integer between 1 and 31. Default: 1.",
+          "default": 1
         },
-        {
-          "type": "object",
-          "properties": {
-            "configurationId": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 31,
-              "default": 1
-            },
-            "deviceAction": {
-              "type": "string",
-              "const": "resetBatteryIndicator"
-            }
-          },
-          "required": [
-            "deviceAction"
-          ],
-          "additionalProperties": false
+        "deviceAction": {
+          "const": "resetBatteryIndicator",
+          "description": "Resets the battery indicator."
+        }
+      },
+      "required": [
+        "deviceAction"
+      ]
+    },
+    {
+      "type": "object",
+      "properties": {
+        "configurationId": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 31,
+          "description": "The configuration ID. Integer between 1 and 31. Default: 1.",
+          "default": 1
         },
-        {
+        "deviceAction": {
+          "const": "disableChannel",
+          "description": "Disables one or more channels."
+        },
+        "configuration": {
           "type": "object",
           "properties": {
-            "configurationId": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 31,
-              "default": 1
-            },
-            "deviceAction": {
-              "type": "string",
-              "const": "disableChannel"
-            },
-            "configuration": {
+            "channel0": {
               "type": "object",
               "properties": {
-                "channel0": {
-                  "type": "object",
-                  "properties": {
-                    "disable": {
-                      "type": "boolean",
-                      "const": true
-                    }
-                  },
-                  "required": [
-                    "disable"
-                  ],
-                  "additionalProperties": false
-                },
-                "channel1": {
-                  "type": "object",
-                  "properties": {
-                    "disable": {
-                      "type": "boolean",
-                      "const": true
-                    }
-                  },
-                  "required": [
-                    "disable"
-                  ],
-                  "additionalProperties": false
-                }
-              },
-              "additionalProperties": false
-            }
-          },
-          "required": [
-            "deviceAction",
-            "configuration"
-          ],
-          "additionalProperties": false,
-          "description": "A channel can be reenabled with an \"empty\" process alarm message (no alarms)"
-        },
-        {
-          "type": "object",
-          "properties": {
-            "configurationId": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 31,
-              "default": 1
-            },
-            "deviceAction": {
-              "type": "string",
-              "const": "setMainConfiguration"
-            },
-            "configuration": {
-              "type": "object",
-              "properties": {
-                "measuringRateWhenNoAlarm": {
-                  "type": "integer",
-                  "minimum": 60,
-                  "maximum": 86400
-                },
-                "publicationFactorWhenNoAlarm": {
-                  "type": "integer",
-                  "minimum": 1,
-                  "maximum": 2880
-                },
-                "measuringRateWhenAlarm": {
-                  "type": "integer",
-                  "minimum": 60,
-                  "maximum": 86400
-                },
-                "publicationFactorWhenAlarm": {
-                  "type": "integer",
-                  "minimum": 1,
-                  "maximum": 2880
+                "disable": {
+                  "const": true,
+                  "description": "Set to true to disable channel 0."
                 }
               },
               "required": [
-                "measuringRateWhenNoAlarm",
-                "publicationFactorWhenNoAlarm",
-                "measuringRateWhenAlarm",
-                "publicationFactorWhenAlarm"
-              ],
-              "additionalProperties": false
-            }
-          },
-          "required": [
-            "deviceAction",
-            "configuration"
-          ],
-          "additionalProperties": false,
-          "description": "measuring rate * publication factor has to be less than or equal 172,800"
-        },
-        {
-          "type": "object",
-          "properties": {
-            "configurationId": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 31,
-              "default": 1
+                "disable"
+              ]
             },
-            "deviceAction": {
-              "type": "string",
-              "const": "setProcessAlarmConfiguration"
-            },
-            "configuration": {
+            "channel1": {
               "type": "object",
               "properties": {
-                "channel0": {
-                  "type": "object",
-                  "properties": {
-                    "deadBand": {
-                      "type": "number",
-                      "description": "Dead Band setting is limited to a maximum of 20% of the radio unit measuring range. An invalid dead band value makes the whole channel process alarm configuration invalid. Only uses the first 2 decimal places.",
-                      "minimum": 0,
-                      "maximum": 20
-                    },
-                    "alarms": {
-                      "type": "object",
-                      "properties": {
-                        "lowThreshold": {
-                          "type": "number",
-                          "description": "High threshold alarm appears for a measurement above threshold + dead band and disappears for a measurement below threshold - dead band. In percent (%). Corresponds to the lower limit of the measuring range, 100% corresponds to the upper limit of the measuring range. Only uses the first 2 decimal places.",
-                          "examples": [
-                            75.75
-                          ],
-                          "minimum": 0,
-                          "maximum": 100
-                        },
-                        "highThreshold": {
-                          "type": "number",
-                          "description": "High threshold alarm appears for a measurement above threshold + dead band and disappears for a measurement below threshold - dead band. In percent (%). Corresponds to the lower limit of the measuring range, 100% corresponds to the upper limit of the measuring range. Only uses the first 2 decimal places.",
-                          "examples": [
-                            80.8
-                          ],
-                          "minimum": 0,
-                          "maximum": 100
-                        },
-                        "lowThresholdWithDelay": {
-                          "type": "object",
-                          "properties": {
-                            "value": {
-                              "type": "number",
-                              "description": "Value for low threshold with delay. Only uses the first 2 decimal places. In percent (%). Corresponds to the lower limit of the measuring range, 100% corresponds to the upper limit of the measuring range.",
-                              "examples": [
-                                10.1
-                              ],
-                              "minimum": 0,
-                              "maximum": 100
-                            },
-                            "delay": {
-                              "type": "integer",
-                              "description": "Delay in seconds (s). Must be a multiple of both the measurement period without alarm and the measurement period with alarm.",
-                              "minimum": 0,
-                              "maximum": 65535
-                            }
-                          },
-                          "required": [
-                            "value",
-                            "delay"
-                          ],
-                          "additionalProperties": false
-                        },
-                        "highThresholdWithDelay": {
-                          "type": "object",
-                          "properties": {
-                            "value": {
-                              "type": "number",
-                              "description": "Value for high threshold with delay in percent (%). Only uses the first 2 decimal places. In percent (%). Corresponds to the lower limit of the measuring range, 100% corresponds to the upper limit of the measuring range.",
-                              "examples": [
-                                90.9
-                              ],
-                              "minimum": 0,
-                              "maximum": 100
-                            },
-                            "delay": {
-                              "type": "integer",
-                              "description": "Delay in seconds (s). Must be a multiple of both the measurement period without alarm and the measurement period with alarm.",
-                              "minimum": 0,
-                              "maximum": 65535
-                            }
-                          },
-                          "required": [
-                            "value",
-                            "delay"
-                          ],
-                          "additionalProperties": false
-                        },
-                        "risingSlope": {
-                          "type": "number",
-                          "description": "Rising slope alarm value in percent (%). Slope alarms can only be configured for a maximum of 50% of the radio unit measuring range. Only uses the first 2 decimal places.",
-                          "examples": [
-                            25.25
-                          ],
-                          "minimum": 0,
-                          "maximum": 50
-                        },
-                        "fallingSlope": {
-                          "type": "number",
-                          "description": "Falling slope alarm value in percent (%). Slope alarms can only be configured for a maximum of 50% of the radio unit measuring range. Only uses the first 2 decimal places.",
-                          "examples": [
-                            25.25
-                          ],
-                          "minimum": 0,
-                          "maximum": 50
-                        }
-                      },
-                      "additionalProperties": false
-                    }
-                  },
-                  "required": [
-                    "deadBand"
-                  ],
-                  "additionalProperties": false
-                },
-                "channel1": {
-                  "type": "object",
-                  "properties": {
-                    "deadBand": {
-                      "type": "number",
-                      "description": "Dead Band setting is limited to a maximum of 20% of the radio unit measuring range. An invalid dead band value makes the whole channel process alarm configuration invalid. Only uses the first 2 decimal places.",
-                      "minimum": 0,
-                      "maximum": 20
-                    },
-                    "alarms": {
-                      "type": "object",
-                      "properties": {
-                        "lowThreshold": {
-                          "type": "number",
-                          "description": "High threshold alarm appears for a measurement above threshold + dead band and disappears for a measurement below threshold - dead band. In percent (%). Corresponds to the lower limit of the measuring range, 100% corresponds to the upper limit of the measuring range. Only uses the first 2 decimal places.",
-                          "examples": [
-                            75.75
-                          ],
-                          "minimum": 0,
-                          "maximum": 100
-                        },
-                        "highThreshold": {
-                          "type": "number",
-                          "description": "High threshold alarm appears for a measurement above threshold + dead band and disappears for a measurement below threshold - dead band. In percent (%). Corresponds to the lower limit of the measuring range, 100% corresponds to the upper limit of the measuring range. Only uses the first 2 decimal places.",
-                          "examples": [
-                            80.8
-                          ],
-                          "minimum": 0,
-                          "maximum": 100
-                        },
-                        "lowThresholdWithDelay": {
-                          "type": "object",
-                          "properties": {
-                            "value": {
-                              "type": "number",
-                              "description": "Value for low threshold with delay. Only uses the first 2 decimal places. In percent (%). Corresponds to the lower limit of the measuring range, 100% corresponds to the upper limit of the measuring range.",
-                              "examples": [
-                                10.1
-                              ],
-                              "minimum": 0,
-                              "maximum": 100
-                            },
-                            "delay": {
-                              "type": "integer",
-                              "description": "Delay in seconds (s). Must be a multiple of both the measurement period without alarm and the measurement period with alarm.",
-                              "minimum": 0,
-                              "maximum": 65535
-                            }
-                          },
-                          "required": [
-                            "value",
-                            "delay"
-                          ],
-                          "additionalProperties": false
-                        },
-                        "highThresholdWithDelay": {
-                          "type": "object",
-                          "properties": {
-                            "value": {
-                              "type": "number",
-                              "description": "Value for high threshold with delay in percent (%). Only uses the first 2 decimal places. In percent (%). Corresponds to the lower limit of the measuring range, 100% corresponds to the upper limit of the measuring range.",
-                              "examples": [
-                                90.9
-                              ],
-                              "minimum": 0,
-                              "maximum": 100
-                            },
-                            "delay": {
-                              "type": "integer",
-                              "description": "Delay in seconds (s). Must be a multiple of both the measurement period without alarm and the measurement period with alarm.",
-                              "minimum": 0,
-                              "maximum": 65535
-                            }
-                          },
-                          "required": [
-                            "value",
-                            "delay"
-                          ],
-                          "additionalProperties": false
-                        },
-                        "risingSlope": {
-                          "type": "number",
-                          "description": "Rising slope alarm value in percent (%). Slope alarms can only be configured for a maximum of 50% of the radio unit measuring range. Only uses the first 2 decimal places.",
-                          "examples": [
-                            25.25
-                          ],
-                          "minimum": 0,
-                          "maximum": 50
-                        },
-                        "fallingSlope": {
-                          "type": "number",
-                          "description": "Falling slope alarm value in percent (%). Slope alarms can only be configured for a maximum of 50% of the radio unit measuring range. Only uses the first 2 decimal places.",
-                          "examples": [
-                            25.25
-                          ],
-                          "minimum": 0,
-                          "maximum": 50
-                        }
-                      },
-                      "additionalProperties": false
-                    }
-                  },
-                  "required": [
-                    "deadBand"
-                  ],
-                  "additionalProperties": false
+                "disable": {
+                  "const": true,
+                  "description": "Set to true to disable channel 1."
                 }
               },
-              "additionalProperties": false
+              "required": [
+                "disable"
+              ]
+            }
+          },
+          "required": [],
+          "description": "A channel can be reenabled with an \"empty\" process alarm message (no alarms)."
+        }
+      },
+      "required": [
+        "deviceAction",
+        "configuration"
+      ]
+    },
+    {
+      "type": "object",
+      "properties": {
+        "configurationId": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 31,
+          "description": "The configuration ID. Integer between 1 and 31. Default: 1.",
+          "default": 1
+        },
+        "deviceAction": {
+          "const": "setMainConfiguration",
+          "description": "Sets the main configuration."
+        },
+        "configuration": {
+          "type": "object",
+          "properties": {
+            "measuringRateWhenNoAlarm": {
+              "type": "integer",
+              "minimum": 60,
+              "maximum": 86400,
+              "description": "Measuring rate when no alarm (seconds). Integer between 60 and 86400."
+            },
+            "publicationFactorWhenNoAlarm": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2880,
+              "description": "Publication factor when no alarm. Integer between 1 and 2880."
+            },
+            "measuringRateWhenAlarm": {
+              "type": "integer",
+              "minimum": 60,
+              "maximum": 86400,
+              "description": "Measuring rate when alarm (seconds). Integer between 60 and 86400."
+            },
+            "publicationFactorWhenAlarm": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2880,
+              "description": "Publication factor when alarm. Integer between 1 and 2880."
             }
           },
           "required": [
-            "deviceAction",
-            "configuration"
-          ],
-          "additionalProperties": false
+            "measuringRateWhenNoAlarm",
+            "publicationFactorWhenNoAlarm",
+            "measuringRateWhenAlarm",
+            "publicationFactorWhenAlarm"
+          ]
+        }
+      },
+      "required": [
+        "deviceAction",
+        "configuration"
+      ]
+    },
+    {
+      "type": "object",
+      "properties": {
+        "configurationId": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 31,
+          "description": "The configuration ID. Integer between 1 and 31. Default: 1.",
+          "default": 1
         },
-        {
+        "deviceAction": {
+          "const": "setProcessAlarmConfiguration",
+          "description": "Sets the process alarm configuration."
+        },
+        "configuration": {
           "type": "object",
           "properties": {
-            "configurationId": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 31,
-              "default": 1
-            },
-            "deviceAction": {
-              "type": "string",
-              "const": "setMeasureOffsetConfiguration"
-            },
-            "configuration": {
+            "channel0": {
               "type": "object",
               "properties": {
-                "channel0": {
-                  "type": "object",
-                  "properties": {
-                    "measureOffset": {
-                      "type": "number",
-                      "description": "Offset value for measurement correction. Only uses the first 2 decimal places. Unit: percent (%)",
-                      "examples": [
-                        2.75
-                      ],
-                      "minimum": -5,
-                      "maximum": 5
-                    }
-                  },
-                  "required": [
-                    "measureOffset"
-                  ],
-                  "additionalProperties": false
+                "deadBand": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 20,
+                  "description": "Dead Band setting (max 20% of measuring range). Only uses the first 2 decimal places."
                 },
-                "channel1": {
+                "alarms": {
                   "type": "object",
                   "properties": {
-                    "measureOffset": {
+                    "lowThreshold": {
                       "type": "number",
-                      "description": "Offset value for measurement correction. Only uses the first 2 decimal places. Unit: percent (%)",
-                      "examples": [
-                        2.75
-                      ],
-                      "minimum": -5,
-                      "maximum": 5
+                      "maximum": 100,
+                      "description": "Low threshold value (max 100)."
+                    },
+                    "highThreshold": {
+                      "type": "number",
+                      "maximum": 100,
+                      "description": "High threshold value (max 100)."
+                    },
+                    "lowThresholdWithDelay": {
+                      "type": "object",
+                      "properties": {
+                        "value": {
+                          "type": "number",
+                          "maximum": 100,
+                          "description": "Low threshold with delay value (max 100)."
+                        },
+                        "delay": {
+                          "type": "number",
+                          "description": "Delay for low threshold with delay."
+                        }
+                      },
+                      "required": [
+                        "value",
+                        "delay"
+                      ]
+                    },
+                    "highThresholdWithDelay": {
+                      "type": "object",
+                      "properties": {
+                        "value": {
+                          "type": "number",
+                          "maximum": 100,
+                          "description": "High threshold with delay value (max 100)."
+                        },
+                        "delay": {
+                          "type": "number",
+                          "description": "Delay for high threshold with delay."
+                        }
+                      },
+                      "required": [
+                        "value",
+                        "delay"
+                      ]
+                    },
+                    "risingSlope": {
+                      "type": "number",
+                      "description": "Rising slope value."
+                    },
+                    "fallingSlope": {
+                      "type": "number",
+                      "description": "Falling slope value."
                     }
                   },
-                  "required": [
-                    "measureOffset"
-                  ],
-                  "additionalProperties": false
+                  "required": []
                 }
               },
-              "additionalProperties": false
-            }
-          },
-          "required": [
-            "deviceAction",
-            "configuration"
-          ],
-          "additionalProperties": false
-        },
-        {
-          "type": "object",
-          "properties": {
-            "configurationId": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 31,
-              "default": 1
+              "required": [
+                "deadBand"
+              ]
             },
-            "deviceAction": {
-              "type": "string",
-              "const": "setStartUpTimeConfiguration"
-            },
-            "configuration": {
+            "channel1": {
               "type": "object",
               "properties": {
-                "channel0": {
+                "deadBand": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 20,
+                  "description": "Dead Band setting (max 20% of measuring range). Only uses the first 2 decimal places."
+                },
+                "alarms": {
                   "type": "object",
                   "properties": {
-                    "startUpTime": {
+                    "lowThreshold": {
                       "type": "number",
-                      "description": "Start-up time in seconds (s). Only uses the first decimal place.",
-                      "minimum": 0.1,
-                      "maximum": 15
+                      "maximum": 100,
+                      "description": "Low threshold value (max 100)."
+                    },
+                    "highThreshold": {
+                      "type": "number",
+                      "maximum": 100,
+                      "description": "High threshold value (max 100)."
+                    },
+                    "lowThresholdWithDelay": {
+                      "type": "object",
+                      "properties": {
+                        "value": {
+                          "type": "number",
+                          "maximum": 100,
+                          "description": "Low threshold with delay value (max 100)."
+                        },
+                        "delay": {
+                          "type": "number",
+                          "description": "Delay for low threshold with delay."
+                        }
+                      },
+                      "required": [
+                        "value",
+                        "delay"
+                      ]
+                    },
+                    "highThresholdWithDelay": {
+                      "type": "object",
+                      "properties": {
+                        "value": {
+                          "type": "number",
+                          "maximum": 100,
+                          "description": "High threshold with delay value (max 100)."
+                        },
+                        "delay": {
+                          "type": "number",
+                          "description": "Delay for high threshold with delay."
+                        }
+                      },
+                      "required": [
+                        "value",
+                        "delay"
+                      ]
+                    },
+                    "risingSlope": {
+                      "type": "number",
+                      "description": "Rising slope value."
+                    },
+                    "fallingSlope": {
+                      "type": "number",
+                      "description": "Falling slope value."
                     }
                   },
-                  "required": [
-                    "startUpTime"
-                  ],
-                  "additionalProperties": false,
+                  "required": []
+                }
+              },
+              "required": [
+                "deadBand"
+              ]
+            }
+          },
+          "required": []
+        }
+      },
+      "required": [
+        "deviceAction",
+        "configuration"
+      ]
+    },
+    {
+      "type": "object",
+      "properties": {
+        "configurationId": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 31,
+          "description": "The configuration ID. Integer between 1 and 31. Default: 1.",
+          "default": 1
+        },
+        "deviceAction": {
+          "const": "setMeasureOffsetConfiguration",
+          "description": "Sets the measure offset configuration."
+        },
+        "configuration": {
+          "type": "object",
+          "properties": {
+            "channel0": {
+              "type": "object",
+              "properties": {
+                "measureOffset": {
+                  "type": "number",
+                  "minimum": -5,
+                  "maximum": 5,
+                  "description": "Offset value for measurement correction. Only uses the first 2 decimal places. Unit: percent (%)."
+                }
+              },
+              "required": [
+                "measureOffset"
+              ]
+            },
+            "channel1": {
+              "type": "object",
+              "properties": {
+                "measureOffset": {
+                  "type": "number",
+                  "minimum": -5,
+                  "maximum": 5,
+                  "description": "Offset value for measurement correction. Only uses the first 2 decimal places. Unit: percent (%)."
+                }
+              },
+              "required": [
+                "measureOffset"
+              ]
+            }
+          },
+          "required": []
+        }
+      },
+      "required": [
+        "deviceAction",
+        "configuration"
+      ]
+    },
+    {
+      "type": "object",
+      "properties": {
+        "configurationId": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 31,
+          "description": "The configuration ID. Integer between 1 and 31. Default: 1.",
+          "default": 1
+        },
+        "deviceAction": {
+          "const": "setStartUpTimeConfiguration",
+          "description": "Sets the start-up time configuration."
+        },
+        "configuration": {
+          "type": "object",
+          "properties": {
+            "channel0": {
+              "type": "object",
+              "properties": {
+                "startUpTime": {
+                  "type": "number",
+                  "minimum": 0.1,
+                  "maximum": 15,
                   "description": "Start-up time for channel 0 in seconds (s). Only uses the first decimal place."
-                },
-                "channel1": {
-                  "type": "object",
-                  "properties": {
-                    "startUpTime": {
-                      "type": "number",
-                      "description": "Start-up time in seconds (s). Only uses the first decimal place.",
-                      "minimum": 0.1,
-                      "maximum": 15
-                    }
-                  },
-                  "required": [
-                    "startUpTime"
-                  ],
-                  "additionalProperties": false,
+                }
+              },
+              "required": [
+                "startUpTime"
+              ]
+            },
+            "channel1": {
+              "type": "object",
+              "properties": {
+                "startUpTime": {
+                  "type": "number",
+                  "minimum": 0.1,
+                  "maximum": 15,
                   "description": "Start-up time for channel 1 in seconds (s). Only uses the first decimal place."
                 }
               },
-              "additionalProperties": false
+              "required": [
+                "startUpTime"
+              ]
             }
           },
-          "required": [
-            "deviceAction",
-            "configuration"
-          ],
-          "additionalProperties": false
+          "required": []
         }
+      },
+      "required": [
+        "deviceAction",
+        "configuration"
       ]
     }
-  }
+  ]
 }
