@@ -1,6 +1,6 @@
 import type {
   UplinkInput,
-} from '../shared'
+} from '../../shared'
 
 import type {
   ChannelMeasurement,
@@ -21,7 +21,7 @@ import type {
 
 import * as v from 'valibot'
 
-import { hexStringToIntArray, numberToIntArray, useBaseParser } from '../shared'
+import { hexStringToIntArray, numberToIntArray, useBaseParser } from '../../shared'
 
 import {
   ALARM_EVENT_NAMES_DICTIONARY,

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { numbersToIntArray, numberToIntArray } from './shared'
+import { numbersToIntArray, numberToIntArray } from '../src/shared'
 
 describe('numberToIntArray', () => {
   it('should convert a number to an array of bytes', () => {

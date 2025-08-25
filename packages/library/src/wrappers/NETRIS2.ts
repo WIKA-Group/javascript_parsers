@@ -1,12 +1,12 @@
 import type {
   DownlinkInput,
   DownlinkOutput,
-} from '../../../parsers/src/NETRIS2/schemas'
+} from '../../../parsers/src/devices/NETRIS2/schemas'
 import type { DownlinkOutputSuccessful } from '../../../parsers/src/shared'
 import type { Frame } from '../shared'
 import
 useParser
-  from '../../../parsers/src/NETRIS2/parser'
+  from '../../../parsers/src/devices/NETRIS2/parser'
 import { concatFrames } from '../shared'
 
 type DownlinkActions = Extract<DownlinkInput, { deviceAction: 'resetToFactory' | 'resetBatteryIndicator' }>

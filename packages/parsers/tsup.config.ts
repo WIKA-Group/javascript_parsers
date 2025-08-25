@@ -9,7 +9,7 @@ export default defineConfig({
   name: 'raw parsers',
 
   entryPoints: {
-    'NETRIS2/index': 'src/NETRIS2/index.ts',
+    'NETRIS2/index': 'src/devices/NETRIS2/index.ts',
   },
 
   outDir: 'dist',
@@ -74,7 +74,7 @@ export default defineConfig({
 
     const zip = new JSZip()
 
-    const srcFiles = await fg('src/**/index.(ts|js)')
+    const srcFiles = await fg('src/devices/**/index.(ts|js)')
 
     for (const file of srcFiles) {
       const dir = path.dirname(file)

@@ -68,7 +68,7 @@ async function main() {
 
   const __dirname = import.meta.dirname
 
-  const schemaFiles = await glob('../src/**/schemas.ts', { absolute: true, cwd: __dirname,
+  const schemaFiles = await glob('../src/devices/**/schemas.ts', { absolute: true, cwd: __dirname,
   })
   if (!schemaFiles.length) {
     console.warn('No schemas.ts files found.')

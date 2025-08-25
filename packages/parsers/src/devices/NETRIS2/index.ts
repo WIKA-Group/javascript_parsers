@@ -1,5 +1,5 @@
 import useParser from './parser'
-import '../polyfills'
+import '../../polyfills'
 
 const {
   decodeUplink,
