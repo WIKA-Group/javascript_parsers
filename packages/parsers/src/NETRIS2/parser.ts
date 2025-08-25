@@ -1186,13 +1186,13 @@ export default function useParser() {
     // Convert the offsets to int16C encoded bytes
     const channel0Bytes = channel0 !== undefined
       ? int16ToBytes(
-        int16C(Math.floor(channel0.measureOffset * CONVERSION_FACTOR)),
-      )
+          int16C(Math.floor(channel0.measureOffset * CONVERSION_FACTOR)),
+        )
       : []
     const channel1Bytes = channel1 !== undefined
       ? int16ToBytes(
-        int16C(Math.floor(channel1.measureOffset * CONVERSION_FACTOR)),
-      )
+          int16C(Math.floor(channel1.measureOffset * CONVERSION_FACTOR)),
+        )
       : []
 
     return {
@@ -1229,15 +1229,15 @@ export default function useParser() {
 
     const channel0Bytes = channel0 !== undefined
       ? numberToIntArray(
-        Math.floor(channel0.startUpTime * CONVERSION_FACTOR),
-        2,
-      )
+          Math.floor(channel0.startUpTime * CONVERSION_FACTOR),
+          2,
+        )
       : []
     const channel1Bytes = channel1 !== undefined
       ? numberToIntArray(
-        Math.floor(channel1.startUpTime * CONVERSION_FACTOR),
-        2,
-      )
+          Math.floor(channel1.startUpTime * CONVERSION_FACTOR),
+          2,
+        )
       : []
 
     return {
@@ -1327,15 +1327,15 @@ export default function useParser() {
 
     const lowThresholdBytes = channel.alarms?.lowThreshold
       ? numberToIntArray(
-        thresholdValueConversion(channel.alarms.lowThreshold),
-        2,
-      )
+          thresholdValueConversion(channel.alarms.lowThreshold),
+          2,
+        )
       : []
     const highThresholdBytes = channel.alarms?.highThreshold
       ? numberToIntArray(
-        thresholdValueConversion(channel.alarms.highThreshold),
-        2,
-      )
+          thresholdValueConversion(channel.alarms.highThreshold),
+          2,
+        )
       : []
     const fallingSlopeBytes = channel.alarms?.fallingSlope
       ? numberToIntArray(slopeConversion(channel.alarms.fallingSlope), 2)
@@ -1346,34 +1346,34 @@ export default function useParser() {
     const lowThresholdWithDelayValueBytes
       = channel.alarms?.lowThresholdWithDelay
         ? numberToIntArray(
-          thresholdValueConversion(
-            channel.alarms.lowThresholdWithDelay.value,
-          ),
-          2,
-        )
+            thresholdValueConversion(
+              channel.alarms.lowThresholdWithDelay.value,
+            ),
+            2,
+          )
         : []
     const lowThresholdWithDelayDelayBytes
       = channel.alarms?.lowThresholdWithDelay
         ? numberToIntArray(
-          channel.alarms.lowThresholdWithDelay.delay,
-          2,
-        )
+            channel.alarms.lowThresholdWithDelay.delay,
+            2,
+          )
         : []
     const highThresholdWithDelayValueBytes
       = channel.alarms?.highThresholdWithDelay
         ? numberToIntArray(
-          thresholdValueConversion(
-            channel.alarms.highThresholdWithDelay.value,
-          ),
-          2,
-        )
+            thresholdValueConversion(
+              channel.alarms.highThresholdWithDelay.value,
+            ),
+            2,
+          )
         : []
     const highThresholdWithDelayDelayBytes
       = channel.alarms?.highThresholdWithDelay
         ? numberToIntArray(
-          channel.alarms.highThresholdWithDelay.delay,
-          2,
-        )
+            channel.alarms.highThresholdWithDelay.delay,
+            2,
+          )
         : []
 
     const bytes = [

@@ -10,7 +10,7 @@
     "@w2a-iiot/parsers": "workspace:^"
   },
   "devDependencies": {
-    "consola": "^3.2.3",
+    "consola": "^3.4.2",
     "nitropack": "latest"
   }
 }

@@ -62,27 +62,27 @@ function getNecessaryFrames(input: DownlinkConfigurationFrame) {
   const channel1StartUpTimeNecessary = typeof input.configuration.channel1 === 'object' ? input.configuration.channel1.startUpTime !== undefined : false
   const channel1OffsetNecessary = typeof input.configuration.channel1 === 'object' ? input.configuration.channel1.measureOffset !== undefined : false
 
-    type Configuration = 'disabled' | 'enabled' | 'configured' | 'none'
+  type Configuration = 'disabled' | 'enabled' | 'configured' | 'none'
 
-    const channel0Configuration: Configuration = input.configuration.channel0 === undefined ? 'none' : input.configuration.channel0 === false ? 'disabled' : input.configuration.channel0 === true ? 'enabled' : 'configured'
-    const channel1Configuration: Configuration = input.configuration.channel1 === undefined ? 'none' : input.configuration.channel1 === false ? 'disabled' : input.configuration.channel1 === true ? 'enabled' : 'configured'
+  const channel0Configuration: Configuration = input.configuration.channel0 === undefined ? 'none' : input.configuration.channel0 === false ? 'disabled' : input.configuration.channel0 === true ? 'enabled' : 'configured'
+  const channel1Configuration: Configuration = input.configuration.channel1 === undefined ? 'none' : input.configuration.channel1 === false ? 'disabled' : input.configuration.channel1 === true ? 'enabled' : 'configured'
 
-    const channel0Disabled = input.configuration.channel0 === false
-    const channel1Disabled = input.configuration.channel1 === false
+  const channel0Disabled = input.configuration.channel0 === false
+  const channel1Disabled = input.configuration.channel1 === false
 
-    const isMainConfigurationNecessary = !!input.configuration.mainConfiguration
+  const isMainConfigurationNecessary = !!input.configuration.mainConfiguration
 
-    return {
-      channel0StartUpTimeNecessary,
-      channel0OffsetNecessary,
-      channel1StartUpTimeNecessary,
-      channel1OffsetNecessary,
-      channel1Configuration,
-      channel0Configuration,
-      channel0Disabled,
-      channel1Disabled,
-      isMainConfigurationNecessary,
-    }
+  return {
+    channel0StartUpTimeNecessary,
+    channel0OffsetNecessary,
+    channel1StartUpTimeNecessary,
+    channel1OffsetNecessary,
+    channel1Configuration,
+    channel0Configuration,
+    channel0Disabled,
+    channel1Disabled,
+    isMainConfigurationNecessary,
+  }
 }
 
 /**

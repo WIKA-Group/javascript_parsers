@@ -263,15 +263,15 @@ export type OutputSuccessfulExtendedDeviceIdentification = BaseMessage & {
   }
 }
 
-export type OutputSuccessful =
-  | OutputSuccessfulMeasurements
-  | OutputSuccessfulProcessAlarms
-  | OutputSuccessfulSensorTechnicalAlarms
-  | OutputSuccessfulDeviceALarms
-  | OutputSuccessfulConfigurationStatus
-  | OutputSuccessfulDeviceIdentification
-  | OutputSuccessfulKeepAlive
-  | OutputSuccessfulExtendedDeviceIdentification
+export type OutputSuccessful
+  = | OutputSuccessfulMeasurements
+    | OutputSuccessfulProcessAlarms
+    | OutputSuccessfulSensorTechnicalAlarms
+    | OutputSuccessfulDeviceALarms
+    | OutputSuccessfulConfigurationStatus
+    | OutputSuccessfulDeviceIdentification
+    | OutputSuccessfulKeepAlive
+    | OutputSuccessfulExtendedDeviceIdentification
 
 // ! This is like spec.
 export interface OutputFailure {
@@ -284,8 +284,8 @@ export interface OutputFailure {
 export type OutputWarning = string
 export type OutputError = string
 
-type MeasurementChannelEntry =
-  OutputSuccessfulMeasurements['data']['measurements']['channels'][number]
+type MeasurementChannelEntry
+  = OutputSuccessfulMeasurements['data']['measurements']['channels'][number]
 
 export type UplinkOutput = OutputSuccessful | OutputFailure
 
