@@ -5,8 +5,8 @@ export default defineConfig({
     include: ['**/*.{test,spec}.{ts,js}'],
     exclude: ['**/node_modules/**', '**/dist/**', '**/rawParsers/**'],
     coverage: {
-      include: ['**/index.{ts,js}', '**/shared.{ts,js}'],
-      exclude: ['**/node_modules/**', '**/dist/**', '**/rawParsers/**'],
+      include: ['**/src/devices/**/index.{ts,js}', '**/src/devices/**/shared.{ts,js}', '**/src/codecs/**', '**/parsers/src/*.ts'],
+      exclude: ['**/node_modules/**', '**/dist/**', '**/rawParsers/**', '**/polyfills.ts', '**/schemas.ts'],
     },
   },
 })

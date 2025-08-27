@@ -84,6 +84,10 @@ importers:
         version: 1.1.0(typescript@5.9.2)
 
   packages/parsers:
+    dependencies:
+      tiny-glob:
+        specifier: ^0.2.9
+        version: 0.2.9
     devDependencies:
       '@swc/core':
         specifier: ^1.13.5

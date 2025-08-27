@@ -1,0 +1,174 @@
+import * as v from 'valibot'
+
+export const DEFAULT_ROUNDING_DECIMALS = 4
+
+/**
+ * Returns the number of decimals to use for rounding, with robust handling for edge cases.
+ *
+ * @param roundingDecimals The requested number of decimals (may be undefined, NaN, Infinity, etc.)
+ * @param currentDecimals The fallback number of decimals if roundingDecimals is not valid
+ * @returns The number of decimals to use for rounding
+ *
+ * - If roundingDecimals is undefined, NaN, or -Infinity, returns fallback (currentDecimals or DEFAULT_ROUNDING_DECIMALS)
+ * - If roundingDecimals is Infinity, returns Infinity
+ * - If Math.floor(roundingDecimals) >= 0, returns Math.floor(roundingDecimals)
+ * - Otherwise, returns fallback
+ */
+export function getRoundingDecimals(roundingDecimals: number | undefined, currentDecimals?: number | undefined): number {
+  const fallbackDecimals = currentDecimals ?? DEFAULT_ROUNDING_DECIMALS
+
+  if (roundingDecimals === undefined || Number.isNaN(roundingDecimals) || roundingDecimals === -Infinity) {
+    return fallbackDecimals
+  }
+  if (roundingDecimals === Infinity) {
+    return Infinity
+  }
+  return Math.floor(roundingDecimals) >= 0 ? Math.floor(roundingDecimals) : fallbackDecimals
+}
+
+/**
+ * Converts an array of numbers to an array of bytes.
+ * Each number in the input array is converted to its byte representation
+ * and then all bytes are flattened into a single array.
+ *
+ * @param numbers Array of objects containing value and byte length
+ * @param numbers.value The numeric value to convert
+ * @param numbers.bytes The number of bytes to represent the value
+ * @returns The flattened byte array
+ * @example
+ * numbersToIntArray([{value: 0x1234, bytes: 2}, {value: 0x5678, bytes: 2}])
+ * // Returns: [0x12, 0x34, 0x56, 0x78]
+ */
+export function numbersToIntArray(numbers: {
+  value: number
+  bytes: number
+}[]): number[] {
+  return numbers.map(({ value, bytes }) => numberToIntArray(value, bytes)).flat()
+}
+
+/**
+ * Converts a single number to an array of bytes in big-endian format.
+ * The function converts the number to a hexadecimal string, pads it to the required
+ * byte length, and then converts each pair of hex digits to a byte value.
+ *
+ * Note: This function does not validate input types or handle negative numbers.
+ * Ensure you pass valid unsigned integers for predictable results.
+ *
+ * @param value The number to convert (should be a valid unsigned integer)
+ * @param byteLength The number of bytes to represent the value
+ * @returns Array of bytes representing the number in big-endian format
+ * @example
+ * numberToIntArray(0x1234, 2) // Returns: [0x12, 0x34]
+ * numberToIntArray(2, 2) // Returns: [0x00, 0x02]
+ * numberToIntArray(0x12345678, 4) // Returns: [0x12, 0x34, 0x56, 0x78]
+ */
+export function numberToIntArray(value: number, byteLength: number): number[] {
+  // Convert number to hex string and pad with zeros to match byte length
+  const hexString = value.toString(16).padStart(byteLength * 2, '0')
+  const arr: number[] = Array.from({ length: byteLength })
+
+  // Parse each pair of hex digits into a byte value
+  let hexIndex = 0
+  let byteIndex = 0
+  while (hexIndex < hexString.length) {
+    arr[byteIndex] = Number.parseInt(hexString.slice(hexIndex, hexIndex + 2), 16)
+    hexIndex += 2
+    byteIndex++
+  }
+  return arr
+}
+
+/**
+ * Converts a hexadecimal string to an array of integer bytes.
+ * The function handles various hex string formats including prefixes and spaces.
+ * Returns null if the input string contains invalid hexadecimal characters.
+ *
+ * @param hexString The hexadecimal string to convert (supports '0x' prefix and spaces)
+ * @returns Array of integer bytes or null if invalid hex string
+ * @example
+ * hexStringToIntArray('1234') // Returns: [0x12, 0x34]
+ * hexStringToIntArray('0x1234') // Returns: [0x12, 0x34]
+ * hexStringToIntArray('12 34') // Returns: [0x12, 0x34]
+ * hexStringToIntArray('xyz') // Returns: null (invalid hex)
+ */
+export function hexStringToIntArray(hexString: string): number[] | null {
+  // Remove spaces and optional '0x' prefix
+  let adjustedString = hexString.replaceAll(' ', '')
+  adjustedString = adjustedString.startsWith('0x') ? adjustedString.slice(2) : adjustedString
+
+  // Validate that the string contains only valid hexadecimal characters
+  const schema = v.pipe(v.string(), v.hexadecimal())
+  const result = v.safeParse(schema, adjustedString)
+  if (!result.success) {
+    return null
+  }
+
+  const intArray: number[] = []
+
+  // Convert each pair of hex characters to a byte value
+  for (let i = 0; i < result.output.length; i += 2) {
+    const byte = Number.parseInt(result.output.slice(i, i + 2), 16)
+    intArray.push(byte)
+  }
+
+  return intArray
+}
+
+/**
+ * Converts a percentage value to a real value within a specified range.
+ * The function performs linear interpolation between the minimum and maximum values
+ * based on the given percentage.
+ *
+ * @param percentage The percentage value (must be between 0 and 100)
+ * @param range Object containing min and max values for the target range
+ * @param range.min The minimum value of the range
+ * @param range.max The maximum value of the range
+ * @returns The calculated value within the specified range
+ * @throws {RangeError} When percentage is not between 0 and 100
+ * @example
+ * percentageToValue(50, {min: 0, max: 100}) // Returns: 50
+ * percentageToValue(25, {min: -10, max: 10}) // Returns: -5
+ * percentageToValue(0, {min: 5, max: 15}) // Returns: 5
+ * percentageToValue(100, {min: 5, max: 15}) // Returns: 15
+ */
+export function percentageToValue(percentage: number, range: { min: number, max: number }): number {
+  if (percentage < 0 || percentage > 100) {
+    throw new RangeError('Percentage must be between 0 and 100')
+  }
+  // Linear interpolation: min + (max - min) * (percentage / 100)
+  return (range.max - range.min) * (percentage / 100) + range.min
+}
+
+/**
+ * Converts a TULIP scale value to a real value within a specified range.
+ * TULIP scale uses values from 2500 to 12500, where:
+ * - 2500 represents 0% (minimum value)
+ * - 7500 represents 50% (middle value)
+ * - 12500 represents 100% (maximum value)
+ *
+ * The function first converts the TULIP value to a percentage, then maps
+ * that percentage to the specified range using linear interpolation.
+ *
+ * @param tulipValue The TULIP scale value (must be between 2500 and 12500)
+ * @param range Object containing min and max values for the target range
+ * @param range.min The minimum value of the range
+ * @param range.max The maximum value of the range
+ * @returns The calculated value within the specified range
+ * @throws {RangeError} When tulipValue is not between 2500 and 12500
+ * @example
+ * TULIPValueToValue(2500, {min: 0, max: 100}) // Returns: 0 (0%)
+ * TULIPValueToValue(7500, {min: 0, max: 100}) // Returns: 50 (50%)
+ * TULIPValueToValue(12500, {min: 0, max: 100}) // Returns: 100 (100%)
+ * TULIPValueToValue(5000, {min: -10, max: 10}) // Returns: -5 (25%)
+ */
+export function TULIPValueToValue(tulipValue: number, range: { min: number, max: number }): number {
+  if (tulipValue < 2500 || tulipValue > 12500) {
+    throw new RangeError(`TULIP scale value must be between 2500 and 12500, is ${tulipValue}`)
+  }
+
+  // Convert TULIP scale value (2500 - 12500) to percentage (0 - 100)
+  const percentage = (((tulipValue - 2500) * (100 - 0)) / 10_000) + 0
+
+  // Use the existing percentageToValue function to map to the target range
+  return percentageToValue(percentage, range)
+}

@@ -1,3 +1,5 @@
+import type { UplinkInput } from './schemas'
+import type { Channel } from './types'
 import * as v from 'valibot'
 
 /** CONSTANTS */
@@ -17,25 +19,6 @@ export interface ChannelMeasurement {
   channelId: number
   value: number
   channelName: string
-}
-
-export interface UplinkInput {
-  /**
-   * The uplink payload byte array, where each byte is represented by an integer between 0 and 255.
-   *  @format: integer[]
-   */
-  bytes: number[
-
-  ]
-  /**
-   * The uplink message LoRaWAN `fPort`
-   * @format: int
-   */
-  fPort: fPort
-  /**
-   * ISO 8601 string representation of the time the message was received by the network server.
-   */
-  recvTime?: string
 }
 
 export interface DownlinkOutputSuccessful extends BaseMessage {
@@ -71,73 +54,9 @@ export interface BaseData<TMessage extends number = number> {
   configurationId: number
 }
 
-/**
- * Converts an array of numbers to an array of bytes.
- * @param numbers The numbers to convert
- * @returns The byte array
- * @example
- * numbersToIntArray([0x1234, 0x5678]) // [0x12, 0x34, 0x56, 0x78]
- */
-export function numbersToIntArray(numbers: {
-  value: number
-  bytes: number
-}[]): number[] {
-  return numbers.map(({ value, bytes }) => numberToIntArray(value, bytes)).flat()
-}
-/**
- * Converts a number to an array of bytes.
- * The function does not do type checking, so make sure to pass a valid uInt.
- * Otherwise there will be unexpected results.
- * Negative numbers are not supported
- * @param value The number to convert
- * @param byteLength The number of bytes
- * @returns The byte array
- * @example
- * numberToIntArray(0x1234, 2) // [0x12, 0x34]
- * numberToIntArray(2, 2) // [0x00, 0x02]
- */
-export function numberToIntArray(value: number, byteLength: number): number[] {
-  const hexString = value.toString(16).padStart(byteLength * 2, '0')
-  const arr: number[] = Array.from({ length: byteLength })
-  let i = 0
-  let j = 0
-  while (i < hexString.length) {
-    arr[j] = Number.parseInt(hexString.slice(i, i + 2), 16)
-    i += 2
-    j++
-  }
-  return arr
-}
-
-export function hexStringToIntArray(hexString: string): number[] | null {
-  let adjustedString = hexString.replaceAll(' ', '')
-  adjustedString = adjustedString.startsWith('0x') ? adjustedString.slice(2) : adjustedString
-
-  const schema = v.pipe(v.string(), v.hexadecimal())
-  const result = v.safeParse(schema, adjustedString)
-  if (!result.success) {
-    return null
-  }
-  const intArray: number[] = []
-
-  for (let i = 0; i < result.output.length; i += 2) {
-    const byte = Number.parseInt(result.output.slice(i, i + 2), 16)
-    intArray.push(byte)
-  }
-
-  return intArray
-}
-
-export interface Channel {
-  name: string
-  start: number
-  end: number
-  span: number
-}
-
 export interface ParserConfig {
   deviceName: string
-  channels: Omit<Channel, 'span'>[]
+  channels: Channel[]
   /**
    * The number of decimal places to round the measurements to.
    * Falls back to 4 if invalid or not provided.
@@ -145,6 +64,8 @@ export interface ParserConfig {
    */
   roundingDecimals?: number
 }
+
+type ChannelWithSpan = Channel & { span: number }
 
 // eslint-disable-next-line ts/explicit-function-return-type
 export function useBaseParser(config: ParserConfig) {
@@ -252,14 +173,14 @@ export function useBaseParser(config: ParserConfig) {
   // Measurement Utils
   //
 
-  const channels: Channel[] = config.channels.map(channel => ({
+  const channels: (Channel & { span: number })[] = config.channels.map(channel => ({
     name: channel.name,
     start: channel.start,
     end: channel.end,
     span: channel.end - channel.start,
   }))
 
-  function getChannel(channelId: number): Channel | OutputError {
+  function getChannel(channelId: number): ChannelWithSpan | OutputError {
     const channel = channels[channelId]
     if (!channel) {
       return `Channel ${channel} is not defined in the configuration`
