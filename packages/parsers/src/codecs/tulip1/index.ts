@@ -62,13 +62,6 @@ export function defineTULIP1Codec<const TOptions extends TULIP1CodecOptions>(opt
 
   let roundingDecimals = getRoundingDecimals(options.roundingDecimals)
 
-  const channelNames = options.channels.map(channel => channel.name)
-  const uniqueChannelNames = new Set(channelNames)
-
-  if (uniqueChannelNames.size !== channelNames.length) {
-    throw new Error('Channel names must be unique')
-  }
-
   checkChannelsValidity(options.channels)
 
   function canTryDecode(input: UplinkInput): boolean {
