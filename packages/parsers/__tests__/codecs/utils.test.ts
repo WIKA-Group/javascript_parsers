@@ -38,6 +38,101 @@ describe('checkChannelsValidity', () => {
     ]
     expect(() => checkChannelsValidity(channels, 'TestCodec')).toThrow('Invalid channel range in codec TestCodec: 5 >= 3 in channel B')
   })
+
+  it('should throw for exact duplicate names', () => {
+    expect(() => checkChannelsValidity([
+      { name: 'A', start: 0, end: 1 },
+      { name: 'A', start: 1, end: 2 },
+    ])).toThrow(/Duplicate channel name/)
+  })
+
+  it('should not throw for names differing by case (case-sensitive)', () => {
+    expect(() => checkChannelsValidity([
+      { name: 'A', start: 0, end: 1 },
+      { name: 'a', start: 1, end: 2 },
+    ])).not.toThrow()
+  })
+
+  it('should throw for duplicate names with symbols', () => {
+    expect(() => checkChannelsValidity([
+      { name: 'foo$', start: 0, end: 1 },
+      { name: 'foo$', start: 1, end: 2 },
+    ])).toThrow(/Duplicate channel name/)
+  })
+
+  it('should not throw for names with different symbols', () => {
+    expect(() => checkChannelsValidity([
+      { name: 'foo$', start: 0, end: 1 },
+      { name: 'foo#', start: 1, end: 2 },
+    ])).not.toThrow()
+  })
+
+  it('should throw for duplicate names with spaces', () => {
+    expect(() => checkChannelsValidity([
+      { name: 'foo bar', start: 0, end: 1 },
+      { name: 'foo bar', start: 1, end: 2 },
+    ])).toThrow(/Duplicate channel name/)
+  })
+
+  it('should not throw for names with different whitespace', () => {
+    expect(() => checkChannelsValidity([
+      { name: 'foo bar', start: 0, end: 1 },
+      { name: 'foo  bar', start: 1, end: 2 },
+    ])).not.toThrow()
+  })
+
+  it('should throw for duplicate names with Unicode', () => {
+    expect(() => checkChannelsValidity([
+      { name: 'café', start: 0, end: 1 },
+      { name: 'café', start: 1, end: 2 },
+    ])).toThrow(/Duplicate channel name/)
+  })
+
+  it('should not throw for visually similar but different Unicode', () => {
+    // e.g., 'cafe' (ASCII) vs 'café' (with accent)
+    expect(() => checkChannelsValidity([
+      { name: 'cafe', start: 0, end: 1 },
+      { name: 'café', start: 1, end: 2 },
+    ])).not.toThrow()
+  })
+
+  it('should throw for duplicate names with emoji', () => {
+    expect(() => checkChannelsValidity([
+      { name: 'foo😀', start: 0, end: 1 },
+      { name: 'foo😀', start: 1, end: 2 },
+    ])).toThrow(/Duplicate channel name/)
+  })
+
+  it('should not throw for different emoji', () => {
+    expect(() => checkChannelsValidity([
+      { name: 'foo😀', start: 0, end: 1 },
+      { name: 'foo😁', start: 1, end: 2 },
+    ])).not.toThrow()
+  })
+
+  it('should throw for duplicate names with leading/trailing whitespace', () => {
+    expect(() => checkChannelsValidity([
+      { name: 'foo', start: 0, end: 1 },
+      { name: 'foo ', start: 1, end: 2 },
+      { name: 'foo', start: 2, end: 3 },
+    ])).toThrow(/Duplicate channel name/)
+  })
+
+  it('should not throw for names that are substrings of each other', () => {
+    expect(() => checkChannelsValidity([
+      { name: 'foo', start: 0, end: 1 },
+      { name: 'foobar', start: 1, end: 2 },
+    ])).not.toThrow()
+  })
+
+  it('should throw for multiple duplicates in a larger set', () => {
+    expect(() => checkChannelsValidity([
+      { name: 'A', start: 0, end: 1 },
+      { name: 'B', start: 1, end: 2 },
+      { name: 'A', start: 2, end: 3 },
+      { name: 'B', start: 3, end: 4 },
+    ])).toThrow(/Duplicate channel name/)
+  })
 })
 
 describe('checkCodecsValidity', () => {

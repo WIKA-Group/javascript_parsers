@@ -1,6 +1,18 @@
 /* eslint-disable ts/explicit-function-return-type */
 import * as v from 'valibot'
 
+export function createSemVerSchema() {
+  return v.pipe(
+    v.string(),
+    // https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
+    v.regex(
+      // eslint-disable-next-line regexp/use-ignore-case
+      /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/,
+      'The version is not a valid semver.',
+    ),
+  )
+}
+
 function createFPortSchema() {
   return v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(255))
 }

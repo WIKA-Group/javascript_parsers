@@ -7,6 +7,8 @@ import type { AnyCodec } from './codec'
  * @throws Will throw an error if start is equal to or greater than end.
  */
 export function checkChannelsValidity(channels: Channel[], codecName?: string): void {
+  const channelNameSet = new Set<string>()
+
   channels.forEach((channel) => {
     // validate that start is less than end
     if (channel.start >= channel.end) {
@@ -15,6 +17,14 @@ export function checkChannelsValidity(channels: Channel[], codecName?: string): 
       }
       throw new Error(`Invalid channel range: ${channel.start} >= ${channel.end} in channel ${channel.name}`)
     }
+
+    if (channelNameSet.has(channel.name)) {
+      if (codecName) {
+        throw new Error(`Duplicate channel name found in codec ${codecName}: ${channel.name}`)
+      }
+      throw new Error(`Duplicate channel name found: ${channel.name}`)
+    }
+    channelNameSet.add(channel.name)
   })
 }
 

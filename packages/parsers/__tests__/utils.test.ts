@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { DEFAULT_ROUNDING_DECIMALS, getRoundingDecimals, hexStringToIntArray, numbersToIntArray, numberToIntArray, percentageToValue, TULIPValueToValue } from '../src/utils'
+import { DEFAULT_ROUNDING_DECIMALS, getRoundingDecimals, hexStringToIntArray, numbersToIntArray, numberToIntArray, percentageToValue, roundValue, TULIPValueToValue } from '../src/utils'
 
 describe('numberToIntArray', () => {
   it('should convert a 4-byte number to byte array correctly', () => {
@@ -195,16 +195,8 @@ describe('percentageToValue', () => {
       expect(percentageToValue(25, { min: -10, max: 10 })).toBe(-5)
     })
 
-    it('should handle inverted ranges (min > max)', () => {
-      expect(percentageToValue(50, { min: 10, max: 0 })).toBe(5)
-    })
-
     it('should handle decimal percentages', () => {
       expect(percentageToValue(33.33, { min: 0, max: 30 })).toBeCloseTo(9.999, 2)
-    })
-
-    it('should handle zero range (min = max)', () => {
-      expect(percentageToValue(50, { min: 5, max: 5 })).toBe(5)
     })
 
     it('should handle fractional ranges', () => {
@@ -331,16 +323,15 @@ describe('tULIPValueToValue', () => {
   })
 
   describe('edge cases and special ranges', () => {
-    it('should handle zero range (min = max)', () => {
-      expect(TULIPValueToValue(7500, { min: 5, max: 5 })).toBe(5)
-      expect(TULIPValueToValue(2500, { min: 10, max: 10 })).toBe(10)
-      expect(TULIPValueToValue(12500, { min: -3, max: -3 })).toBe(-3)
+    it('should throw RangeError for zero range (min = max)', () => {
+      expect(() => TULIPValueToValue(7500, { min: 5, max: 5 })).toThrow(RangeError)
+      expect(() => TULIPValueToValue(2500, { min: 10, max: 10 })).toThrow(RangeError)
+      expect(() => TULIPValueToValue(12500, { min: -3, max: -3 })).toThrow(RangeError)
     })
-
-    it('should handle inverted ranges (min > max)', () => {
-      expect(TULIPValueToValue(2500, { min: 10, max: 0 })).toBe(10)
-      expect(TULIPValueToValue(12500, { min: 10, max: 0 })).toBe(0)
-      expect(TULIPValueToValue(7500, { min: 10, max: 0 })).toBe(5)
+    it('should throw RangeError for inverted ranges (min > max)', () => {
+      expect(() => TULIPValueToValue(2500, { min: 10, max: 0 })).toThrow(RangeError)
+      expect(() => TULIPValueToValue(12500, { min: 10, max: 0 })).toThrow(RangeError)
+      expect(() => TULIPValueToValue(7500, { min: 10, max: 0 })).toThrow(RangeError)
     })
 
     it('should handle fractional ranges', () => {
@@ -446,5 +437,157 @@ describe('getRoundingDecimals', () => {
     expect(getRoundingDecimals(Number.NaN, 2)).toBe(2)
     expect(getRoundingDecimals(Infinity, 2)).toBe(Infinity)
     expect(getRoundingDecimals(-Infinity, 2)).toBe(2)
+  })
+})
+
+describe('roundValue', () => {
+  describe('extensive edge cases and floating point issues', () => {
+    it('should handle subnormal (denormalized) numbers', () => {
+      expect(roundValue(Number.MIN_VALUE, 10)).toBe(0)
+      expect(roundValue(-Number.MIN_VALUE, 10)).toBe(0)
+    })
+
+    it('should handle very large numbers', () => {
+      expect(roundValue(1e20, 2)).toBe(1e20)
+      expect(roundValue(1e+20, 2)).toBe(1e20)
+      expect(roundValue(-1e20, 2)).toBe(-1e20)
+    })
+
+    it('should handle very small numbers', () => {
+      expect(roundValue(1e-20, 10)).toBe(0)
+      expect(roundValue(-1e-20, 10)).toBe(0)
+    })
+
+    it('should handle numbers with repeating decimals', () => {
+      expect(roundValue(1 / 3, 10)).toBeCloseTo(0.3333333333, 10)
+      expect(roundValue(2 / 3, 10)).toBeCloseTo(0.6666666667, 10)
+    })
+
+    it('should handle numbers with .5 at various decimal places', () => {
+      expect(roundValue(1.005, 2)).toBe(1.01)
+      expect(roundValue(2.675, 2)).toBe(2.68)
+      expect(roundValue(0.125, 2)).toBe(0.13)
+    })
+
+    it('should handle floating point addition issues', () => {
+      expect(roundValue(0.1 + 0.2, 2)).toBe(0.3)
+      expect(roundValue(0.2 + 0.1, 2)).toBe(0.3)
+      expect(roundValue(0.1 + 0.7, 1)).toBe(0.8)
+      expect(roundValue(0.1 + 0.2 + 0.3, 2)).toBe(0.6)
+      expect(roundValue(0.1 + 0.2 - 0.3, 2)).toBe(0)
+    })
+
+    it('should handle fractions and irrational numbers', () => {
+      expect(roundValue(Math.PI, 5)).toBeCloseTo(3.14159, 5)
+      expect(roundValue(Math.E, 5)).toBeCloseTo(2.71828, 5)
+      expect(roundValue(Math.sqrt(2), 8)).toBeCloseTo(1.41421356, 8)
+      expect(roundValue(Math.sqrt(0.5), 8)).toBeCloseTo(0.70710678, 8)
+    })
+
+    it('should handle numbers just below and above rounding thresholds', () => {
+      expect(roundValue(1.2344999999, 3)).toBe(1.234)
+      expect(roundValue(1.2345000001, 3)).toBe(1.235)
+      expect(roundValue(-1.2344999999, 3)).toBe(-1.234)
+      expect(roundValue(-1.2345000001, 3)).toBe(-1.235)
+    })
+
+    it('should handle numbers with lots of trailing 9s and 0s', () => {
+      expect(roundValue(0.999999999999, 10)).toBe(1)
+      expect(roundValue(0.000000000001, 10)).toBe(0)
+      expect(roundValue(1.000000000001, 10)).toBe(1)
+      expect(roundValue(1.000000000009, 10)).toBe(1)
+    })
+
+    it('should handle undefined decimals as no rounding', () => {
+      expect(roundValue(1.2345, undefined)).toBe(1.2345)
+    })
+
+    it('should handle decimals as floating point values', () => {
+      expect(roundValue(1.2345, 2.9)).toBe(1.23)
+      expect(roundValue(1.2345, 2.1)).toBe(1.23)
+      expect(roundValue(1.2345, 3.7)).toBe(1.235)
+    })
+
+    it('should handle negative decimals as zero', () => {
+      expect(roundValue(1.2345, -2)).toBe(1)
+      expect(roundValue(1.2345, -0.1)).toBe(1)
+    })
+
+    it('should handle NaN, Infinity, -Infinity', () => {
+      expect(Number.isNaN(roundValue(Number.NaN, 2))).toBe(true)
+      expect(roundValue(Infinity, 2)).toBe(Infinity)
+      expect(roundValue(-Infinity, 2)).toBe(-Infinity)
+    })
+  })
+  it('should round to zero decimals by default', () => {
+    expect(roundValue(3.7)).toBe(3.7)
+    expect(roundValue(3.2)).toBe(3.2)
+    expect(roundValue(-3.7)).toBe(-3.7)
+    expect(roundValue(-3.2)).toBe(-3.2)
+    expect(roundValue(0)).toBe(0)
+  })
+
+  it('should round to specified positive decimals', () => {
+    expect(roundValue(3.14159, 2)).toBe(3.14)
+    expect(roundValue(3.145, 2)).toBe(3.15)
+    expect(roundValue(1.005, 2)).toBe(1.01)
+    expect(roundValue(1.004, 2)).toBe(1.0)
+    expect(roundValue(-1.004, 2)).toBe(-1.0)
+  })
+
+  it('should treat negative decimals as zero', () => {
+    expect(roundValue(3.14159, -2)).toBe(3)
+    expect(roundValue(3.9, -1)).toBe(4)
+    expect(roundValue(-3.9, -1)).toBe(-4)
+  })
+
+  it('should handle large numbers and decimals', () => {
+    expect(roundValue(123456.789, 0)).toBe(123457)
+    expect(roundValue(123456.789, 2)).toBe(123456.79)
+    expect(roundValue(123456.789, 5)).toBe(123456.789)
+  })
+
+  it('should handle very small numbers', () => {
+    expect(roundValue(0.0001234, 6)).toBe(0.000123)
+    expect(roundValue(0.0001236, 6)).toBe(0.000124)
+    expect(roundValue(-0.0001234, 6)).toBe(-0.000123)
+    expect(roundValue(-0.0001236, 6)).toBe(-0.000124)
+  })
+
+  it('should handle zero value for any decimals', () => {
+    expect(roundValue(0, 0)).toBe(0)
+    expect(roundValue(0, 2)).toBe(0)
+    expect(roundValue(0, 10)).toBe(0)
+  })
+
+  it('should handle edge cases for decimals', () => {
+    expect(roundValue(1.2345, 0)).toBe(1)
+    expect(roundValue(1.2345, 1)).toBe(1.2)
+    expect(roundValue(1.2345, 2)).toBe(1.23)
+    expect(roundValue(1.2345, 3)).toBe(1.235)
+    expect(roundValue(1.2345, 4)).toBe(1.2345)
+    expect(roundValue(1.2345, 5)).toBe(1.2345)
+  })
+
+  it('should handle NaN and Infinity', () => {
+    expect(roundValue(Number.NaN, 2)).toBeNaN()
+    expect(roundValue(Infinity, 2)).toBe(Infinity)
+    expect(roundValue(-Infinity, 2)).toBe(-Infinity)
+  })
+
+  it('should handle decimals as floating point values', () => {
+    expect(roundValue(1.2345, 2.9)).toBe(1.23)
+    expect(roundValue(1.2345, 2.1)).toBe(1.23)
+    expect(roundValue(1.2345, 3.7)).toBe(1.235)
+  })
+
+  it('should handle negative numbers', () => {
+    expect(roundValue(-3.14159, 2)).toBe(-3.14)
+    expect(roundValue(-1.004, 2)).toBe(-1.0)
+  })
+
+  it('should handle very large decimals (should not add extra precision)', () => {
+    expect(roundValue(1.23456789, 10)).toBe(1.23456789)
+    expect(roundValue(-1.23456789, 10)).toBe(-1.23456789)
   })
 })

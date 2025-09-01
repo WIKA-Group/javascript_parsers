@@ -1,0 +1,141 @@
+import type { TULIP3DeviceSensorConfig } from '../../codecs/tulip3/profile'
+/* eslint-disable ts/explicit-function-return-type */
+import * as v from 'valibot'
+import { protocolDataTypeLookup } from '../../codecs/tulip3/lookups'
+import { createFullSensorChannelSchemaWithExtension, createGenericUplinkOutputSchema } from './index'
+
+// =============================================================================
+// BASE TYPE SCHEMAS
+// =============================================================================
+
+/**
+ * Creates a validation schema for protocol data types.
+ *
+ * @returns A Valibot picklist schema that validates against supported protocol data types
+ * @example
+ * ```typescript
+ * const schema = createProtocolDataTypeSchema()
+ * const result = v.parse(schema, "float - IEEE754")
+ * ```
+ */
+export function createProtocolDataTypeSchema() {
+  return v.picklist(Object.values(protocolDataTypeLookup) as (typeof protocolDataTypeLookup[keyof typeof protocolDataTypeLookup])[])
+}
+
+// =============================================================================
+// MEASUREMENT SCHEMAS
+// =============================================================================
+
+// Helper type to extract measurement types from a channel config
+
+/**
+ * Creates a validation schema for general measurements.
+ * This is a union type that can be either an error measurement or a value measurement.
+ * The schema enforces that sensor and channel combinations are valid according to the device configuration.
+ *
+ * @param config - Configuration object defining sensor-to-channel mappings
+ * @returns A Valibot union schema for general measurements with custom validation
+ * @template TTULIP3DeviceSensorConfig - Type-safe sensor configuration
+ * @example
+ * ```typescript
+ * const config = {
+ *   sensor1: { channel1: {}, channel2: {} },
+ *   sensor2: { channel1: {} }
+ * }
+ * const schema = createGeneralMeasurementSchema(config)
+ *
+ * // Valid error measurement
+ * const errorResult = v.parse(schema, {
+ *   sensorId: 0, // sensor1
+ *   channelId: 0, // channel1
+ *   sourceDataType: "float - IEEE754",
+ *   valueAcquisitionError: true
+ * })
+ *
+ * // Valid value measurement
+ * const valueResult = v.parse(schema, {
+ *   sensorId: 1, // sensor2
+ *   channelId: 0, // channel1
+ *   sourceDataType: "float - IEEE754",
+ *   valueAcquisitionError: false,
+ *   value: 42.0
+ * })
+ * ```
+ */
+export function createGeneralMeasurementSchema<const TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig>(config: TTULIP3DeviceSensorConfig) {
+  return v.pipe(
+    v.union([
+      // error measurement schema
+      ...createFullSensorChannelSchemaWithExtension(config, {
+        valueAcquisitionError: v.literal(true),
+        value: v.optional(v.undefined()),
+      }),
+      ...createFullSensorChannelSchemaWithExtension(config, {
+        valueAcquisitionError: v.literal(false),
+        value: v.number(),
+      }),
+    ]),
+  )
+}
+
+// =============================================================================
+// DATA MESSAGE SCHEMAS
+// =============================================================================
+
+/**
+ * Creates a validation schema for data message uplink output.
+ * This is the main schema for TULIP3 data messages, including optional warnings.
+ *
+ * @param config - Configuration object defining sensor-to-channel mappings
+ * @returns A Valibot object schema for data message uplink output
+ * @template TTULIP3DeviceSensorConfig - Type-safe sensor configuration
+ * @example
+ * ```typescript
+ * const config = {
+ *   sensor1: {
+ *     channel1: {
+ *       min: 0,
+ *       max: 100,
+ *       unit: "°C",
+ *       measurementTypes: ["float - IEEE754"]
+ *     }
+ *   }
+ * }
+ * const schema = createDataMessageUplinkOutputSchema(config)
+ *
+ * const result = v.parse(schema, {
+ *   data: {
+ *     messageType: 0x10,
+ *     messageSubType: 0x01,
+ *     measurements: [
+ *       {
+ *         sensorId: 0,
+ *         channelId: 0,
+ *         channelName: "temperature",
+ *         sourceDataType: "float - IEEE754",
+ *         valueAcquisitionError: false,
+ *         value: 23.5
+ *       }
+ *     ]
+ *   },
+ *   warnings: ["Optional warning message"]
+ * })
+ * ```
+ */
+export function createDataMessageUplinkOutputSchema<const TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig>(config: TTULIP3DeviceSensorConfig) {
+  return createGenericUplinkOutputSchema({
+    messageType: [0x10, 0x11], // Data message types
+    messageSubType: [0x01], // Data message subtype
+    extension: {
+      measurements: v.tupleWithRest([createGeneralMeasurementSchema(config)], createGeneralMeasurementSchema(config)),
+    },
+  })
+}
+
+// =============================================================================
+// TYPE EXPORTS
+// =============================================================================
+
+export type GeneralMeasurement<TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig> = v.InferOutput<ReturnType<typeof createGeneralMeasurementSchema<TTULIP3DeviceSensorConfig>>>
+export type DataMessageData<TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig> = DataMessageUplinkOutput<TTULIP3DeviceSensorConfig>['data']['measurements']
+export type DataMessageUplinkOutput<TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig> = v.InferOutput<ReturnType<typeof createDataMessageUplinkOutputSchema<TTULIP3DeviceSensorConfig>>>

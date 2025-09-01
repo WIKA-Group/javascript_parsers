@@ -12,10 +12,10 @@ type ChannelNamesFromCodec<TCodecs extends AnyCodec> = {
 }[TCodecs['name']]
 
 type EncodeInput<TCodecs extends AnyCodec> = {
-  [Codec in TCodecs as Codec['name']]: {
+  [Codec in TCodecs as Codec['name']]: Codec extends { encode: infer THandler extends (input: any) => any } ? {
     codec: Codec['name']
-    input: Parameters<Codec['encode']>[0]
-  }
+    input: Parameters<THandler>[0]
+  } : never
 }[TCodecs['name']]
 
 interface ParserOptions<TCodec extends AnyCodec = AnyCodec> {
@@ -140,6 +140,9 @@ export function defineParser<const TParserOptions extends ParserOptions>(options
     const codec = codecs.find(c => c.name === input.codec)
     if (!codec) {
       throw new Error(`Codec ${input.codec} not found in parser. Input could not be encoded.`)
+    }
+    if (!codec.encode) {
+      throw new Error(`Codec ${input.codec} does not support encoding. Input could not be encoded.`)
     }
     return codec.encode(input.input)
   }

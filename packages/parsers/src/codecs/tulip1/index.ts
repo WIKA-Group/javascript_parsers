@@ -29,7 +29,7 @@ type ReturnTypeOfHandlers<THandlers extends MessageHandlers<object>> = {
   [K in keyof THandlers]: THandlers[K] extends Handler ? ReturnType<THandlers[K]> : never
 }[keyof THandlers]
 
-export interface TULIP1CodecOptions<TName extends string = string, THandlers extends MessageHandlers = MessageHandlers, TEncoder extends (input: object) => number[] = (input: any) => number[]> {
+export interface TULIP1CodecOptions<TName extends string = string, THandlers extends MessageHandlers = MessageHandlers, TEncoder extends (input: object) => number[] = (input: object) => number[]> {
   deviceName: TName
   /**
    * The list of channels to use for this codec.

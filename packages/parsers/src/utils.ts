@@ -1,3 +1,4 @@
+import nstr from 'nstr'
 import * as v from 'valibot'
 
 export const DEFAULT_ROUNDING_DECIMALS = 4
@@ -125,6 +126,7 @@ export function hexStringToIntArray(hexString: string): number[] | null {
  * @param range.max The maximum value of the range
  * @returns The calculated value within the specified range
  * @throws {RangeError} When percentage is not between 0 and 100
+ * @throws {RangeError} When range.min is not less than range.max
  * @example
  * percentageToValue(50, {min: 0, max: 100}) // Returns: 50
  * percentageToValue(25, {min: -10, max: 10}) // Returns: -5
@@ -134,6 +136,9 @@ export function hexStringToIntArray(hexString: string): number[] | null {
 export function percentageToValue(percentage: number, range: { min: number, max: number }): number {
   if (percentage < 0 || percentage > 100) {
     throw new RangeError('Percentage must be between 0 and 100')
+  }
+  if (range.min >= range.max) {
+    throw new RangeError('Range min must be less than range max')
   }
   // Linear interpolation: min + (max - min) * (percentage / 100)
   return (range.max - range.min) * (percentage / 100) + range.min
@@ -155,6 +160,7 @@ export function percentageToValue(percentage: number, range: { min: number, max:
  * @param range.max The maximum value of the range
  * @returns The calculated value within the specified range
  * @throws {RangeError} When tulipValue is not between 2500 and 12500
+ * Uses {@link percentageToValue} internally, which may throw errors itself.
  * @example
  * TULIPValueToValue(2500, {min: 0, max: 100}) // Returns: 0 (0%)
  * TULIPValueToValue(7500, {min: 0, max: 100}) // Returns: 50 (50%)
@@ -171,4 +177,48 @@ export function TULIPValueToValue(tulipValue: number, range: { min: number, max:
 
   // Use the existing percentageToValue function to map to the target range
   return percentageToValue(percentage, range)
+}
+
+/**
+ * Converts a number to a hexadecimal string.
+ * @param num The number to convert.
+ * @returns The hexadecimal representation of the number.
+ */
+export function numberToHexString(num: number): string {
+  const hex = num.toString(16).padStart(2, '0')
+  return `0x${hex}`
+}
+
+/**
+ * Rounds a number to a specified number of decimal places.
+ *
+ * This function attempts to smartly handle floating point imprecisions that can occur due to repeating values
+ * (such as 0.998 actually being 0.99799999... etc.), which are not exactly representable in binary floating point.
+ *
+ * @param value The number to round.
+ * @param decimals The number of decimal places to round to (default is 0). Negative values are treated as 0.
+ * Values above 100 are clamped to 100.
+ * @returns The rounded number.
+ * @example
+ * roundValue(3.14159, 2) // Returns: 3.14
+ * roundValue(123.456, 0) // Returns: 123
+ * roundValue(1.005, 2) // Returns: 1.01
+ */
+export function roundValue(value: number, decimals?: number): number {
+  decimals = typeof decimals === 'number' ? Math.min(Math.max(0, Math.floor(decimals)), 100) : undefined
+
+  if (Number.isInteger(value)) {
+    return value
+  }
+
+  const v = nstr(value + (5 * Number.EPSILON), { maxDecimals: decimals })
+
+  // current bug in nstr that removed all "0" from the result.
+  // but if it is rounded to 0 it removes it and returns ""
+  if (v === '') {
+    // TODO: remove once nstr is fixed
+    return 0
+  }
+
+  return Number.parseFloat(v)
 }
