@@ -282,9 +282,9 @@ export function createSensorWithChannelsSchema<const TTULIP3SensorChannelConfig 
     [ChannelKey in keyof TTULIP3SensorChannelConfig]:
     TTULIP3SensorChannelConfig[ChannelKey] extends { channelName: infer T extends string }
       ? v.OptionalSchema<
-          ReturnType<typeof createChannelIdentificationSchema<T>>,
-          undefined
-        >
+        ReturnType<typeof createChannelIdentificationSchema<T>>,
+        undefined
+      >
       : never
   }
 

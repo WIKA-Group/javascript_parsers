@@ -1,38 +1,36 @@
 import * as fs from 'node:fs'
 import path from 'node:path'
-import consola, {} from 'consola'
+import consola from 'consola'
 import fg from 'fast-glob'
 import JSZip from 'jszip'
-import { defineConfig } from 'tsup'
+import { defineConfig } from 'tsdown'
 
 export default defineConfig({
-  name: 'raw parsers',
+  name: 'Parsers',
 
-  entryPoints: {
+  entry: {
     'NETRIS2/index': 'src/devices/NETRIS2/index.ts',
   },
 
   outDir: 'dist',
 
-  outExtension: () => ({
+  outExtensions: () => ({
     js: '.js',
   }),
-  target: 'es5',
-  minify: 'terser',
+  target: 'es2015',
+  minify: {
+    compress: true,
+    mangle: true,
+  },
   clean: true,
 
   format: ['esm'],
   dts: false,
   noExternal: [/(.*)/],
-  splitting: false,
+
   treeshake: true,
   // keep the top level functions exported
-  terserOptions: {
-    mangle: {
-      toplevel: false,
-      reserved: ['decodeUplink', 'encodeDownlink', 'adjustRoundingDecimals'],
-    },
-  },
+
   onSuccess: async () => {
     const files = await fg.glob('./dist/**/index.js', {
       cwd: __dirname,
@@ -112,27 +110,6 @@ export default defineConfig({
     fs.writeFileSync('../../parsers.zip', zipContent)
 
     consola.success('Zip created')
-
-    // now for the release of the raw parsers we need to copy the package.parsers.json to the dist folder
-
-    const distDir = path.join(__dirname, 'dist')
-
-    const filesToCopy: `${string}.parsers.${string}`[] = [
-      'package.parsers.json',
-      'README.parsers.md',
-    ]
-
-    for (const file of filesToCopy) {
-      const src = path.join(__dirname, file)
-      if (fs.existsSync(src)) {
-        // take the name of the file but remove the ".parsers" part
-        const dest = path.join(distDir, file.replace('.parsers.', '.'))
-        fs.copyFileSync(src, dest)
-      }
-    }
-
-    // const distDir = path.join(__dirname, 'dist')
-    // fs.rmSync(distDir, { recursive: true, force: true })
   },
 
 })
