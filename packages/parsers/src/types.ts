@@ -14,10 +14,13 @@ export interface GenericFailureUplinkOutput {
 
 export type GenericUplinkOutput<TData extends object> = GenericSuccessfulUplinkOutput<TData> | GenericFailureUplinkOutput
 
-export interface Channel<TName extends string = string> {
-  name: TName
-  end: number
+export interface Range {
   start: number
+  end: number
+}
+
+export interface Channel<TName extends string = string> extends Range {
+  name: TName
 }
 
 declare const __brand: unique symbol

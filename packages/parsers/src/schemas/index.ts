@@ -35,7 +35,7 @@ export function createUplinkInputSchema() {
      * ISO 8601 string representation of the time the message was received by the network server.
      */
     recvTime: v.optional(v.string()),
-  })
+  }, 'Uplink input should be an object with `bytes` and optional `fPort` and `recvTime` properties.')
 }
 
 export function createHexUplinkInputSchema() {
@@ -46,7 +46,7 @@ export function createHexUplinkInputSchema() {
         fPort: v.optional(createFPortSchema()),
         recvTime: createRecvTimeSchema(),
       }),
-      v.pipe(v.string()),
+      v.string(),
     ]),
     v.transform((input) => {
       if (typeof input === 'string') {
@@ -55,6 +55,12 @@ export function createHexUplinkInputSchema() {
       return input
     }),
   )
+}
+
+export function createUplinkOutputFailureSchema() {
+  return v.object({
+    errors: v.array(v.string()),
+  })
 }
 
 export type UplinkInput = v.InferOutput<ReturnType<typeof createUplinkInputSchema>>

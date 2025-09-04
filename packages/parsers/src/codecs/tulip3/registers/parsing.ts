@@ -1,5 +1,5 @@
 // Import lookup tables from utils
-import nstr from 'nstr'
+import { intTuple4ToFloat32, intTuple4ToFloat32WithThreshold } from '../../../utils'
 import {
   measurandLookup,
   productSubIdLookup,
@@ -49,15 +49,15 @@ export function intTuple2ToUInt16(data: [number, number]): number {
  * precision artifacts (for example: 0.30000000000000004). If you need
  * a UI-friendly, rounded number, use {@link intTuple4ToFloat32WithThreshold}.
  */
-export function intTuple4ToFloat32(data: [number, number, number, number]): number {
-  const buffer = new ArrayBuffer(4)
-  const view = new DataView(buffer)
-  view.setUint8(0, data[0] & 0xFF)
-  view.setUint8(1, data[1] & 0xFF)
-  view.setUint8(2, data[2] & 0xFF)
-  view.setUint8(3, data[3] & 0xFF)
-  return view.getFloat32(0)
-}
+/**
+ * Thin wrapper re-export of the project-wide utility that converts a
+ * 4-byte tuple to a 32-bit IEEE-754 float (big-endian).
+ *
+ * See `packages/parsers/src/utils.ts` for the actual implementation and
+ * full JSDoc. Keeping this small wrapper ensures the `parsing.ts`
+ * API doesn't change while sharing logic across parsers.
+ */
+export { intTuple4ToFloat32 }
 
 /**
  * Converts a 4-byte tuple to a 32-bit IEEE 754 float and returns a
@@ -70,18 +70,12 @@ export function intTuple4ToFloat32(data: [number, number, number, number]): numb
  * @param threshold Non-negative integer controlling artifact detection sensitivity (default: 3)
  * @returns Cleaned numeric value (parsed from `nstr` output)
  */
-export function intTuple4ToFloat32WithThreshold(data: [number, number, number, number], threshold = 3): number {
-  threshold = Math.max(0, Math.floor(threshold))
-  const value = intTuple4ToFloat32(data)
-  // Use `nstr` to automatically detect and fix common floating-point
-  // precision artifacts (repeating or spurious digits) and return a
-  // cleaned numeric value. `threshold` controls the detection behavior
-  // (non-negative integer); higher values make the function less eager
-  // to modify trailing digits. See `nstr` for details — it converts a
-  // number to a string with smart precision detection and here we parse
-  // that back to a Number.
-  return Number.parseFloat(nstr(value, { threshold }))
-}
+/**
+ * Thin wrapper re-export of the project-wide utility that converts a
+ * 4-byte tuple to a cleaned float value using `nstr` for artifact
+ * trimming. See `packages/parsers/src/utils.ts` for implementation.
+ */
+export { intTuple4ToFloat32WithThreshold }
 
 /**
  * Converts a 3-byte tuple to a semantic version string

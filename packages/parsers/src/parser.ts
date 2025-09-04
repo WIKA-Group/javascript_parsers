@@ -57,7 +57,7 @@ export interface DeviceParser<TParserOptions extends ParserOptions<AnyCodec>> {
   */
 
   decodeUplink: (input: UplinkInput) => GenericUplinkOutput<ReturnType<TParserOptions['codecs'][number]['decode']>>
-  decodeHexString: (input: HexUplinkInput) => GenericUplinkOutput<ReturnType<TParserOptions['codecs'][number]['decode']>>
+  decodeHexUplink: (input: HexUplinkInput) => GenericUplinkOutput<ReturnType<TParserOptions['codecs'][number]['decode']>>
 
   /*
   decodeBase64String: (input: string) => GenericUplinkOutput<ReturnType<TParserOptions['codecs'][number]['decode']>>
@@ -119,7 +119,7 @@ export function defineParser<const TParserOptions extends ParserOptions>(options
     }
   }
 
-  function decodeHexString(input: HexUplinkInput) {
+  function decodeHexUplink(input: HexUplinkInput) {
     const validatedInput = safeParse(createHexUplinkInputSchema(), input)
     if (!validatedInput.success) {
       return createError(`Input is not a valid for decoding. Check your input data.`)
@@ -149,7 +149,7 @@ export function defineParser<const TParserOptions extends ParserOptions>(options
 
   return {
     decodeUplink,
-    decodeHexString,
+    decodeHexUplink,
     encodeDownlink,
     adjustMeasuringRange: (name, range) => {
       codecs.forEach((codec) => {

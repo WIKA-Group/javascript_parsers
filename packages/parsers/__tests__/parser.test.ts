@@ -93,18 +93,18 @@ describe('defineParser', () => {
     expect(result.errors![0]).toMatch(/Input is not a valid/)
   })
 
-  it('should decodeHexString and call decodeUplink', () => {
+  it('should decodeHexUplink and call decodeUplink', () => {
     const codec = new MockCodec({ name: 'codec1', channels: validChannels })
     const parser = defineParser({ parserName: 'TestParser', codecs: [codec] })
     // bytes: '0102' => [1,2]
-    const result = parser.decodeHexString({ bytes: '0102', fPort: 1 })
+    const result = parser.decodeHexUplink({ bytes: '0102', fPort: 1 })
     expect(result).toEqual({ data: 'codec1' })
   })
 
-  it('should return error for invalid hex string in decodeHexString', () => {
+  it('should return error for invalid hex string in decodeHexUplink', () => {
     const codec = new MockCodec({ name: 'codec1', channels: validChannels })
     const parser = defineParser({ parserName: 'TestParser', codecs: [codec] })
-    const result = parser.decodeHexString({ bytes: 'ZZZZ', fPort: 1 })
+    const result = parser.decodeHexUplink({ bytes: 'ZZZZ', fPort: 1 })
     expect(result.errors![0]).toMatch(/not a valid hexadecimal/)
   })
 
@@ -167,11 +167,11 @@ describe('defineParser', () => {
     expect(result.errors![0]).toMatch(/Unknown error/)
   })
 
-  it('should return error for invalid input object in decodeHexString (coverage for lines 125-126)', () => {
+  it('should return error for invalid input object in decodeHexUplink (coverage for lines 125-126)', () => {
     const codec = new MockCodec({ name: 'codec1', channels: validChannels })
     const parser = defineParser({ parserName: 'TestParser', codecs: [codec] })
     // missing bytes property, so input is invalid for createHexUplinkInputSchema
-    const result = parser.decodeHexString({ fPort: 1 } as any)
+    const result = parser.decodeHexUplink({ fPort: 1 } as any)
     expect(result.errors![0]).toMatch(/Input is not a valid/)
   })
 })

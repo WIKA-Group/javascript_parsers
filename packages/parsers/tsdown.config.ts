@@ -18,10 +18,7 @@ export default defineConfig({
     js: '.js',
   }),
   target: 'es2015',
-  minify: {
-    compress: true,
-    mangle: true,
-  },
+  minify: true,
   clean: true,
 
   format: ['esm'],

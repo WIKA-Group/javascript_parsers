@@ -180,73 +180,51 @@ describe('hexStringToIntArray', () => {
 describe('percentageToValue', () => {
   describe('valid percentages', () => {
     it('should convert 50% to middle value', () => {
-      expect(percentageToValue(50, { min: 0, max: 100 })).toBe(50)
+      expect(percentageToValue(50, { start: 0, end: 100 })).toBe(50)
     })
 
     it('should convert 0% to minimum value', () => {
-      expect(percentageToValue(0, { min: 5, max: 15 })).toBe(5)
+      expect(percentageToValue(0, { start: 5, end: 15 })).toBe(5)
     })
 
     it('should convert 100% to maximum value', () => {
-      expect(percentageToValue(100, { min: 5, max: 15 })).toBe(15)
+      expect(percentageToValue(100, { start: 5, end: 15 })).toBe(15)
     })
 
     it('should handle negative ranges', () => {
-      expect(percentageToValue(25, { min: -10, max: 10 })).toBe(-5)
+      expect(percentageToValue(25, { start: -10, end: 10 })).toBe(-5)
     })
 
     it('should handle decimal percentages', () => {
-      expect(percentageToValue(33.33, { min: 0, max: 30 })).toBeCloseTo(9.999, 2)
+      expect(percentageToValue(33.33, { start: 0, end: 30 })).toBeCloseTo(9.999, 2)
     })
 
     it('should handle fractional ranges', () => {
-      expect(percentageToValue(25, { min: 0.5, max: 1.5 })).toBe(0.75)
+      expect(percentageToValue(25, { start: 0.5, end: 1.5 })).toBe(0.75)
     })
 
     it('should handle large ranges', () => {
-      expect(percentageToValue(10, { min: 1000, max: 2000 })).toBe(1100)
+      expect(percentageToValue(10, { start: 1000, end: 2000 })).toBe(1100)
     })
   })
 
   describe('boundary conditions', () => {
     it('should handle exactly 0%', () => {
-      expect(percentageToValue(0, { min: -100, max: 100 })).toBe(-100)
+      expect(percentageToValue(0, { start: -100, end: 100 })).toBe(-100)
     })
 
     it('should handle exactly 100%', () => {
-      expect(percentageToValue(100, { min: -100, max: 100 })).toBe(100)
-    })
-  })
-
-  describe('invalid percentages', () => {
-    it('should throw RangeError for negative percentage', () => {
-      expect(() => percentageToValue(-1, { min: 0, max: 100 }))
-        .toThrow('Percentage must be between 0 and 100')
-    })
-
-    it('should throw RangeError for percentage over 100', () => {
-      expect(() => percentageToValue(101, { min: 0, max: 100 }))
-        .toThrow('Percentage must be between 0 and 100')
-    })
-
-    it('should throw RangeError for significantly negative percentage', () => {
-      expect(() => percentageToValue(-50, { min: 0, max: 100 }))
-        .toThrow(RangeError)
-    })
-
-    it('should throw RangeError for significantly over 100 percentage', () => {
-      expect(() => percentageToValue(200, { min: 0, max: 100 }))
-        .toThrow(RangeError)
+      expect(percentageToValue(100, { start: -100, end: 100 })).toBe(100)
     })
   })
 
   describe('special numeric values', () => {
     it('should handle very small percentages', () => {
-      expect(percentageToValue(0.01, { min: 0, max: 1000 })).toBe(0.1)
+      expect(percentageToValue(0.01, { start: 0, end: 1000 })).toBe(0.1)
     })
 
     it('should handle very precise percentages', () => {
-      expect(percentageToValue(33.333333, { min: 0, max: 3 })).toBeCloseTo(1, 5)
+      expect(percentageToValue(33.333333, { start: 0, end: 3 })).toBeCloseTo(1, 5)
     })
   })
 })
@@ -254,161 +232,138 @@ describe('percentageToValue', () => {
 describe('tULIPValueToValue', () => {
   describe('boundary values', () => {
     it('should convert minimum TULIP value (2500) to minimum range value', () => {
-      expect(TULIPValueToValue(2500, { min: 0, max: 100 })).toBe(0)
-      expect(TULIPValueToValue(2500, { min: -10, max: 10 })).toBe(-10)
-      expect(TULIPValueToValue(2500, { min: 5, max: 15 })).toBe(5)
+      expect(TULIPValueToValue(2500, { start: 0, end: 100 })).toBe(0)
+      expect(TULIPValueToValue(2500, { start: -10, end: 10 })).toBe(-10)
+      expect(TULIPValueToValue(2500, { start: 5, end: 15 })).toBe(5)
     })
 
     it('should convert maximum TULIP value (12500) to maximum range value', () => {
-      expect(TULIPValueToValue(12500, { min: 0, max: 100 })).toBe(100)
-      expect(TULIPValueToValue(12500, { min: -10, max: 10 })).toBe(10)
-      expect(TULIPValueToValue(12500, { min: 5, max: 15 })).toBe(15)
+      expect(TULIPValueToValue(12500, { start: 0, end: 100 })).toBe(100)
+      expect(TULIPValueToValue(12500, { start: -10, end: 10 })).toBe(10)
+      expect(TULIPValueToValue(12500, { start: 5, end: 15 })).toBe(15)
     })
 
     it('should convert middle TULIP value (7500) to middle range value', () => {
-      expect(TULIPValueToValue(7500, { min: 0, max: 100 })).toBe(50)
-      expect(TULIPValueToValue(7500, { min: -10, max: 10 })).toBe(0)
-      expect(TULIPValueToValue(7500, { min: 5, max: 15 })).toBe(10)
+      expect(TULIPValueToValue(7500, { start: 0, end: 100 })).toBe(50)
+      expect(TULIPValueToValue(7500, { start: -10, end: 10 })).toBe(0)
+      expect(TULIPValueToValue(7500, { start: 5, end: 15 })).toBe(10)
     })
   })
 
   describe('specific test values', () => {
     it('should convert TULIP value 3000 correctly', () => {
       // 3000 = 5% of TULIP scale (500/10000)
-      expect(TULIPValueToValue(3000, { min: 0, max: 100 })).toBe(5)
-      expect(TULIPValueToValue(3000, { min: -10, max: 10 })).toBe(-9)
-      expect(TULIPValueToValue(3000, { min: 0, max: 20 })).toBe(1)
+      expect(TULIPValueToValue(3000, { start: 0, end: 100 })).toBe(5)
+      expect(TULIPValueToValue(3000, { start: -10, end: 10 })).toBe(-9)
+      expect(TULIPValueToValue(3000, { start: 0, end: 20 })).toBe(1)
     })
 
     it('should convert TULIP value 5000 correctly', () => {
       // 5000 = 25% of TULIP scale (2500/10000)
-      expect(TULIPValueToValue(5000, { min: 0, max: 100 })).toBe(25)
-      expect(TULIPValueToValue(5000, { min: -10, max: 10 })).toBe(-5)
-      expect(TULIPValueToValue(5000, { min: 0, max: 20 })).toBe(5)
+      expect(TULIPValueToValue(5000, { start: 0, end: 100 })).toBe(25)
+      expect(TULIPValueToValue(5000, { start: -10, end: 10 })).toBe(-5)
+      expect(TULIPValueToValue(5000, { start: 0, end: 20 })).toBe(5)
     })
 
     it('should convert TULIP value 6000 correctly', () => {
       // 6000 = 35% of TULIP scale (3500/10000)
-      expect(TULIPValueToValue(6000, { min: 0, max: 100 })).toBe(35)
-      expect(TULIPValueToValue(6000, { min: -10, max: 10 })).toBe(-3)
-      expect(TULIPValueToValue(6000, { min: 0, max: 20 })).toBe(7)
+      expect(TULIPValueToValue(6000, { start: 0, end: 100 })).toBe(35)
+      expect(TULIPValueToValue(6000, { start: -10, end: 10 })).toBe(-3)
+      expect(TULIPValueToValue(6000, { start: 0, end: 20 })).toBe(7)
     })
 
     it('should convert TULIP value 10000 correctly', () => {
       // 10000 = 75% of TULIP scale (7500/10000)
-      expect(TULIPValueToValue(10000, { min: 0, max: 100 })).toBe(75)
-      expect(TULIPValueToValue(10000, { min: -10, max: 10 })).toBe(5)
-      expect(TULIPValueToValue(10000, { min: 0, max: 20 })).toBe(15)
+      expect(TULIPValueToValue(10000, { start: 0, end: 100 })).toBe(75)
+      expect(TULIPValueToValue(10000, { start: -10, end: 10 })).toBe(5)
+      expect(TULIPValueToValue(10000, { start: 0, end: 20 })).toBe(15)
     })
 
     it('should convert TULIP value 11250 correctly', () => {
       // 11250 = 87.5% of TULIP scale (8750/10000)
-      expect(TULIPValueToValue(11250, { min: 0, max: 100 })).toBe(87.5)
-      expect(TULIPValueToValue(11250, { min: -10, max: 10 })).toBe(7.5)
-      expect(TULIPValueToValue(11250, { min: 0, max: 8 })).toBe(7)
+      expect(TULIPValueToValue(11250, { start: 0, end: 100 })).toBe(87.5)
+      expect(TULIPValueToValue(11250, { start: -10, end: 10 })).toBe(7.5)
+      expect(TULIPValueToValue(11250, { start: 0, end: 8 })).toBe(7)
     })
   })
 
   describe('quarter values', () => {
     it('should convert quarter TULIP values correctly', () => {
       // 25% = 5000
-      expect(TULIPValueToValue(5000, { min: 0, max: 100 })).toBe(25)
+      expect(TULIPValueToValue(5000, { start: 0, end: 100 })).toBe(25)
 
       // 50% = 7500
-      expect(TULIPValueToValue(7500, { min: 0, max: 100 })).toBe(50)
+      expect(TULIPValueToValue(7500, { start: 0, end: 100 })).toBe(50)
 
       // 75% = 10000
-      expect(TULIPValueToValue(10000, { min: 0, max: 100 })).toBe(75)
+      expect(TULIPValueToValue(10000, { start: 0, end: 100 })).toBe(75)
     })
   })
 
   describe('edge cases and special ranges', () => {
     it('should throw RangeError for zero range (min = max)', () => {
-      expect(() => TULIPValueToValue(7500, { min: 5, max: 5 })).toThrow(RangeError)
-      expect(() => TULIPValueToValue(2500, { min: 10, max: 10 })).toThrow(RangeError)
-      expect(() => TULIPValueToValue(12500, { min: -3, max: -3 })).toThrow(RangeError)
+      expect(() => TULIPValueToValue(7500, { start: 5, end: 5 })).toThrow(RangeError)
+      expect(() => TULIPValueToValue(2500, { start: 10, end: 10 })).toThrow(RangeError)
+      expect(() => TULIPValueToValue(12500, { start: -3, end: -3 })).toThrow(RangeError)
     })
     it('should throw RangeError for inverted ranges (min > max)', () => {
-      expect(() => TULIPValueToValue(2500, { min: 10, max: 0 })).toThrow(RangeError)
-      expect(() => TULIPValueToValue(12500, { min: 10, max: 0 })).toThrow(RangeError)
-      expect(() => TULIPValueToValue(7500, { min: 10, max: 0 })).toThrow(RangeError)
+      expect(() => TULIPValueToValue(2500, { start: 10, end: 0 })).toThrow(RangeError)
+      expect(() => TULIPValueToValue(12500, { start: 10, end: 0 })).toThrow(RangeError)
+      expect(() => TULIPValueToValue(7500, { start: 10, end: 0 })).toThrow(RangeError)
     })
 
     it('should handle fractional ranges', () => {
-      expect(TULIPValueToValue(2500, { min: 0.5, max: 1.5 })).toBe(0.5)
-      expect(TULIPValueToValue(12500, { min: 0.5, max: 1.5 })).toBe(1.5)
-      expect(TULIPValueToValue(7500, { min: 0.5, max: 1.5 })).toBe(1.0)
+      expect(TULIPValueToValue(2500, { start: 0.5, end: 1.5 })).toBe(0.5)
+      expect(TULIPValueToValue(12500, { start: 0.5, end: 1.5 })).toBe(1.5)
+      expect(TULIPValueToValue(7500, { start: 0.5, end: 1.5 })).toBe(1.0)
     })
 
     it('should handle large ranges', () => {
-      expect(TULIPValueToValue(2500, { min: 1000, max: 2000 })).toBe(1000)
-      expect(TULIPValueToValue(12500, { min: 1000, max: 2000 })).toBe(2000)
-      expect(TULIPValueToValue(5000, { min: 1000, max: 2000 })).toBe(1250)
+      expect(TULIPValueToValue(2500, { start: 1000, end: 2000 })).toBe(1000)
+      expect(TULIPValueToValue(12500, { start: 1000, end: 2000 })).toBe(2000)
+      expect(TULIPValueToValue(5000, { start: 1000, end: 2000 })).toBe(1250)
     })
 
     it('should handle negative ranges', () => {
-      expect(TULIPValueToValue(2500, { min: -100, max: -50 })).toBe(-100)
-      expect(TULIPValueToValue(12500, { min: -100, max: -50 })).toBe(-50)
-      expect(TULIPValueToValue(7500, { min: -100, max: -50 })).toBe(-75)
+      expect(TULIPValueToValue(2500, { start: -100, end: -50 })).toBe(-100)
+      expect(TULIPValueToValue(12500, { start: -100, end: -50 })).toBe(-50)
+      expect(TULIPValueToValue(7500, { start: -100, end: -50 })).toBe(-75)
     })
   })
 
   describe('precision tests', () => {
     it('should handle precise decimal calculations', () => {
       // Test with values that might introduce floating point precision issues
-      expect(TULIPValueToValue(3333, { min: 0, max: 3 })).toBeCloseTo(0.2499, 4)
-      expect(TULIPValueToValue(8333, { min: 0, max: 12 })).toBeCloseTo(6.9996, 4)
+      expect(TULIPValueToValue(3333, { start: 0, end: 3 })).toBeCloseTo(0.2499, 4)
+      expect(TULIPValueToValue(8333, { start: 0, end: 12 })).toBeCloseTo(6.9996, 4)
     })
 
     it('should maintain precision with very small ranges', () => {
-      expect(TULIPValueToValue(7500, { min: 0.001, max: 0.002 })).toBeCloseTo(0.0015, 6)
-    })
-  })
-
-  describe('invalid TULIP values', () => {
-    it('should throw RangeError for values below 2500', () => {
-      expect(() => TULIPValueToValue(2499, { min: 0, max: 100 }))
-        .toThrow('TULIP scale value must be between 2500 and 12500, is 2499')
-    })
-
-    it('should throw RangeError for values above 12500', () => {
-      expect(() => TULIPValueToValue(12501, { min: 0, max: 100 }))
-        .toThrow('TULIP scale value must be between 2500 and 12500, is 12501')
-    })
-
-    it('should throw RangeError for significantly out of range values', () => {
-      expect(() => TULIPValueToValue(0, { min: 0, max: 100 }))
-        .toThrow(RangeError)
-
-      expect(() => TULIPValueToValue(20000, { min: 0, max: 100 }))
-        .toThrow(RangeError)
-
-      expect(() => TULIPValueToValue(-1000, { min: 0, max: 100 }))
-        .toThrow(RangeError)
+      expect(TULIPValueToValue(7500, { start: 0.001, end: 0.002 })).toBeCloseTo(0.0015, 6)
     })
   })
 
   describe('real-world sensor scenarios', () => {
     it('should convert temperature sensor values correctly', () => {
       // Temperature range: -40°C to +85°C
-      expect(TULIPValueToValue(2500, { min: -40, max: 85 })).toBe(-40) // 0%
-      expect(TULIPValueToValue(7500, { min: -40, max: 85 })).toBe(22.5) // 50%
-      expect(TULIPValueToValue(12500, { min: -40, max: 85 })).toBe(85) // 100%
+      expect(TULIPValueToValue(2500, { start: -40, end: 85 })).toBe(-40) // 0%
+      expect(TULIPValueToValue(7500, { start: -40, end: 85 })).toBe(22.5) // 50%
+      expect(TULIPValueToValue(12500, { start: -40, end: 85 })).toBe(85) // 100%
     })
 
     it('should convert pressure sensor values correctly', () => {
       // Pressure range: 0 to 10 bar
-      expect(TULIPValueToValue(2500, { min: 0, max: 10 })).toBe(0) // 0%
-      expect(TULIPValueToValue(5000, { min: 0, max: 10 })).toBe(2.5) // 25%
-      expect(TULIPValueToValue(10000, { min: 0, max: 10 })).toBe(7.5) // 75%
-      expect(TULIPValueToValue(12500, { min: 0, max: 10 })).toBe(10) // 100%
+      expect(TULIPValueToValue(2500, { start: 0, end: 10 })).toBe(0) // 0%
+      expect(TULIPValueToValue(5000, { start: 0, end: 10 })).toBe(2.5) // 25%
+      expect(TULIPValueToValue(10000, { start: 0, end: 10 })).toBe(7.5) // 75%
+      expect(TULIPValueToValue(12500, { start: 0, end: 10 })).toBe(10) // 100%
     })
 
     it('should convert flow sensor values correctly', () => {
       // Flow range: 0 to 100 L/min
-      expect(TULIPValueToValue(3750, { min: 0, max: 100 })).toBe(12.5) // 12.5%
-      expect(TULIPValueToValue(6250, { min: 0, max: 100 })).toBe(37.5) // 37.5%
-      expect(TULIPValueToValue(8750, { min: 0, max: 100 })).toBe(62.5) // 62.5%
+      expect(TULIPValueToValue(3750, { start: 0, end: 100 })).toBe(12.5) // 12.5%
+      expect(TULIPValueToValue(6250, { start: 0, end: 100 })).toBe(37.5) // 37.5%
+      expect(TULIPValueToValue(8750, { start: 0, end: 100 })).toBe(62.5) // 62.5%
     })
   })
 })

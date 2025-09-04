@@ -1,3 +1,4 @@
+import type { Range } from './types'
 import nstr from 'nstr'
 import * as v from 'valibot'
 
@@ -122,26 +123,22 @@ export function hexStringToIntArray(hexString: string): number[] | null {
  *
  * @param percentage The percentage value (must be between 0 and 100)
  * @param range Object containing min and max values for the target range
- * @param range.min The minimum value of the range
- * @param range.max The maximum value of the range
+ * @param range.start The minimum value of the range
+ * @param range.end The maximum value of the range
  * @returns The calculated value within the specified range
- * @throws {RangeError} When percentage is not between 0 and 100
- * @throws {RangeError} When range.min is not less than range.max
+ * @throws {RangeError} When range.start is not less than range.end
  * @example
  * percentageToValue(50, {min: 0, max: 100}) // Returns: 50
  * percentageToValue(25, {min: -10, max: 10}) // Returns: -5
  * percentageToValue(0, {min: 5, max: 15}) // Returns: 5
  * percentageToValue(100, {min: 5, max: 15}) // Returns: 15
  */
-export function percentageToValue(percentage: number, range: { min: number, max: number }): number {
-  if (percentage < 0 || percentage > 100) {
-    throw new RangeError('Percentage must be between 0 and 100')
-  }
-  if (range.min >= range.max) {
-    throw new RangeError('Range min must be less than range max')
+export function percentageToValue(percentage: number, range: Range): number {
+  if (range.start >= range.end) {
+    throw new RangeError('Range start must be less than range end')
   }
   // Linear interpolation: min + (max - min) * (percentage / 100)
-  return (range.max - range.min) * (percentage / 100) + range.min
+  return (range.end - range.start) * (percentage / 100) + range.start
 }
 
 /**
@@ -156,10 +153,9 @@ export function percentageToValue(percentage: number, range: { min: number, max:
  *
  * @param tulipValue The TULIP scale value (must be between 2500 and 12500)
  * @param range Object containing min and max values for the target range
- * @param range.min The minimum value of the range
- * @param range.max The maximum value of the range
+ * @param range.start The minimum value of the range
+ * @param range.end The maximum value of the range
  * @returns The calculated value within the specified range
- * @throws {RangeError} When tulipValue is not between 2500 and 12500
  * Uses {@link percentageToValue} internally, which may throw errors itself.
  * @example
  * TULIPValueToValue(2500, {min: 0, max: 100}) // Returns: 0 (0%)
@@ -167,15 +163,43 @@ export function percentageToValue(percentage: number, range: { min: number, max:
  * TULIPValueToValue(12500, {min: 0, max: 100}) // Returns: 100 (100%)
  * TULIPValueToValue(5000, {min: -10, max: 10}) // Returns: -5 (25%)
  */
-export function TULIPValueToValue(tulipValue: number, range: { min: number, max: number }): number {
-  if (tulipValue < 2500 || tulipValue > 12500) {
-    throw new RangeError(`TULIP scale value must be between 2500 and 12500, is ${tulipValue}`)
-  }
-
+export function TULIPValueToValue(tulipValue: number, range: Range): number {
   // Convert TULIP scale value (2500 - 12500) to percentage (0 - 100)
   const percentage = (((tulipValue - 2500) * (100 - 0)) / 10_000) + 0
 
   // Use the existing percentageToValue function to map to the target range
+  return percentageToValue(percentage, range)
+}
+
+/**
+ * Converts a slope scale value to a real value within a specified range.
+ *
+ * The slope scale uses values from 0 to 10_000 (inclusive). This maps linearly
+ * to a percentage between 0 and 100 by dividing the slope value by 100, and
+ * then uses {@link percentageToValue} to map that percentage into the provided
+ * range using linear interpolation.
+ *
+ * @param slopeValue The slope scale value (must be between 0 and 10_000 inclusive)
+ * @param range Object containing min and max values for the target range
+ * @param range.start The minimum value of the range
+ * @param range.end The maximum value of the range
+ * @returns The calculated value within the specified range
+ * @throws {RangeError} When slopeValue is not between 0 and 10_000
+ * Uses {@link percentageToValue} internally, which may throw errors for invalid ranges or percentages.
+ * @example
+ * slopeValueToValue(0, {min: 0, max: 100}) // Returns: 0 (0%)
+ * slopeValueToValue(5000, {min: 0, max: 100}) // Returns: 50 (50%)
+ * slopeValueToValue(10000, {min: 0, max: 100}) // Returns: 100 (100%)
+ */
+export function slopeValueToValue(slopeValue: number, range: Range): number {
+  // slope value must be between 0 and 10_000 (inclusive)
+  if (slopeValue < 0 || slopeValue > 10_000) {
+    throw new RangeError(`Slope value must be between 0 and 10_000, is ${slopeValue}`)
+  }
+
+  // convert the value to 0 - 100%
+  const percentage = slopeValue / 100
+
   return percentageToValue(percentage, range)
 }
 
@@ -221,4 +245,50 @@ export function roundValue(value: number, decimals?: number): number {
   }
 
   return Number.parseFloat(v)
+}
+
+/**
+ * Converts a 4-byte tuple to a 32-bit IEEE 754 float (big-endian).
+ *
+ * This is a small, dependency-free helper that converts four bytes into
+ * a JavaScript Number using a DataView. It returns the raw IEEE-754
+ * float value as produced by the platform.
+ *
+ * @param data Tuple containing exactly 4 bytes in big-endian order
+ * @returns 32-bit floating point number (raw IEEE-754 value)
+ */
+export function intTuple4ToFloat32(data: [number, number, number, number]): number {
+  const buffer = new ArrayBuffer(4)
+  const view = new DataView(buffer)
+  view.setUint8(0, data[0] & 0xFF)
+  view.setUint8(1, data[1] & 0xFF)
+  view.setUint8(2, data[2] & 0xFF)
+  view.setUint8(3, data[3] & 0xFF)
+  return view.getFloat32(0)
+}
+
+/**
+ * Converts a 4-byte tuple to a 32-bit IEEE 754 float and returns a
+ * cleaned numeric value suitable for UI display.
+ *
+ * This wrapper applies a small post-processing step using `nstr` to
+ * remove common floating-point precision artifacts (for example:
+ * 0.30000000000000004 → "0.3"). The `threshold` parameter controls
+ * detection sensitivity (non-negative integer). Higher values make the
+ * function less eager to trim trailing digits.
+ *
+ * Note: `nstr` is used here centrally in `utils` so other modules do
+ * not need to import it directly.
+ *
+ * @param data Tuple containing exactly 4 bytes in big-endian order
+ * @param threshold Non-negative integer controlling artifact detection sensitivity (default: 3)
+ * @returns Cleaned numeric value (parsed from `nstr` output)
+ */
+export function intTuple4ToFloat32WithThreshold(
+  data: [number, number, number, number],
+  threshold = 3,
+): number {
+  threshold = Math.max(0, Math.floor(threshold))
+  const value = intTuple4ToFloat32(data)
+  return Number.parseFloat(nstr(value, { threshold }))
 }

@@ -1,26 +1,24 @@
-import { beforeEach, describe, expect, it } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { defineTULIP1Codec } from '../../../src/codecs/tulip1'
 
 describe('defineTULIP1Codec (non-decode methods)', () => {
-  let codec: ReturnType<typeof defineTULIP1Codec>
+  const handlers: any = {}
+  for (let i = 0x00; i <= 0x09; ++i) {
+    // handlers return a shape including the rounding value so tests can assert it changed
+    handlers[i] = ((input: any, options: any) => ({ prefix: i, rounding: options.roundingDecimals })) as any
+  }
 
-  beforeEach(() => {
-    const handlers: any = {}
-    for (let i = 0x00; i <= 0x09; ++i) {
-      // handlers return a shape including the rounding value so tests can assert it changed
-      handlers[i] = ((input: any, options: any) => ({ prefix: i, rounding: options.roundingDecimals })) as any
-    }
+  const channels = [
+    { name: 'ch1', start: 0, end: 100, channelId: 0 },
+    { name: 'ch2', start: 10, end: 200, channelId: 1 },
+  ]
 
-    codec = defineTULIP1Codec({
-      deviceName: 'TestDevice',
-      channels: [
-        { name: 'ch1', start: 0, end: 100 },
-        { name: 'ch2', start: 10, end: 200 },
-      ],
-      roundingDecimals: 2,
-      handlers,
-      encodeHandler: () => [0x00],
-    })
+  const codec = defineTULIP1Codec({
+    deviceName: 'TestDevice',
+    channels,
+    roundingDecimals: 2,
+    handlers,
+    encodeHandler: () => [0x00],
   })
 
   it('should have the correct name', () => {
@@ -60,7 +58,7 @@ describe('defineTULIP1Codec (non-decode methods)', () => {
   })
 
   it('encode is the encode handler provided', () => {
-    const out = codec.encode({})
+    const out = codec.encode()
     expect(out).toEqual([0x00])
   })
 })
@@ -69,7 +67,7 @@ describe('defineTULIP1Codec (decoding + validations)', () => {
   it('decode throws when no handler for first byte', () => {
     const codec = defineTULIP1Codec({
       deviceName: 'D',
-      channels: [{ name: 'c', start: 0, end: 1 }],
+      channels: [{ name: 'c', start: 0, end: 1, channelId: 0 }],
       handlers: { 0x00: (() => ({})) as any },
       encodeHandler: () => [],
     })
@@ -82,8 +80,8 @@ describe('defineTULIP1Codec (decoding + validations)', () => {
       defineTULIP1Codec({
         deviceName: 'Dup',
         channels: [
-          { name: 'dup', start: 0, end: 10 },
-          { name: 'dup', start: 0, end: 5 },
+          { name: 'dup', start: 0, end: 10, channelId: 0 },
+          { name: 'dup', start: 0, end: 5, channelId: 1 },
         ],
         handlers: {},
         encodeHandler: () => [],
@@ -96,7 +94,7 @@ describe('defineTULIP1Codec (decoding + validations)', () => {
     const options = () =>
       defineTULIP1Codec({
         deviceName: 'BadRange',
-        channels: [{ name: 'bad', start: 10, end: 10 }],
+        channels: [{ name: 'bad', start: 10, end: 10, channelId: 0 }],
         handlers: {},
         encodeHandler: () => [],
       })

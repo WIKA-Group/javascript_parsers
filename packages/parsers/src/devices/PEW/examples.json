@@ -100,9 +100,8 @@
       "recvTime": "1992-12-22T17:00:00+01:00"
     },
     "output": {
-      "data": {},
       "errors": [
-        "PEW-1000 (JS): Data message type 00 not supported"
+        "PEW-1000 (JS): Message could not be decoded. No codec matched the input."
       ]
     }
   },
@@ -119,7 +118,6 @@
       "recvTime": "1992-12-22T17:00:00+01:00"
     },
     "output": {
-      "data": {},
       "errors": [
         "PEW-1000 (JS): Data message 01/02 needs 7 bytes but got 3"
       ]
@@ -183,7 +181,7 @@
             "eventName": "triggered",
             "alarmType": 2,
             "alarmTypeName": "falling slope",
-            "value": -2.283
+            "value": 0.217
           }
         ]
       }
@@ -316,9 +314,8 @@
       "recvTime": "1992-12-22T17:00:00+01:00"
     },
     "output": {
-      "data": {},
       "errors": [
-        "PEW-1000 (JS): Data message type 06 not supported"
+        "PEW-1000 (JS): Message could not be decoded. No codec matched the input."
       ]
     }
   },
@@ -453,9 +450,8 @@
       "recvTime": "1992-12-22T17:00:00+01:00"
     },
     "output": {
-      "data": {},
       "errors": [
-        "PEW-1000 (JS): Data message type 09 not supported"
+        "PEW-1000 (JS): Message could not be decoded. No codec matched the input."
       ]
     }
   },
