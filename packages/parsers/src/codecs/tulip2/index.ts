@@ -55,6 +55,72 @@ export interface TULIP2CodecOptions<TChannels extends TULIP2Channel[] = TULIP2Ch
 
 export type TULIP2Codec<TChannels extends TULIP2Channel[], TName extends string, THandlers extends MessageHandlers<TChannels>, TEncoder extends ((input: object) => number[]) | undefined> = Codec<`${TName}TULIP2`, ReturnTypeOfHandlers<TChannels, THandlers>, TChannels[number]['name'], TEncoder>
 
+/**
+ * Creates a TULIP2 protocol codec for decoding and encoding IoT device messages.
+ *
+ * TULIP2 is a protocol that uses the first byte (0x00-0x09) as a message type identifier,
+ * followed by payload data. Each message type is handled by a specific handler function.
+ *
+ *
+ * @param options - Configuration object for the TULIP2 codec, see {@link TULIP2CodecOptions}
+ *
+ * @returns A fully configured TULIP2 codec with decode, encode, and adjustment capabilities
+ *
+ * @throws {Error} When channel names are duplicated
+ * @throws {Error} When channel IDs are duplicated
+ * @throws {Error} When channel ranges are invalid (start >= end)
+ *
+ * @example
+ * ```typescript
+ * // Define channels with unique names and IDs
+ * const defineChannels () =>  ([
+ *   { name: 'temperature', start: -40, end: 125, channelId: 0 },
+ *   { name: 'humidity', start: 0, end: 100, channelId: 1 }
+ * ] as const);
+ *
+ * // Define message handlers
+ * const handlers = {
+ *   0x01: (input, { roundingDecimals, channels }) => ({
+ *     data: { temperature: 22.5, timestamp: Date.now() }
+ *   }),
+ *   0x02: (input, { roundingDecimals, channels }) => ({
+ *     data: { humidity: 55.0, timestamp: Date.now() }
+ *   })
+ * };
+ *
+ * // Create codec
+ * const codec = defineTULIP2Codec({
+ *   deviceName: 'SensorDevice',
+ *   channels: defineChannels(),
+ *   handlers,
+ *   encodeHandler: (data) => [0x01, 0x42] // Optional encoder
+ * });
+ * ```
+ *
+ * @warning **ANTI-PATTERN**: Do not reuse the same channel array reference across multiple codec instances.
+ * The channels array is mutated when `adjustMeasuringRange` is called, which can cause unexpected
+ * behavior when multiple parsers share the same channel references. Always create fresh channel
+ * arrays for each codec instance to avoid channel pollution:
+ *
+ * ```typescript
+ * // ❌ WRONG - Reusing channel reference
+ * const sharedChannels = [{ name: 'temp', start: 0, end: 100, channelId: 0 }];
+ * const codec1 = defineTULIP2Codec({ channels: sharedChannels, ... });
+ * const codec2 = defineTULIP2Codec({ channels: sharedChannels, ... }); // Will share mutations!
+ *
+ * // ✅ CORRECT - Fresh channel arrays
+ * const codec1 = defineTULIP2Codec({
+ *   channels: [{ name: 'temp', start: 0, end: 100, channelId: 0 }], ...
+ * });
+ * const codec2 = defineTULIP2Codec({
+ *   channels: [{ name: 'temp', start: 0, end: 100, channelId: 0 }], ...
+ * });
+ * ```
+ *
+ * @see {@link TULIP2CodecOptions} for detailed options interface
+ * @see {@link MessageHandlers} for handler function signatures
+ * @see {@link TULIP2Channel} for channel configuration interface
+ */
 export function defineTULIP2Codec<TChannels extends TULIP2Channel[], TName extends string, THandlers extends MessageHandlers<TChannels>, TEncoder extends ((input: object) => number[]) | undefined>(options: TULIP2CodecOptions<TChannels, TName, THandlers, TEncoder>): TULIP2Codec<TChannels, TName, THandlers, TEncoder> {
   const codecName = `${options.deviceName}TULIP2` as `${TName}TULIP2`
 

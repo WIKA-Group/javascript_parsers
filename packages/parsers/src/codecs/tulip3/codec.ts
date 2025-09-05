@@ -20,6 +20,91 @@ type ChannelNames<TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig> = 
   }[keyof TTULIP3DeviceSensorConfig[S]] : never
 }[keyof TTULIP3DeviceSensorConfig]
 
+/**
+ * Creates a TULIP3 protocol codec for decoding advanced IoT device messages with comprehensive sensor support.
+ *
+ * TULIP3 is an enhanced protocol that supports multiple message types (0x10-0x17) with sub-types,
+ * providing sophisticated handling for data messages, alarms, configuration, identification, and more.
+ * Unlike TULIP2, TULIP3 uses a device profile configuration approach with sensor-based channel organization.
+ *
+ * @param deviceProfile - Complete device profile configuration object, see {@link TULIP3DeviceProfile}
+ *
+ * @returns A fully configured TULIP3 codec capable of handling all TULIP3 message types
+ *
+ * @throws {Error} When channel names are duplicated across sensors
+ * @throws {Error} When channel ranges are invalid (start >= end)
+ * @throws {RangeError} When input bytes are insufficient for message type
+ * @throws {Error} When unsupported message types or sub-types are encountered
+ *
+ * @example
+ * ```typescript
+ * // Create a device profile with sensor configuration
+ * const createDeviceProfile = () => ({
+ *   deviceName: 'PressureSensor',
+ *   roundingDecimals: 2,
+ *   identificationMessageMaxRegisterSize: 64,
+ *   configurationMessageMaxRegisterSize: 32,
+ *   sensorChannelConfig: {
+ *     sensor1: {
+ *       channel1: {
+ *         channelName: 'pressure',
+ *         start: 0,
+ *         end: 1000,
+ *         unit: 'bar'
+ *       }
+ *     }
+ *   },
+ *   deviceAlarmConfig: {
+ *     communicationModuleAlarms: {...},
+ *     sensorAlarms: {...},
+ *     sensorChannelAlarms: {...}
+ *   }
+ * } as const);
+ *
+ * // Create TULIP3 codec
+ * const codec = defineTULIP3Codec(createDeviceProfile());
+ *
+ * // Decode a data message (0x10/0x11)
+ * const result = codec.decode({ bytes: [0x10, 0x01, ...], fPort: 1 });
+ * ```
+ *
+ * **Supported Message Types:**
+ * - `0x10/0x11` - Data messages with sensor readings
+ * - `0x12` - Process alarm messages
+ * - `0x13` - Device alarm messages (communication, sensor, channel)
+ * - `0x14` - Identification register read/write
+ * - `0x15` - Configuration register read/write
+ * - `0x16` - Keep-alive messages
+ * - `0x17` - Spontaneous messages (downlink answers, fetch requests)
+ *
+ * @warning **ANTI-PATTERN**: Do not reuse the same device profile object reference across multiple codec instances.
+ * The device profile's sensor channel configurations are mutated when `adjustMeasuringRange` is called,
+ * which can cause unexpected behavior when multiple parsers share the same profile reference.
+ * Always create fresh device profile objects for each codec instance to avoid channel pollution:
+ *
+ * ```typescript
+ * // ❌ WRONG - Reusing device profile reference
+ * const sharedProfile = { deviceName: 'Device', sensorChannelConfig: {...}, ... };
+ * const codec1 = defineTULIP3Codec(sharedProfile);
+ * const codec2 = defineTULIP3Codec(sharedProfile); // Will share mutations!
+ *
+ * // ✅ CORRECT - Fresh device profiles
+ * const codec1 = defineTULIP3Codec({
+ *   deviceName: 'Device1',
+ *   sensorChannelConfig: { sensor1: { ch1: {...} } },
+ *   ...
+ * });
+ * const codec2 = defineTULIP3Codec({
+ *   deviceName: 'Device2',
+ *   sensorChannelConfig: { sensor1: { ch1: {...} } },
+ *   ...
+ * });
+ * ```
+ *
+ * @see {@link TULIP3DeviceProfile} for complete device profile interface
+ * @see {@link TULIP3UplinkOutput} for output type definitions
+ * @see {@link TULIP3ChannelConfig} for channel configuration interface
+ */
 export function defineTULIP3Codec<const TDeviceProfile extends TULIP3DeviceProfile>(deviceProfile: TDeviceProfile): Codec<`${TDeviceProfile['deviceName']}TULIP3Codec`, TULIP3UplinkOutput<TDeviceProfile>, ChannelNames<TDeviceProfile['sensorChannelConfig']>> {
   const name = `${deviceProfile.deviceName}TULIP3Codec` as `${TDeviceProfile['deviceName']}TULIP3Codec`
   let roundingDecimals = getRoundingDecimals(deviceProfile.roundingDecimals)

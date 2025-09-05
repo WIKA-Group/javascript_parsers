@@ -7,22 +7,27 @@ import { ALARM_EVENTS, DEVICE_ALARM_CAUSE_OF_FAILURE, DEVICE_ALARM_TYPES, PRESSU
 
 const ERROR_VALUE = 0xFFFF
 
-const channels = [
-  {
-    channelId: 0,
-    name: 'pressure',
-    start: 0 as number,
-    end: 10 as number,
-  },
-  {
-    channelId: 1,
-    name: 'device temperature',
-    start: -45 as number,
-    end: 110 as number,
-  },
-] as const satisfies TULIP2Channel[]
+// eslint-disable-next-line ts/explicit-function-return-type
+function createTULIP2PEWChannels() {
+  return [
+    {
+      channelId: 0,
+      name: 'pressure',
+      start: 0 as number,
+      end: 10 as number,
+    },
+    {
+      channelId: 1,
+      name: 'device temperature',
+      start: -45 as number,
+      end: 110 as number,
+    },
+  ] as const satisfies TULIP2Channel[]
+}
 
-const handleDataMessage: Handler<typeof channels, PEWTULIP2DataMessageUplinkOutput> = (input, options) => {
+type TULIP2PEWChannels = ReturnType<typeof createTULIP2PEWChannels>
+
+const handleDataMessage: Handler<TULIP2PEWChannels, PEWTULIP2DataMessageUplinkOutput> = (input, options) => {
   // validate that the message needs to be 7 bytes long
   if (input.bytes.length !== 7) {
     throw new Error(`Data message 01/02 needs 7 bytes but got ${input.bytes.length}`)
@@ -65,7 +70,7 @@ const handleDataMessage: Handler<typeof channels, PEWTULIP2DataMessageUplinkOutp
   }
 }
 
-const handleProcessAlarmMessage: Handler<typeof channels, PEWTULIP2ProcessAlarmsUplinkOutput> = (input, options) => {
+const handleProcessAlarmMessage: Handler<TULIP2PEWChannels, PEWTULIP2ProcessAlarmsUplinkOutput> = (input, options) => {
   // validate that it needs atleast 5 bytes AND that length-2 % 3
   if (input.bytes.length < 5 || (input.bytes.length - 2) % 3 !== 0) {
     throw new Error(`Process alarm 03 needs at least 5 bytes and got ${input.bytes.length}. Also all bytes for each alarm needed`)
@@ -124,7 +129,7 @@ const handleProcessAlarmMessage: Handler<typeof channels, PEWTULIP2ProcessAlarms
   return res
 }
 
-const handleTechnicalAlarmMessage: Handler<typeof channels, PEWTULIP2TechnicalAlarmsUplinkOutput> = (input) => {
+const handleTechnicalAlarmMessage: Handler<TULIP2PEWChannels, PEWTULIP2TechnicalAlarmsUplinkOutput> = (input) => {
   // Technical alarm messages are exactly 3 bytes: [0x04, configurationId, alarmByte]
   if (input.bytes.length !== 3) {
     throw new Error(`Technical alarm 04 needs 3 bytes but got ${input.bytes.length}.`)
@@ -167,7 +172,7 @@ const handleTechnicalAlarmMessage: Handler<typeof channels, PEWTULIP2TechnicalAl
   return res
 }
 
-const handleDeviceAlarmMessage: Handler<typeof channels, PEWTULIP2DeviceAlarmsUplinkOutput> = (input) => {
+const handleDeviceAlarmMessage: Handler<TULIP2PEWChannels, PEWTULIP2DeviceAlarmsUplinkOutput> = (input) => {
   // Device alarm messages are 3 or 4 bytes: [0x05, configurationId, alarmByte, [value]]
   if (input.bytes.length < 3 || input.bytes.length > 4) {
     throw new Error(`Device alarm 05 needs 3 or 4 bytes but got ${input.bytes.length}.`)
@@ -216,7 +221,7 @@ const handleDeviceAlarmMessage: Handler<typeof channels, PEWTULIP2DeviceAlarmsUp
   return res
 }
 
-const handleDeviceIdentificationMessage: Handler<typeof channels, PEWTULIP2DeviceInformationUplinkOutput> = (input) => {
+const handleDeviceIdentificationMessage: Handler<TULIP2PEWChannels, PEWTULIP2DeviceInformationUplinkOutput> = (input) => {
   // validate if 8 or 38 bytes are present
   if (input.bytes.length !== 8 && input.bytes.length !== 38) {
     throw new Error(`Identification message 07 needs 8 or 38 bytes but got ${input.bytes.length}`)
@@ -320,7 +325,7 @@ const handleDeviceIdentificationMessage: Handler<typeof channels, PEWTULIP2Devic
   }
 }
 
-const handleKeepAliveMessage: Handler<typeof channels, PEWTULIP2DeviceStatisticsUplinkOutput> = (input) => {
+const handleKeepAliveMessage: Handler<TULIP2PEWChannels, PEWTULIP2DeviceStatisticsUplinkOutput> = (input) => {
   // Keep alive message is 3 bytes: [0x08, configurationId, batteryByte]
   if (input.bytes.length !== 3) {
     throw new Error(`Keep alive message 08 needs 3 bytes but got ${input.bytes.length}.`)
@@ -351,7 +356,7 @@ export function createTULIP2PEWCodec() {
   return defineTULIP2Codec({
     deviceName: PEW_NAME,
     roundingDecimals: DEFAULT_ROUNDING_DECIMALS,
-    channels,
+    channels: createTULIP2PEWChannels(),
     handlers: {
       0x01: handleDataMessage,
       0x02: handleDataMessage,
