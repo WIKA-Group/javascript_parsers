@@ -1,6 +1,6 @@
 {
   "name": "wika-netris1-driver",
-  "version": "3.2.1",
+  "version": "4.0.0",
   "description": "WIKA NETRIS1 LoRaWAN driver",
   "author": "WIKA Alexander Wiegand SE & Co. KG",
   "license": "MIT",

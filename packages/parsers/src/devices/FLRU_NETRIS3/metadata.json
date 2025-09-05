@@ -1,6 +1,6 @@
 {
   "name": "wika-flru-netris3-decoder",
-  "version": "3.2.1",
+  "version": "4.0.0",
   "main": "index.js",
   "description": "WIKA FLRU+NETRIS3 LoRaWAN decoder",
   "codecId": "0001",
