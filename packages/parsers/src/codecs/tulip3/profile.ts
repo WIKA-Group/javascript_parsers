@@ -4,11 +4,11 @@ export interface TULIP3ChannelConfig {
   /**
    * Measurement limit, not physical limit
    */
-  min: number
+  start: number
   /**
    * Measurement limit, not physical limit
    */
-  max: number
+  end: number
   measurementTypes: typeof protocolDataTypeLookup[keyof typeof protocolDataTypeLookup][]
   channelName: string
 }
@@ -86,22 +86,8 @@ export interface TULIP3DeviceProfile<TTULIP3DeviceSensorConfig extends TULIP3Dev
      */
     sensorChannelAlarms: DeviceAlarmFlags
   }
-
-  /**
-   * How many bytes a register can have in the identification message.
-   * Minimum value is 1, maximum value is 31.
-   * @default 31
-   */
-  identificationMessageMaxRegisterSize?: number
-
-  /**
-   * How many bytes a register can have in the configuration message.
-   * Minimum value is 1, maximum value is 31.
-   * @default 31
-   */
-  configurationMessageMaxRegisterSize?: number
 }
 
-export function defineTULIP3DeviceProfile<TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig>(profile: TULIP3DeviceProfile<TTULIP3DeviceSensorConfig>): TULIP3DeviceProfile<TTULIP3DeviceSensorConfig> {
+export function defineTULIP3DeviceProfile<const TTULIP3DeviceProfile extends TULIP3DeviceProfile>(profile: TTULIP3DeviceProfile): TTULIP3DeviceProfile {
   return profile
 }

@@ -28,8 +28,8 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsdown --clean --splitting",
-    "schema": "pnpm dlx jiti ./scripts/schema.ts",
+    "build": "jiti ./scripts/build.ts",
+    "schema": "jiti ./scripts/schema.ts",
     "test:shared": "vitest ./src/shared.spec.ts"
   },
   "devDependencies": {

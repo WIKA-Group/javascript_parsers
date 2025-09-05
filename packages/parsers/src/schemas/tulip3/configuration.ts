@@ -18,7 +18,7 @@ import { createGenericUplinkOutputSchema, createWriteResponseDataSchema } from '
  * const result = v.parse(schema, "float - IEEE754")
  * ```
  */
-export function createProtocolDataTypeSchema() {
+function createProtocolDataTypeSchema() {
   return v.picklist(Object.values(protocolDataTypeLookup) as (typeof protocolDataTypeLookup[keyof typeof protocolDataTypeLookup])[])
 }
 
@@ -39,7 +39,7 @@ export function createProtocolDataTypeSchema() {
  * const result = v.parse(schema, { channel1: true, channel2: true, channel3: false })
  * ```
  */
-export function createSamplingChannelsSchema<const TConfig extends TULIP3SensorChannelConfig>(config: TConfig) {
+function createSamplingChannelsSchema<const TConfig extends TULIP3SensorChannelConfig>(config: TConfig) {
   const allChannels = ['channel1', 'channel2', 'channel3', 'channel4', 'channel5', 'channel6', 'channel7', 'channel8'] as const
 
   type SampledChannels = {
@@ -68,7 +68,7 @@ export function createSamplingChannelsSchema<const TConfig extends TULIP3SensorC
  * })
  * ```
  */
-export function createProcessAlarmEnabledSchema() {
+function createProcessAlarmEnabledSchema() {
   return v.object({
     lowThreshold: v.optional(v.boolean()), // Bit 7
     highThreshold: v.optional(v.boolean()), // Bit 6
@@ -99,7 +99,7 @@ export function createProcessAlarmEnabledSchema() {
  * })
  * ```
  */
-export function createCommunicationModuleConfigurationSchema() {
+function createCommunicationModuleConfigurationSchema() {
   return v.object({
     measuringPeriodAlarmOff: v.optional(v.number()), // uint32, in milliseconds
     measuringPeriodAlarmOn: v.optional(v.number()), // uint32, in milliseconds
@@ -132,7 +132,7 @@ export function createCommunicationModuleConfigurationSchema() {
  * })
  * ```
  */
-export function createSensorConfigurationSchema<const TConfig extends TULIP3SensorChannelConfig>(config: TConfig) {
+function createSensorConfigurationSchema<const TConfig extends TULIP3SensorChannelConfig>(config: TConfig) {
   return v.object({
     samplingChannels: v.optional(createSamplingChannelsSchema(config)), // bit flags for sampling channels
     bootTime: v.optional(v.number()), // uint16, in milliseconds
@@ -160,7 +160,7 @@ export function createSensorConfigurationSchema<const TConfig extends TULIP3Sens
  * })
  * ```
  */
-export function createChannelConfigurationSchema<TName extends string>(name: TName) {
+function createChannelConfigurationSchema<TName extends string>(name: TName) {
   return v.object({
     channelName: v.literal(name), // channel name
     protocolDataType: v.optional(createProtocolDataTypeSchema()), // protocol data type enum
@@ -204,7 +204,7 @@ export function createChannelConfigurationSchema<TName extends string>(name: TNa
  * })
  * ```
  */
-export function createSensorWithChannelConfigurationsSchema<const TTULIP3SensorChannelConfig extends TULIP3SensorChannelConfig>(sensorChannelConfig: TTULIP3SensorChannelConfig) {
+function createSensorWithChannelConfigurationsSchema<const TTULIP3SensorChannelConfig extends TULIP3SensorChannelConfig>(sensorChannelConfig: TTULIP3SensorChannelConfig) {
   const sensorWithChannelConfigurationsObject = {
     configuration: v.optional(createSensorConfigurationSchema(sensorChannelConfig)),
   } as const
@@ -280,7 +280,7 @@ function createConfigurationReadRegisterDataSchema<const TTULIP3DeviceSensorConf
  * })
  * ```
  */
-export function createConfigurationReadRegistersResponseUplinkOutputSchema<const TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig>(config: TTULIP3DeviceSensorConfig) {
+function createConfigurationReadRegistersResponseUplinkOutputSchema<const TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig>(config: TTULIP3DeviceSensorConfig) {
   return createGenericUplinkOutputSchema({
     messageType: [0x15], // Configuration message type
     messageSubType: [0x01, 0x02], // Configuration message subtypes (read responses)
@@ -313,7 +313,7 @@ export function createConfigurationReadRegistersResponseUplinkOutputSchema<const
  * })
  * ```
  */
-export function createConfigurationWriteRegistersResponseUplinkOutputSchema() {
+function createConfigurationWriteRegistersResponseUplinkOutputSchema() {
   return createGenericUplinkOutputSchema({
     messageType: [0x15], // Configuration message type
     messageSubType: [0x03], // Configuration write response subtype
@@ -327,3 +327,8 @@ export type ConfigurationReadRegisterData<TTULIP3DeviceSensorConfig extends TULI
 export type ConfigurationReadRegistersResponseUplinkOutput<TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig> = v.InferOutput<ReturnType<typeof createConfigurationReadRegistersResponseUplinkOutputSchema<TTULIP3DeviceSensorConfig>>>
 export type ConfigurationWriteRegisterData = v.InferOutput<ReturnType<typeof createWriteResponseDataSchema>>
 export type ConfigurationWriteRegistersResponseUplinkOutput = v.InferOutput<ReturnType<typeof createConfigurationWriteRegistersResponseUplinkOutputSchema>>
+
+export {
+  createConfigurationReadRegistersResponseUplinkOutputSchema,
+  createConfigurationWriteRegistersResponseUplinkOutputSchema,
+}

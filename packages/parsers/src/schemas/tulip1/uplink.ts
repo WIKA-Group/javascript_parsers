@@ -11,9 +11,9 @@ function createGenericUplinkOutputSchema<const TMaxConfigId extends number, cons
     data: v.object({
       configurationId: v.pipe(
         v.number(),
-        v.integer(),
         v.minValue(0),
         v.maxValue(i.maxConfigId),
+        v.integer(),
       ),
       messageType: v.picklist(i.messageType),
       ...i.extension,
@@ -55,15 +55,15 @@ export function createDownlinkOutputSuccessfulSchema() {
     bytes: v.array(
       v.pipe(
         v.number(),
-        v.integer(),
         v.minValue(0),
         v.maxValue(255),
+        v.integer(),
       ),
     ),
     /**
      * The uplink message LoRaWAN `fPort`
      */
-    fPort: v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(224)),
+    fPort: v.pipe(v.number(), v.minValue(1), v.maxValue(224), v.integer()),
   })
 }
 
@@ -71,8 +71,8 @@ export function createChannelMeasurementSchema() {
   return v.object({
     channelId: v.pipe(
       v.number(),
-      v.integer(),
       v.minValue(0),
+      v.integer(),
     ),
     value: v.number(),
     channelName: v.string(),
@@ -85,8 +85,8 @@ export function createProcessAlarmsSchemaExtension() {
       v.object({
         channelId: v.pipe(
           v.number(),
-          v.integer(),
           v.minValue(0),
+          v.integer(),
         ),
         channelName: v.string(),
         event: v.picklist([0, 1]),
@@ -112,8 +112,8 @@ export function createTechnicalAlarmsSchemaExtension() {
       v.object({
         channelId: v.pipe(
           v.number(),
-          v.integer(),
           v.minValue(0),
+          v.integer(),
         ),
         channelName: v.string(),
         event: v.picklist([0, 1]),
@@ -168,8 +168,8 @@ export function createRadioUnitIdentificationSchemaExtension() {
 export function createDeviceStatisticSchemaExtension() {
   return {
     deviceStatistic: v.object({
-      numberOfMeasurements: v.pipe(v.number(), v.integer(), v.minValue(0)),
-      numberOfTransmissions: v.pipe(v.number(), v.integer(), v.minValue(0)),
+      numberOfMeasurements: v.pipe(v.number(), v.minValue(0), v.integer()),
+      numberOfTransmissions: v.pipe(v.number(), v.minValue(0), v.integer()),
       batteryResetSinceLastKeepAlive: v.boolean(),
       estimatedBatteryPercent: v.pipe(v.number(), v.minValue(0), v.maxValue(100)),
       batteryCalculationError: v.boolean(),

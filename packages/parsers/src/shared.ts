@@ -118,8 +118,8 @@ export function useBaseParser(config: ParserConfig) {
    */
   function validateUplinkInput(input: unknown): UplinkInput | OutputFailure {
     const inputSchema = v.object({
-      bytes: v.array(v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(255))),
-      fPort: v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(255)),
+      bytes: v.array(v.pipe(v.number(), v.minValue(0), v.maxValue(255), v.integer())),
+      fPort: v.pipe(v.number(), v.minValue(1), v.maxValue(255), v.integer()),
       recvTime: v.optional(v.string()),
     })
 

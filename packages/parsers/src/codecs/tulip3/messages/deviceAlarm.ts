@@ -2,6 +2,50 @@ import type { ChannelAlarmData, ChannelAlarmMessageUplinkOutput, CommunicationMo
 import type { DeviceAlarmFlags, TULIP3ChannelConfig, TULIP3DeviceSensorConfig } from '../profile'
 import { validateMessageHeader } from '.'
 
+export const defaultCommunicationModuleAlarmFlags = defineDeviceAlarmFlags({
+  localUserAccessDenied: 0b0000_0000_0000_0001,
+  cmChipLowTemperature: 0b0000_0000_0000_0010,
+  cmChipHighTemperature: 0b0000_0000_0000_0100,
+  airTimeLimitation: 0b0000_0000_0000_1000,
+  memoryError: 0b0000_0000_0001_0000,
+  lowVoltage: 0b0000_0000_0001_0000,
+  highVoltage: 0b000_0000_0010_0000,
+})
+
+export const defaultSensorAlarmFlags = defineDeviceAlarmFlags({
+  sensorCommunicationError: 0b0000_0000_0000_0001,
+  sensorNotSupported: 0b0000_0000_0000_0010,
+})
+
+export const defaultChannelAlarmFlags = defineDeviceAlarmFlags({
+  shortCondition: 0b0000_0000_0000_0001,
+  openCondition: 0b0000_0000_0000_0010,
+  outOfMinMeasurementRange: 0b0000_0000_0000_0100,
+  outOfMaxMeasurementRange: 0b0000_0000_0000_1000,
+  outOfMinPhysicalSensorLimit: 0b0000_0000_0001_0000,
+  outOfMaxPhysicalSensorLimit: 0b0000_0000_0010_0000,
+})
+
+type MergedFlags<TDeviceAlarmFlags extends DeviceAlarmFlags, TMergeFlags extends DeviceAlarmFlags> = {
+  [Key in (keyof TDeviceAlarmFlags | Exclude<keyof TMergeFlags, keyof TDeviceAlarmFlags>)]: Key extends keyof TDeviceAlarmFlags
+    ? TDeviceAlarmFlags[Key]
+    : Key extends keyof TMergeFlags
+      ? TMergeFlags[Key]
+      : never
+}
+
+export function defineDeviceAlarmFlags<const TDeviceAlarmFlags extends DeviceAlarmFlags>(flagsConfig: TDeviceAlarmFlags): TDeviceAlarmFlags
+export function defineDeviceAlarmFlags<const TDeviceAlarmFlags extends DeviceAlarmFlags, const TMergeFlags extends DeviceAlarmFlags>(
+  flagsConfig: TDeviceAlarmFlags,
+  merge: TMergeFlags,
+): MergedFlags<TDeviceAlarmFlags, TMergeFlags>
+export function defineDeviceAlarmFlags<const TDeviceAlarmFlags extends DeviceAlarmFlags, const TMergeFlags extends DeviceAlarmFlags>(
+  flagsConfig: TDeviceAlarmFlags,
+  merge?: TMergeFlags,
+): (MergedFlags<TDeviceAlarmFlags, TMergeFlags>) | TDeviceAlarmFlags {
+  return { ...merge ?? {}, ...flagsConfig }
+}
+
 /**
  * Creates alarm flags object from a bitfield value using the provided flags configuration.
  */

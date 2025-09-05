@@ -7,11 +7,11 @@ const deviceProfile = defineTULIP3DeviceProfile({
   roundingDecimals: 2,
   sensorChannelConfig: {
     sensor1: {
-      channel1: { min: 0, max: 100, measurementTypes: [], channelName: 'ch1' },
-      channel2: { min: 10, max: 200, measurementTypes: [], channelName: 'ch2' },
+      channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'ch1' },
+      channel2: { start: 10, end: 200, measurementTypes: [], channelName: 'ch2' },
     },
     sensor2: {
-      channel1: { min: -50, max: 50, measurementTypes: [], channelName: 'ch3' },
+      channel1: { start: -50, end: 50, measurementTypes: [], channelName: 'ch3' },
     },
   },
   deviceAlarmConfig: {
@@ -19,7 +19,6 @@ const deviceProfile = defineTULIP3DeviceProfile({
     sensorAlarms: { sensor: 2 },
     sensorChannelAlarms: { channel: 4 },
   },
-  configurationMessageMaxRegisterSize: 16,
 })
 
 describe('defineTULIP3Codec (non-decode methods)', () => {
@@ -73,7 +72,7 @@ describe('defineTULIP3Codec (validations)', () => {
       roundingDecimals: 2,
       sensorChannelConfig: {
         sensor1: {
-          channel1: { min: 10, max: 10, measurementTypes: [], channelName: 'bch1' },
+          channel1: { start: 10, end: 10, measurementTypes: [], channelName: 'bch1' },
         },
       },
       deviceAlarmConfig: {
@@ -81,7 +80,6 @@ describe('defineTULIP3Codec (validations)', () => {
         sensorAlarms: { sensor: 2 },
         sensorChannelAlarms: { channel: 4 },
       },
-      configurationMessageMaxRegisterSize: 16,
     })
 
     expect(() => defineTULIP3Codec(badProfile)).toThrow(/Invalid channel range/)
@@ -93,10 +91,10 @@ describe('defineTULIP3Codec (validations)', () => {
       roundingDecimals: 2,
       sensorChannelConfig: {
         sensor1: {
-          channel1: { min: 0, max: 100, measurementTypes: [], channelName: 'dup' },
+          channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'dup' },
         },
         sensor2: {
-          channel1: { min: 0, max: 50, measurementTypes: [], channelName: 'dup' },
+          channel1: { start: 0, end: 50, measurementTypes: [], channelName: 'dup' },
         },
       },
       deviceAlarmConfig: {
@@ -104,7 +102,6 @@ describe('defineTULIP3Codec (validations)', () => {
         sensorAlarms: { sensor: 2 },
         sensorChannelAlarms: { channel: 4 },
       },
-      configurationMessageMaxRegisterSize: 16,
     })
 
     expect(() => defineTULIP3Codec(badProfile)).toThrow(/Duplicate channel name/)
@@ -115,14 +112,13 @@ describe('defineTULIP3Codec (validations)', () => {
       deviceName: 'GoodDevice',
       roundingDecimals: 2,
       sensorChannelConfig: {
-        sensor1: { channel1: { min: 0, max: 100, measurementTypes: [], channelName: 'chA' } },
+        sensor1: { channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'chA' } },
       },
       deviceAlarmConfig: {
         communicationModuleAlarms: { comms: 1 },
         sensorAlarms: { sensor: 2 },
         sensorChannelAlarms: { channel: 4 },
       },
-      configurationMessageMaxRegisterSize: 16,
     })
 
     const codec = defineTULIP3Codec(goodProfile)

@@ -11,7 +11,7 @@ type AllowedTypeCombinationsSchema = v.UnionSchema<{
   }, undefined>
 }[keyof typeof allowedTypeSubTypeCombinations][], undefined>
 
-export function createAllowedTULIP3TypeSubTypeCombinationsSchema() {
+function createAllowedTULIP3TypeSubTypeCombinationsSchema() {
   return v.union(
     Object.entries(allowedTypeSubTypeCombinations).map(([type, subTypes]) => {
       return v.object({
@@ -25,7 +25,7 @@ export function createAllowedTULIP3TypeSubTypeCombinationsSchema() {
 // Main spontaneous downlink answer data schema
 // Two schema variants: with and without deviceErrorCode, depending on status
 
-export function createSpontaneousDownlinkAnswerDataSchema() {
+function createSpontaneousDownlinkAnswerDataSchema() {
   const statusStrings = Object.values(spontaneousStatusLookup)
   const statusWithoutDeviceError = statusStrings.filter(s => s !== spontaneousStatusLookup[4])
   const statusWithDeviceError = spontaneousStatusLookup[4]
@@ -43,7 +43,7 @@ export function createSpontaneousDownlinkAnswerDataSchema() {
   ])
 }
 
-export function createSpontaneousDownlinkAnswerUplinkOutputSchema() {
+function createSpontaneousDownlinkAnswerUplinkOutputSchema() {
   return createGenericUplinkOutputSchema({
     messageType: [0x17],
     messageSubType: [0x01],
@@ -57,7 +57,7 @@ export type SpontaneousDownlinkAnswerUplinkOutput = v.InferOutput<ReturnType<typ
 export type AllowedTULIP3TypeSubTypeCombination = v.InferOutput<ReturnType<typeof createAllowedTULIP3TypeSubTypeCombinationsSchema>>
 export type SpontaneousDownlinkAnswerData = v.InferOutput<ReturnType<typeof createSpontaneousDownlinkAnswerDataSchema>>
 
-export function createSpontaneousFetchAdditionalDownlinkMessageSchema() {
+function createSpontaneousFetchAdditionalDownlinkMessageSchema() {
   return createGenericUplinkOutputSchema({
     messageType: [0x17],
     messageSubType: [0x02],
@@ -68,3 +68,8 @@ export function createSpontaneousFetchAdditionalDownlinkMessageSchema() {
 }
 
 export type SpontaneousFetchAdditionalDownlinkMessageUplinkOutput = v.InferOutput<ReturnType<typeof createSpontaneousFetchAdditionalDownlinkMessageSchema>>
+
+export {
+  createSpontaneousDownlinkAnswerUplinkOutputSchema,
+  createSpontaneousFetchAdditionalDownlinkMessageSchema,
+}

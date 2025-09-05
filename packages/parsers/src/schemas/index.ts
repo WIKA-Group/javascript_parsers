@@ -14,7 +14,7 @@ export function createSemVerSchema() {
 }
 
 function createFPortSchema() {
-  return v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(255))
+  return v.pipe(v.number(), v.minValue(1), v.maxValue(255), v.integer())
 }
 
 function createRecvTimeSchema() {

@@ -160,7 +160,6 @@ function createDeviceAlarmsDataSchema() {
               alarmTypeName: v.literal(alarmTypeName),
               causeOfFailure: v.literal(DEVICE_ALARM_CAUSE_OF_FAILURE[causeOfFailureName as keyof typeof DEVICE_ALARM_CAUSE_OF_FAILURE]),
               causeOfFailureName: v.literal(causeOfFailureName),
-              value: v.optional(v.undefined()),
             }) as DeviceAlarmsPossibility,
           )
         }

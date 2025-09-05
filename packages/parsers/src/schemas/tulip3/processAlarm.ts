@@ -26,7 +26,7 @@ import { createGenericUplinkOutputSchema, createSensorChannelSchemaWithExtension
  * const parsed = v.parse(schema, { lowThreshold: true, highThreshold: false, fallingSlope: false, risingSlope: false, lowThresholdWithDelay: false, highThresholdWithDelay: false })
  * ```
  */
-export function createProcessAlarmTypeSchema() {
+function createProcessAlarmTypeSchema() {
   // Represent the bitfield as explicit booleans in the parsed structure
   return v.object({
     lowThreshold: v.boolean(), // bit 7
@@ -51,7 +51,7 @@ export function createProcessAlarmTypeSchema() {
  * @template TTULIP3DeviceSensorConfig - Type-safe sensor configuration
  * @see {@link createFullSensorChannelSchemaWithExtension} for the variant WITH `sourceDataType`.
  */
-export function createProcessAlarmEntrySchemas<const TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig>(config: TTULIP3DeviceSensorConfig) {
+function createProcessAlarmEntrySchemas<const TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig>(config: TTULIP3DeviceSensorConfig) {
   return createSensorChannelSchemaWithExtension(config, {
     alarmFlags: createProcessAlarmTypeSchema(),
   })
@@ -104,7 +104,7 @@ export function createProcessAlarmEntrySchemas<const TTULIP3DeviceSensorConfig e
  * })
  * ```
  */
-export function createProcessAlarmUplinkOutputSchema<const TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig>(config: TTULIP3DeviceSensorConfig) {
+function createProcessAlarmUplinkOutputSchema<const TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig>(config: TTULIP3DeviceSensorConfig) {
   return createGenericUplinkOutputSchema({
     messageType: [0x12],
     messageSubType: [0x01],
@@ -121,3 +121,7 @@ export function createProcessAlarmUplinkOutputSchema<const TTULIP3DeviceSensorCo
 export type ProcessAlarmEntry<TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig> = v.InferOutput<ReturnType<typeof createProcessAlarmEntrySchemas<TTULIP3DeviceSensorConfig>>[number]>
 export type ProcessAlarmMessageUplinkOutput<TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig> = v.InferOutput<ReturnType<typeof createProcessAlarmUplinkOutputSchema<TTULIP3DeviceSensorConfig>>>
 export type ProcessAlarmData<TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig> = ProcessAlarmMessageUplinkOutput<TTULIP3DeviceSensorConfig>['data']['processAlarms']
+
+export {
+  createProcessAlarmUplinkOutputSchema,
+}

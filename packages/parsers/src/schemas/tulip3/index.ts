@@ -1,4 +1,4 @@
-import type { TULIP3ChannelConfig, TULIP3DeviceProfile, TULIP3DeviceSensorConfig } from '../../codecs/tulip3/profile'
+import type { DeviceAlarmFlags, TULIP3ChannelConfig, TULIP3DeviceProfile, TULIP3DeviceSensorConfig } from '../../codecs/tulip3/profile'
 import type { MinusOne } from '../../types'
 /* eslint-disable ts/explicit-function-return-type */
 import type { ConfigurationReadRegistersResponseUplinkOutput, ConfigurationWriteRegistersResponseUplinkOutput } from './configuration'
@@ -11,6 +11,13 @@ import type { ProcessAlarmMessageUplinkOutput } from './processAlarm'
 import type { SpontaneousDownlinkAnswerUplinkOutput, SpontaneousFetchAdditionalDownlinkMessageUplinkOutput } from './spontaneous'
 import * as v from 'valibot'
 import { configurationStatusLookup } from '../../codecs/tulip3/lookups'
+import { createConfigurationReadRegistersResponseUplinkOutputSchema, createConfigurationWriteRegistersResponseUplinkOutputSchema } from './configuration'
+import { createDataMessageUplinkOutputSchema } from './data'
+import { createChannelAlarmUplinkOutputSchema, createCommunicationModuleAlarmUplinkOutputSchema, createSensorAlarmUplinkOutputSchema } from './deviceAlarm'
+import { createIdentificationReadRegistersResponseUplinkOutputSchema, createIdentificationWriteRegistersResponseUplinkOutputSchema } from './identification'
+import { createKeepAliveUplinkOutputSchema } from './keepAlive'
+import { createProcessAlarmUplinkOutputSchema } from './processAlarm'
+import { createSpontaneousDownlinkAnswerUplinkOutputSchema, createSpontaneousFetchAdditionalDownlinkMessageSchema } from './spontaneous'
 
 // =============================================================================
 // SHARED SCHEMAS
@@ -351,3 +358,20 @@ export type TULIP3UplinkOutput<TDeviceProfile extends TULIP3DeviceProfile>
     | SpontaneousDownlinkAnswerUplinkOutput
     | SpontaneousFetchAdditionalDownlinkMessageUplinkOutput
     | KeepAliveMessageUplinkOutput
+
+export function createTULIP3UplinkOutputSchema<const TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig, const TCMFlags extends DeviceAlarmFlags, TSensorFlags extends DeviceAlarmFlags, TChannelFlags extends DeviceAlarmFlags>(sensorChannelConfig: TTULIP3DeviceSensorConfig, communicationModuleAlarms: TCMFlags, sensorAlarms: TSensorFlags, sensorChannelAlarms: TChannelFlags) {
+  return v.union([
+    createDataMessageUplinkOutputSchema(sensorChannelConfig),
+    createConfigurationReadRegistersResponseUplinkOutputSchema(sensorChannelConfig),
+    createConfigurationWriteRegistersResponseUplinkOutputSchema(),
+    createChannelAlarmUplinkOutputSchema(sensorChannelConfig, sensorChannelAlarms),
+    createCommunicationModuleAlarmUplinkOutputSchema(communicationModuleAlarms),
+    createSensorAlarmUplinkOutputSchema(sensorChannelConfig, sensorAlarms),
+    createKeepAliveUplinkOutputSchema(),
+    createProcessAlarmUplinkOutputSchema(sensorChannelConfig),
+    createSpontaneousDownlinkAnswerUplinkOutputSchema(),
+    createSpontaneousFetchAdditionalDownlinkMessageSchema(),
+    createIdentificationReadRegistersResponseUplinkOutputSchema(sensorChannelConfig),
+    createIdentificationWriteRegistersResponseUplinkOutputSchema(),
+  ])
+}

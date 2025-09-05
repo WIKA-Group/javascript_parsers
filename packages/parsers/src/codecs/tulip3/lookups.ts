@@ -106,9 +106,9 @@ export const measurandLookup = {
   27: 'Humidity (absolute)', // Density units
   28: 'Angle of rotation / inclination',
   // RFU (device-specific)
-  60: 'RFU (device-specific)',
+/*   60: 'RFU (device-specific)',
   61: 'RFU (device-specific)',
-  62: 'RFU (device-specific)',
+  62: 'RFU (device-specific)', */
 } as const
 
 export const unitsLookup = {
@@ -170,8 +170,8 @@ export const unitsLookup = {
   70: 'l', // litre
   71: 'ml', // millilitre
   72: 'm³', // cubic metre
-  73: 'gal', // imperial gallon (UK)
-  74: 'gal', // US gallon (US)
+  73: 'gal (UK)', // imperial gallon (UK)
+  74: 'gal (US)', // US gallon (US)
   75: 'ft³', // cubic foot
   76: 'in³', // cubic inch
 
@@ -251,8 +251,8 @@ export const unitsLookup = {
   181: 'ft/s²', // foot per second squared
 
   // RFU (device-specific)
-  250: 'RFU', // RFU (device-specific)
+/*   250: 'RFU', // RFU (device-specific)
   251: 'RFU', // RFU (device-specific)
   252: 'RFU', // RFU (device-specific)
-  253: 'RFU', // RFU (device-specific)
+  253: 'RFU', // RFU (device-specific) */
 } as const

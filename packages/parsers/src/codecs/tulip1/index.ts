@@ -8,9 +8,9 @@ export interface TULIP1Channel extends Channel {
   channelId: number
 }
 
-export type Handler<TChannels extends TULIP1Channel[] = TULIP1Channel[], TReturn extends object = object> = (input: UplinkInput, options: { roundingDecimals: number, channels: TChannels }) => GenericUplinkOutput<TReturn>
+export type Handler<TChannels extends TULIP1Channel[] = TULIP1Channel[], TReturn extends GenericUplinkOutput = GenericUplinkOutput> = (input: UplinkInput, options: { roundingDecimals: number, channels: TChannels }) => TReturn
 
-export interface MessageHandlers<TChannels extends TULIP1Channel[] = TULIP1Channel[], TReturn extends object = object> {
+export interface MessageHandlers<TChannels extends TULIP1Channel[] = TULIP1Channel[], TReturn extends GenericUplinkOutput = GenericUplinkOutput> {
   0x00?: Handler<TChannels, TReturn>
   0x01?: Handler<TChannels, TReturn>
   0x02?: Handler<TChannels, TReturn>
@@ -23,11 +23,11 @@ export interface MessageHandlers<TChannels extends TULIP1Channel[] = TULIP1Chann
   0x09?: Handler<TChannels, TReturn>
 }
 
-type ReturnTypeOfHandlers<TChannels extends TULIP1Channel[], THandlers extends MessageHandlers<TChannels>> = {
-  [K in keyof THandlers]: THandlers[K] extends Handler<TChannels> ? ReturnType<THandlers[K]> : never
+export type ReturnTypeOfHandlers<TChannels extends TULIP1Channel[], THandlers extends MessageHandlers<TChannels, any>> = {
+  [K in keyof THandlers]: THandlers[K] extends Handler<TChannels, infer TReturn> ? TReturn : never
 }[keyof THandlers]
 
-export interface TULIP1CodecOptions<TChannels extends TULIP1Channel[] = TULIP1Channel[], TName extends string = string, THandlers extends MessageHandlers<TChannels> = MessageHandlers<TChannels>, TEncoder extends (input: object) => number[] = (input: object) => number[]> {
+export interface TULIP1CodecOptions<TChannels extends TULIP1Channel[] = TULIP1Channel[], TName extends string = string, THandlers extends MessageHandlers<TChannels> = MessageHandlers<TChannels>, TEncoder extends ((input: object) => number[]) | undefined = undefined> {
   deviceName: TName
   /**
    * The list of channels to use for this codec.
@@ -53,10 +53,10 @@ export interface TULIP1CodecOptions<TChannels extends TULIP1Channel[] = TULIP1Ch
   encodeHandler?: TEncoder
 }
 
-export type Tulip1Codec<TChannels extends TULIP1Channel[], TTULIP1CodecOptions extends TULIP1CodecOptions<TChannels>> = Codec<`${TTULIP1CodecOptions['deviceName']}TULIP1`, ReturnTypeOfHandlers<TChannels, TTULIP1CodecOptions['handlers']>, TTULIP1CodecOptions['channels'][number]['name'], TTULIP1CodecOptions['encodeHandler']>
+export type Tulip1Codec<TChannels extends TULIP1Channel[], TName extends string, THandlers extends MessageHandlers<TChannels>, TEncoder extends ((input: object) => number[]) | undefined> = Codec<`${TName}TULIP1`, ReturnTypeOfHandlers<TChannels, THandlers>, TChannels[number]['name'], TEncoder>
 
-export function defineTULIP1Codec<const TChannels extends TULIP1Channel[], const TOptions extends TULIP1CodecOptions<TChannels> = TULIP1CodecOptions<TChannels>>(options: TOptions): Tulip1Codec<TChannels, TOptions> {
-  const codecName = `${options.deviceName}TULIP1` as `${TOptions['deviceName']}TULIP1`
+export function defineTULIP1Codec<TChannels extends TULIP1Channel[], TName extends string, THandlers extends MessageHandlers<TChannels>, TEncoder extends ((input: object) => number[]) | undefined>(options: TULIP1CodecOptions<TChannels, TName, THandlers, TEncoder>): Tulip1Codec<TChannels, TName, THandlers, TEncoder> {
+  const codecName = `${options.deviceName}TULIP1` as `${TName}TULIP1`
 
   let roundingDecimals = getRoundingDecimals(options.roundingDecimals)
 
@@ -85,7 +85,7 @@ export function defineTULIP1Codec<const TChannels extends TULIP1Channel[], const
     }
     const handler = options.handlers[firstByte as any as keyof MessageHandlers]
     if (handler) {
-      return handler(input, { roundingDecimals, channels: options.channels as TChannels }) as ReturnTypeOfHandlers<TChannels, TOptions['handlers']>
+      return handler(input, { roundingDecimals, channels: options.channels as TChannels }) as ReturnTypeOfHandlers<TChannels, THandlers>
     }
     throw new TypeError(`No handler registered for byte ${firstByte} in ${codecName} Codec`)
   }
@@ -111,5 +111,5 @@ export function defineTULIP1Codec<const TChannels extends TULIP1Channel[], const
     adjustRoundingDecimals: (decimals: number) => {
       roundingDecimals = getRoundingDecimals(decimals, roundingDecimals)
     },
-  } satisfies Tulip1Codec<TChannels, TOptions>
+  } as Tulip1Codec<TChannels, TName, THandlers, TEncoder>
 }

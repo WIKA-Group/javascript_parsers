@@ -294,7 +294,7 @@ describe('tulip3 communication module device alarm message decoding (0x13/0x01)'
   it('throws TypeError for invalid message type', () => {
     const bytes = [0x12, 0x01, 0x00, 0x01] // wrong message type
     expect(() => decodeCommunicationModuleAlarmMessage(bytes, STANDARD_COMMUNICATION_MODULE_ALARMS)).toThrow(TypeError)
-    expect(() => decodeCommunicationModuleAlarmMessage(bytes, STANDARD_COMMUNICATION_MODULE_ALARMS)).toThrow('Invalid message type: expected 0x13 but got 0x12')
+    expect(() => decodeCommunicationModuleAlarmMessage(bytes, STANDARD_COMMUNICATION_MODULE_ALARMS)).toThrow('Invalid communication module alarm message type: expected 0x13 but got 0x12')
   })
 
   it('throws TypeError for invalid sub message type', () => {
@@ -324,7 +324,7 @@ describe('tulip3 communication module device alarm message decoding (0x13/0x01)'
   it('throws TypeError for completely wrong message type (not even close)', () => {
     const bytes = [0xFF, 0x01, 0x00, 0x01]
     expect(() => decodeCommunicationModuleAlarmMessage(bytes, STANDARD_COMMUNICATION_MODULE_ALARMS)).toThrow(TypeError)
-    expect(() => decodeCommunicationModuleAlarmMessage(bytes, STANDARD_COMMUNICATION_MODULE_ALARMS)).toThrow('Invalid message type: expected 0x13 but got 0xFF')
+    expect(() => decodeCommunicationModuleAlarmMessage(bytes, STANDARD_COMMUNICATION_MODULE_ALARMS)).toThrow('Invalid communication module alarm message type: expected 0x13 but got 0xFF')
   })
 
   it('throws TypeError for wrong sub message type (0x13/0x00)', () => {
@@ -406,26 +406,26 @@ describe('tulip3 sensor alarm message decoding (0x13/0x02)', () => {
   const testConfig = {
     sensor1: { channel1: {
       channelName: 'sensor1Channel1',
-      min: 4,
-      max: 20,
+      start: 4,
+      end: 20,
       measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
     } },
     sensor2: { channel1: {
       channelName: 'sensor2Channel1',
-      min: 0,
-      max: 10,
+      start: 0,
+      end: 10,
       measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
     } },
     sensor3: { channel1: {
       channelName: 'sensor3Channel1',
-      min: 0,
-      max: 100,
+      start: 0,
+      end: 100,
       measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
     } },
     sensor4: { channel1: {
       channelName: 'sensor4Channel1',
-      min: 0,
-      max: 1000,
+      start: 0,
+      end: 1000,
       measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
     } },
   } as const satisfies TULIP3DeviceSensorConfig
@@ -434,8 +434,8 @@ describe('tulip3 sensor alarm message decoding (0x13/0x02)', () => {
   const minimalConfig = {
     sensor2: { channel1: {
       channelName: 'sensor2Channel1',
-      min: 0,
-      max: 10,
+      start: 0,
+      end: 10,
       measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
     } },
   } as const satisfies TULIP3DeviceSensorConfig
@@ -704,7 +704,7 @@ describe('tulip3 sensor alarm message decoding (0x13/0x02)', () => {
   it('throws TypeError for invalid message type', () => {
     const bytes = [0x12, 0x02, 0x40, 0x00, 0x01]
     expect(() => decodeSensorAlarmMessage(bytes, testConfig, STANDARD_SENSOR_ALARMS)).toThrow(TypeError)
-    expect(() => decodeSensorAlarmMessage(bytes, testConfig, STANDARD_SENSOR_ALARMS)).toThrow('Invalid message type: expected 0x13 but got 0x12')
+    expect(() => decodeSensorAlarmMessage(bytes, testConfig, STANDARD_SENSOR_ALARMS)).toThrow('Invalid sensor alarm message type: expected 0x13 but got 0x12')
   })
 
   it('throws TypeError for invalid sub message type', () => {
@@ -857,8 +857,8 @@ describe('tulip3 sensor alarm message decoding (0x13/0x02)', () => {
   it('maintains type safety across different configurations', () => {
     const singleSensorConfig = {
       sensor1: { channel1: {
-        min: 4,
-        max: 20,
+        start: 4,
+        end: 20,
         measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
         channelName: 's1c1',
       } },
@@ -876,50 +876,50 @@ describe('tulip3 channel alarm message decoding (0x13/0x03)', () => {
   const testConfig = {
     sensor1: {
       channel1: {
-        min: 4,
-        max: 20,
+        start: 4,
+        end: 20,
         measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
         channelName: 'sensor1Channel1',
       },
       channel2: {
-        min: 0,
-        max: 5,
+        start: 0,
+        end: 5,
         measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
         channelName: 'sensor1Channel2',
       },
     },
     sensor2: {
       channel1: {
-        min: 0,
-        max: 10,
+        start: 0,
+        end: 10,
         measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
         channelName: 'sensor2Channel1',
       },
       channel2: {
-        min: -10,
-        max: 10,
+        start: -10,
+        end: 10,
         measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
         channelName: 'sensor2Channel2',
       },
       channel3: {
-        min: 0,
-        max: 100,
+        start: 0,
+        end: 100,
         measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
         channelName: 'sensor2Channel3',
       },
     },
     sensor3: {
       channel1: {
-        min: 0,
-        max: 100,
+        start: 0,
+        end: 100,
         measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
         channelName: 'sensor3Channel1',
       },
     },
     sensor4: {
       channel1: {
-        min: 0,
-        max: 1000,
+        start: 0,
+        end: 1000,
         measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
         channelName: 'sensor4Channel1',
       },
@@ -930,8 +930,8 @@ describe('tulip3 channel alarm message decoding (0x13/0x03)', () => {
   const minimalConfig = {
     sensor2: {
       channel1: {
-        min: 0,
-        max: 10,
+        start: 0,
+        end: 10,
         measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
         channelName: 'sensor1Channel1',
       },
@@ -1302,7 +1302,7 @@ describe('tulip3 channel alarm message decoding (0x13/0x03)', () => {
   it('throws TypeError for invalid message type', () => {
     const bytes = [0x12, 0x03, 0x40, 0x00, 0x20]
     expect(() => decodeChannelAlarmMessage(bytes, testConfig, STANDARD_CHANNEL_ALARMS)).toThrow(TypeError)
-    expect(() => decodeChannelAlarmMessage(bytes, testConfig, STANDARD_CHANNEL_ALARMS)).toThrow('Invalid message type: expected 0x13 but got 0x12')
+    expect(() => decodeChannelAlarmMessage(bytes, testConfig, STANDARD_CHANNEL_ALARMS)).toThrow('Invalid channel alarm message type: expected 0x13 but got 0x12')
   })
 
   it('throws TypeError for invalid sub message type', () => {
@@ -1487,8 +1487,8 @@ describe('tulip3 channel alarm message decoding (0x13/0x03)', () => {
     const singleChannelConfig = {
       sensor1: {
         channel1: {
-          min: 4,
-          max: 20,
+          start: 4,
+          end: 20,
           measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
           channelName: 'sensor1Channel1',
         },
@@ -1627,16 +1627,16 @@ describe('generic alarm flags system - custom flag configurations', () => {
       const sensorConfig = {
         sensor1: {
           channel1: {
-            min: 4,
-            max: 20,
+            start: 4,
+            end: 20,
             measurementTypes: ['uint16 - TULIP scale 2500 - 12500' as const],
             channelName: 'sensor1Channel1',
           },
         },
         sensor2: {
           channel1: {
-            min: 0,
-            max: 10,
+            start: 0,
+            end: 10,
             measurementTypes: ['uint16 - TULIP scale 2500 - 12500' as const],
             channelName: 'sensor2Channel1',
           },

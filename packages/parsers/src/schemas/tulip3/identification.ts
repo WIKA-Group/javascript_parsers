@@ -22,7 +22,7 @@ import { createGenericUplinkOutputSchema, createWriteResponseDataSchema } from '
  * const result = v.parse(schema, "PEW-1000")
  * ```
  */
-export function createProductSubIdSchema() {
+function createProductSubIdSchema() {
   return v.picklist(Object.values(productSubIdLookup) as (typeof productSubIdLookup[keyof typeof productSubIdLookup])[])
 }
 
@@ -53,7 +53,7 @@ function _createMiotyChannelPlanSchema() {
  * const result = v.parse(schema, 1) // Only non-negative integers are valid
  * ```
  */
-export function createChannelPlanSchema() {
+function createChannelPlanSchema() {
   // If subId are set, consider using a union of picklists for LoRaWAN and Mioty channel plans.
   return v.pipe(
     v.number(),
@@ -72,7 +72,7 @@ export function createChannelPlanSchema() {
  * const result = v.parse(schema, "temperature")
  * ```
  */
-export function createMeasurandSchema() {
+function createMeasurandSchema() {
   return v.picklist(Object.values(measurandLookup) as (typeof measurandLookup[keyof typeof measurandLookup])[])
 }
 
@@ -86,7 +86,7 @@ export function createMeasurandSchema() {
  * const result = v.parse(schema, "°C")
  * ```
  */
-export function createUnitSchema() {
+function createUnitSchema() {
   return v.picklist(Object.values(unitsLookup) as (typeof unitsLookup[keyof typeof unitsLookup])[])
 }
 
@@ -106,7 +106,7 @@ export function createUnitSchema() {
  * const result = v.parse(schema, { sensor1: true, sensor2: false, sensor3: false, sensor4: false })
  * ```
  */
-export function createConnectedSensorsSchema<const TConfig extends TULIP3DeviceSensorConfig>(config: TConfig) {
+function createConnectedSensorsSchema<const TConfig extends TULIP3DeviceSensorConfig>(config: TConfig) {
   const allSensors = ['sensor1', 'sensor2', 'sensor3', 'sensor4'] as const
 
   type ExistingSensors = {
@@ -132,7 +132,7 @@ export function createConnectedSensorsSchema<const TConfig extends TULIP3DeviceS
  * const result = v.parse(schema, { channel1: true, channel2: true, channel3: false, channel4: false, channel5: false, channel6: false, channel7: false, channel8: false })
  * ```
  */
-export function createExistingChannelsSchema<const TConfig extends TULIP3SensorChannelConfig>(config: TConfig) {
+function createExistingChannelsSchema<const TConfig extends TULIP3SensorChannelConfig>(config: TConfig) {
   const allChannels = ['channel1', 'channel2', 'channel3', 'channel4', 'channel5', 'channel6', 'channel7', 'channel8'] as const
 
   type ExistingChannels = {
@@ -168,7 +168,7 @@ export function createExistingChannelsSchema<const TConfig extends TULIP3SensorC
  * })
  * ```
  */
-export function createCommunicationModuleIdentificationSchema<const TConfig extends TULIP3DeviceSensorConfig>(config: TConfig) {
+function createCommunicationModuleIdentificationSchema<const TConfig extends TULIP3DeviceSensorConfig>(config: TConfig) {
   return v.object({
     productId: v.optional(v.number()), // uint8, 0x0B = PEW-1000
     productSubId: v.optional(createProductSubIdSchema()),
@@ -176,7 +176,7 @@ export function createCommunicationModuleIdentificationSchema<const TConfig exte
     connectedSensors: v.optional(createConnectedSensorsSchema(config)),
     firmwareVersion: v.optional(v.string()), // semver format: major.minor.patch
     hardwareVersion: v.optional(v.string()), // semver format: major.minor.patch
-    productionDate: v.optional(v.date()), // ISO date format: YYYY-MM-DD
+    productionDate: v.optional(v.pipe(v.string(), v.isoDate())), // ISO date format: YYYY-MM-DD
     serialNumberPart1: v.optional(v.string()), // ASCII characters, not null-terminated
     serialNumberPart2: v.optional(v.string()), // ASCII characters, not null-terminated
   })
@@ -199,13 +199,13 @@ export function createCommunicationModuleIdentificationSchema<const TConfig exte
  * })
  * ```
  */
-export function createSensorIdentificationSchema<const TConfig extends TULIP3SensorChannelConfig>(config: TConfig) {
+function createSensorIdentificationSchema<const TConfig extends TULIP3SensorChannelConfig>(config: TConfig) {
   return v.object({
     sensorType: v.optional(v.number()), // uint16, = 0x0000
     existingChannels: v.optional(createExistingChannelsSchema(config)), // bit flags for existing channels
     firmwareVersion: v.optional(v.string()), // semver format: major.minor.patch
     hardwareVersion: v.optional(v.string()), // semver format: major.minor.patch
-    productionDate: v.optional(v.date()), // ISO date format: YYYY-MM-DD
+    productionDate: v.optional(v.pipe(v.string(), v.isoDate())), // ISO date format: YYYY-MM-DD
     serialNumberPart1: v.optional(v.string()), // ASCII characters, not null-terminated
     serialNumberPart2: v.optional(v.string()), // ASCII characters, not null-terminated
   })
@@ -228,7 +228,7 @@ export function createSensorIdentificationSchema<const TConfig extends TULIP3Sen
  * })
  * ```
  */
-export function createChannelIdentificationSchema<TChannelName extends string>(name: TChannelName) {
+function createChannelIdentificationSchema<TChannelName extends string>(name: TChannelName) {
   return v.object({
     measurand: v.optional(createMeasurandSchema()),
     unit: v.optional(createUnitSchema()),
@@ -239,7 +239,7 @@ export function createChannelIdentificationSchema<TChannelName extends string>(n
     accuracy: v.optional(v.number()), // uint16, expressed in 0.001%
     offset: v.optional(v.number()), // float, in channel physical unit
     gain: v.optional(v.number()), // float
-    calibrationDate: v.optional(v.date()), // ISO date format: YYYY-MM-DD
+    calibrationDate: v.optional(v.pipe(v.string(), v.isoDate())), // ISO date format: YYYY-MM-DD
     channelName: v.literal(name), // Channel name
   })
 }
@@ -271,7 +271,7 @@ export function createChannelIdentificationSchema<TChannelName extends string>(n
  * })
  * ```
  */
-export function createSensorWithChannelsSchema<const TTULIP3SensorChannelConfig extends TULIP3SensorChannelConfig>(sensorChannelConfig: TTULIP3SensorChannelConfig) {
+function createSensorWithChannelsSchema<const TTULIP3SensorChannelConfig extends TULIP3SensorChannelConfig>(sensorChannelConfig: TTULIP3SensorChannelConfig) {
   const channels = Object.keys(sensorChannelConfig) as Extract<(keyof TTULIP3SensorChannelConfig), string>[]
 
   const identificationObject = {
@@ -355,7 +355,7 @@ function createIdentificationReadRegisterDataSchema<const TTULIP3DeviceSensorCon
  * })
  * ```
  */
-export function createIdentificationReadRegistersResponseUplinkOutputSchema<const TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig>(config: TTULIP3DeviceSensorConfig) {
+function createIdentificationReadRegistersResponseUplinkOutputSchema<const TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig>(config: TTULIP3DeviceSensorConfig) {
   return createGenericUplinkOutputSchema({
     messageType: [0x14], // Identification message type
     messageSubType: [0x01, 0x02, 0x04], // Identification message subtype
@@ -365,7 +365,7 @@ export function createIdentificationReadRegistersResponseUplinkOutputSchema<cons
   })
 }
 
-export function createIdentificationWriteRegistersResponseUplinkOutputSchema() {
+function createIdentificationWriteRegistersResponseUplinkOutputSchema() {
   return createGenericUplinkOutputSchema({
     messageType: [0x14], // Identification message type
     messageSubType: [0x03], // Identification message subtype
@@ -378,3 +378,8 @@ export function createIdentificationWriteRegistersResponseUplinkOutputSchema() {
 export type IdentificationReadRegisterData<TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig> = v.InferOutput<ReturnType<typeof createIdentificationReadRegisterDataSchema<TTULIP3DeviceSensorConfig>>>
 export type IdentificationReadRegistersResponseUplinkOutput<TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig> = v.InferOutput<ReturnType<typeof createIdentificationReadRegistersResponseUplinkOutputSchema<TTULIP3DeviceSensorConfig>>>
 export type IdentificationWriteRegistersResponseUplinkOutput = v.InferOutput<ReturnType<typeof createIdentificationWriteRegistersResponseUplinkOutputSchema>>
+
+export {
+  createIdentificationReadRegistersResponseUplinkOutputSchema,
+  createIdentificationWriteRegistersResponseUplinkOutputSchema,
+}

@@ -22,7 +22,7 @@ import { createGenericUplinkOutputSchema, createSensorChannelSchemaWithExtension
  *
  * @returns A Valibot object schema containing an `alarmFlags` property with booleans
  */
-export function createGenericAlarmFlagsSchema<const TDeviceAlarmFlags extends DeviceAlarmFlags>(flags: TDeviceAlarmFlags) {
+function createGenericAlarmFlagsSchema<const TDeviceAlarmFlags extends DeviceAlarmFlags>(flags: TDeviceAlarmFlags) {
   const keys = Object.keys(flags) as (keyof DeviceAlarmFlags)[]
 
   const obj = keys.reduce((acc, key) => {
@@ -74,7 +74,7 @@ export function createGenericAlarmFlagsSchema<const TDeviceAlarmFlags extends De
  * })
  * ```
  */
-export function createCommunicationModuleAlarmUplinkOutputSchema<const TDeviceAlarmFlags extends DeviceAlarmFlags>(flags: TDeviceAlarmFlags) {
+function createCommunicationModuleAlarmUplinkOutputSchema<const TDeviceAlarmFlags extends DeviceAlarmFlags>(flags: TDeviceAlarmFlags) {
   return createGenericUplinkOutputSchema({
     messageType: [0x13],
     messageSubType: [0x01],
@@ -98,7 +98,7 @@ export function createCommunicationModuleAlarmUplinkOutputSchema<const TDeviceAl
  * @returns Array of Valibot object schemas, one per sensor
  * @template TTULIP3DeviceSensorConfig - Type-safe sensor configuration
  */
-export function createSensorAlarmEntrySchemas<const TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig, const TDeviceAlarmFlags extends DeviceAlarmFlags>(config: TTULIP3DeviceSensorConfig, flags: TDeviceAlarmFlags) {
+function createSensorAlarmEntrySchemas<const TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig, const TDeviceAlarmFlags extends DeviceAlarmFlags>(config: TTULIP3DeviceSensorConfig, flags: TDeviceAlarmFlags) {
   return createSensorMeasurementSchemaWithExtension(config, {
     alarmFlags: createGenericAlarmFlagsSchema(flags),
   })
@@ -146,7 +146,7 @@ export function createSensorAlarmEntrySchemas<const TTULIP3DeviceSensorConfig ex
  * })
  * ```
  */
-export function createSensorAlarmUplinkOutputSchema<const TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig, const TDeviceAlarmFlags extends DeviceAlarmFlags>(config: TTULIP3DeviceSensorConfig, flags: TDeviceAlarmFlags) {
+function createSensorAlarmUplinkOutputSchema<const TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig, const TDeviceAlarmFlags extends DeviceAlarmFlags>(config: TTULIP3DeviceSensorConfig, flags: TDeviceAlarmFlags) {
   return createGenericUplinkOutputSchema({
     messageType: [0x13],
     messageSubType: [0x02],
@@ -168,7 +168,7 @@ export function createSensorAlarmUplinkOutputSchema<const TTULIP3DeviceSensorCon
  * @returns Array of Valibot object schemas, one per sensor/channel
  * @template TTULIP3DeviceSensorConfig - Type-safe sensor configuration
  */
-export function createChannelAlarmEntrySchemas<const TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig, const TDeviceAlarmFlags extends DeviceAlarmFlags>(config: TTULIP3DeviceSensorConfig, flags: TDeviceAlarmFlags) {
+function createChannelAlarmEntrySchemas<const TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig, const TDeviceAlarmFlags extends DeviceAlarmFlags>(config: TTULIP3DeviceSensorConfig, flags: TDeviceAlarmFlags) {
   return createSensorChannelSchemaWithExtension(config, {
     alarmFlags: createGenericAlarmFlagsSchema(flags),
   })
@@ -224,7 +224,7 @@ export function createChannelAlarmEntrySchemas<const TTULIP3DeviceSensorConfig e
  * })
  * ```
  */
-export function createChannelAlarmUplinkOutputSchema<const TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig, const TDeviceAlarmFlags extends DeviceAlarmFlags>(config: TTULIP3DeviceSensorConfig, flags: TDeviceAlarmFlags) {
+function createChannelAlarmUplinkOutputSchema<const TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig, const TDeviceAlarmFlags extends DeviceAlarmFlags>(config: TTULIP3DeviceSensorConfig, flags: TDeviceAlarmFlags) {
   return createGenericUplinkOutputSchema({
     messageType: [0x13],
     messageSubType: [0x03],
@@ -251,3 +251,9 @@ export type ChannelAlarmType<TDeviceAlarmFlags extends DeviceAlarmFlags> = v.Inf
 export type ChannelAlarmEntry<TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig, TDeviceAlarmFlags extends DeviceAlarmFlags> = v.InferOutput<ReturnType<typeof createChannelAlarmEntrySchemas<TTULIP3DeviceSensorConfig, TDeviceAlarmFlags>>[number]>
 export type ChannelAlarmMessageUplinkOutput<TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig, TDeviceAlarmFlags extends DeviceAlarmFlags> = v.InferOutput<ReturnType<typeof createChannelAlarmUplinkOutputSchema<TTULIP3DeviceSensorConfig, TDeviceAlarmFlags>>>
 export type ChannelAlarmData<TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig, TDeviceAlarmFlags extends DeviceAlarmFlags> = ChannelAlarmMessageUplinkOutput<TTULIP3DeviceSensorConfig, TDeviceAlarmFlags>['data']['channelAlarms']
+
+export {
+  createChannelAlarmUplinkOutputSchema,
+  createCommunicationModuleAlarmUplinkOutputSchema,
+  createSensorAlarmUplinkOutputSchema,
+}

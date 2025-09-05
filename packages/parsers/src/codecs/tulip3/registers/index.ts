@@ -61,7 +61,7 @@ export interface ParseRegisterBlocksOptions {
  * ```
  */
 export function parseRegisterBlocks(data: number[], options: ParseRegisterBlocksOptions = {}): RegisterBlock[] {
-  const { maxRegisterSize = 31, startPosition = 2 } = options
+  const { startPosition = 2 } = options
   const registerBlocks: RegisterBlock[] = []
   let position = startPosition
 
@@ -87,15 +87,6 @@ export function parseRegisterBlocks(data: number[], options: ParseRegisterBlocks
     // Extract start address (upper 11 bits) and total length (lower 5 bits)
     const startAddress = addressingField >> 5
     const totalLength = addressingFieldLow & 0b00011111
-
-    if (totalLength > maxRegisterSize) {
-      throw new RangeError(
-        `Register at address 0x${startAddress.toString(16)} has invalid size ${totalLength} bytes, exceeds maximum of ${maxRegisterSize} bytes. `
-        + `This may indicate corrupted addressing field data at position ${position}. `
-        + `Addressing field: 0x${addressingField.toString(16).padStart(4, '0')} `
-        + `(high byte: 0x${addressingFieldHigh.toString(16).padStart(2, '0')}, low byte: 0x${addressingFieldLow.toString(16).padStart(2, '0')})`,
-      )
-    }
 
     // Check if there are enough bytes left for the register value
     if (position + 2 + totalLength > data.length) {

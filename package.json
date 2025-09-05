@@ -11,6 +11,7 @@
     "test": "vitest",
     "coverage": "vitest run --coverage",
     "build": "pnpm -r schema && pnpm -r build",
+    "schema": "pnpm -r schema",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
     "typecheck": "tsc --noEmit"

@@ -1,8 +1,8 @@
 export type MappedChannels<Type> = Record<`channel${number}`, Type>
 
-export interface GenericSuccessfulUplinkOutput<TData extends object> {
+export interface GenericSuccessfulUplinkOutput {
   warnings?: string[]
-  data: TData
+  data: object
   errors?: never
 }
 
@@ -12,7 +12,7 @@ export interface GenericFailureUplinkOutput {
   data?: never
 }
 
-export type GenericUplinkOutput<TData extends object> = GenericSuccessfulUplinkOutput<TData> | GenericFailureUplinkOutput
+export type GenericUplinkOutput<TData extends GenericSuccessfulUplinkOutput = GenericSuccessfulUplinkOutput> = TData | GenericFailureUplinkOutput
 
 export interface Range {
   start: number

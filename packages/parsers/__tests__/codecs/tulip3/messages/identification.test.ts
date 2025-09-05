@@ -5,47 +5,47 @@ import { hexStringToIntArray } from '../../../../src/utils'
 import { FullIdentificationHexString } from '../constants/identification'
 
 const sensor1channelConfig = {
-  channel1: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor1Channel1' },
-  channel2: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor1Channel2' },
-  channel3: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor1Channel3' },
-  channel4: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor1Channel4' },
-  channel5: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor1Channel5' },
-  channel6: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor1Channel6' },
-  channel7: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor1Channel7' },
-  channel8: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor1Channel8' },
+  channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel1' },
+  channel2: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel2' },
+  channel3: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel3' },
+  channel4: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel4' },
+  channel5: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel5' },
+  channel6: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel6' },
+  channel7: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel7' },
+  channel8: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel8' },
 } as const satisfies TULIP3DeviceSensorConfig['sensor1']
 
 const sensor2channelConfig = {
-  channel1: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor2Channel1' },
-  channel2: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor2Channel2' },
-  channel3: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor2Channel3' },
-  channel4: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor2Channel4' },
-  channel5: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor2Channel5' },
-  channel6: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor2Channel6' },
-  channel7: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor2Channel7' },
-  channel8: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor2Channel8' },
+  channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor2Channel1' },
+  channel2: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor2Channel2' },
+  channel3: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor2Channel3' },
+  channel4: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor2Channel4' },
+  channel5: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor2Channel5' },
+  channel6: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor2Channel6' },
+  channel7: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor2Channel7' },
+  channel8: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor2Channel8' },
 } as const satisfies TULIP3DeviceSensorConfig['sensor1']
 
 const sensor3channelConfig = {
-  channel1: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor3Channel1' },
-  channel2: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor3Channel2' },
-  channel3: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor3Channel3' },
-  channel4: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor3Channel4' },
-  channel5: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor3Channel5' },
-  channel6: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor3Channel6' },
-  channel7: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor3Channel7' },
-  channel8: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor3Channel8' },
+  channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor3Channel1' },
+  channel2: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor3Channel2' },
+  channel3: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor3Channel3' },
+  channel4: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor3Channel4' },
+  channel5: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor3Channel5' },
+  channel6: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor3Channel6' },
+  channel7: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor3Channel7' },
+  channel8: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor3Channel8' },
 } as const satisfies TULIP3DeviceSensorConfig['sensor1']
 
 const sensor4channelConfig = {
-  channel1: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor4Channel1' },
-  channel2: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor4Channel2' },
-  channel3: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor4Channel3' },
-  channel4: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor4Channel4' },
-  channel5: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor4Channel5' },
-  channel6: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor4Channel6' },
-  channel7: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor4Channel7' },
-  channel8: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor4Channel8' },
+  channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor4Channel1' },
+  channel2: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor4Channel2' },
+  channel3: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor4Channel3' },
+  channel4: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor4Channel4' },
+  channel5: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor4Channel5' },
+  channel6: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor4Channel6' },
+  channel7: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor4Channel7' },
+  channel8: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor4Channel8' },
 } as const satisfies TULIP3DeviceSensorConfig['sensor1']
 
 const config = {
@@ -57,8 +57,8 @@ const config = {
 
 const configWithS1C1C2 = {
   sensor1: {
-    channel1: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor1Channel1' },
-    channel2: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor1Channel2' },
+    channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel1' },
+    channel2: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel2' },
   },
 } as const satisfies TULIP3DeviceSensorConfig
 
@@ -461,7 +461,7 @@ describe('identification messages', () => {
           },
           firmwareVersion: '3.1.4',
           hardwareVersion: '2.5.1',
-          productionDate: new Date('2024-03-15T00:00:00.000Z'),
+          productionDate: new Date('2024-03-15T00:00:00.000Z').toISOString(),
           serialNumberPart1: 'WIKA0',
           serialNumberPart2: '01ABC!',
         },
@@ -480,7 +480,7 @@ describe('identification messages', () => {
             },
             firmwareVersion: '2.1.0',
             hardwareVersion: '1.3.2',
-            productionDate: new Date('2023-11-20T00:00:00.000Z'),
+            productionDate: new Date('2023-11-20T00:00:00.000Z').toISOString(),
             serialNumberPart1: 'TEMP0',
             serialNumberPart2: '1XYZ!!',
           },
@@ -495,7 +495,7 @@ describe('identification messages', () => {
             accuracy: 0.2,
             offset: 0.5,
             gain: 0.998,
-            calibrationDate: new Date('2023-10-05T00:00:00.000Z'),
+            calibrationDate: new Date('2023-10-05T00:00:00.000Z').toISOString(),
           },
           channel2: {
             measurand: 'Pressure (gauge)',
@@ -508,7 +508,7 @@ describe('identification messages', () => {
             accuracy: 0.3,
             offset: 0.01,
             gain: 1.002,
-            calibrationDate: new Date('2024-02-28T00:00:00.000Z'),
+            calibrationDate: new Date('2024-02-28T00:00:00.000Z').toISOString(),
           },
           channel3: {
             measurand: 'Flow (vol.)',
@@ -521,7 +521,7 @@ describe('identification messages', () => {
             accuracy: 0.5,
             offset: 0.02,
             gain: 0.997,
-            calibrationDate: new Date('2024-06-17T00:00:00.000Z'),
+            calibrationDate: new Date('2024-06-17T00:00:00.000Z').toISOString(),
           },
           channel4: {
             measurand: 'Level',
@@ -534,7 +534,7 @@ describe('identification messages', () => {
             accuracy: 0.15,
             offset: 0.005,
             gain: 1.001,
-            calibrationDate: new Date('2025-03-05T00:00:00.000Z'),
+            calibrationDate: new Date('2025-03-05T00:00:00.000Z').toISOString(),
           },
           channel5: {
             measurand: 'Voltage',
@@ -547,7 +547,7 @@ describe('identification messages', () => {
             accuracy: 0.125,
             offset: 0.01,
             gain: 0.991,
-            calibrationDate: new Date('2024-09-18T00:00:00.000Z'),
+            calibrationDate: new Date('2024-09-18T00:00:00.000Z').toISOString(),
           },
           channel6: {
             channelName: 'sensor1Channel6',
@@ -560,7 +560,7 @@ describe('identification messages', () => {
             accuracy: 2,
             offset: 0.5,
             gain: 1.003,
-            calibrationDate: new Date('2025-05-22T00:00:00.000Z'),
+            calibrationDate: new Date('2025-05-22T00:00:00.000Z').toISOString(),
           },
           channel7: {
             channelName: 'sensor1Channel7',
@@ -573,7 +573,7 @@ describe('identification messages', () => {
             accuracy: 0.35,
             offset: 0.8,
             gain: 0.9985,
-            calibrationDate: new Date('2024-10-03T00:00:00.000Z'),
+            calibrationDate: new Date('2024-10-03T00:00:00.000Z').toISOString(),
           },
           channel8: {
             channelName: 'sensor1Channel8',
@@ -586,7 +586,7 @@ describe('identification messages', () => {
             accuracy: 0.6,
             offset: 2,
             gain: 1.008,
-            calibrationDate: new Date('2025-04-12T00:00:00.000Z'),
+            calibrationDate: new Date('2025-04-12T00:00:00.000Z').toISOString(),
           },
         },
         sensor2: {
@@ -604,7 +604,7 @@ describe('identification messages', () => {
             },
             firmwareVersion: '1.8.3',
             hardwareVersion: '2.0.1',
-            productionDate: new Date('2024-07-08T00:00:00.000Z'),
+            productionDate: new Date('2024-07-08T00:00:00.000Z').toISOString(),
             serialNumberPart1: 'FREQ0',
             serialNumberPart2: '2DEF!!',
           },
@@ -619,7 +619,7 @@ describe('identification messages', () => {
             accuracy: 0.05,
             offset: 0.01,
             gain: 1,
-            calibrationDate: new Date('2023-12-03T00:00:00.000Z'),
+            calibrationDate: new Date('2023-12-03T00:00:00.000Z').toISOString(),
           },
           channel2: {
             measurand: 'Current',
@@ -632,7 +632,7 @@ describe('identification messages', () => {
             accuracy: 0.1,
             offset: 2.5,
             gain: 1,
-            calibrationDate: new Date('2025-08-04T00:00:00.000Z'),
+            calibrationDate: new Date('2025-08-04T00:00:00.000Z').toISOString(),
           },
           channel3: {
             measurand: 'Current',
@@ -645,7 +645,7 @@ describe('identification messages', () => {
             accuracy: 0.1,
             offset: 2.5,
             gain: 1,
-            calibrationDate: new Date('2025-08-04T00:00:00.000Z'),
+            calibrationDate: new Date('2025-08-04T00:00:00.000Z').toISOString(),
           },
           channel4: {
             measurand: 'Current',
@@ -658,7 +658,7 @@ describe('identification messages', () => {
             accuracy: 0.1,
             offset: 2.5,
             gain: 1,
-            calibrationDate: new Date('2025-08-04T00:00:00.000Z'),
+            calibrationDate: new Date('2025-08-04T00:00:00.000Z').toISOString(),
           },
           channel5: {
             measurand: 'Current',
@@ -671,7 +671,7 @@ describe('identification messages', () => {
             accuracy: 0.1,
             offset: 2.5,
             gain: 1,
-            calibrationDate: new Date('2025-08-04T00:00:00.000Z'),
+            calibrationDate: new Date('2025-08-04T00:00:00.000Z').toISOString(),
           },
           channel6: {
             measurand: 'Current',
@@ -684,7 +684,7 @@ describe('identification messages', () => {
             accuracy: 0.1,
             offset: 2.5,
             gain: 1,
-            calibrationDate: new Date('2025-08-04T00:00:00.000Z'),
+            calibrationDate: new Date('2025-08-04T00:00:00.000Z').toISOString(),
           },
           channel7: {
             measurand: 'Current',
@@ -697,7 +697,7 @@ describe('identification messages', () => {
             accuracy: 0.1,
             offset: 2.5,
             gain: 1,
-            calibrationDate: new Date('2025-08-04T00:00:00.000Z'),
+            calibrationDate: new Date('2025-08-04T00:00:00.000Z').toISOString(),
           },
           channel8: {
             measurand: 'Current',
@@ -710,7 +710,7 @@ describe('identification messages', () => {
             accuracy: 0.1,
             offset: 2.5,
             gain: 1,
-            calibrationDate: new Date('2025-08-04T00:00:00.000Z'),
+            calibrationDate: new Date('2025-08-04T00:00:00.000Z').toISOString(),
           },
         },
         sensor3: {
@@ -728,7 +728,7 @@ describe('identification messages', () => {
             },
             firmwareVersion: '2.5.7',
             hardwareVersion: '1.4.0',
-            productionDate: new Date('2024-01-12T00:00:00.000Z'),
+            productionDate: new Date('2024-01-12T00:00:00.000Z').toISOString(),
             serialNumberPart1: 'SPEED',
             serialNumberPart2: '3GHI!!',
           },
@@ -743,7 +743,7 @@ describe('identification messages', () => {
             accuracy: 0.4,
             offset: 0.02,
             gain: 0.9975,
-            calibrationDate: new Date('2024-05-09T00:00:00.000Z'),
+            calibrationDate: new Date('2024-05-09T00:00:00.000Z').toISOString(),
           },
           channel2: {
             measurand: 'Current',
@@ -756,7 +756,7 @@ describe('identification messages', () => {
             accuracy: 0.1,
             offset: 2.5,
             gain: 1,
-            calibrationDate: new Date('2025-08-04T00:00:00.000Z'),
+            calibrationDate: new Date('2025-08-04T00:00:00.000Z').toISOString(),
           },
           channel3: {
             measurand: 'Current',
@@ -769,7 +769,7 @@ describe('identification messages', () => {
             accuracy: 0.1,
             offset: 2.5,
             gain: 1,
-            calibrationDate: new Date('2025-08-04T00:00:00.000Z'),
+            calibrationDate: new Date('2025-08-04T00:00:00.000Z').toISOString(),
           },
           channel4: {
             measurand: 'Current',
@@ -782,7 +782,7 @@ describe('identification messages', () => {
             accuracy: 0.1,
             offset: 2.5,
             gain: 1,
-            calibrationDate: new Date('2025-08-04T00:00:00.000Z'),
+            calibrationDate: new Date('2025-08-04T00:00:00.000Z').toISOString(),
           },
           channel5: {
             measurand: 'Current',
@@ -795,7 +795,7 @@ describe('identification messages', () => {
             accuracy: 0.1,
             offset: 2.5,
             gain: 1,
-            calibrationDate: new Date('2025-08-04T00:00:00.000Z'),
+            calibrationDate: new Date('2025-08-04T00:00:00.000Z').toISOString(),
           },
           channel6: {
             measurand: 'Current',
@@ -808,7 +808,7 @@ describe('identification messages', () => {
             accuracy: 0.1,
             offset: 2.5,
             gain: 1,
-            calibrationDate: new Date('2025-08-04T00:00:00.000Z'),
+            calibrationDate: new Date('2025-08-04T00:00:00.000Z').toISOString(),
           },
           channel7: {
             measurand: 'Current',
@@ -821,7 +821,7 @@ describe('identification messages', () => {
             accuracy: 0.1,
             offset: 2.5,
             gain: 1,
-            calibrationDate: new Date('2025-08-04T00:00:00.000Z'),
+            calibrationDate: new Date('2025-08-04T00:00:00.000Z').toISOString(),
           },
           channel8: {
             measurand: 'Current',
@@ -834,7 +834,7 @@ describe('identification messages', () => {
             accuracy: 0.1,
             offset: 2.5,
             gain: 1,
-            calibrationDate: new Date('2025-08-04T00:00:00.000Z'),
+            calibrationDate: new Date('2025-08-04T00:00:00.000Z').toISOString(),
           },
         },
         sensor4: {
@@ -852,7 +852,7 @@ describe('identification messages', () => {
             },
             firmwareVersion: '3.0.2',
             hardwareVersion: '2.1.5',
-            productionDate: new Date('2023-09-25T00:00:00.000Z'),
+            productionDate: new Date('2023-09-25T00:00:00.000Z').toISOString(),
             serialNumberPart1: 'ANGLE',
             serialNumberPart2: '4JKL!!',
           },
@@ -867,7 +867,7 @@ describe('identification messages', () => {
             accuracy: 1,
             offset: 0.1,
             gain: 1.005,
-            calibrationDate: new Date('2023-08-11T00:00:00.000Z'),
+            calibrationDate: new Date('2023-08-11T00:00:00.000Z').toISOString(),
           },
           channel2: {
             measurand: 'Current',
@@ -880,7 +880,7 @@ describe('identification messages', () => {
             accuracy: 0.1,
             offset: 2.5,
             gain: 1,
-            calibrationDate: new Date('2025-08-04T00:00:00.000Z'),
+            calibrationDate: new Date('2025-08-04T00:00:00.000Z').toISOString(),
           },
           channel3: {
             measurand: 'Current',
@@ -893,7 +893,7 @@ describe('identification messages', () => {
             accuracy: 0.1,
             offset: 2.5,
             gain: 1,
-            calibrationDate: new Date('2025-08-04T00:00:00.000Z'),
+            calibrationDate: new Date('2025-08-04T00:00:00.000Z').toISOString(),
           },
           channel4: {
             measurand: 'Current',
@@ -906,7 +906,7 @@ describe('identification messages', () => {
             accuracy: 0.1,
             offset: 2.5,
             gain: 1,
-            calibrationDate: new Date('2025-08-04T00:00:00.000Z'),
+            calibrationDate: new Date('2025-08-04T00:00:00.000Z').toISOString(),
           },
           channel5: {
             measurand: 'Current',
@@ -919,7 +919,7 @@ describe('identification messages', () => {
             accuracy: 0.1,
             offset: 2.5,
             gain: 1,
-            calibrationDate: new Date('2025-08-04T00:00:00.000Z'),
+            calibrationDate: new Date('2025-08-04T00:00:00.000Z').toISOString(),
           },
           channel6: {
             measurand: 'Current',
@@ -932,7 +932,7 @@ describe('identification messages', () => {
             accuracy: 0.1,
             offset: 2.5,
             gain: 1,
-            calibrationDate: new Date('2025-08-04T00:00:00.000Z'),
+            calibrationDate: new Date('2025-08-04T00:00:00.000Z').toISOString(),
           },
           channel7: {
             measurand: 'Current',
@@ -945,7 +945,7 @@ describe('identification messages', () => {
             accuracy: 0.1,
             offset: 2.5,
             gain: 1,
-            calibrationDate: new Date('2025-08-04T00:00:00.000Z'),
+            calibrationDate: new Date('2025-08-04T00:00:00.000Z').toISOString(),
           },
           channel8: {
             measurand: 'Current',
@@ -958,7 +958,7 @@ describe('identification messages', () => {
             accuracy: 0.1,
             offset: 2.5,
             gain: 1,
-            calibrationDate: new Date('2025-08-04T00:00:00.000Z'),
+            calibrationDate: new Date('2025-08-04T00:00:00.000Z').toISOString(),
           },
         },
       })
@@ -1266,8 +1266,8 @@ describe('validation and transformation after decode (tests for validation funct
       // Create a config that only includes sensor1
       const limitedConfig = {
         sensor1: {
-          channel1: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor1Channel1' },
-          channel2: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor1Channel2' },
+          channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel1' },
+          channel2: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel2' },
         },
       } as const satisfies TULIP3DeviceSensorConfig
 
@@ -1289,11 +1289,11 @@ describe('validation and transformation after decode (tests for validation funct
       // Use a config that includes sensor2 but hex data that doesn't indicate it's connected
       const extendedConfig = {
         sensor1: {
-          channel1: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor1Channel1' },
-          channel2: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor1Channel2' },
+          channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel1' },
+          channel2: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel2' },
         },
         sensor2: {
-          channel1: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor2Channel1' },
+          channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor2Channel1' },
         },
       } as const satisfies TULIP3DeviceSensorConfig
 
@@ -1393,7 +1393,7 @@ describe('validation and transformation after decode (tests for validation funct
       // Create config with only channel1
       const limitedChannelConfig = {
         sensor1: {
-          channel1: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor1Channel1' },
+          channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel1' },
           // Missing channel2
         },
       } as const satisfies TULIP3DeviceSensorConfig
@@ -1442,8 +1442,8 @@ describe('validation and transformation after decode (tests for validation funct
     it('should handle sparse channel configuration', () => {
       const sparseConfig = {
         sensor1: {
-          channel1: { min: 0, max: 100, measurementTypes: [], channelName: 'First Channel' },
-          channel8: { min: 0, max: 100, measurementTypes: [], channelName: 'Eighth Channel' },
+          channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'First Channel' },
+          channel8: { start: 0, end: 100, measurementTypes: [], channelName: 'Eighth Channel' },
           // Missing channels 2-7
         },
       } as const satisfies TULIP3DeviceSensorConfig
@@ -1527,7 +1527,7 @@ describe('validation and transformation after decode (tests for validation funct
     it('should handle missing channel configuration gracefully', () => {
       const incompleteConfig = {
         sensor1: {
-          channel1: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor1Channel1' },
+          channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel1' },
           // channel2 missing
         },
       } as const satisfies TULIP3DeviceSensorConfig
@@ -1553,7 +1553,7 @@ describe('validation and transformation after decode (tests for validation funct
       const configWithoutChannelName = {
         sensor1: {
           // @ts-expect-error - missing channel name on purpose
-          channel1: { min: 0, max: 100, measurementTypes: [] }, // No channelName
+          channel1: { start: 0, end: 100, measurementTypes: [] }, // No channelName
         },
       } as const satisfies TULIP3DeviceSensorConfig
 
@@ -1641,7 +1641,7 @@ describe('validation and transformation after decode (tests for validation funct
       }).toThrow(TypeError)
       expect(() => {
         decodeIdentificationRegisterRead(data, config)
-      }).toThrow('Invalid message type: expected 0x14 but got 0x15')
+      }).toThrow('Invalid identification message type: expected 0x14 but got 0x15')
     })
 
     it('should throw TypeError for unsupported subtype', () => {
@@ -1720,11 +1720,11 @@ describe('validateAndTransformIdentificationResult function', () => {
     it('should throw when sensor is not connected but expected in config', () => {
       const extendedConfig = {
         sensor1: {
-          channel1: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor1Channel1' },
-          channel2: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor1Channel2' },
+          channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel1' },
+          channel2: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel2' },
         },
         sensor2: {
-          channel1: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor2Channel1' },
+          channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor2Channel1' },
         },
       } as const satisfies TULIP3DeviceSensorConfig
 
@@ -2032,10 +2032,10 @@ describe('validateAndTransformIdentificationResult function', () => {
     it('should skip sensors not in result', () => {
       const extendedConfig = {
         sensor1: {
-          channel1: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor1Channel1' },
+          channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel1' },
         },
         sensor2: {
-          channel1: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor2Channel1' },
+          channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor2Channel1' },
         },
       } as const satisfies TULIP3DeviceSensorConfig
 
@@ -2056,8 +2056,8 @@ describe('validateAndTransformIdentificationResult function', () => {
       // Create config with optional channelName
       const configWithOptionalChannelName = {
         sensor1: {
-          channel1: { min: 0, max: 100, measurementTypes: [], channelName: '' }, // Empty channelName
-          channel2: { min: 0, max: 100, measurementTypes: [], channelName: 'WithName' },
+          channel1: { start: 0, end: 100, measurementTypes: [], channelName: '' }, // Empty channelName
+          channel2: { start: 0, end: 100, measurementTypes: [], channelName: 'WithName' },
         },
       } as const satisfies TULIP3DeviceSensorConfig
 

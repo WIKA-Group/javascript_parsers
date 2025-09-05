@@ -7,28 +7,28 @@ const testDeviceConfig = {
   sensor1: {
     channel1: {
       channelName: 'sensor1Channel1',
-      min: 0,
-      max: 100,
+      start: 0,
+      end: 100,
       measurementTypes: ['uint16 - TULIP scale 2500 - 12500', 'float - IEEE754'] as const,
     },
     channel2: {
       channelName: 'sensor1Channel2',
-      min: 0,
-      max: 100,
+      start: 0,
+      end: 100,
       measurementTypes: ['uint16 - TULIP scale 2500 - 12500', 'float - IEEE754'] as const,
     },
     channel3: {
       channelName: 'sensor1Channel3',
-      min: -40,
-      max: 125,
+      start: -40,
+      end: 125,
       measurementTypes: ['float - IEEE754'] as const,
     },
   },
   sensor2: {
     channel1: {
       channelName: 'sensor2Channel1',
-      min: 0,
-      max: 50,
+      start: 0,
+      end: 50,
       measurementTypes: ['float - IEEE754'] as const,
     },
   },
@@ -43,13 +43,13 @@ describe('decodeDataMessage', () => {
           channel1: {
             channelName: 'sensor1Channel1',
             measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
-            min: 0,
-            max: 10,
+            start: 0,
+            end: 10,
           },
           channel2: {
             channelName: 'sensor1Channel2',
-            min: -40,
-            max: 125,
+            start: -40,
+            end: 125,
             measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
           },
         },
@@ -192,7 +192,7 @@ describe('decodeDataMessage', () => {
       const data = [0x20, 0x01, 0x00, 0x40, 0x20, 0x00, 0x00]
 
       expect(() => decodeDataMessage(data, testDeviceConfig)).toThrow(TypeError)
-      expect(() => decodeDataMessage(data, testDeviceConfig)).toThrow('Invalid message type: expected 0x16,17 but got 0x20')
+      expect(() => decodeDataMessage(data, testDeviceConfig)).toThrow('Invalid data message type: expected 0x10, 0x11 but got 0x20')
     })
 
     it('should throw TypeError for invalid sub message type', () => {
@@ -232,8 +232,8 @@ describe('decodeDataMessage', () => {
         sensor1: {
           channel1: {
             channelName: 'sensor1Channel1',
-            min: 0,
-            max: 100,
+            start: 0,
+            end: 100,
             measurementTypes: ['uint16 - TULIP scale 2500 - 12500'] as const,
           },
         },
@@ -262,14 +262,14 @@ describe('decodeDataMessage', () => {
         sensor1: {
           channel1: {
             channelName: 'sensor1Channel1',
-            min: 4,
-            max: 20,
+            start: 4,
+            end: 20,
             measurementTypes: ['float - IEEE754'] as const,
           },
           channel2: {
             channelName: 'sensor1Channel2',
-            min: -45,
-            max: 110,
+            start: -45,
+            end: 110,
             measurementTypes: ['float - IEEE754'] as const,
           },
         },
@@ -419,8 +419,8 @@ describe('decodeDataMessage', () => {
         sensor4: {
           channel8: {
             channelName: 'sensor4Channel8',
-            min: 0,
-            max: 100,
+            start: 0,
+            end: 100,
             measurementTypes: ['float - IEEE754'] as const,
           },
         },
@@ -534,14 +534,14 @@ describe('decodeDataMessage', () => {
         sensor1: {
           channel1: {
             channelName: 'sensor1Channel1',
-            min: 4,
-            max: 20,
+            start: 4,
+            end: 20,
             measurementTypes: ['uint16 - TULIP scale 2500 - 12500', 'float - IEEE754'] as const,
           },
           channel2: {
             channelName: 'sensor1Channel2',
-            min: -45,
-            max: 110,
+            start: -45,
+            end: 110,
             measurementTypes: ['uint16 - TULIP scale 2500 - 12500', 'float - IEEE754'] as const,
           },
         },
@@ -580,14 +580,14 @@ describe('decodeDataMessage', () => {
       const customConfig = {
         sensor1: {
           channel1: {
-            min: 4,
-            max: 20,
+            start: 4,
+            end: 20,
             measurementTypes: ['uint16 - TULIP scale 2500 - 12500', 'float - IEEE754'] as const,
             channelName: 'sensor1Channel1',
           },
           channel2: {
-            min: -45,
-            max: 110,
+            start: -45,
+            end: 110,
             measurementTypes: ['uint16 - TULIP scale 2500 - 12500', 'float - IEEE754'] as const,
             channelName: 'sensor1Channel2',
           },
@@ -679,8 +679,8 @@ describe('decodeDataMessage', () => {
           channel1: {
             channelName: 'sensor1Channel1',
             measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
-            min: 0,
-            max: 1,
+            start: 0,
+            end: 1,
           },
         },
       })
@@ -689,8 +689,8 @@ describe('decodeDataMessage', () => {
           channel1: {
             channelName: 'sensor1Channel1',
             measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
-            min: 0,
-            max: 1,
+            start: 0,
+            end: 1,
           },
         },
       }, 0)
@@ -699,8 +699,8 @@ describe('decodeDataMessage', () => {
           channel1: {
             channelName: 'sensor1Channel1',
             measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
-            min: 0,
-            max: 1,
+            start: 0,
+            end: 1,
           },
         },
       }, 2)

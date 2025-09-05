@@ -91,11 +91,11 @@ export function intTuple3ToSemVer(data: [number, number, number]): string {
  * @param data Tuple containing exactly 3 bytes [year_offset, month, day]
  * @returns Date object (year is calculated as data[0] + 2000)
  */
-export function intTuple3ToDate(data: [number, number, number]): Date {
+export function intTuple3ToDate(data: [number, number, number]): string {
   const year = data[0] + 2000 // Assuming the year is in the range 2000-2099
   const month = data[1].toString().padStart(2, '0')
   const day = data[2].toString().padStart(2, '0')
-  return new Date(`${year}-${month}-${day}`)
+  return new Date(`${year}-${month}-${day}`).toISOString()
 }
 
 /**

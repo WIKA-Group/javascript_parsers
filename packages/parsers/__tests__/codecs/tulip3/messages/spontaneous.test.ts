@@ -76,7 +76,7 @@ describe('tulip3 spontaneous downlink answer message decoding (0x17/0x01)', () =
   describe('error handling', () => {
     it('should throw error for invalid message type', () => {
       const data = [0x16, 0x01, 0x10, 0x01, 0x00]
-      expect(() => decodeSpontaneousGenericDownlinkAnswerMessage(data)).toThrow('Invalid message type: expected 0x17 but got 0x16')
+      expect(() => decodeSpontaneousGenericDownlinkAnswerMessage(data)).toThrow('Invalid spontaneous downlink answer message type: expected 0x17 but got 0x16')
     })
 
     it('should throw error for invalid sub message type', () => {
@@ -139,7 +139,7 @@ describe('tulip3 spontaneous fetch additional downlink message decoding (0x17/0x
 
   it('should throw error for invalid message type', () => {
     const data = [0x16, 0x02]
-    expect(() => decodeSpontaneousFetchAdditionalDownlinkMessageMessage(data)).toThrow('Invalid message type: expected 0x17 but got 0x16')
+    expect(() => decodeSpontaneousFetchAdditionalDownlinkMessageMessage(data)).toThrow('Invalid spontaneous fetch additional downlink message type: expected 0x17 but got 0x16')
   })
 
   it('should throw error for invalid sub message type', () => {

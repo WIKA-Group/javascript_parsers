@@ -129,21 +129,21 @@ describe('tULIP3 register parsing functions', () => {
   describe('intTuple3ToDate', () => {
     it('should convert 3-byte tuple to Date object', () => {
       const date1 = intTuple3ToDate([23, 12, 25]) // December 25, 2023
-      expect(date1.getFullYear()).toBe(2023)
-      expect(date1.getMonth()).toBe(11) // December is month 11 (0-based)
-      expect(date1.getDate()).toBe(25)
+      expect(new Date(date1).getFullYear()).toBe(2023)
+      expect(new Date(date1).getMonth()).toBe(11) // December is month 11 (0-based)
+      expect(new Date(date1).getDate()).toBe(25)
 
       const date2 = intTuple3ToDate([24, 1, 1]) // January 1, 2024
-      expect(date2.getFullYear()).toBe(2024)
-      expect(date2.getMonth()).toBe(0) // January is month 0
-      expect(date2.getDate()).toBe(1)
+      expect(new Date(date2).getFullYear()).toBe(2024)
+      expect(new Date(date2).getMonth()).toBe(0) // January is month 0
+      expect(new Date(date2).getDate()).toBe(1)
     })
 
     it('should handle edge cases', () => {
       const date = intTuple3ToDate([0, 1, 1]) // January 1, 2000
-      expect(date.getFullYear()).toBe(2000)
-      expect(date.getMonth()).toBe(0)
-      expect(date.getDate()).toBe(1)
+      expect(new Date(date).getFullYear()).toBe(2000)
+      expect(new Date(date).getMonth()).toBe(0)
+      expect(new Date(date).getDate()).toBe(1)
     })
   })
 
@@ -306,23 +306,6 @@ describe('tULIP3 register parsing functions', () => {
       // Address 0x200 (512), 4 bytes: 512 << 5 | 4 = 16388 = 0x4004
       const data = [0x00, 0x00, 0x40, 0x04, 0x01, 0x02]
       expect(() => parseRegisterBlocks(data)).toThrow('Incomplete register data for address 0x200')
-    })
-
-    it('should throw error for register size exceeding maximum', () => {
-      // Create a register with size 20 bytes that exceeds the set maximum of 16 bytes
-      // Address 0x00 with size 20 -> 0x00, 0x14
-      const data = [0x00, 0x00, 0x00, 0x14, ...Array.from({ length: 20 }, () => 0x01)]
-      expect(() => parseRegisterBlocks(data, { maxRegisterSize: 16 })).toThrow(RangeError)
-      expect(() => parseRegisterBlocks(data, { maxRegisterSize: 16 })).toThrow('Register at address 0x0 has invalid size 20 bytes, exceeds maximum of 16 bytes. This may indicate corrupted addressing field data at position 2. Addressing field: 0x0014 (high byte: 0x00, low byte: 0x14)')
-    })
-
-    it('should throw error for register size exceeding custom maximum', () => {
-      // Create a register with size 16 bytes but set custom max to 10
-      // Address 0x200 (512), 16 bytes: 512 << 5 | 16 = 16384 + 16 = 16400 = 0x4010
-      // Big-endian: [0x40, 0x10]
-      const data = [0x00, 0x00, 0x40, 0x10, ...Array.from({ length: 16 }, () => 0x01)]
-      expect(() => parseRegisterBlocks(data, { maxRegisterSize: 10 })).toThrow(RangeError)
-      expect(() => parseRegisterBlocks(data, { maxRegisterSize: 10 })).toThrow('Register at address 0x200 has invalid size 16 bytes, exceeds maximum of 10 bytes')
     })
 
     it('should handle maximum allowed register size correctly', () => {

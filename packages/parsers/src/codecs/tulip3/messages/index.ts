@@ -191,8 +191,17 @@ export function validateMessageHeader<const TMessageType extends number, const T
   // Validate message type
   const messageType = data[0]! as TMessageType
   if (!expectedMessageTypes.includes(messageType)) {
-    const expectedHex = `0x${expectedMessageType.toString(16).padStart(2, '0').toUpperCase()}`
+    // Format expected type(s) clearly whether a single value or an array
+    const expectedHex = Array.isArray(expectedMessageType)
+      ? expectedMessageType.map(t => `0x${t.toString(16).padStart(2, '0').toUpperCase()}`).join(', ')
+      : `0x${(expectedMessageType as number).toString(16).padStart(2, '0').toUpperCase()}`
     const actualHex = `0x${messageType.toString(16).padStart(2, '0').toUpperCase()}`
+
+    if (messageTypeName) {
+      // e.g. "Invalid configuration message type: expected 0x15 but got 0x05"
+      throw new TypeError(`Invalid ${messageTypeName.toLowerCase()} message type: expected ${expectedHex} but got ${actualHex}`)
+    }
+
     throw new TypeError(`Invalid message type: expected ${expectedHex} but got ${actualHex}`)
   }
 

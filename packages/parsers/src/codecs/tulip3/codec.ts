@@ -9,7 +9,7 @@ import { readMessageSubtype } from './messages'
 import { decodeConfigurationRegisterRead, decodeConfigurationRegisterWrite } from './messages/configuration'
 import { decodeDataMessage } from './messages/data'
 import { decodeChannelAlarmMessage, decodeCommunicationModuleAlarmMessage, decodeSensorAlarmMessage } from './messages/deviceAlarm'
-import { decodeIdentificationRegisterWrite } from './messages/identification'
+import { decodeIdentificationRegisterRead, decodeIdentificationRegisterWrite } from './messages/identification'
 import { decodeKeepAliveMessage } from './messages/keepAlive'
 import { decodeProcessAlarmMessage } from './messages/processAlarm'
 import { decodeSpontaneousFetchAdditionalDownlinkMessageMessage, decodeSpontaneousGenericDownlinkAnswerMessage } from './messages/spontaneous'
@@ -30,8 +30,8 @@ export function defineTULIP3Codec<const TDeviceProfile extends TULIP3DeviceProfi
       Object.values(sensorConfig).forEach((channelConfig: TULIP3ChannelConfig) => {
         c.push({
           name: channelConfig.channelName,
-          start: channelConfig.min,
-          end: channelConfig.max,
+          start: channelConfig.start,
+          end: channelConfig.end,
         })
       })
     })
@@ -85,7 +85,7 @@ export function defineTULIP3Codec<const TDeviceProfile extends TULIP3DeviceProfi
           case 0x02:
           case 0x04:
             // @ts-expect-error - type is not correctly inferred due to default generic type in deviceProfile
-            return decodeConfigurationRegisterRead(input.bytes, deviceProfile.sensorChannelConfig, { maxRegisterSize: deviceProfile.identificationMessageMaxRegisterSize })
+            return decodeIdentificationRegisterRead(input.bytes, deviceProfile.sensorChannelConfig, { maxRegisterSize: deviceProfile.identificationMessageMaxRegisterSize })
           case 0x03:
             return decodeIdentificationRegisterWrite(input.bytes)
           default:
@@ -125,8 +125,8 @@ export function defineTULIP3Codec<const TDeviceProfile extends TULIP3DeviceProfi
       for (const sensorConfig of sensorConfigs) {
         const channel = Object.values(sensorConfig).find((channel: TULIP3ChannelConfig) => channel?.channelName === name) as TULIP3ChannelConfig
         if (channel) {
-          channel.min = range.start
-          channel.max = range.end
+          channel.start = range.start
+          channel.end = range.end
           return
         }
       }

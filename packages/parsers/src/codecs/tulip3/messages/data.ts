@@ -147,11 +147,11 @@ export function decodeDataMessage<TTULIP3DeviceSensorConfig extends TULIP3Device
 
     // now scale the tulip value if necessary
     if (b.sourceDataType === 'uint16 - TULIP scale 2500 - 12500' && b.value !== undefined) {
-      b.value = TULIPValueToValue(b.value, { start: config.min, end: config.max })
+      b.value = TULIPValueToValue(b.value, config)
     }
     else if (b.sourceDataType !== 'uint16 - TULIP scale 2500 - 12500' && b.value !== undefined) {
       // if it is any other value, it needs to be inside the min max range
-      if (b.value < config.min || b.value > config.max) {
+      if (b.value < config.start || b.value > config.end) {
         throw new RangeError(`Measurement for sensor ${b.sensor} channel ${b.channel} is out of range, got ${b.value}`)
       }
     }

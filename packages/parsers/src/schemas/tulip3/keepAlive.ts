@@ -26,7 +26,7 @@ import { createGenericUplinkOutputSchema } from './index'
  * })
  * ```
  */
-export function createKeepAliveStatusWithBatterySchema() {
+function createKeepAliveStatusWithBatterySchema() {
   return v.object({
     mainPowered: v.boolean(), // bit 7
     ableToComputeBatteryLevel: v.literal(true), // bit 6
@@ -54,7 +54,7 @@ export function createKeepAliveStatusWithBatterySchema() {
  * })
  * ```
  */
-export function createKeepAliveStatusWithoutBatterySchema() {
+function createKeepAliveStatusWithoutBatterySchema() {
   return v.object({
     mainPowered: v.boolean(), // bit 7
     ableToComputeBatteryLevel: v.literal(false), // bit 6
@@ -77,7 +77,7 @@ export function createKeepAliveStatusWithoutBatterySchema() {
  * })
  * ```
  */
-export function createKeepAliveDataWithBatterySchema() {
+function createKeepAliveDataWithBatterySchema() {
   return v.object({
     status: createKeepAliveStatusWithBatterySchema(),
     revisionCounter: v.number(),
@@ -100,7 +100,7 @@ export function createKeepAliveDataWithBatterySchema() {
  * })
  * ```
  */
-export function createKeepAliveDataWithoutBatterySchema() {
+function createKeepAliveDataWithoutBatterySchema() {
   return v.object({
     status: createKeepAliveStatusWithoutBatterySchema(),
     revisionCounter: v.number(),
@@ -145,7 +145,7 @@ export function createKeepAliveDataWithoutBatterySchema() {
  * })
  * ```
  */
-export function createKeepAliveUplinkOutputSchema() {
+function createKeepAliveUplinkOutputSchema() {
   return createGenericUplinkOutputSchema({
     messageType: [0x16],
     messageSubType: [0x01],
@@ -165,3 +165,7 @@ export function createKeepAliveUplinkOutputSchema() {
 export type KeepAliveStatusWithBattery = v.InferOutput<ReturnType<typeof createKeepAliveStatusWithBatterySchema>>
 export type KeepAliveStatusWithoutBattery = v.InferOutput<ReturnType<typeof createKeepAliveStatusWithoutBatterySchema>>
 export type KeepAliveMessageUplinkOutput = v.InferOutput<ReturnType<typeof createKeepAliveUplinkOutputSchema>>
+
+export {
+  createKeepAliveUplinkOutputSchema,
+}

@@ -1,7 +1,7 @@
 import type { UplinkInput } from '../schemas'
 import type { Channel, GenericUplinkOutput } from '../types'
 
-export type Codec<TCodecName extends string, TData extends GenericUplinkOutput<object>, TChannelName extends string, TEncoder extends (((input: any) => number[]) | undefined) = undefined> = {
+export type Codec<TCodecName extends string, TData extends GenericUplinkOutput, TChannelName extends string, TEncoder extends (((input: any) => number[]) | undefined) = undefined> = {
   name: TCodecName
 
   adjustRoundingDecimals: (decimals: number) => void

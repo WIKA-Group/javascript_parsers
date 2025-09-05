@@ -160,7 +160,7 @@ describe('tulip3 keep alive message decoding (0x16/0x01)', () => {
       const data = [0x15, 0x01, 0x60, 0x00, 0x02, 0x64] // Wrong message type
 
       expect(() => decodeKeepAliveMessage(data)).toThrow(
-        'Invalid message type: expected 0x16 but got 0x15',
+        'Invalid keep alive message type: expected 0x16 but got 0x15',
       )
     })
 

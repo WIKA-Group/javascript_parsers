@@ -1,425 +1,4529 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "type": "object",
-    "properties": {
-        "$schema": {
-            "type": "string"
-        },
-        "data": {
-            "$ref": "#/definitions/Data"
-        },
-        "errors": {
-            "type": "array",
-            "items": {
-                "type": "string"
-            }
-        },
-        "warnings": {
-            "type": "array",
-            "items": {
-                "type": "string"
-            }
-        }
-    },
-    "additionalProperties": false,
-    "required": [],
-    "definitions": {
-        "Data": {
-            "type": "object",
-            "properties": {
-                "messageType": {
-                    "type": "integer",
-                    "maximum": 9,
-                    "minimum": 1
-                },
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "anyOf": [
+    {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
                 "configurationId": {
-                    "type": "integer"
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 31
+                },
+                "messageType": {
+                  "enum": [
+                    1,
+                    2
+                  ]
                 },
                 "measurement": {
-                    "type": "object",
-                    "properties": {
-                        "channels": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/Channel"
+                  "type": "object",
+                  "properties": {
+                    "channels": {
+                      "type": "array",
+                      "items": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "channelName": {
+                              "const": "pressure"
+                            },
+                            "channelId": {
+                              "const": 0
+                            },
+                            "value": {
+                              "type": "number"
                             }
+                          },
+                          "required": [
+                            "channelName",
+                            "channelId",
+                            "value"
+                          ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "channelName": {
+                              "const": "device temperature"
+                            },
+                            "channelId": {
+                              "const": 1
+                            },
+                            "value": {
+                              "type": "number"
+                            }
+                          },
+                          "required": [
+                            "channelName",
+                            "channelId",
+                            "value"
+                          ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "channelName": {
+                              "const": "battery voltage"
+                            },
+                            "channelId": {
+                              "const": 2
+                            },
+                            "value": {
+                              "type": "number"
+                            }
+                          },
+                          "required": [
+                            "channelName",
+                            "channelId",
+                            "value"
+                          ]
                         }
-                    },
-                    "additionalProperties": false,
-                    "required": [
-                        "channels"
-                    ]
+                      ],
+                      "minItems": 3
+                    }
+                  },
+                  "required": [
+                    "channels"
+                  ]
+                }
+              },
+              "required": [
+                "configurationId",
+                "messageType",
+                "measurement"
+              ]
+            },
+            "warnings": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "data"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "configurationId": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 31
+                },
+                "messageType": {
+                  "enum": [
+                    3
+                  ]
                 },
                 "processAlarms": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/ProcessAlarm"
-                    }
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "channelId": {
+                            "const": 0
+                          },
+                          "channelName": {
+                            "const": "pressure"
+                          },
+                          "event": {
+                            "const": 0
+                          },
+                          "eventName": {
+                            "const": "triggered"
+                          },
+                          "alarmType": {
+                            "const": 0
+                          },
+                          "alarmTypeName": {
+                            "const": "low threshold"
+                          },
+                          "value": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "channelId",
+                          "channelName",
+                          "event",
+                          "eventName",
+                          "alarmType",
+                          "alarmTypeName",
+                          "value"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "channelId": {
+                            "const": 0
+                          },
+                          "channelName": {
+                            "const": "pressure"
+                          },
+                          "event": {
+                            "const": 0
+                          },
+                          "eventName": {
+                            "const": "triggered"
+                          },
+                          "alarmType": {
+                            "const": 1
+                          },
+                          "alarmTypeName": {
+                            "const": "high threshold"
+                          },
+                          "value": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "channelId",
+                          "channelName",
+                          "event",
+                          "eventName",
+                          "alarmType",
+                          "alarmTypeName",
+                          "value"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "channelId": {
+                            "const": 0
+                          },
+                          "channelName": {
+                            "const": "pressure"
+                          },
+                          "event": {
+                            "const": 0
+                          },
+                          "eventName": {
+                            "const": "triggered"
+                          },
+                          "alarmType": {
+                            "const": 2
+                          },
+                          "alarmTypeName": {
+                            "const": "falling slope"
+                          },
+                          "value": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "channelId",
+                          "channelName",
+                          "event",
+                          "eventName",
+                          "alarmType",
+                          "alarmTypeName",
+                          "value"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "channelId": {
+                            "const": 0
+                          },
+                          "channelName": {
+                            "const": "pressure"
+                          },
+                          "event": {
+                            "const": 0
+                          },
+                          "eventName": {
+                            "const": "triggered"
+                          },
+                          "alarmType": {
+                            "const": 3
+                          },
+                          "alarmTypeName": {
+                            "const": "rising slope"
+                          },
+                          "value": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "channelId",
+                          "channelName",
+                          "event",
+                          "eventName",
+                          "alarmType",
+                          "alarmTypeName",
+                          "value"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "channelId": {
+                            "const": 0
+                          },
+                          "channelName": {
+                            "const": "pressure"
+                          },
+                          "event": {
+                            "const": 0
+                          },
+                          "eventName": {
+                            "const": "triggered"
+                          },
+                          "alarmType": {
+                            "const": 4
+                          },
+                          "alarmTypeName": {
+                            "const": "low threshold with delay"
+                          },
+                          "value": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "channelId",
+                          "channelName",
+                          "event",
+                          "eventName",
+                          "alarmType",
+                          "alarmTypeName",
+                          "value"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "channelId": {
+                            "const": 0
+                          },
+                          "channelName": {
+                            "const": "pressure"
+                          },
+                          "event": {
+                            "const": 0
+                          },
+                          "eventName": {
+                            "const": "triggered"
+                          },
+                          "alarmType": {
+                            "const": 5
+                          },
+                          "alarmTypeName": {
+                            "const": "high threshold with delay"
+                          },
+                          "value": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "channelId",
+                          "channelName",
+                          "event",
+                          "eventName",
+                          "alarmType",
+                          "alarmTypeName",
+                          "value"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "channelId": {
+                            "const": 0
+                          },
+                          "channelName": {
+                            "const": "pressure"
+                          },
+                          "event": {
+                            "const": 1
+                          },
+                          "eventName": {
+                            "const": "disappeared"
+                          },
+                          "alarmType": {
+                            "const": 0
+                          },
+                          "alarmTypeName": {
+                            "const": "low threshold"
+                          },
+                          "value": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "channelId",
+                          "channelName",
+                          "event",
+                          "eventName",
+                          "alarmType",
+                          "alarmTypeName",
+                          "value"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "channelId": {
+                            "const": 0
+                          },
+                          "channelName": {
+                            "const": "pressure"
+                          },
+                          "event": {
+                            "const": 1
+                          },
+                          "eventName": {
+                            "const": "disappeared"
+                          },
+                          "alarmType": {
+                            "const": 1
+                          },
+                          "alarmTypeName": {
+                            "const": "high threshold"
+                          },
+                          "value": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "channelId",
+                          "channelName",
+                          "event",
+                          "eventName",
+                          "alarmType",
+                          "alarmTypeName",
+                          "value"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "channelId": {
+                            "const": 0
+                          },
+                          "channelName": {
+                            "const": "pressure"
+                          },
+                          "event": {
+                            "const": 1
+                          },
+                          "eventName": {
+                            "const": "disappeared"
+                          },
+                          "alarmType": {
+                            "const": 2
+                          },
+                          "alarmTypeName": {
+                            "const": "falling slope"
+                          },
+                          "value": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "channelId",
+                          "channelName",
+                          "event",
+                          "eventName",
+                          "alarmType",
+                          "alarmTypeName",
+                          "value"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "channelId": {
+                            "const": 0
+                          },
+                          "channelName": {
+                            "const": "pressure"
+                          },
+                          "event": {
+                            "const": 1
+                          },
+                          "eventName": {
+                            "const": "disappeared"
+                          },
+                          "alarmType": {
+                            "const": 3
+                          },
+                          "alarmTypeName": {
+                            "const": "rising slope"
+                          },
+                          "value": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "channelId",
+                          "channelName",
+                          "event",
+                          "eventName",
+                          "alarmType",
+                          "alarmTypeName",
+                          "value"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "channelId": {
+                            "const": 0
+                          },
+                          "channelName": {
+                            "const": "pressure"
+                          },
+                          "event": {
+                            "const": 1
+                          },
+                          "eventName": {
+                            "const": "disappeared"
+                          },
+                          "alarmType": {
+                            "const": 4
+                          },
+                          "alarmTypeName": {
+                            "const": "low threshold with delay"
+                          },
+                          "value": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "channelId",
+                          "channelName",
+                          "event",
+                          "eventName",
+                          "alarmType",
+                          "alarmTypeName",
+                          "value"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "channelId": {
+                            "const": 0
+                          },
+                          "channelName": {
+                            "const": "pressure"
+                          },
+                          "event": {
+                            "const": 1
+                          },
+                          "eventName": {
+                            "const": "disappeared"
+                          },
+                          "alarmType": {
+                            "const": 5
+                          },
+                          "alarmTypeName": {
+                            "const": "high threshold with delay"
+                          },
+                          "value": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "channelId",
+                          "channelName",
+                          "event",
+                          "eventName",
+                          "alarmType",
+                          "alarmTypeName",
+                          "value"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "channelId": {
+                            "const": 1
+                          },
+                          "channelName": {
+                            "const": "device temperature"
+                          },
+                          "event": {
+                            "const": 0
+                          },
+                          "eventName": {
+                            "const": "triggered"
+                          },
+                          "alarmType": {
+                            "const": 0
+                          },
+                          "alarmTypeName": {
+                            "const": "low threshold"
+                          },
+                          "value": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "channelId",
+                          "channelName",
+                          "event",
+                          "eventName",
+                          "alarmType",
+                          "alarmTypeName",
+                          "value"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "channelId": {
+                            "const": 1
+                          },
+                          "channelName": {
+                            "const": "device temperature"
+                          },
+                          "event": {
+                            "const": 0
+                          },
+                          "eventName": {
+                            "const": "triggered"
+                          },
+                          "alarmType": {
+                            "const": 1
+                          },
+                          "alarmTypeName": {
+                            "const": "high threshold"
+                          },
+                          "value": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "channelId",
+                          "channelName",
+                          "event",
+                          "eventName",
+                          "alarmType",
+                          "alarmTypeName",
+                          "value"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "channelId": {
+                            "const": 1
+                          },
+                          "channelName": {
+                            "const": "device temperature"
+                          },
+                          "event": {
+                            "const": 0
+                          },
+                          "eventName": {
+                            "const": "triggered"
+                          },
+                          "alarmType": {
+                            "const": 2
+                          },
+                          "alarmTypeName": {
+                            "const": "falling slope"
+                          },
+                          "value": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "channelId",
+                          "channelName",
+                          "event",
+                          "eventName",
+                          "alarmType",
+                          "alarmTypeName",
+                          "value"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "channelId": {
+                            "const": 1
+                          },
+                          "channelName": {
+                            "const": "device temperature"
+                          },
+                          "event": {
+                            "const": 0
+                          },
+                          "eventName": {
+                            "const": "triggered"
+                          },
+                          "alarmType": {
+                            "const": 3
+                          },
+                          "alarmTypeName": {
+                            "const": "rising slope"
+                          },
+                          "value": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "channelId",
+                          "channelName",
+                          "event",
+                          "eventName",
+                          "alarmType",
+                          "alarmTypeName",
+                          "value"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "channelId": {
+                            "const": 1
+                          },
+                          "channelName": {
+                            "const": "device temperature"
+                          },
+                          "event": {
+                            "const": 0
+                          },
+                          "eventName": {
+                            "const": "triggered"
+                          },
+                          "alarmType": {
+                            "const": 4
+                          },
+                          "alarmTypeName": {
+                            "const": "low threshold with delay"
+                          },
+                          "value": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "channelId",
+                          "channelName",
+                          "event",
+                          "eventName",
+                          "alarmType",
+                          "alarmTypeName",
+                          "value"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "channelId": {
+                            "const": 1
+                          },
+                          "channelName": {
+                            "const": "device temperature"
+                          },
+                          "event": {
+                            "const": 0
+                          },
+                          "eventName": {
+                            "const": "triggered"
+                          },
+                          "alarmType": {
+                            "const": 5
+                          },
+                          "alarmTypeName": {
+                            "const": "high threshold with delay"
+                          },
+                          "value": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "channelId",
+                          "channelName",
+                          "event",
+                          "eventName",
+                          "alarmType",
+                          "alarmTypeName",
+                          "value"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "channelId": {
+                            "const": 1
+                          },
+                          "channelName": {
+                            "const": "device temperature"
+                          },
+                          "event": {
+                            "const": 1
+                          },
+                          "eventName": {
+                            "const": "disappeared"
+                          },
+                          "alarmType": {
+                            "const": 0
+                          },
+                          "alarmTypeName": {
+                            "const": "low threshold"
+                          },
+                          "value": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "channelId",
+                          "channelName",
+                          "event",
+                          "eventName",
+                          "alarmType",
+                          "alarmTypeName",
+                          "value"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "channelId": {
+                            "const": 1
+                          },
+                          "channelName": {
+                            "const": "device temperature"
+                          },
+                          "event": {
+                            "const": 1
+                          },
+                          "eventName": {
+                            "const": "disappeared"
+                          },
+                          "alarmType": {
+                            "const": 1
+                          },
+                          "alarmTypeName": {
+                            "const": "high threshold"
+                          },
+                          "value": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "channelId",
+                          "channelName",
+                          "event",
+                          "eventName",
+                          "alarmType",
+                          "alarmTypeName",
+                          "value"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "channelId": {
+                            "const": 1
+                          },
+                          "channelName": {
+                            "const": "device temperature"
+                          },
+                          "event": {
+                            "const": 1
+                          },
+                          "eventName": {
+                            "const": "disappeared"
+                          },
+                          "alarmType": {
+                            "const": 2
+                          },
+                          "alarmTypeName": {
+                            "const": "falling slope"
+                          },
+                          "value": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "channelId",
+                          "channelName",
+                          "event",
+                          "eventName",
+                          "alarmType",
+                          "alarmTypeName",
+                          "value"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "channelId": {
+                            "const": 1
+                          },
+                          "channelName": {
+                            "const": "device temperature"
+                          },
+                          "event": {
+                            "const": 1
+                          },
+                          "eventName": {
+                            "const": "disappeared"
+                          },
+                          "alarmType": {
+                            "const": 3
+                          },
+                          "alarmTypeName": {
+                            "const": "rising slope"
+                          },
+                          "value": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "channelId",
+                          "channelName",
+                          "event",
+                          "eventName",
+                          "alarmType",
+                          "alarmTypeName",
+                          "value"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "channelId": {
+                            "const": 1
+                          },
+                          "channelName": {
+                            "const": "device temperature"
+                          },
+                          "event": {
+                            "const": 1
+                          },
+                          "eventName": {
+                            "const": "disappeared"
+                          },
+                          "alarmType": {
+                            "const": 4
+                          },
+                          "alarmTypeName": {
+                            "const": "low threshold with delay"
+                          },
+                          "value": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "channelId",
+                          "channelName",
+                          "event",
+                          "eventName",
+                          "alarmType",
+                          "alarmTypeName",
+                          "value"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "channelId": {
+                            "const": 1
+                          },
+                          "channelName": {
+                            "const": "device temperature"
+                          },
+                          "event": {
+                            "const": 1
+                          },
+                          "eventName": {
+                            "const": "disappeared"
+                          },
+                          "alarmType": {
+                            "const": 5
+                          },
+                          "alarmTypeName": {
+                            "const": "high threshold with delay"
+                          },
+                          "value": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "channelId",
+                          "channelName",
+                          "event",
+                          "eventName",
+                          "alarmType",
+                          "alarmTypeName",
+                          "value"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "configurationId",
+                "messageType",
+                "processAlarms"
+              ]
+            },
+            "warnings": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "data"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "configurationId": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 31
+                },
+                "messageType": {
+                  "enum": [
+                    4
+                  ]
                 },
                 "technicalAlarms": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/TechnicalAlarm"
+                  "type": "array",
+                  "items": [
+                    {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "event": {
+                              "const": 0
+                            },
+                            "eventName": {
+                              "const": "triggered"
+                            },
+                            "alarmType": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 255
+                            },
+                            "alarmTypeNames": {
+                              "type": "array",
+                              "items": {
+                                "enum": [
+                                  "ALU saturation error",
+                                  "sensor memory integrity error",
+                                  "sensor busy error",
+                                  "reserved",
+                                  "sensor communication error",
+                                  "pressure out of limit",
+                                  "temperature out of limit"
+                                ]
+                              }
+                            }
+                          },
+                          "required": [
+                            "event",
+                            "eventName",
+                            "alarmType",
+                            "alarmTypeNames"
+                          ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "event": {
+                              "const": 1
+                            },
+                            "eventName": {
+                              "const": "disappeared"
+                            },
+                            "alarmType": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 255
+                            },
+                            "alarmTypeNames": {
+                              "type": "array",
+                              "items": {
+                                "enum": [
+                                  "ALU saturation error",
+                                  "sensor memory integrity error",
+                                  "sensor busy error",
+                                  "reserved",
+                                  "sensor communication error",
+                                  "pressure out of limit",
+                                  "temperature out of limit"
+                                ]
+                              }
+                            }
+                          },
+                          "required": [
+                            "event",
+                            "eventName",
+                            "alarmType",
+                            "alarmTypeNames"
+                          ]
+                        }
+                      ]
                     }
+                  ],
+                  "minItems": 1
+                }
+              },
+              "required": [
+                "configurationId",
+                "messageType",
+                "technicalAlarms"
+              ]
+            },
+            "warnings": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "data"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "configurationId": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 31
+                },
+                "messageType": {
+                  "enum": [
+                    5
+                  ]
                 },
                 "deviceAlarm": {
-                    "$ref": "#/definitions/DeviceAlarm"
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "event": {
+                          "const": 0
+                        },
+                        "eventName": {
+                          "const": "triggered"
+                        },
+                        "alarmType": {
+                          "const": 0
+                        },
+                        "alarmTypeName": {
+                          "const": "battery low"
+                        },
+                        "causeOfFailure": {
+                          "const": 0
+                        },
+                        "causeOfFailureName": {
+                          "const": "generic"
+                        },
+                        "value": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "event",
+                        "eventName",
+                        "alarmType",
+                        "alarmTypeName",
+                        "causeOfFailure",
+                        "causeOfFailureName",
+                        "value"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "event": {
+                          "const": 0
+                        },
+                        "eventName": {
+                          "const": "triggered"
+                        },
+                        "alarmType": {
+                          "const": 0
+                        },
+                        "alarmTypeName": {
+                          "const": "battery low"
+                        },
+                        "causeOfFailure": {
+                          "const": 1
+                        },
+                        "causeOfFailureName": {
+                          "const": "device dependent"
+                        },
+                        "value": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "event",
+                        "eventName",
+                        "alarmType",
+                        "alarmTypeName",
+                        "causeOfFailure",
+                        "causeOfFailureName",
+                        "value"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "event": {
+                          "const": 0
+                        },
+                        "eventName": {
+                          "const": "triggered"
+                        },
+                        "alarmType": {
+                          "const": 4
+                        },
+                        "alarmTypeName": {
+                          "const": "acknowledged message not emitted"
+                        },
+                        "causeOfFailure": {
+                          "const": 0
+                        },
+                        "causeOfFailureName": {
+                          "const": "generic"
+                        }
+                      },
+                      "required": [
+                        "event",
+                        "eventName",
+                        "alarmType",
+                        "alarmTypeName",
+                        "causeOfFailure",
+                        "causeOfFailureName"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "event": {
+                          "const": 0
+                        },
+                        "eventName": {
+                          "const": "triggered"
+                        },
+                        "alarmType": {
+                          "const": 4
+                        },
+                        "alarmTypeName": {
+                          "const": "acknowledged message not emitted"
+                        },
+                        "causeOfFailure": {
+                          "const": 1
+                        },
+                        "causeOfFailureName": {
+                          "const": "device dependent"
+                        }
+                      },
+                      "required": [
+                        "event",
+                        "eventName",
+                        "alarmType",
+                        "alarmTypeName",
+                        "causeOfFailure",
+                        "causeOfFailureName"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "event": {
+                          "const": 1
+                        },
+                        "eventName": {
+                          "const": "disappeared"
+                        },
+                        "alarmType": {
+                          "const": 0
+                        },
+                        "alarmTypeName": {
+                          "const": "battery low"
+                        },
+                        "causeOfFailure": {
+                          "const": 0
+                        },
+                        "causeOfFailureName": {
+                          "const": "generic"
+                        },
+                        "value": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "event",
+                        "eventName",
+                        "alarmType",
+                        "alarmTypeName",
+                        "causeOfFailure",
+                        "causeOfFailureName",
+                        "value"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "event": {
+                          "const": 1
+                        },
+                        "eventName": {
+                          "const": "disappeared"
+                        },
+                        "alarmType": {
+                          "const": 0
+                        },
+                        "alarmTypeName": {
+                          "const": "battery low"
+                        },
+                        "causeOfFailure": {
+                          "const": 1
+                        },
+                        "causeOfFailureName": {
+                          "const": "device dependent"
+                        },
+                        "value": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "event",
+                        "eventName",
+                        "alarmType",
+                        "alarmTypeName",
+                        "causeOfFailure",
+                        "causeOfFailureName",
+                        "value"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "event": {
+                          "const": 1
+                        },
+                        "eventName": {
+                          "const": "disappeared"
+                        },
+                        "alarmType": {
+                          "const": 4
+                        },
+                        "alarmTypeName": {
+                          "const": "acknowledged message not emitted"
+                        },
+                        "causeOfFailure": {
+                          "const": 0
+                        },
+                        "causeOfFailureName": {
+                          "const": "generic"
+                        }
+                      },
+                      "required": [
+                        "event",
+                        "eventName",
+                        "alarmType",
+                        "alarmTypeName",
+                        "causeOfFailure",
+                        "causeOfFailureName"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "event": {
+                          "const": 1
+                        },
+                        "eventName": {
+                          "const": "disappeared"
+                        },
+                        "alarmType": {
+                          "const": 4
+                        },
+                        "alarmTypeName": {
+                          "const": "acknowledged message not emitted"
+                        },
+                        "causeOfFailure": {
+                          "const": 1
+                        },
+                        "causeOfFailureName": {
+                          "const": "device dependent"
+                        }
+                      },
+                      "required": [
+                        "event",
+                        "eventName",
+                        "alarmType",
+                        "alarmTypeName",
+                        "causeOfFailure",
+                        "causeOfFailureName"
+                      ]
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "configurationId",
+                "messageType",
+                "deviceAlarm"
+              ]
+            },
+            "warnings": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "data"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "configurationId": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 31
+                },
+                "messageType": {
+                  "enum": [
+                    7
+                  ]
                 },
                 "deviceInformation": {
-                    "$ref": "#/definitions/DeviceIdentification"
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "productIdName": {
+                          "const": "PEW"
+                        },
+                        "productId": {
+                          "const": 11
+                        },
+                        "productSubId": {
+                          "const": 0
+                        },
+                        "productSubIdName": {
+                          "const": "LoRaWAN"
+                        },
+                        "wirelessModuleFirmwareVersion": {
+                          "type": "string",
+                          "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
+                        },
+                        "wirelessModuleHardwareVersion": {
+                          "type": "string",
+                          "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
+                        },
+                        "serialNumber": {
+                          "type": "string"
+                        },
+                        "pressureType": {
+                          "const": 1
+                        },
+                        "measurementRangeStartPressure": {
+                          "type": "number"
+                        },
+                        "measurementRangeEndPressure": {
+                          "type": "number"
+                        },
+                        "measurementRangeStartDeviceTemperature": {
+                          "type": "number"
+                        },
+                        "measurementRangeEndDeviceTemperature": {
+                          "type": "number"
+                        },
+                        "pressureUnit": {
+                          "const": 7
+                        },
+                        "pressureUnitName": {
+                          "const": "bar"
+                        },
+                        "deviceTemperatureUnit": {
+                          "const": 32
+                        },
+                        "deviceTemperatureUnitName": {
+                          "const": "°C"
+                        }
+                      },
+                      "required": [
+                        "productIdName",
+                        "productId",
+                        "productSubId",
+                        "productSubIdName",
+                        "wirelessModuleFirmwareVersion",
+                        "wirelessModuleHardwareVersion",
+                        "serialNumber",
+                        "pressureType",
+                        "measurementRangeStartPressure",
+                        "measurementRangeEndPressure",
+                        "measurementRangeStartDeviceTemperature",
+                        "measurementRangeEndDeviceTemperature",
+                        "pressureUnit",
+                        "pressureUnitName",
+                        "deviceTemperatureUnit",
+                        "deviceTemperatureUnitName"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "productIdName": {
+                          "const": "PEW"
+                        },
+                        "productId": {
+                          "const": 11
+                        },
+                        "productSubId": {
+                          "const": 0
+                        },
+                        "productSubIdName": {
+                          "const": "LoRaWAN"
+                        },
+                        "wirelessModuleFirmwareVersion": {
+                          "type": "string",
+                          "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
+                        },
+                        "wirelessModuleHardwareVersion": {
+                          "type": "string",
+                          "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
+                        },
+                        "serialNumber": {
+                          "type": "string"
+                        },
+                        "pressureType": {
+                          "const": 1
+                        },
+                        "measurementRangeStartPressure": {
+                          "type": "number"
+                        },
+                        "measurementRangeEndPressure": {
+                          "type": "number"
+                        },
+                        "measurementRangeStartDeviceTemperature": {
+                          "type": "number"
+                        },
+                        "measurementRangeEndDeviceTemperature": {
+                          "type": "number"
+                        },
+                        "pressureUnit": {
+                          "const": 237
+                        },
+                        "pressureUnitName": {
+                          "const": "MPa"
+                        },
+                        "deviceTemperatureUnit": {
+                          "const": 32
+                        },
+                        "deviceTemperatureUnitName": {
+                          "const": "°C"
+                        }
+                      },
+                      "required": [
+                        "productIdName",
+                        "productId",
+                        "productSubId",
+                        "productSubIdName",
+                        "wirelessModuleFirmwareVersion",
+                        "wirelessModuleHardwareVersion",
+                        "serialNumber",
+                        "pressureType",
+                        "measurementRangeStartPressure",
+                        "measurementRangeEndPressure",
+                        "measurementRangeStartDeviceTemperature",
+                        "measurementRangeEndDeviceTemperature",
+                        "pressureUnit",
+                        "pressureUnitName",
+                        "deviceTemperatureUnit",
+                        "deviceTemperatureUnitName"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "productIdName": {
+                          "const": "PEW"
+                        },
+                        "productId": {
+                          "const": 11
+                        },
+                        "productSubId": {
+                          "const": 0
+                        },
+                        "productSubIdName": {
+                          "const": "LoRaWAN"
+                        },
+                        "wirelessModuleFirmwareVersion": {
+                          "type": "string",
+                          "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
+                        },
+                        "wirelessModuleHardwareVersion": {
+                          "type": "string",
+                          "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
+                        },
+                        "serialNumber": {
+                          "type": "string"
+                        },
+                        "pressureType": {
+                          "const": 1
+                        },
+                        "measurementRangeStartPressure": {
+                          "type": "number"
+                        },
+                        "measurementRangeEndPressure": {
+                          "type": "number"
+                        },
+                        "measurementRangeStartDeviceTemperature": {
+                          "type": "number"
+                        },
+                        "measurementRangeEndDeviceTemperature": {
+                          "type": "number"
+                        },
+                        "pressureUnit": {
+                          "const": 6
+                        },
+                        "pressureUnitName": {
+                          "const": "psi"
+                        },
+                        "deviceTemperatureUnit": {
+                          "const": 32
+                        },
+                        "deviceTemperatureUnitName": {
+                          "const": "°C"
+                        }
+                      },
+                      "required": [
+                        "productIdName",
+                        "productId",
+                        "productSubId",
+                        "productSubIdName",
+                        "wirelessModuleFirmwareVersion",
+                        "wirelessModuleHardwareVersion",
+                        "serialNumber",
+                        "pressureType",
+                        "measurementRangeStartPressure",
+                        "measurementRangeEndPressure",
+                        "measurementRangeStartDeviceTemperature",
+                        "measurementRangeEndDeviceTemperature",
+                        "pressureUnit",
+                        "pressureUnitName",
+                        "deviceTemperatureUnit",
+                        "deviceTemperatureUnitName"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "productIdName": {
+                          "const": "PEW"
+                        },
+                        "productId": {
+                          "const": 11
+                        },
+                        "productSubId": {
+                          "const": 0
+                        },
+                        "productSubIdName": {
+                          "const": "LoRaWAN"
+                        },
+                        "wirelessModuleFirmwareVersion": {
+                          "type": "string",
+                          "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
+                        },
+                        "wirelessModuleHardwareVersion": {
+                          "type": "string",
+                          "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
+                        },
+                        "serialNumber": {
+                          "type": "string"
+                        },
+                        "pressureType": {
+                          "const": 2
+                        },
+                        "measurementRangeStartPressure": {
+                          "type": "number"
+                        },
+                        "measurementRangeEndPressure": {
+                          "type": "number"
+                        },
+                        "measurementRangeStartDeviceTemperature": {
+                          "type": "number"
+                        },
+                        "measurementRangeEndDeviceTemperature": {
+                          "type": "number"
+                        },
+                        "pressureUnit": {
+                          "const": 7
+                        },
+                        "pressureUnitName": {
+                          "const": "bar"
+                        },
+                        "deviceTemperatureUnit": {
+                          "const": 32
+                        },
+                        "deviceTemperatureUnitName": {
+                          "const": "°C"
+                        }
+                      },
+                      "required": [
+                        "productIdName",
+                        "productId",
+                        "productSubId",
+                        "productSubIdName",
+                        "wirelessModuleFirmwareVersion",
+                        "wirelessModuleHardwareVersion",
+                        "serialNumber",
+                        "pressureType",
+                        "measurementRangeStartPressure",
+                        "measurementRangeEndPressure",
+                        "measurementRangeStartDeviceTemperature",
+                        "measurementRangeEndDeviceTemperature",
+                        "pressureUnit",
+                        "pressureUnitName",
+                        "deviceTemperatureUnit",
+                        "deviceTemperatureUnitName"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "productIdName": {
+                          "const": "PEW"
+                        },
+                        "productId": {
+                          "const": 11
+                        },
+                        "productSubId": {
+                          "const": 0
+                        },
+                        "productSubIdName": {
+                          "const": "LoRaWAN"
+                        },
+                        "wirelessModuleFirmwareVersion": {
+                          "type": "string",
+                          "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
+                        },
+                        "wirelessModuleHardwareVersion": {
+                          "type": "string",
+                          "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
+                        },
+                        "serialNumber": {
+                          "type": "string"
+                        },
+                        "pressureType": {
+                          "const": 2
+                        },
+                        "measurementRangeStartPressure": {
+                          "type": "number"
+                        },
+                        "measurementRangeEndPressure": {
+                          "type": "number"
+                        },
+                        "measurementRangeStartDeviceTemperature": {
+                          "type": "number"
+                        },
+                        "measurementRangeEndDeviceTemperature": {
+                          "type": "number"
+                        },
+                        "pressureUnit": {
+                          "const": 237
+                        },
+                        "pressureUnitName": {
+                          "const": "MPa"
+                        },
+                        "deviceTemperatureUnit": {
+                          "const": 32
+                        },
+                        "deviceTemperatureUnitName": {
+                          "const": "°C"
+                        }
+                      },
+                      "required": [
+                        "productIdName",
+                        "productId",
+                        "productSubId",
+                        "productSubIdName",
+                        "wirelessModuleFirmwareVersion",
+                        "wirelessModuleHardwareVersion",
+                        "serialNumber",
+                        "pressureType",
+                        "measurementRangeStartPressure",
+                        "measurementRangeEndPressure",
+                        "measurementRangeStartDeviceTemperature",
+                        "measurementRangeEndDeviceTemperature",
+                        "pressureUnit",
+                        "pressureUnitName",
+                        "deviceTemperatureUnit",
+                        "deviceTemperatureUnitName"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "productIdName": {
+                          "const": "PEW"
+                        },
+                        "productId": {
+                          "const": 11
+                        },
+                        "productSubId": {
+                          "const": 0
+                        },
+                        "productSubIdName": {
+                          "const": "LoRaWAN"
+                        },
+                        "wirelessModuleFirmwareVersion": {
+                          "type": "string",
+                          "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
+                        },
+                        "wirelessModuleHardwareVersion": {
+                          "type": "string",
+                          "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
+                        },
+                        "serialNumber": {
+                          "type": "string"
+                        },
+                        "pressureType": {
+                          "const": 2
+                        },
+                        "measurementRangeStartPressure": {
+                          "type": "number"
+                        },
+                        "measurementRangeEndPressure": {
+                          "type": "number"
+                        },
+                        "measurementRangeStartDeviceTemperature": {
+                          "type": "number"
+                        },
+                        "measurementRangeEndDeviceTemperature": {
+                          "type": "number"
+                        },
+                        "pressureUnit": {
+                          "const": 6
+                        },
+                        "pressureUnitName": {
+                          "const": "psi"
+                        },
+                        "deviceTemperatureUnit": {
+                          "const": 32
+                        },
+                        "deviceTemperatureUnitName": {
+                          "const": "°C"
+                        }
+                      },
+                      "required": [
+                        "productIdName",
+                        "productId",
+                        "productSubId",
+                        "productSubIdName",
+                        "wirelessModuleFirmwareVersion",
+                        "wirelessModuleHardwareVersion",
+                        "serialNumber",
+                        "pressureType",
+                        "measurementRangeStartPressure",
+                        "measurementRangeEndPressure",
+                        "measurementRangeStartDeviceTemperature",
+                        "measurementRangeEndDeviceTemperature",
+                        "pressureUnit",
+                        "pressureUnitName",
+                        "deviceTemperatureUnit",
+                        "deviceTemperatureUnitName"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "productIdName": {
+                          "const": "PEW"
+                        },
+                        "productId": {
+                          "const": 11
+                        },
+                        "productSubId": {
+                          "const": 0
+                        },
+                        "productSubIdName": {
+                          "const": "LoRaWAN"
+                        },
+                        "wirelessModuleFirmwareVersion": {
+                          "type": "string",
+                          "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
+                        },
+                        "wirelessModuleHardwareVersion": {
+                          "type": "string",
+                          "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
+                        }
+                      },
+                      "required": [
+                        "productIdName",
+                        "productId",
+                        "productSubId",
+                        "productSubIdName",
+                        "wirelessModuleFirmwareVersion",
+                        "wirelessModuleHardwareVersion"
+                      ]
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "configurationId",
+                "messageType",
+                "deviceInformation"
+              ]
+            },
+            "warnings": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "data"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "configurationId": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 31
+                },
+                "messageType": {
+                  "enum": [
+                    8
+                  ]
                 },
                 "deviceStatistic": {
-                    "$ref": "#/definitions/KeepAlive"
-                }
-            },
-            "additionalProperties": false,
-            "required": []
-        },
-        "Channel": {
-            "type": "object",
-            "properties": {
-                "channelId": {
-                    "type": "integer",
-                    "maximum": 2,
-                    "minimum": 0
-                },
-                "channelName": {
-                    "type": "string",
-                    "enum": [
-                        "pressure",
-                        "device temperature",
-                        "battery voltage"
-                    ]
-                },
-                "value": {
-                    "type": "number"
-                }
-            },
-            "additionalProperties": false,
-            "required": [
-                "channelId",
-                "channelName",
-                "value"
-            ]
-        },
-        "ProcessAlarm": {
-            "type": "object",
-            "properties": {
-                "channelId": {
-                    "type": "integer",
-                    "maximum": 1,
-                    "minimum": 0
-                },
-                "channelName": {
-                    "type": "string",
-                    "enum": [
-                        "pressure",
-                        "device temperature"
-                    ]
-                },
-                "event": {
-                    "type": "integer",
-                    "maximum": 1,
-                    "minimum": 0
-                },
-                "eventName": {
-                    "type": "string",
-                    "enum": [
-                        "triggered",
-                        "disappeared"
-                    ]
-                },
-                "alarmType": {
-                    "type": "integer",
-                    "maximum": 7,
-                    "minimum": 0
-                },
-                "alarmTypeName": {
-                    "type": "string",
-                    "enum": [
-                        "low threshold",
-                        "high threshold",
-                        "falling slope",
-                        "rising slope",
-                        "low threshold with delay",
-                        "high threshold with delay"
-                    ]
-                },
-                "value": {
-                    "type": "number"
-                }
-            },
-            "additionalProperties": false,
-            "required": [
-                "channelId",
-                "value",
-                "channelName",
-                "event",
-                "eventName",
-                "alarmType",
-                "alarmTypeName"
-            ]
-        },
-        "TechnicalAlarm": {
-            "type": "object",
-            "properties": {
-                "event": {
-                    "type": "integer",
-                    "maximum": 1,
-                    "minimum": 0
-                },
-                "eventName": {
-                    "type": "string",
-                    "enum": [
-                        "triggered",
-                        "disappeared"
-                    ]
-                },
-                "alarmType": {
-                    "type": "integer",
-                    "maximum": 128,
-                    "minimum": 0
-                },
-                "alarmTypeNames": {
-                    "type": "array",
-                    "items": {
-                        "type": "string",
-                        "enum": [
-                            "ALU saturation error",
-                            "sensor memory integrity error",
-                            "sensor busy error",
-                            "sensor communication error",
-                            "pressure out of limit",
-                            "temperature out of limit"
-                        ]
+                  "type": "object",
+                  "properties": {
+                    "batteryLevelNewEvent": {
+                      "type": "boolean"
+                    },
+                    "batteryLevelPercent": {
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 100
+                        },
+                        {
+                          "const": 127
+                        }
+                      ]
                     }
+                  },
+                  "required": [
+                    "batteryLevelNewEvent",
+                    "batteryLevelPercent"
+                  ]
                 }
+              },
+              "required": [
+                "configurationId",
+                "messageType",
+                "deviceStatistic"
+              ]
             },
-            "additionalProperties": false,
-            "required": [
-                "event",
-                "eventName",
-                "alarmTypeNames",
-                "alarmType"
-            ]
-        },
-        "DeviceAlarm": {
-            "type": "object",
-            "properties": {
-                "event": {
-                    "type": "integer",
-                    "maximum": 1,
-                    "minimum": 0
-                },
-                "eventName": {
-                    "type": "string",
-                    "enum": [
-                        "triggered",
-                        "disappeared"
-                    ]
-                },
-                "alarmType": {
-                    "type": "integer",
-                    "maximum": 7,
-                    "minimum": 0
-                },
-                "alarmTypeName": {
-                    "type": "string",
-                    "enum": [
-                        "battery low",
-                        "acknowledged message not emitted"
-                    ]
-                },
-                "causeOfFailure": {
-                    "type": "integer",
-                    "maximum": 1,
-                    "minimum": 0
-                },
-                "causeOfFailureName": {
-                    "type": "string",
-                    "enum": [
-                        "generic",
-                        "device dependent"
-                    ]
-                },
-                "value": {
-                    "type": "number"
-                }
-            },
-            "additionalProperties": false,
-            "required": [
-                "event",
-                "eventName",
-                "alarmType",
-                "alarmTypeName",
-                "causeOfFailureName",
-                "causeOfFailure"
-            ]
-        },
-        "DeviceIdentification": {
-            "type": "object",
-            "properties": {
-                "productId": {
-                    "type": "integer",
-                    "maximum": 11,
-                    "minimum": 11
-                },
-                "productIdName": {
-                    "type": "string",
-                    "enum": [
-                        "PEW"
-                    ]
-                },
-                "productSubId": {
-                    "type": "integer"
-                },
-                "productSubIdName": {
-                    "type": "string"
-                },
-                "wirelessModuleFirmwareVersion": {
-                    "type": "string"
-                },
-                "wirelessModuleHardwareVersion": {
-                    "type": "string"
-                },
-                "serialNumber": {
-                    "type": "string"
-                },
-                "pressureType": {
-                    "type": "string",
-                    "enum": [
-                        "absolute",
-                        "gauge / relative"
-                    ]
-                },
-                "measurementRangeStartPressure": {
-                    "type": "integer"
-                },
-                "measurementRangeEndPressure": {
-                    "type": "number"
-                },
-                "measurementRangeStartDeviceTemperature": {
-                    "type": "number"
-                },
-                "measurementRangeEndDeviceTemperature": {
-                    "type": "number"
-                },
-                "pressureUnit": {
-                    "type": "number"
-                },
-                "pressureUnitName": {
-                    "type": "string",
-                    "enum": [
-                        "inH2O",
-                        "inHg",
-                        "ftH2O",
-                        "mmH2O",
-                        "mmHg",
-                        "psi",
-                        "bar",
-                        "mbar",
-                        "g/cm²",
-                        "kg/cm²",
-                        "Pa",
-                        "kPa",
-                        "Torr",
-                        "at",
-                        "inH2O (60 °F)",
-                        "cmH2O (4 °C)",
-                        "mH2O (4 °C)",
-                        "cmHg",
-                        "lb/ft²",
-                        "hPa",
-                        "psia",
-                        "kg/m²",
-                        "ftH2O (4 °C)",
-                        "ftH2O (60 °F)",
-                        "mHg",
-                        "Mpsi",
-                        "MPa",
-                        "inH2O (4 °C)",
-                        "mmH2O (4 °C)",
-                        "°C",
-                        "°F",
-                        "Unknown"
-                    ]
-                },
-                "deviceTemperatureUnit": {
-                    "type": "number"
-                },
-                "deviceTemperatureUnitName": {
-                    "type": "string",
-                    "enum": [
-                        "inH2O",
-                        "inHg",
-                        "ftH2O",
-                        "mmH2O",
-                        "mmHg",
-                        "psi",
-                        "bar",
-                        "mbar",
-                        "g/cm²",
-                        "kg/cm²",
-                        "Pa",
-                        "kPa",
-                        "Torr",
-                        "at",
-                        "inH2O (60 °F)",
-                        "cmH2O (4 °C)",
-                        "mH2O (4 °C)",
-                        "cmHg",
-                        "lb/ft²",
-                        "hPa",
-                        "psia",
-                        "kg/m²",
-                        "ftH2O (4 °C)",
-                        "ftH2O (60 °F)",
-                        "mHg",
-                        "Mpsi",
-                        "MPa",
-                        "inH2O (4 °C)",
-                        "mmH2O (4 °C)",
-                        "°C",
-                        "°F",
-                        "Unknown"
-                    ]
-                }
-            },
-            "additionalProperties": false,
-            "required": [
-                "productIdName",
-                "productId",
-                "wirelessModuleFirmwareVersion",
-                "wirelessModuleHardwareVersion",
-                "serialNumber",
-                "pressureType",
-                "measurementRangeStartPressure",
-                "measurementRangeEndPressure",
-                "measurementRangeStartDeviceTemperature",
-                "measurementRangeEndDeviceTemperature",
-                "pressureUnit",
-                "pressureUnitName",
-                "deviceTemperatureUnit",
-                "deviceTemperatureUnitName",
-                "productSubId",
-                "productSubIdName"
-            ]
-        },
-        "KeepAlive": {
-            "type": "object",
-            "properties": {
-                "batteryLevelNewEvent": {
-                    "type": "boolean"
-                },
-                "batteryLevelPercent": {
-                    "type": "integer"
-                }
-            },
-            "additionalProperties": false,
-            "required": [
-                "batteryLevelNewEvent",
-                "batteryLevelPercent"
-            ]
+            "warnings": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "data"
+          ]
         }
+      ]
+    },
+    {
+      "type": "object",
+      "properties": {
+        "errors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "errors"
+      ]
+    },
+    {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "messageType": {
+                  "enum": [
+                    16,
+                    17
+                  ]
+                },
+                "messageSubType": {
+                  "enum": [
+                    1
+                  ]
+                },
+                "measurements": {
+                  "type": "array",
+                  "items": [
+                    {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "sensor": {
+                              "const": "sensor1"
+                            },
+                            "sensorId": {
+                              "const": 0
+                            },
+                            "channel": {
+                              "const": "channel1"
+                            },
+                            "channelId": {
+                              "const": 0
+                            },
+                            "channelName": {
+                              "const": "pressure"
+                            },
+                            "sourceDataType": {
+                              "enum": [
+                                "uint16 - TULIP scale 2500 - 12500"
+                              ]
+                            },
+                            "valueAcquisitionError": {
+                              "const": true
+                            },
+                            "value": {}
+                          },
+                          "required": [
+                            "sensor",
+                            "sensorId",
+                            "channel",
+                            "channelId",
+                            "channelName",
+                            "sourceDataType",
+                            "valueAcquisitionError"
+                          ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "sensor": {
+                              "const": "sensor1"
+                            },
+                            "sensorId": {
+                              "const": 0
+                            },
+                            "channel": {
+                              "const": "channel2"
+                            },
+                            "channelId": {
+                              "const": 1
+                            },
+                            "channelName": {
+                              "const": "device temperature"
+                            },
+                            "sourceDataType": {
+                              "enum": [
+                                "uint16 - TULIP scale 2500 - 12500"
+                              ]
+                            },
+                            "valueAcquisitionError": {
+                              "const": true
+                            },
+                            "value": {}
+                          },
+                          "required": [
+                            "sensor",
+                            "sensorId",
+                            "channel",
+                            "channelId",
+                            "channelName",
+                            "sourceDataType",
+                            "valueAcquisitionError"
+                          ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "sensor": {
+                              "const": "sensor1"
+                            },
+                            "sensorId": {
+                              "const": 0
+                            },
+                            "channel": {
+                              "const": "channel1"
+                            },
+                            "channelId": {
+                              "const": 0
+                            },
+                            "channelName": {
+                              "const": "pressure"
+                            },
+                            "sourceDataType": {
+                              "enum": [
+                                "uint16 - TULIP scale 2500 - 12500"
+                              ]
+                            },
+                            "valueAcquisitionError": {
+                              "const": false
+                            },
+                            "value": {
+                              "type": "number"
+                            }
+                          },
+                          "required": [
+                            "sensor",
+                            "sensorId",
+                            "channel",
+                            "channelId",
+                            "channelName",
+                            "sourceDataType",
+                            "valueAcquisitionError",
+                            "value"
+                          ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "sensor": {
+                              "const": "sensor1"
+                            },
+                            "sensorId": {
+                              "const": 0
+                            },
+                            "channel": {
+                              "const": "channel2"
+                            },
+                            "channelId": {
+                              "const": 1
+                            },
+                            "channelName": {
+                              "const": "device temperature"
+                            },
+                            "sourceDataType": {
+                              "enum": [
+                                "uint16 - TULIP scale 2500 - 12500"
+                              ]
+                            },
+                            "valueAcquisitionError": {
+                              "const": false
+                            },
+                            "value": {
+                              "type": "number"
+                            }
+                          },
+                          "required": [
+                            "sensor",
+                            "sensorId",
+                            "channel",
+                            "channelId",
+                            "channelName",
+                            "sourceDataType",
+                            "valueAcquisitionError",
+                            "value"
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "minItems": 1,
+                  "additionalItems": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "sensor": {
+                            "const": "sensor1"
+                          },
+                          "sensorId": {
+                            "const": 0
+                          },
+                          "channel": {
+                            "const": "channel1"
+                          },
+                          "channelId": {
+                            "const": 0
+                          },
+                          "channelName": {
+                            "const": "pressure"
+                          },
+                          "sourceDataType": {
+                            "enum": [
+                              "uint16 - TULIP scale 2500 - 12500"
+                            ]
+                          },
+                          "valueAcquisitionError": {
+                            "const": true
+                          },
+                          "value": {}
+                        },
+                        "required": [
+                          "sensor",
+                          "sensorId",
+                          "channel",
+                          "channelId",
+                          "channelName",
+                          "sourceDataType",
+                          "valueAcquisitionError"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "sensor": {
+                            "const": "sensor1"
+                          },
+                          "sensorId": {
+                            "const": 0
+                          },
+                          "channel": {
+                            "const": "channel2"
+                          },
+                          "channelId": {
+                            "const": 1
+                          },
+                          "channelName": {
+                            "const": "device temperature"
+                          },
+                          "sourceDataType": {
+                            "enum": [
+                              "uint16 - TULIP scale 2500 - 12500"
+                            ]
+                          },
+                          "valueAcquisitionError": {
+                            "const": true
+                          },
+                          "value": {}
+                        },
+                        "required": [
+                          "sensor",
+                          "sensorId",
+                          "channel",
+                          "channelId",
+                          "channelName",
+                          "sourceDataType",
+                          "valueAcquisitionError"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "sensor": {
+                            "const": "sensor1"
+                          },
+                          "sensorId": {
+                            "const": 0
+                          },
+                          "channel": {
+                            "const": "channel1"
+                          },
+                          "channelId": {
+                            "const": 0
+                          },
+                          "channelName": {
+                            "const": "pressure"
+                          },
+                          "sourceDataType": {
+                            "enum": [
+                              "uint16 - TULIP scale 2500 - 12500"
+                            ]
+                          },
+                          "valueAcquisitionError": {
+                            "const": false
+                          },
+                          "value": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "sensor",
+                          "sensorId",
+                          "channel",
+                          "channelId",
+                          "channelName",
+                          "sourceDataType",
+                          "valueAcquisitionError",
+                          "value"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "sensor": {
+                            "const": "sensor1"
+                          },
+                          "sensorId": {
+                            "const": 0
+                          },
+                          "channel": {
+                            "const": "channel2"
+                          },
+                          "channelId": {
+                            "const": 1
+                          },
+                          "channelName": {
+                            "const": "device temperature"
+                          },
+                          "sourceDataType": {
+                            "enum": [
+                              "uint16 - TULIP scale 2500 - 12500"
+                            ]
+                          },
+                          "valueAcquisitionError": {
+                            "const": false
+                          },
+                          "value": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "sensor",
+                          "sensorId",
+                          "channel",
+                          "channelId",
+                          "channelName",
+                          "sourceDataType",
+                          "valueAcquisitionError",
+                          "value"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "messageType",
+                "messageSubType",
+                "measurements"
+              ]
+            },
+            "warnings": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "data"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "messageType": {
+                  "enum": [
+                    21
+                  ]
+                },
+                "messageSubType": {
+                  "enum": [
+                    1,
+                    2
+                  ]
+                },
+                "configuration": {
+                  "type": "object",
+                  "properties": {
+                    "communicationModule": {
+                      "type": "object",
+                      "properties": {
+                        "measuringPeriodAlarmOff": {
+                          "type": "number"
+                        },
+                        "measuringPeriodAlarmOn": {
+                          "type": "number"
+                        },
+                        "transmissionRateAlarmOff": {
+                          "type": "number"
+                        },
+                        "transmissionRateAlarmOn": {
+                          "type": "number"
+                        },
+                        "overVoltageThreshold": {
+                          "type": "number"
+                        },
+                        "underVoltageThreshold": {
+                          "type": "number"
+                        },
+                        "overTemperatureCmChip": {
+                          "type": "number"
+                        },
+                        "underTemperatureCmChip": {
+                          "type": "number"
+                        },
+                        "downlinkAnswerTimeout": {
+                          "type": "number"
+                        },
+                        "fetchAdditionalDownlinkTimeInterval": {
+                          "type": "number"
+                        },
+                        "enableBleAdvertising": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": []
+                    },
+                    "sensor1": {
+                      "type": "object",
+                      "properties": {
+                        "configuration": {
+                          "type": "object",
+                          "properties": {
+                            "samplingChannels": {
+                              "type": "object",
+                              "properties": {
+                                "channel1": {
+                                  "type": "boolean"
+                                },
+                                "channel2": {
+                                  "type": "boolean"
+                                },
+                                "channel3": {
+                                  "const": false
+                                },
+                                "channel4": {
+                                  "const": false
+                                },
+                                "channel5": {
+                                  "const": false
+                                },
+                                "channel6": {
+                                  "const": false
+                                },
+                                "channel7": {
+                                  "const": false
+                                },
+                                "channel8": {
+                                  "const": false
+                                }
+                              },
+                              "required": [
+                                "channel1",
+                                "channel2",
+                                "channel3",
+                                "channel4",
+                                "channel5",
+                                "channel6",
+                                "channel7",
+                                "channel8"
+                              ]
+                            },
+                            "bootTime": {
+                              "type": "number"
+                            },
+                            "communicationTimeout": {
+                              "type": "number"
+                            },
+                            "communicationRetryCount": {
+                              "type": "number"
+                            }
+                          },
+                          "required": []
+                        },
+                        "channel1": {
+                          "type": "object",
+                          "properties": {
+                            "channelName": {
+                              "const": "pressure"
+                            },
+                            "protocolDataType": {
+                              "enum": [
+                                "float - IEEE754",
+                                "int 24 - Fixed-point s16.7 (Q16.7)",
+                                "int 16 - Fixed-point s10.5 (Q10.5)",
+                                "uint16 - TULIP scale 2500 - 12500"
+                              ]
+                            },
+                            "processAlarmEnabled": {
+                              "type": "object",
+                              "properties": {
+                                "lowThreshold": {
+                                  "type": "boolean"
+                                },
+                                "highThreshold": {
+                                  "type": "boolean"
+                                },
+                                "fallingSlope": {
+                                  "type": "boolean"
+                                },
+                                "risingSlope": {
+                                  "type": "boolean"
+                                },
+                                "lowThresholdWithDelay": {
+                                  "type": "boolean"
+                                },
+                                "highThresholdWithDelay": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "required": []
+                            },
+                            "processAlarmDeadBand": {
+                              "type": "number"
+                            },
+                            "lowThresholdAlarmValue": {
+                              "type": "number"
+                            },
+                            "highThresholdAlarmValue": {
+                              "type": "number"
+                            },
+                            "fallingSlopeAlarmValue": {
+                              "type": "number"
+                            },
+                            "risingSlopeAlarmValue": {
+                              "type": "number"
+                            },
+                            "lowThresholdWithDelayAlarmValue": {
+                              "type": "number"
+                            },
+                            "lowThresholdWithDelayAlarmDelay": {
+                              "type": "number"
+                            },
+                            "highThresholdWithDelayAlarmValue": {
+                              "type": "number"
+                            },
+                            "highThresholdWithDelayAlarmDelay": {
+                              "type": "number"
+                            }
+                          },
+                          "required": [
+                            "channelName"
+                          ]
+                        },
+                        "channel2": {
+                          "type": "object",
+                          "properties": {
+                            "channelName": {
+                              "const": "device temperature"
+                            },
+                            "protocolDataType": {
+                              "enum": [
+                                "float - IEEE754",
+                                "int 24 - Fixed-point s16.7 (Q16.7)",
+                                "int 16 - Fixed-point s10.5 (Q10.5)",
+                                "uint16 - TULIP scale 2500 - 12500"
+                              ]
+                            },
+                            "processAlarmEnabled": {
+                              "type": "object",
+                              "properties": {
+                                "lowThreshold": {
+                                  "type": "boolean"
+                                },
+                                "highThreshold": {
+                                  "type": "boolean"
+                                },
+                                "fallingSlope": {
+                                  "type": "boolean"
+                                },
+                                "risingSlope": {
+                                  "type": "boolean"
+                                },
+                                "lowThresholdWithDelay": {
+                                  "type": "boolean"
+                                },
+                                "highThresholdWithDelay": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "required": []
+                            },
+                            "processAlarmDeadBand": {
+                              "type": "number"
+                            },
+                            "lowThresholdAlarmValue": {
+                              "type": "number"
+                            },
+                            "highThresholdAlarmValue": {
+                              "type": "number"
+                            },
+                            "fallingSlopeAlarmValue": {
+                              "type": "number"
+                            },
+                            "risingSlopeAlarmValue": {
+                              "type": "number"
+                            },
+                            "lowThresholdWithDelayAlarmValue": {
+                              "type": "number"
+                            },
+                            "lowThresholdWithDelayAlarmDelay": {
+                              "type": "number"
+                            },
+                            "highThresholdWithDelayAlarmValue": {
+                              "type": "number"
+                            },
+                            "highThresholdWithDelayAlarmDelay": {
+                              "type": "number"
+                            }
+                          },
+                          "required": [
+                            "channelName"
+                          ]
+                        }
+                      },
+                      "required": []
+                    }
+                  },
+                  "required": []
+                }
+              },
+              "required": [
+                "messageType",
+                "messageSubType",
+                "configuration"
+              ]
+            },
+            "warnings": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "data"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "messageType": {
+                  "enum": [
+                    21
+                  ]
+                },
+                "messageSubType": {
+                  "enum": [
+                    3
+                  ]
+                },
+                "configuration": {
+                  "type": "object",
+                  "properties": {
+                    "revisionCounter": {
+                      "type": "number"
+                    },
+                    "totalWrongFrames": {
+                      "type": "number"
+                    },
+                    "frames": {
+                      "type": "array",
+                      "items": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "frameNumber": {
+                              "type": "number"
+                            },
+                            "status": {
+                              "enum": [
+                                "Configuration received but not applied",
+                                "Configuration received and applied with success",
+                                "Configuration rejected - Tried to write a read only register",
+                                "Configuration rejected - At least one register has an invalid value",
+                                "Configuration rejected - The combination register start address/number of bytes is wrong",
+                                "Entire configuration discarded because of invalid parameter combination",
+                                "Entire configuration discarded because no answer from the cloud",
+                                "Missing frame",
+                                "Frame rejected - frame number already received"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "frameNumber",
+                            "status"
+                          ]
+                        }
+                      ],
+                      "minItems": 1,
+                      "additionalItems": {
+                        "type": "object",
+                        "properties": {
+                          "frameNumber": {
+                            "type": "number"
+                          },
+                          "status": {
+                            "enum": [
+                              "Configuration received but not applied",
+                              "Configuration received and applied with success",
+                              "Configuration rejected - Tried to write a read only register",
+                              "Configuration rejected - At least one register has an invalid value",
+                              "Configuration rejected - The combination register start address/number of bytes is wrong",
+                              "Entire configuration discarded because of invalid parameter combination",
+                              "Entire configuration discarded because no answer from the cloud",
+                              "Missing frame",
+                              "Frame rejected - frame number already received"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "frameNumber",
+                          "status"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "frames"
+                  ]
+                }
+              },
+              "required": [
+                "messageType",
+                "messageSubType",
+                "configuration"
+              ]
+            },
+            "warnings": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "data"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "messageType": {
+                  "enum": [
+                    19
+                  ]
+                },
+                "messageSubType": {
+                  "enum": [
+                    3
+                  ]
+                },
+                "channelAlarms": {
+                  "type": "array",
+                  "items": [
+                    {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "sensor": {
+                              "const": "sensor1"
+                            },
+                            "sensorId": {
+                              "const": 0
+                            },
+                            "channel": {
+                              "const": "channel1"
+                            },
+                            "channelId": {
+                              "const": 0
+                            },
+                            "channelName": {
+                              "const": "pressure"
+                            },
+                            "alarmFlags": {
+                              "type": "object",
+                              "properties": {
+                                "shortCondition": {
+                                  "type": "boolean"
+                                },
+                                "openCondition": {
+                                  "type": "boolean"
+                                },
+                                "outOfMinMeasurementRange": {
+                                  "type": "boolean"
+                                },
+                                "outOfMaxMeasurementRange": {
+                                  "type": "boolean"
+                                },
+                                "outOfMinPhysicalSensorLimit": {
+                                  "type": "boolean"
+                                },
+                                "outOfMaxPhysicalSensorLimit": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "required": [
+                                "shortCondition",
+                                "openCondition",
+                                "outOfMinMeasurementRange",
+                                "outOfMaxMeasurementRange",
+                                "outOfMinPhysicalSensorLimit",
+                                "outOfMaxPhysicalSensorLimit"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "sensor",
+                            "sensorId",
+                            "channel",
+                            "channelId",
+                            "channelName",
+                            "alarmFlags"
+                          ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "sensor": {
+                              "const": "sensor1"
+                            },
+                            "sensorId": {
+                              "const": 0
+                            },
+                            "channel": {
+                              "const": "channel2"
+                            },
+                            "channelId": {
+                              "const": 1
+                            },
+                            "channelName": {
+                              "const": "device temperature"
+                            },
+                            "alarmFlags": {
+                              "type": "object",
+                              "properties": {
+                                "shortCondition": {
+                                  "type": "boolean"
+                                },
+                                "openCondition": {
+                                  "type": "boolean"
+                                },
+                                "outOfMinMeasurementRange": {
+                                  "type": "boolean"
+                                },
+                                "outOfMaxMeasurementRange": {
+                                  "type": "boolean"
+                                },
+                                "outOfMinPhysicalSensorLimit": {
+                                  "type": "boolean"
+                                },
+                                "outOfMaxPhysicalSensorLimit": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "required": [
+                                "shortCondition",
+                                "openCondition",
+                                "outOfMinMeasurementRange",
+                                "outOfMaxMeasurementRange",
+                                "outOfMinPhysicalSensorLimit",
+                                "outOfMaxPhysicalSensorLimit"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "sensor",
+                            "sensorId",
+                            "channel",
+                            "channelId",
+                            "channelName",
+                            "alarmFlags"
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "minItems": 1,
+                  "additionalItems": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "sensor": {
+                            "const": "sensor1"
+                          },
+                          "sensorId": {
+                            "const": 0
+                          },
+                          "channel": {
+                            "const": "channel1"
+                          },
+                          "channelId": {
+                            "const": 0
+                          },
+                          "channelName": {
+                            "const": "pressure"
+                          },
+                          "alarmFlags": {
+                            "type": "object",
+                            "properties": {
+                              "shortCondition": {
+                                "type": "boolean"
+                              },
+                              "openCondition": {
+                                "type": "boolean"
+                              },
+                              "outOfMinMeasurementRange": {
+                                "type": "boolean"
+                              },
+                              "outOfMaxMeasurementRange": {
+                                "type": "boolean"
+                              },
+                              "outOfMinPhysicalSensorLimit": {
+                                "type": "boolean"
+                              },
+                              "outOfMaxPhysicalSensorLimit": {
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "shortCondition",
+                              "openCondition",
+                              "outOfMinMeasurementRange",
+                              "outOfMaxMeasurementRange",
+                              "outOfMinPhysicalSensorLimit",
+                              "outOfMaxPhysicalSensorLimit"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "sensor",
+                          "sensorId",
+                          "channel",
+                          "channelId",
+                          "channelName",
+                          "alarmFlags"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "sensor": {
+                            "const": "sensor1"
+                          },
+                          "sensorId": {
+                            "const": 0
+                          },
+                          "channel": {
+                            "const": "channel2"
+                          },
+                          "channelId": {
+                            "const": 1
+                          },
+                          "channelName": {
+                            "const": "device temperature"
+                          },
+                          "alarmFlags": {
+                            "type": "object",
+                            "properties": {
+                              "shortCondition": {
+                                "type": "boolean"
+                              },
+                              "openCondition": {
+                                "type": "boolean"
+                              },
+                              "outOfMinMeasurementRange": {
+                                "type": "boolean"
+                              },
+                              "outOfMaxMeasurementRange": {
+                                "type": "boolean"
+                              },
+                              "outOfMinPhysicalSensorLimit": {
+                                "type": "boolean"
+                              },
+                              "outOfMaxPhysicalSensorLimit": {
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "shortCondition",
+                              "openCondition",
+                              "outOfMinMeasurementRange",
+                              "outOfMaxMeasurementRange",
+                              "outOfMinPhysicalSensorLimit",
+                              "outOfMaxPhysicalSensorLimit"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "sensor",
+                          "sensorId",
+                          "channel",
+                          "channelId",
+                          "channelName",
+                          "alarmFlags"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "messageType",
+                "messageSubType",
+                "channelAlarms"
+              ]
+            },
+            "warnings": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "data"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "messageType": {
+                  "enum": [
+                    19
+                  ]
+                },
+                "messageSubType": {
+                  "enum": [
+                    1
+                  ]
+                },
+                "communicationModuleAlarms": {
+                  "type": "object",
+                  "properties": {
+                    "alarmFlags": {
+                      "type": "object",
+                      "properties": {
+                        "localUserAccessDenied": {
+                          "type": "boolean"
+                        },
+                        "cmChipLowTemperature": {
+                          "type": "boolean"
+                        },
+                        "cmChipHighTemperature": {
+                          "type": "boolean"
+                        },
+                        "airTimeLimitation": {
+                          "type": "boolean"
+                        },
+                        "memoryError": {
+                          "type": "boolean"
+                        },
+                        "lowVoltage": {
+                          "type": "boolean"
+                        },
+                        "highVoltage": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "localUserAccessDenied",
+                        "cmChipLowTemperature",
+                        "cmChipHighTemperature",
+                        "airTimeLimitation",
+                        "memoryError",
+                        "lowVoltage",
+                        "highVoltage"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "alarmFlags"
+                  ]
+                }
+              },
+              "required": [
+                "messageType",
+                "messageSubType",
+                "communicationModuleAlarms"
+              ]
+            },
+            "warnings": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "data"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "messageType": {
+                  "enum": [
+                    19
+                  ]
+                },
+                "messageSubType": {
+                  "enum": [
+                    2
+                  ]
+                },
+                "sensorAlarms": {
+                  "type": "array",
+                  "items": [
+                    {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "sensor": {
+                              "const": "sensor1"
+                            },
+                            "sensorId": {
+                              "const": 0
+                            },
+                            "alarmFlags": {
+                              "type": "object",
+                              "properties": {
+                                "sensorCommunicationError": {
+                                  "type": "boolean"
+                                },
+                                "sensorNotSupported": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "required": [
+                                "sensorCommunicationError",
+                                "sensorNotSupported"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "sensor",
+                            "sensorId",
+                            "alarmFlags"
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "minItems": 1,
+                  "additionalItems": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "sensor": {
+                            "const": "sensor1"
+                          },
+                          "sensorId": {
+                            "const": 0
+                          },
+                          "alarmFlags": {
+                            "type": "object",
+                            "properties": {
+                              "sensorCommunicationError": {
+                                "type": "boolean"
+                              },
+                              "sensorNotSupported": {
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "sensorCommunicationError",
+                              "sensorNotSupported"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "sensor",
+                          "sensorId",
+                          "alarmFlags"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "messageType",
+                "messageSubType",
+                "sensorAlarms"
+              ]
+            },
+            "warnings": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "data"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "messageType": {
+                  "enum": [
+                    22
+                  ]
+                },
+                "messageSubType": {
+                  "enum": [
+                    1
+                  ]
+                },
+                "keepAliveData": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "object",
+                          "properties": {
+                            "mainPowered": {
+                              "type": "boolean"
+                            },
+                            "ableToComputeBatteryLevel": {
+                              "const": true
+                            },
+                            "hasCommunicationModuleRestarted": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": [
+                            "mainPowered",
+                            "ableToComputeBatteryLevel",
+                            "hasCommunicationModuleRestarted"
+                          ]
+                        },
+                        "revisionCounter": {
+                          "type": "number"
+                        },
+                        "batteryLevel": {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 100
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "revisionCounter",
+                        "batteryLevel"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "object",
+                          "properties": {
+                            "mainPowered": {
+                              "type": "boolean"
+                            },
+                            "ableToComputeBatteryLevel": {
+                              "const": false
+                            },
+                            "hasCommunicationModuleRestarted": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": [
+                            "mainPowered",
+                            "ableToComputeBatteryLevel",
+                            "hasCommunicationModuleRestarted"
+                          ]
+                        },
+                        "revisionCounter": {
+                          "type": "number"
+                        },
+                        "batteryLevel": {}
+                      },
+                      "required": [
+                        "status",
+                        "revisionCounter"
+                      ]
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "messageType",
+                "messageSubType",
+                "keepAliveData"
+              ]
+            },
+            "warnings": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "data"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "messageType": {
+                  "enum": [
+                    18
+                  ]
+                },
+                "messageSubType": {
+                  "enum": [
+                    1
+                  ]
+                },
+                "processAlarms": {
+                  "type": "array",
+                  "items": [
+                    {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "sensor": {
+                              "const": "sensor1"
+                            },
+                            "sensorId": {
+                              "const": 0
+                            },
+                            "channel": {
+                              "const": "channel1"
+                            },
+                            "channelId": {
+                              "const": 0
+                            },
+                            "channelName": {
+                              "const": "pressure"
+                            },
+                            "alarmFlags": {
+                              "type": "object",
+                              "properties": {
+                                "lowThreshold": {
+                                  "type": "boolean"
+                                },
+                                "highThreshold": {
+                                  "type": "boolean"
+                                },
+                                "fallingSlope": {
+                                  "type": "boolean"
+                                },
+                                "risingSlope": {
+                                  "type": "boolean"
+                                },
+                                "lowThresholdWithDelay": {
+                                  "type": "boolean"
+                                },
+                                "highThresholdWithDelay": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "required": [
+                                "lowThreshold",
+                                "highThreshold",
+                                "fallingSlope",
+                                "risingSlope",
+                                "lowThresholdWithDelay",
+                                "highThresholdWithDelay"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "sensor",
+                            "sensorId",
+                            "channel",
+                            "channelId",
+                            "channelName",
+                            "alarmFlags"
+                          ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "sensor": {
+                              "const": "sensor1"
+                            },
+                            "sensorId": {
+                              "const": 0
+                            },
+                            "channel": {
+                              "const": "channel2"
+                            },
+                            "channelId": {
+                              "const": 1
+                            },
+                            "channelName": {
+                              "const": "device temperature"
+                            },
+                            "alarmFlags": {
+                              "type": "object",
+                              "properties": {
+                                "lowThreshold": {
+                                  "type": "boolean"
+                                },
+                                "highThreshold": {
+                                  "type": "boolean"
+                                },
+                                "fallingSlope": {
+                                  "type": "boolean"
+                                },
+                                "risingSlope": {
+                                  "type": "boolean"
+                                },
+                                "lowThresholdWithDelay": {
+                                  "type": "boolean"
+                                },
+                                "highThresholdWithDelay": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "required": [
+                                "lowThreshold",
+                                "highThreshold",
+                                "fallingSlope",
+                                "risingSlope",
+                                "lowThresholdWithDelay",
+                                "highThresholdWithDelay"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "sensor",
+                            "sensorId",
+                            "channel",
+                            "channelId",
+                            "channelName",
+                            "alarmFlags"
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "minItems": 1,
+                  "additionalItems": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "sensor": {
+                            "const": "sensor1"
+                          },
+                          "sensorId": {
+                            "const": 0
+                          },
+                          "channel": {
+                            "const": "channel1"
+                          },
+                          "channelId": {
+                            "const": 0
+                          },
+                          "channelName": {
+                            "const": "pressure"
+                          },
+                          "alarmFlags": {
+                            "type": "object",
+                            "properties": {
+                              "lowThreshold": {
+                                "type": "boolean"
+                              },
+                              "highThreshold": {
+                                "type": "boolean"
+                              },
+                              "fallingSlope": {
+                                "type": "boolean"
+                              },
+                              "risingSlope": {
+                                "type": "boolean"
+                              },
+                              "lowThresholdWithDelay": {
+                                "type": "boolean"
+                              },
+                              "highThresholdWithDelay": {
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "lowThreshold",
+                              "highThreshold",
+                              "fallingSlope",
+                              "risingSlope",
+                              "lowThresholdWithDelay",
+                              "highThresholdWithDelay"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "sensor",
+                          "sensorId",
+                          "channel",
+                          "channelId",
+                          "channelName",
+                          "alarmFlags"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "sensor": {
+                            "const": "sensor1"
+                          },
+                          "sensorId": {
+                            "const": 0
+                          },
+                          "channel": {
+                            "const": "channel2"
+                          },
+                          "channelId": {
+                            "const": 1
+                          },
+                          "channelName": {
+                            "const": "device temperature"
+                          },
+                          "alarmFlags": {
+                            "type": "object",
+                            "properties": {
+                              "lowThreshold": {
+                                "type": "boolean"
+                              },
+                              "highThreshold": {
+                                "type": "boolean"
+                              },
+                              "fallingSlope": {
+                                "type": "boolean"
+                              },
+                              "risingSlope": {
+                                "type": "boolean"
+                              },
+                              "lowThresholdWithDelay": {
+                                "type": "boolean"
+                              },
+                              "highThresholdWithDelay": {
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "lowThreshold",
+                              "highThreshold",
+                              "fallingSlope",
+                              "risingSlope",
+                              "lowThresholdWithDelay",
+                              "highThresholdWithDelay"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "sensor",
+                          "sensorId",
+                          "channel",
+                          "channelId",
+                          "channelName",
+                          "alarmFlags"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "messageType",
+                "messageSubType",
+                "processAlarms"
+              ]
+            },
+            "warnings": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "data"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "messageType": {
+                  "enum": [
+                    23
+                  ]
+                },
+                "messageSubType": {
+                  "enum": [
+                    1
+                  ]
+                },
+                "spontaneousDownlinkAnswer": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "answeredDownlink": {
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "const": "1"
+                                },
+                                "subType": {
+                                  "enum": [
+                                    1,
+                                    2
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "type",
+                                "subType"
+                              ]
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "const": "2"
+                                },
+                                "subType": {
+                                  "enum": [
+                                    1,
+                                    2
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "type",
+                                "subType"
+                              ]
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "const": "3"
+                                },
+                                "subType": {
+                                  "enum": [
+                                    1,
+                                    2,
+                                    3
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "type",
+                                "subType"
+                              ]
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "const": "4"
+                                },
+                                "subType": {
+                                  "enum": [
+                                    1
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "type",
+                                "subType"
+                              ]
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "const": "5"
+                                },
+                                "subType": {
+                                  "enum": [
+                                    1
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "type",
+                                "subType"
+                              ]
+                            }
+                          ]
+                        },
+                        "status": {
+                          "anyOf": [
+                            {
+                              "const": "Success"
+                            },
+                            {
+                              "const": "Unsupported command"
+                            },
+                            {
+                              "const": "Logical error"
+                            },
+                            {
+                              "const": "Memory error"
+                            },
+                            {
+                              "const": "Wrong frame format"
+                            },
+                            {
+                              "const": "Communication session lock"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "answeredDownlink",
+                        "status"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "answeredDownlink": {
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "const": "1"
+                                },
+                                "subType": {
+                                  "enum": [
+                                    1,
+                                    2
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "type",
+                                "subType"
+                              ]
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "const": "2"
+                                },
+                                "subType": {
+                                  "enum": [
+                                    1,
+                                    2
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "type",
+                                "subType"
+                              ]
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "const": "3"
+                                },
+                                "subType": {
+                                  "enum": [
+                                    1,
+                                    2,
+                                    3
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "type",
+                                "subType"
+                              ]
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "const": "4"
+                                },
+                                "subType": {
+                                  "enum": [
+                                    1
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "type",
+                                "subType"
+                              ]
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "const": "5"
+                                },
+                                "subType": {
+                                  "enum": [
+                                    1
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "type",
+                                "subType"
+                              ]
+                            }
+                          ]
+                        },
+                        "status": {
+                          "const": "Device error"
+                        },
+                        "deviceErrorCode": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "answeredDownlink",
+                        "status",
+                        "deviceErrorCode"
+                      ]
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "messageType",
+                "messageSubType",
+                "spontaneousDownlinkAnswer"
+              ]
+            },
+            "warnings": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "data"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "messageType": {
+                  "enum": [
+                    23
+                  ]
+                },
+                "messageSubType": {
+                  "enum": [
+                    2
+                  ]
+                }
+              },
+              "required": [
+                "messageType",
+                "messageSubType"
+              ]
+            },
+            "warnings": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "data"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "messageType": {
+                  "enum": [
+                    20
+                  ]
+                },
+                "messageSubType": {
+                  "enum": [
+                    1,
+                    2,
+                    4
+                  ]
+                },
+                "identification": {
+                  "type": "object",
+                  "properties": {
+                    "communicationModule": {
+                      "type": "object",
+                      "properties": {
+                        "productId": {
+                          "type": "number"
+                        },
+                        "productSubId": {
+                          "enum": [
+                            "BLE only",
+                            "LoRaWAN class A",
+                            "LoRaWAN class B",
+                            "LoRaWAN class C",
+                            "Mioty class Z",
+                            "Mioty class A",
+                            "Mioty class B"
+                          ]
+                        },
+                        "channelPlan": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "connectedSensors": {
+                          "type": "object",
+                          "properties": {
+                            "sensor1": {
+                              "const": true
+                            },
+                            "sensor2": {
+                              "const": false
+                            },
+                            "sensor3": {
+                              "const": false
+                            },
+                            "sensor4": {
+                              "const": false
+                            }
+                          },
+                          "required": [
+                            "sensor1",
+                            "sensor2",
+                            "sensor3",
+                            "sensor4"
+                          ]
+                        },
+                        "firmwareVersion": {
+                          "type": "string"
+                        },
+                        "hardwareVersion": {
+                          "type": "string"
+                        },
+                        "productionDate": {
+                          "type": "string",
+                          "format": "date"
+                        },
+                        "serialNumberPart1": {
+                          "type": "string"
+                        },
+                        "serialNumberPart2": {
+                          "type": "string"
+                        }
+                      },
+                      "required": []
+                    },
+                    "sensor1": {
+                      "type": "object",
+                      "properties": {
+                        "identification": {
+                          "type": "object",
+                          "properties": {
+                            "sensorType": {
+                              "type": "number"
+                            },
+                            "existingChannels": {
+                              "type": "object",
+                              "properties": {
+                                "channel1": {
+                                  "const": true
+                                },
+                                "channel2": {
+                                  "const": true
+                                },
+                                "channel3": {
+                                  "const": false
+                                },
+                                "channel4": {
+                                  "const": false
+                                },
+                                "channel5": {
+                                  "const": false
+                                },
+                                "channel6": {
+                                  "const": false
+                                },
+                                "channel7": {
+                                  "const": false
+                                },
+                                "channel8": {
+                                  "const": false
+                                }
+                              },
+                              "required": [
+                                "channel1",
+                                "channel2",
+                                "channel3",
+                                "channel4",
+                                "channel5",
+                                "channel6",
+                                "channel7",
+                                "channel8"
+                              ]
+                            },
+                            "firmwareVersion": {
+                              "type": "string"
+                            },
+                            "hardwareVersion": {
+                              "type": "string"
+                            },
+                            "productionDate": {
+                              "type": "string",
+                              "format": "date"
+                            },
+                            "serialNumberPart1": {
+                              "type": "string"
+                            },
+                            "serialNumberPart2": {
+                              "type": "string"
+                            }
+                          },
+                          "required": []
+                        },
+                        "channel1": {
+                          "type": "object",
+                          "properties": {
+                            "measurand": {
+                              "enum": [
+                                "Temperature",
+                                "Temperature difference",
+                                "Pressure (gauge)",
+                                "Pressure (absolute)",
+                                "Pressure (differential)",
+                                "Flow (vol.)",
+                                "Flow (mass)",
+                                "Force",
+                                "Mass",
+                                "Level",
+                                "Length",
+                                "Volume",
+                                "Current",
+                                "Voltage",
+                                "Resistance",
+                                "Capacitance",
+                                "Inductance",
+                                "Relative",
+                                "Time",
+                                "Frequency",
+                                "Speed",
+                                "Acceleration",
+                                "Density",
+                                "Density (gauge pressure at 20 °C)",
+                                "Density (absolute pressure at 20 °C)",
+                                "Humidity (relative)",
+                                "Humidity (absolute)",
+                                "Angle of rotation / inclination"
+                              ]
+                            },
+                            "unit": {
+                              "enum": [
+                                "°C",
+                                "°F",
+                                "K",
+                                "°R",
+                                "bar",
+                                "mbar",
+                                "μbar",
+                                "Pa",
+                                "hPa",
+                                "kPa",
+                                "MPa",
+                                "psi",
+                                "lbf/ft²",
+                                "kN/m²",
+                                "N/cm²",
+                                "atm",
+                                "kg/cm²",
+                                "kg/mm²",
+                                "μmHg",
+                                "mmHg",
+                                "cmHg",
+                                "inHg",
+                                "mmH2O",
+                                "mH2O",
+                                "inH2O",
+                                "ftH2O",
+                                "N",
+                                "daN",
+                                "kN",
+                                "MN",
+                                "kp",
+                                "lbf",
+                                "ozf",
+                                "dyn",
+                                "kg",
+                                "g",
+                                "mg",
+                                "lb",
+                                "mm",
+                                "cm",
+                                "m",
+                                "μm",
+                                "ft",
+                                "in",
+                                "l",
+                                "ml",
+                                "m³",
+                                "gal (UK)",
+                                "gal (US)",
+                                "ft³",
+                                "in³",
+                                "mΩ",
+                                "Ω",
+                                "kΩ",
+                                "μV",
+                                "mV",
+                                "V",
+                                "mA",
+                                "μA",
+                                "μF",
+                                "nF",
+                                "pF",
+                                "mH",
+                                "μH",
+                                "%",
+                                "‰",
+                                "ppm",
+                                "°",
+                                "rad",
+                                "counts",
+                                "kg/m³",
+                                "g/m³",
+                                "mg/m³",
+                                "μg/m³",
+                                "kg/l",
+                                "g/l",
+                                "lb/ft³",
+                                "l/min",
+                                "l/s",
+                                "m³/h",
+                                "m³/s",
+                                "cfm",
+                                "kg/s",
+                                "kg/h",
+                                "s",
+                                "min",
+                                "h",
+                                "d",
+                                "Hz",
+                                "kHz",
+                                "m/s",
+                                "cm/s",
+                                "ft/min",
+                                "ft/s",
+                                "m/s²",
+                                "ft/s²"
+                              ]
+                            },
+                            "minMeasureRange": {
+                              "type": "number"
+                            },
+                            "maxMeasureRange": {
+                              "type": "number"
+                            },
+                            "minPhysicalLimit": {
+                              "type": "number"
+                            },
+                            "maxPhysicalLimit": {
+                              "type": "number"
+                            },
+                            "accuracy": {
+                              "type": "number"
+                            },
+                            "offset": {
+                              "type": "number"
+                            },
+                            "gain": {
+                              "type": "number"
+                            },
+                            "calibrationDate": {
+                              "type": "string",
+                              "format": "date"
+                            },
+                            "channelName": {
+                              "const": "pressure"
+                            }
+                          },
+                          "required": [
+                            "channelName"
+                          ]
+                        },
+                        "channel2": {
+                          "type": "object",
+                          "properties": {
+                            "measurand": {
+                              "enum": [
+                                "Temperature",
+                                "Temperature difference",
+                                "Pressure (gauge)",
+                                "Pressure (absolute)",
+                                "Pressure (differential)",
+                                "Flow (vol.)",
+                                "Flow (mass)",
+                                "Force",
+                                "Mass",
+                                "Level",
+                                "Length",
+                                "Volume",
+                                "Current",
+                                "Voltage",
+                                "Resistance",
+                                "Capacitance",
+                                "Inductance",
+                                "Relative",
+                                "Time",
+                                "Frequency",
+                                "Speed",
+                                "Acceleration",
+                                "Density",
+                                "Density (gauge pressure at 20 °C)",
+                                "Density (absolute pressure at 20 °C)",
+                                "Humidity (relative)",
+                                "Humidity (absolute)",
+                                "Angle of rotation / inclination"
+                              ]
+                            },
+                            "unit": {
+                              "enum": [
+                                "°C",
+                                "°F",
+                                "K",
+                                "°R",
+                                "bar",
+                                "mbar",
+                                "μbar",
+                                "Pa",
+                                "hPa",
+                                "kPa",
+                                "MPa",
+                                "psi",
+                                "lbf/ft²",
+                                "kN/m²",
+                                "N/cm²",
+                                "atm",
+                                "kg/cm²",
+                                "kg/mm²",
+                                "μmHg",
+                                "mmHg",
+                                "cmHg",
+                                "inHg",
+                                "mmH2O",
+                                "mH2O",
+                                "inH2O",
+                                "ftH2O",
+                                "N",
+                                "daN",
+                                "kN",
+                                "MN",
+                                "kp",
+                                "lbf",
+                                "ozf",
+                                "dyn",
+                                "kg",
+                                "g",
+                                "mg",
+                                "lb",
+                                "mm",
+                                "cm",
+                                "m",
+                                "μm",
+                                "ft",
+                                "in",
+                                "l",
+                                "ml",
+                                "m³",
+                                "gal (UK)",
+                                "gal (US)",
+                                "ft³",
+                                "in³",
+                                "mΩ",
+                                "Ω",
+                                "kΩ",
+                                "μV",
+                                "mV",
+                                "V",
+                                "mA",
+                                "μA",
+                                "μF",
+                                "nF",
+                                "pF",
+                                "mH",
+                                "μH",
+                                "%",
+                                "‰",
+                                "ppm",
+                                "°",
+                                "rad",
+                                "counts",
+                                "kg/m³",
+                                "g/m³",
+                                "mg/m³",
+                                "μg/m³",
+                                "kg/l",
+                                "g/l",
+                                "lb/ft³",
+                                "l/min",
+                                "l/s",
+                                "m³/h",
+                                "m³/s",
+                                "cfm",
+                                "kg/s",
+                                "kg/h",
+                                "s",
+                                "min",
+                                "h",
+                                "d",
+                                "Hz",
+                                "kHz",
+                                "m/s",
+                                "cm/s",
+                                "ft/min",
+                                "ft/s",
+                                "m/s²",
+                                "ft/s²"
+                              ]
+                            },
+                            "minMeasureRange": {
+                              "type": "number"
+                            },
+                            "maxMeasureRange": {
+                              "type": "number"
+                            },
+                            "minPhysicalLimit": {
+                              "type": "number"
+                            },
+                            "maxPhysicalLimit": {
+                              "type": "number"
+                            },
+                            "accuracy": {
+                              "type": "number"
+                            },
+                            "offset": {
+                              "type": "number"
+                            },
+                            "gain": {
+                              "type": "number"
+                            },
+                            "calibrationDate": {
+                              "type": "string",
+                              "format": "date"
+                            },
+                            "channelName": {
+                              "const": "device temperature"
+                            }
+                          },
+                          "required": [
+                            "channelName"
+                          ]
+                        }
+                      },
+                      "required": []
+                    }
+                  },
+                  "required": []
+                }
+              },
+              "required": [
+                "messageType",
+                "messageSubType",
+                "identification"
+              ]
+            },
+            "warnings": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "data"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "messageType": {
+                  "enum": [
+                    20
+                  ]
+                },
+                "messageSubType": {
+                  "enum": [
+                    3
+                  ]
+                },
+                "identification": {
+                  "type": "object",
+                  "properties": {
+                    "revisionCounter": {
+                      "type": "number"
+                    },
+                    "totalWrongFrames": {
+                      "type": "number"
+                    },
+                    "frames": {
+                      "type": "array",
+                      "items": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "frameNumber": {
+                              "type": "number"
+                            },
+                            "status": {
+                              "enum": [
+                                "Configuration received but not applied",
+                                "Configuration received and applied with success",
+                                "Configuration rejected - Tried to write a read only register",
+                                "Configuration rejected - At least one register has an invalid value",
+                                "Configuration rejected - The combination register start address/number of bytes is wrong",
+                                "Entire configuration discarded because of invalid parameter combination",
+                                "Entire configuration discarded because no answer from the cloud",
+                                "Missing frame",
+                                "Frame rejected - frame number already received"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "frameNumber",
+                            "status"
+                          ]
+                        }
+                      ],
+                      "minItems": 1,
+                      "additionalItems": {
+                        "type": "object",
+                        "properties": {
+                          "frameNumber": {
+                            "type": "number"
+                          },
+                          "status": {
+                            "enum": [
+                              "Configuration received but not applied",
+                              "Configuration received and applied with success",
+                              "Configuration rejected - Tried to write a read only register",
+                              "Configuration rejected - At least one register has an invalid value",
+                              "Configuration rejected - The combination register start address/number of bytes is wrong",
+                              "Entire configuration discarded because of invalid parameter combination",
+                              "Entire configuration discarded because no answer from the cloud",
+                              "Missing frame",
+                              "Frame rejected - frame number already received"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "frameNumber",
+                          "status"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "frames"
+                  ]
+                }
+              },
+              "required": [
+                "messageType",
+                "messageSubType",
+                "identification"
+              ]
+            },
+            "warnings": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "data"
+          ]
+        }
+      ]
     }
+  ]
 }

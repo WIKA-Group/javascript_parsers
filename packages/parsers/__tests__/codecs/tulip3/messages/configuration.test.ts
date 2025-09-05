@@ -5,47 +5,47 @@ import { hexStringToIntArray } from '../../../../src/utils'
 import { FullConfigurationHexString } from '../constants/configuration'
 
 const sensor1channelConfig = {
-  channel1: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor1Channel1' },
-  channel2: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor1Channel2' },
-  channel3: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor1Channel3' },
-  channel4: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor1Channel4' },
-  channel5: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor1Channel5' },
-  channel6: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor1Channel6' },
-  channel7: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor1Channel7' },
-  channel8: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor1Channel8' },
+  channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel1' },
+  channel2: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel2' },
+  channel3: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel3' },
+  channel4: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel4' },
+  channel5: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel5' },
+  channel6: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel6' },
+  channel7: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel7' },
+  channel8: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel8' },
 } as const satisfies TULIP3DeviceSensorConfig['sensor1']
 
 const sensor2channelConfig = {
-  channel1: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor2Channel1' },
-  channel2: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor2Channel2' },
-  channel3: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor2Channel3' },
-  channel4: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor2Channel4' },
-  channel5: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor2Channel5' },
-  channel6: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor2Channel6' },
-  channel7: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor2Channel7' },
-  channel8: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor2Channel8' },
+  channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor2Channel1' },
+  channel2: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor2Channel2' },
+  channel3: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor2Channel3' },
+  channel4: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor2Channel4' },
+  channel5: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor2Channel5' },
+  channel6: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor2Channel6' },
+  channel7: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor2Channel7' },
+  channel8: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor2Channel8' },
 } as const satisfies TULIP3DeviceSensorConfig['sensor1']
 
 const sensor3channelConfig = {
-  channel1: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor3Channel1' },
-  channel2: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor3Channel2' },
-  channel3: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor3Channel3' },
-  channel4: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor3Channel4' },
-  channel5: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor3Channel5' },
-  channel6: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor3Channel6' },
-  channel7: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor3Channel7' },
-  channel8: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor3Channel8' },
+  channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor3Channel1' },
+  channel2: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor3Channel2' },
+  channel3: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor3Channel3' },
+  channel4: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor3Channel4' },
+  channel5: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor3Channel5' },
+  channel6: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor3Channel6' },
+  channel7: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor3Channel7' },
+  channel8: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor3Channel8' },
 } as const satisfies TULIP3DeviceSensorConfig['sensor1']
 
 const sensor4channelConfig = {
-  channel1: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor4Channel1' },
-  channel2: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor4Channel2' },
-  channel3: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor4Channel3' },
-  channel4: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor4Channel4' },
-  channel5: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor4Channel5' },
-  channel6: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor4Channel6' },
-  channel7: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor4Channel7' },
-  channel8: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor4Channel8' },
+  channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor4Channel1' },
+  channel2: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor4Channel2' },
+  channel3: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor4Channel3' },
+  channel4: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor4Channel4' },
+  channel5: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor4Channel5' },
+  channel6: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor4Channel6' },
+  channel7: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor4Channel7' },
+  channel8: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor4Channel8' },
 } as const satisfies TULIP3DeviceSensorConfig['sensor1']
 
 const config = {
@@ -1113,7 +1113,7 @@ describe('validation and transformation after decode (tests for code below TODO)
       // contains sampling channel configuration, so we'll test with limited config
       const limitedConfig = {
         sensor1: {
-          channel1: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor1Channel1' },
+          channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel1' },
           // Only channel1, no channel2
         },
       } as const satisfies TULIP3DeviceSensorConfig
@@ -1170,7 +1170,7 @@ describe('validation and transformation after decode (tests for code below TODO)
       // Create a config with identification
       const configWithIdentification = {
         sensor1: {
-          channel1: { min: 0, max: 100, measurementTypes: [], channelName: 'sensor1Channel1' },
+          channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel1' },
         },
       } as const satisfies TULIP3DeviceSensorConfig
 
@@ -1210,8 +1210,8 @@ describe('validation and transformation after decode (tests for code below TODO)
     it('should handle sparse channel configuration', () => {
       const sparseConfig = {
         sensor1: {
-          channel1: { min: 0, max: 100, measurementTypes: [], channelName: 'First Channel' },
-          channel8: { min: 0, max: 100, measurementTypes: [], channelName: 'Eighth Channel' },
+          channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'First Channel' },
+          channel8: { start: 0, end: 100, measurementTypes: [], channelName: 'Eighth Channel' },
         },
       } as const satisfies TULIP3DeviceSensorConfig
 
@@ -1289,7 +1289,7 @@ describe('validation and transformation after decode (tests for code below TODO)
       }).toThrow(TypeError)
       expect(() => {
         decodeConfigurationRegisterRead(data, config)
-      }).toThrow('Invalid message type: expected 0x15 but got 0x14')
+      }).toThrow('Invalid configuration message type: expected 0x15 but got 0x14')
     })
 
     it('should throw TypeError for unsupported subtype', () => {

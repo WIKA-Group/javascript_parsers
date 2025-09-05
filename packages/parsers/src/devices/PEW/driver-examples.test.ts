@@ -21,6 +21,7 @@ describe('pEW Parser', () => {
 
   it.each(uplinkExamples)(`should decode uplink example: $description`, (example) => {
     const output = decodeUplink(example.input as any)
+
     expect(output).toEqual(example.output)
 
     expect(() => v.parse(outputSchema, output)).not.toThrow()

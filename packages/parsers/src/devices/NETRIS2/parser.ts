@@ -775,9 +775,9 @@ export default function useParser() {
   const configurationIdSchema = v.optional(
     v.pipe(
       v.number('configurationId needs to be a number'),
-      v.integer('configurationId needs to be a number'),
       v.minValue(1, 'configurationId needs to be at least 1'),
       v.maxValue(31, 'configurationId needs to be at most 31'),
+      v.integer('configurationId needs to be a number'),
     ),
     DEFAULT_CONFIGURATION_ID,
   )
@@ -812,7 +812,6 @@ export default function useParser() {
     configuration: v.object({
       measuringRateWhenNoAlarm: v.pipe(
         v.number('measuringRateWhenNoAlarm needs to be a number'),
-        v.integer('measuringRateWhenNoAlarm needs to be an integer'),
         v.minValue(
           60,
           'measuringRateWhenNoAlarm needs to be at least 60',
@@ -821,12 +820,11 @@ export default function useParser() {
           86_400,
           'measuringRateWhenNoAlarm needs to be at most 86,400',
         ),
+        v.integer('measuringRateWhenNoAlarm needs to be an integer'),
       ),
       publicationFactorWhenNoAlarm: v.pipe(
         v.number('publicationFactorWhenNoAlarm needs to be a number'),
-        v.integer(
-          'publicationFactorWhenNoAlarm needs to be an integer',
-        ),
+
         v.minValue(
           1,
           'publicationFactorWhenNoAlarm needs to be at least 1',
@@ -835,10 +833,12 @@ export default function useParser() {
           2_880,
           'publicationFactorWhenNoAlarm needs to be at most 2,880',
         ),
+        v.integer(
+          'publicationFactorWhenNoAlarm needs to be an integer',
+        ),
       ),
       measuringRateWhenAlarm: v.pipe(
         v.number('measuringRateWhenAlarm needs to be a number'),
-        v.integer('measuringRateWhenAlarm needs to be an integer'),
         v.minValue(
           60,
           'measuringRateWhenAlarm needs to be at least 60',
@@ -847,10 +847,11 @@ export default function useParser() {
           86_400,
           'measuringRateWhenAlarm needs to be at most 86,400',
         ),
+        v.integer('measuringRateWhenAlarm needs to be an integer'),
+
       ),
       publicationFactorWhenAlarm: v.pipe(
         v.number('publicationFactorWhenAlarm needs to be a number'),
-        v.integer('publicationFactorWhenAlarm needs to be an integer'),
         v.minValue(
           1,
           'publicationFactorWhenAlarm needs to be at least 1',
@@ -859,6 +860,8 @@ export default function useParser() {
           2_880,
           'publicationFactorWhenAlarm needs to be at most 2,880',
         ),
+        v.integer('publicationFactorWhenAlarm needs to be an integer'),
+
       ),
     }),
   })
@@ -898,9 +901,7 @@ export default function useParser() {
           v.number(
             'delay of lowThresholdWithDelay needs to be a number',
           ),
-          v.integer(
-            'delay of lowThresholdWithDelay needs to be an integer',
-          ),
+
           v.minValue(
             0,
             'delay of lowThresholdWithDelay needs to be at least 0',
@@ -908,6 +909,9 @@ export default function useParser() {
           v.maxValue(
             65_535,
             'delay of lowThresholdWithDelay needs to be at most 65,535',
+          ),
+          v.integer(
+            'delay of lowThresholdWithDelay needs to be an integer',
           ),
         ),
       })),
@@ -929,9 +933,7 @@ export default function useParser() {
           v.number(
             'delay of highThresholdWithDelay needs to be a number',
           ),
-          v.integer(
-            'delay of highThresholdWithDelay needs to be an integer',
-          ),
+
           v.minValue(
             0,
             'delay of highThresholdWithDelay needs to be at least 0',
@@ -939,6 +941,9 @@ export default function useParser() {
           v.maxValue(
             65_535,
             'delay of highThresholdWithDelay needs to be at most 65,535',
+          ),
+          v.integer(
+            'delay of highThresholdWithDelay needs to be an integer',
           ),
         ),
       })),

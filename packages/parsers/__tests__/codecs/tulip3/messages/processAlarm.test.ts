@@ -6,14 +6,14 @@ describe('tulip3 process alarm message decoding (0x12/0x01)', () => {
   // Minimal device profile: sensor2/channel1 exists
   const deviceSensorConfig = {
     sensor1: { channel1: {
-      min: 4,
-      max: 20,
+      start: 4,
+      end: 20,
       channelName: 'current',
       measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
     } },
     sensor2: { channel1: {
-      min: 0,
-      max: 10,
+      start: 0,
+      end: 10,
       channelName: 'voltage',
       measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
     } },
@@ -167,7 +167,7 @@ describe('tulip3 process alarm message decoding (0x12/0x01)', () => {
   it('throws for invalid message type', () => {
     const bytes = [0x10, 0x01, 0x40, 0x80]
     expect(() => decodeProcessAlarmMessage(bytes, deviceSensorConfig)).toThrow(TypeError)
-    expect(() => decodeProcessAlarmMessage(bytes, deviceSensorConfig)).toThrow('Invalid message type: expected 0x12 but got 0x10')
+    expect(() => decodeProcessAlarmMessage(bytes, deviceSensorConfig)).toThrow('Invalid process alarm message type: expected 0x12 but got 0x10')
   })
 
   it('throws for invalid sub message type', () => {
@@ -216,8 +216,8 @@ describe('tulip3 process alarm message decoding (0x12/0x01)', () => {
     const maxConfig = {
       sensor4: {
         channel8: {
-          min: 0,
-          max: 1,
+          start: 0,
+          end: 1,
           measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
           channelName: 'sensor4Channel8',
         },
@@ -250,16 +250,16 @@ describe('tulip3 process alarm message decoding (0x12/0x01)', () => {
   it('parses a message with at least 6 sensor/channel pairs across sensors', () => {
     const richConfig = {
       sensor1: {
-        channel1: { min: 0, max: 1, measurementTypes: ['uint16 - TULIP scale 2500 - 12500'], channelName: 'sensor1Channel1' },
-        channel2: { min: 0, max: 1, measurementTypes: ['uint16 - TULIP scale 2500 - 12500'], channelName: 'sensor1Channel2' },
-        channel3: { min: 0, max: 1, measurementTypes: ['uint16 - TULIP scale 2500 - 12500'], channelName: 'sensor1Channel3' },
+        channel1: { start: 0, end: 1, measurementTypes: ['uint16 - TULIP scale 2500 - 12500'], channelName: 'sensor1Channel1' },
+        channel2: { start: 0, end: 1, measurementTypes: ['uint16 - TULIP scale 2500 - 12500'], channelName: 'sensor1Channel2' },
+        channel3: { start: 0, end: 1, measurementTypes: ['uint16 - TULIP scale 2500 - 12500'], channelName: 'sensor1Channel3' },
       },
       sensor2: {
-        channel1: { min: 0, max: 1, measurementTypes: ['uint16 - TULIP scale 2500 - 12500'], channelName: 'sensor2Channel1' },
-        channel2: { min: 0, max: 1, measurementTypes: ['uint16 - TULIP scale 2500 - 12500'], channelName: 'sensor2Channel2' },
+        channel1: { start: 0, end: 1, measurementTypes: ['uint16 - TULIP scale 2500 - 12500'], channelName: 'sensor2Channel1' },
+        channel2: { start: 0, end: 1, measurementTypes: ['uint16 - TULIP scale 2500 - 12500'], channelName: 'sensor2Channel2' },
       },
       sensor3: {
-        channel4: { min: 0, max: 1, measurementTypes: ['uint16 - TULIP scale 2500 - 12500'], channelName: 'sensor3Channel4' },
+        channel4: { start: 0, end: 1, measurementTypes: ['uint16 - TULIP scale 2500 - 12500'], channelName: 'sensor3Channel4' },
       },
     } as const satisfies TULIP3DeviceSensorConfig
 
