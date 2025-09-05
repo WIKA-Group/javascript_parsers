@@ -75,12 +75,34 @@ They encapsulate the raw parsers and add some additional functionality on top, f
 
 ### Usage in a gateway or network server
 
-#### New JavaScript Parsers (3.x.x and newer)
+> Disclaimer: The term `WIKA tulip` is used to differentiate the device protocol versions. It does not refer to a specific product. It may be referred to as `tulip`, `TULIP`, `WIKA TULIP` or `WIKA tulip` in the documentation or the source code.
+
+#### New JavaScript Parsers (4.x.x and newer)
+
+Since 4.0.0 the parsers architecture have undergone a major refactor with some breaking changes, but they are still compliant to the LoRaWAN® Payload Codec API Specification TS013-1.0.0. Therefore, you can still use the `decodeUplink` function as before.
+
+The devices supported by the new parsers currently are:
+
+- PEW
+
+All other devices are still available in the release but have not yet been migrated to the new parser architecture.
+
+With 4.0.0 there is now a new way to adjust the measuring ranges of the sensor. To allow for a unified API, the channels name is now used to identify the channel.
+
+```typescript
+/**
+ * minified 4.0.0 PEW parser
+ */
+// adjust the measuring range of the pressure channel to -1 to 20 bar
+adjustMeasuringRange('pressure', { start: -1, end: 20 })
+```
+
+**A more complete documentation is following soon. It will include a quick start guide, migration guides and an overview of the APIs exposed by the parsers.**
+
+#### Intermediate JavaScript Parsers (3.x.x)
 
 The javascript parsers are in the process of being rewritten in typescript. In addition the parsers will be made available as a npm package.
 With the new parsers, there is no need to modify the index.js file before you can use the JavaScript parsers as they let you define the measuring ranges of the sensor via a function.
-Additionally, the utility function `adjustRoundingDecimals` to adjust the amount of decimals of the output values.
-To use those, just add the respective function call after the parser.
 
 ```javascript
 /**
@@ -90,16 +112,6 @@ raw minified parser
 */
 
 adjustRoundingDecimals(2);
-// adjust the measuring range of channel 0 to -40 to 100
-// returns an error string if the given channel id cannot be found
-const undefinedOrErrorString = adjustMeasurementRange(0, {
-  start: -40,
-  end: 100
-});
-
-if(typeof undefinedOrErrorString === 'string') {
-    console.error(undefinedOrErrorString);
-}
 
 const decoding = decodeUplink(input);
 
@@ -116,6 +128,7 @@ For more information about how to include the new parsers in your project, pleas
 #### Legacy JavaScript Parsers (2.x.x and older)
 
 ---
+
 **ATTENTION**
 
 !!! You must modify the index.js file before you can use the JavaScript parsers !!!
@@ -196,6 +209,13 @@ console.log(output);
 For more information about parser using see the [Legacy JavaScript Parser Usage](/doc/LegacyJavaScriptUsage.md)
 
 # Release Notes
+4.0.0
+ - Major refactor: modular codec architecture and unified device parser interface enabling multiple codecs (TULIP2/TULIP3).
+ - PEW: integrated TULIP3 codec and migrated parser/codec structure to TypeScript.
+ - Added TULIP3 codec and tests for tulip codecs; moved devices into nested `devices` directories.
+ - Build: migrated to tsdown.
+ - Chores & housekeeping: rename TULIP1 → TULIP2, dependency cleanup and other refactors.
+
 3.2.1
  - parsers: correctly validate hex string in `decodeHexUplink`
 
