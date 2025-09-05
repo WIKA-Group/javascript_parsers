@@ -1,5 +1,5 @@
 import { defineParser } from '../../../parser'
-import { createTULIP1PEWCodec } from './tulip1'
+import { createTULIP2PEWCodec } from './tulip2'
 import { createTULIP3PEWCodec } from './tulip3'
 
 export const PEW_NAME = 'PEW-1000'
@@ -10,7 +10,7 @@ export const PEW_NAME = 'PEW-1000'
 export function useParser() {
   return defineParser({
     parserName: PEW_NAME,
-    codecs: [createTULIP1PEWCodec(), createTULIP3PEWCodec()],
+    codecs: [createTULIP2PEWCodec(), createTULIP3PEWCodec()],
   })
 }
 

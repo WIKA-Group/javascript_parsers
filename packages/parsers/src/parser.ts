@@ -166,7 +166,7 @@ export function defineParser<const TParserOptions extends ParserOptions>(options
   } satisfies DeviceParser<TParserOptions>
 }
 
-/* const tulip1Codec = defineTULIP1Codec({
+/* const tulip2Codec = defineTULIP2Codec({
   channels: [
     {
       name: 'temperature',
@@ -198,7 +198,7 @@ export function defineParser<const TParserOptions extends ParserOptions>(options
 
 const p = defineParser({
   deviceName: 'MyDevice',
-  codecs: [tulip1Codec],
+  codecs: [tulip2Codec],
 })
 
 function someParser(): {
@@ -214,7 +214,7 @@ const res = p.decodeUplink({
 })
 
 p.encodeDownlink({
-  codec: '1TULIP1',
+  codec: '1TULIP2',
   input: { hello: 'world' },
 })
  */

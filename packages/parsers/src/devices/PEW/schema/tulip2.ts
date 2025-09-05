@@ -1,8 +1,8 @@
 /* eslint-disable ts/explicit-function-return-type */
 import * as v from 'valibot'
 import { createSemVerSchema } from '../../../schemas'
-import { createUplinkOutputSchemaFactory } from '../../../schemas/tulip1/uplink'
-import { ALARM_EVENTS, DEVICE_ALARM_CAUSE_OF_FAILURE, DEVICE_ALARM_TYPES, MEASUREMENT_CHANNELS, PRESSURE_TYPES, PRESSURE_UNITS, PROCESS_ALARM_CHANNEL_NAMES, PROCESS_ALARM_TYPES, TECHNICAL_ALARM_TYPES } from '../parser/tulip1/lookups'
+import { createUplinkOutputSchemaFactory } from '../../../schemas/tulip2/uplink'
+import { ALARM_EVENTS, DEVICE_ALARM_CAUSE_OF_FAILURE, DEVICE_ALARM_TYPES, MEASUREMENT_CHANNELS, PRESSURE_TYPES, PRESSURE_UNITS, PROCESS_ALARM_CHANNEL_NAMES, PROCESS_ALARM_TYPES, TECHNICAL_ALARM_TYPES } from '../parser/tulip2/lookups'
 
 const createUplinkSchema = createUplinkOutputSchemaFactory(31)
 
@@ -267,7 +267,7 @@ function createDeviceStatisticsUplinkOutputSchema() {
   })
 }
 
-export function createPEWTULIP1UplinkOutputSchema() {
+export function createPEWTULIP2UplinkOutputSchema() {
   return v.union([
     createDataMessageUplinkOutputSchema(),
     createProcessAlarmsUplinkOutputSchema(),
@@ -279,20 +279,20 @@ export function createPEWTULIP1UplinkOutputSchema() {
 }
 
 // go through each message type and create the Data type and the uplinkOutput type
-export type PEWTULIP1DataMessageData = v.InferOutput<ReturnType<typeof createDataMessageUplinkOutputSchema>>['data']['measurement']
-export type PEWTULIP1DataMessageUplinkOutput = v.InferOutput<ReturnType<typeof createDataMessageUplinkOutputSchema>>
+export type PEWTULIP2DataMessageData = v.InferOutput<ReturnType<typeof createDataMessageUplinkOutputSchema>>['data']['measurement']
+export type PEWTULIP2DataMessageUplinkOutput = v.InferOutput<ReturnType<typeof createDataMessageUplinkOutputSchema>>
 
-export type PEWTULIP1ProcessAlarmsData = v.InferOutput<ReturnType<typeof createProcessAlarmsUplinkOutputSchema>>['data']['processAlarms']
-export type PEWTULIP1ProcessAlarmsUplinkOutput = v.InferOutput<ReturnType<typeof createProcessAlarmsUplinkOutputSchema>>
+export type PEWTULIP2ProcessAlarmsData = v.InferOutput<ReturnType<typeof createProcessAlarmsUplinkOutputSchema>>['data']['processAlarms']
+export type PEWTULIP2ProcessAlarmsUplinkOutput = v.InferOutput<ReturnType<typeof createProcessAlarmsUplinkOutputSchema>>
 
-export type PEWTULIP1TechnicalAlarmsData = v.InferOutput<ReturnType<typeof createTechnicalAlarmsUplinkOutputSchema>>['data']['technicalAlarms']
-export type PEWTULIP1TechnicalAlarmsUplinkOutput = v.InferOutput<ReturnType<typeof createTechnicalAlarmsUplinkOutputSchema>>
+export type PEWTULIP2TechnicalAlarmsData = v.InferOutput<ReturnType<typeof createTechnicalAlarmsUplinkOutputSchema>>['data']['technicalAlarms']
+export type PEWTULIP2TechnicalAlarmsUplinkOutput = v.InferOutput<ReturnType<typeof createTechnicalAlarmsUplinkOutputSchema>>
 
-export type PEWTULIP1DeviceAlarmsData = v.InferOutput<ReturnType<typeof createDeviceAlarmsUplinkOutputSchema>>['data']['deviceAlarm']
-export type PEWTULIP1DeviceAlarmsUplinkOutput = v.InferOutput<ReturnType<typeof createDeviceAlarmsUplinkOutputSchema>>
+export type PEWTULIP2DeviceAlarmsData = v.InferOutput<ReturnType<typeof createDeviceAlarmsUplinkOutputSchema>>['data']['deviceAlarm']
+export type PEWTULIP2DeviceAlarmsUplinkOutput = v.InferOutput<ReturnType<typeof createDeviceAlarmsUplinkOutputSchema>>
 
-export type PEWTULIP1DeviceInformationData = v.InferOutput<ReturnType<typeof createDeviceInformationUplinkOutputSchema>>['data']['deviceInformation']
-export type PEWTULIP1DeviceInformationUplinkOutput = v.InferOutput<ReturnType<typeof createDeviceInformationUplinkOutputSchema>>
+export type PEWTULIP2DeviceInformationData = v.InferOutput<ReturnType<typeof createDeviceInformationUplinkOutputSchema>>['data']['deviceInformation']
+export type PEWTULIP2DeviceInformationUplinkOutput = v.InferOutput<ReturnType<typeof createDeviceInformationUplinkOutputSchema>>
 
-export type PEWTULIP1DeviceStatisticsData = v.InferOutput<ReturnType<typeof createDeviceStatisticsUplinkOutputSchema>>['data']['deviceStatistic']
-export type PEWTULIP1DeviceStatisticsUplinkOutput = v.InferOutput<ReturnType<typeof createDeviceStatisticsUplinkOutputSchema>>
+export type PEWTULIP2DeviceStatisticsData = v.InferOutput<ReturnType<typeof createDeviceStatisticsUplinkOutputSchema>>['data']['deviceStatistic']
+export type PEWTULIP2DeviceStatisticsUplinkOutput = v.InferOutput<ReturnType<typeof createDeviceStatisticsUplinkOutputSchema>>

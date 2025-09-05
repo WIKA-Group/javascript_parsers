@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
-import { defineTULIP1Codec } from '../../../src/codecs/tulip1'
+import { defineTULIP2Codec } from '../../../src/codecs/tulip2'
 
-describe('defineTULIP1Codec (non-decode methods)', () => {
+describe('defineTULIP2Codec (non-decode methods)', () => {
   const handlers: any = {}
   for (let i = 0x00; i <= 0x09; ++i) {
     // handlers return a shape including the rounding value so tests can assert it changed
@@ -13,7 +13,7 @@ describe('defineTULIP1Codec (non-decode methods)', () => {
     { name: 'ch2', start: 10, end: 200, channelId: 1 },
   ]
 
-  const codec = defineTULIP1Codec({
+  const codec = defineTULIP2Codec({
     deviceName: 'TestDevice',
     channels,
     roundingDecimals: 2,
@@ -22,7 +22,7 @@ describe('defineTULIP1Codec (non-decode methods)', () => {
   })
 
   it('should have the correct name', () => {
-    expect(codec.name).toBe('TestDeviceTULIP1')
+    expect(codec.name).toBe('TestDeviceTULIP2')
   })
 
   it('canTryDecode returns true for valid prefixes', () => {
@@ -63,9 +63,9 @@ describe('defineTULIP1Codec (non-decode methods)', () => {
   })
 })
 
-describe('defineTULIP1Codec (decoding + validations)', () => {
+describe('defineTULIP2Codec (decoding + validations)', () => {
   it('decode throws when no handler for first byte', () => {
-    const codec = defineTULIP1Codec({
+    const codec = defineTULIP2Codec({
       deviceName: 'D',
       channels: [{ name: 'c', start: 0, end: 1, channelId: 0 }],
       handlers: { 0x00: (() => ({})) as any },
@@ -77,7 +77,7 @@ describe('defineTULIP1Codec (decoding + validations)', () => {
 
   it('throws when channel names are duplicated', () => {
     const options = () =>
-      defineTULIP1Codec({
+      defineTULIP2Codec({
         deviceName: 'Dup',
         channels: [
           { name: 'dup', start: 0, end: 10, channelId: 0 },
@@ -92,7 +92,7 @@ describe('defineTULIP1Codec (decoding + validations)', () => {
 
   it('throws when channel ranges are invalid', () => {
     const options = () =>
-      defineTULIP1Codec({
+      defineTULIP2Codec({
         deviceName: 'BadRange',
         channels: [{ name: 'bad', start: 10, end: 10, channelId: 0 }],
         handlers: {},
