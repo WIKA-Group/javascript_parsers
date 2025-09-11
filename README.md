@@ -4,19 +4,19 @@
 
 This repository ['javascript_parsers'](https://github.com/WIKA-Group/javascript_parsers) contains the JavaScript parser for our LPWAN devices:
 
-* [A2G](./packages/parsers/src/A2G/)
-* [F98W6](./packages/parsers/src/F98W6/)
-* [GD20W](./packages/parsers/src/GD20W/)
-* [NETRIS1](./packages/parsers/src/NETRIS1/)
-* [NETRIS2](./packages/parsers/src/NETRIS2/)
-* [FLRU+NETRIS3](./packages/parsers/src/FLRU_NETRIS3/)
-* [PEU+NETRIS3](./packages/parsers/src/PEU_NETRIS3/)
-* [PGU+NETRIS3](./packages/parsers/src/PGU_NETRIS3/)
-* [TGU+NETRIS3](./packages/parsers/src/TGU_NETRIS3/)
-* [TRU+NETRIS3](./packages/parsers/src/TRU_NETRIS3/)
-* [PEW](./packages/parsers/src/PEW/)
-* [PGW23](./packages/parsers/src/PGW23_100_11/)
-* [TRW](./packages/parsers/src/TRW/)
+* [A2G](./packages/parsers/src/devices/A2G/)
+* [F98W6](./packages/parsers/src/devices/F98W6/)
+* [GD20W](./packages/parsers/src/devices/GD20W/)
+* [NETRIS1](./packages/parsers/src/devices/NETRIS1/)
+* [NETRIS2](./packages/parsers/src/devices/NETRIS2/)
+* [FLRU+NETRIS3](./packages/parsers/src/devices/FLRU_NETRIS3/)
+* [PEU+NETRIS3](./packages/parsers/src/devices/PEU_NETRIS3/)
+* [PGU+NETRIS3](./packages/parsers/src/devices/PGU_NETRIS3/)
+* [TGU+NETRIS3](./packages/parsers/src/devices/TGU_NETRIS3/)
+* [TRU+NETRIS3](./packages/parsers/src/devices/TRU_NETRIS3/)
+* [PEW](./packages/parsers/src/devices/PEW/)
+* [PGW23](./packages/parsers/src/devices/PGW23_100_11/)
+* [TRW](./packages/parsers/src/devices/TRW/)
 
 The JavaScript parser converts the raw byte payload of our devices into a JavaScript object (defined in the uplink.schema.json file).
 The parser for building the raw byte downlink payloads are available for some devices as well and are defined in the downlink.schema.json file.

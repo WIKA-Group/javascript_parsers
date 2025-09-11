@@ -2,6 +2,7 @@
   "$schema": "./uplink.schema.json",
   "data": {
     "messageType": 1,
+    "messageSubType": 1,
     "configurationId": 0,
     "measurement": {
       "channels": [
@@ -22,6 +23,28 @@
         }
       ]
     },
+    "measurements": [
+      {
+        "channel": "channel1",
+        "channelId": 0,
+        "channelName": "pressure",
+        "sensor": "sensor1",
+        "sensorId": 0,
+        "sourceDataType": "uint16 - TULIP scale 2500 - 12500",
+        "value": 9.427,
+        "valueAcquisitionError": false
+      },
+      {
+        "channel": "channel2",
+        "channelId": 1,
+        "channelName": "device temperature",
+        "sensor": "sensor1",
+        "sensorId": 0,
+        "sourceDataType": "uint16 - TULIP scale 2500 - 12500",
+        "value": 0.3065,
+        "valueAcquisitionError": false
+      }
+    ],
     "processAlarms": [
       {
         "channelId": 0,
@@ -31,6 +54,28 @@
         "alarmType": 1,
         "alarmTypeName": "high threshold",
         "value": 4.08
+      }
+    ],
+    "processAlarms2": [
+      {
+        "channelId": 0,
+        "channelName": "pressure",
+        "event": 0,
+        "eventName": "triggered",
+        "alarmType": 1,
+        "alarmTypeName": "high threshold",
+        "value": 4.08,
+        "alarmFlags": {
+          "fallingSlope": false,
+          "highThreshold": true,
+          "highThresholdWithDelay": false,
+          "lowThreshold": false,
+          "lowThresholdWithDelay": false,
+          "risingSlope": false
+        },
+        "channel": "channel1",
+        "sensor": "sensor1",
+        "sensorId": 0
       }
     ],
     "technicalAlarms": [
@@ -52,6 +97,43 @@
       "causeOfFailureName": "generic",
       "value": 2.8
     },
+    "communicationModuleAlarms": {
+      "alarmFlags": {
+        "airTimeLimitation": true,
+        "lowVoltage": true,
+        "radioCommunicationError": false,
+        "temperatureOutOfRange": false
+      }
+    },
+    "sensorAlarms": [
+      {
+        "alarmFlags": {
+          "communicationError": true,
+          "configurationError": false,
+          "memoryError": false,
+          "powerFailure": false
+        },
+        "sensor": "sensor1",
+        "sensorId": 0
+      }
+    ],
+    "channelAlarms": [
+      {
+        "alarmFlags": {
+          "openCondition": false,
+          "outOfMaxMeasurementRange": false,
+          "outOfMaxPhysicalSensorLimit": true,
+          "outOfMinMeasurementRange": false,
+          "outOfMinPhysicalSensorLimit": false,
+          "shortCondition": false
+        },
+        "channel": "channel1",
+        "channelId": 0,
+        "channelName": "pressure",
+        "sensor": "sensor1",
+        "sensorId": 0
+      }
+    ],
     "deviceInformation": {
       "productIdName": "PEW",
       "productId": 11,
@@ -73,6 +155,108 @@
     "deviceStatistic": {
       "batteryLevelNewEvent": false,
       "batteryLevelPercent": 63
+    },
+    "identification": {
+      "communicationModule": {
+        "channelPlan": 1,
+        "connectedSensors": {
+          "sensor1": true,
+          "sensor2": false,
+          "sensor3": false,
+          "sensor4": false
+        },
+        "productId": 30,
+        "productSubId": "LoRaWAN class A",
+        "firmwareVersion": "3.1.4",
+        "hardwareVersion": "2.5.1",
+        "productionDate": "2024-03-15",
+        "serialNumberPart1": "WIKA0",
+        "serialNumberPart2": "01ABC!"
+      },
+      "sensor1": {
+        "channel1": {
+          "channelName": "pressure",
+          "measurand": "Pressure (gauge)",
+          "unit": "bar"
+        },
+        "channel2": {
+          "channelName": "device temperature",
+          "measurand": "Temperature",
+          "unit": "°C"
+        },
+        "identification": {
+          "existingChannels": {
+            "channel1": true,
+            "channel2": true,
+            "channel3": false,
+            "channel4": false,
+            "channel5": false,
+            "channel6": false,
+            "channel7": false,
+            "channel8": false
+          }
+        }
+      },
+      "frames": [
+        {
+          "frameNumber": 0,
+          "status": "Configuration received and applied with success"
+        }
+      ],
+      "revisionCounter": 3,
+      "totalWrongFrames": 0
+    },
+    "configuration": {
+      "communicationModule": {
+        "measuringPeriodAlarmOff": 18000,
+        "transmissionRateAlarmOff": 0
+      },
+      "sensor1": {
+        "channel1": {
+          "channelName": "pressure",
+          "lowThresholdAlarmValue": 0.3,
+          "highThresholdAlarmValue": 12.98,
+          "processAlarmDeadBand": 0.166,
+          "fallingSlopeAlarmValue": 0,
+          "risingSlopeAlarmValue": 0.079,
+          "processAlarmEnabled": {
+            "fallingSlope": false,
+            "highThreshold": false,
+            "highThresholdWithDelay": false,
+            "lowThreshold": true,
+            "lowThresholdWithDelay": false,
+            "risingSlope": false
+          }
+        },
+        "channel2": {
+          "channelName": "device temperature",
+          "processAlarmEnabled": {
+            "fallingSlope": false,
+            "highThreshold": false,
+            "highThresholdWithDelay": false,
+            "lowThreshold": false,
+            "lowThresholdWithDelay": false,
+            "risingSlope": false
+          }
+        }
+      },
+      "frames": [
+        {
+          "frameNumber": 2,
+          "status": "Configuration received and applied with success"
+        }
+      ],
+      "revisionCounter": 10,
+      "totalWrongFrames": 0
+    },
+    "keepAliveData": {
+      "batteryLevel": 100,
+      "revisionCounter": 2,
+      "status": {
+        "ableToComputeBatteryLevel": true,
+        "hasCommunicationModuleRestarted": true,
+        "mainPowered": false
+      }
     }
   }
 }
