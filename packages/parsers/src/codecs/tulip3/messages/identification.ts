@@ -1,8 +1,9 @@
 import type { IdentificationReadRegisterData, IdentificationReadRegistersResponseUplinkOutput, IdentificationWriteRegistersResponseUplinkOutput } from '../../../schemas/tulip3/identification'
-import type { FullTULIP3DeviceSensorConfig, TULIP3ChannelConfig, TULIP3DeviceSensorConfig } from '../profile'
+import type { FullTULIP3DeviceSensorConfig, TULIP3DeviceSensorConfig } from '../profile'
 import type { ParseRegisterBlocksOptions } from '../registers'
 import { decodeRegisterRead, parseFrameData, validateMessageHeader } from '.'
 import { createIdentificationRegisterLookup } from '../registers/identification'
+import { assignChannelNames, validateResultSensors, validateSensorChannels } from './shared-validation'
 
 /**
  * Validates and transforms the decoded identification result against the provided configuration.
@@ -22,7 +23,7 @@ export function validateAndTransformIdentificationResult<const TTULIP3DeviceSens
 ): void {
   const validSensors = Object.keys(config)
 
-  // Validate connected sensors match configuration
+  // Step 1: Validate connected sensors match configuration (identification-specific)
   if (result?.communicationModule?.connectedSensors) {
     Object.entries(result.communicationModule.connectedSensors).forEach(([sensor, isConnectedInResult]) => {
       const shouldBeConnected = validSensors.includes(sensor)
@@ -36,54 +37,15 @@ export function validateAndTransformIdentificationResult<const TTULIP3DeviceSens
     })
   }
 
-  // Validate result sensors are expected for device
+  // Step 2: Validate result sensors are expected for device (shared logic)
   const resultSensors = Object.keys(result).filter(key => key !== 'communicationModule')
+  validateResultSensors(resultSensors, validSensors)
 
-  if (!resultSensors.every(sensor => validSensors.includes(sensor))) {
-    const invalidSensors = resultSensors.filter(sensor => !validSensors.includes(sensor))
-    const sensorText = invalidSensors.length === 1 ? 'Sensor' : 'Sensors'
-    throw new TypeError(
-      `${sensorText} ${invalidSensors.join(', ')} ${invalidSensors.length === 1 ? 'is' : 'are'} not supported by this device`,
-    )
-  }
+  // Step 3: Validate channel configurations for each sensor (shared logic)
+  validateSensorChannels(resultSensors, result, config, 'identification')
 
-  // Validate channel configurations for each sensor
-  for (const sensor of resultSensors) {
-    const resultChannelKeys = Object.keys(result[sensor as keyof typeof result] || {})
-      .filter(key => key !== 'identification')
-    const validChannelKeys = Object.keys(config[sensor as keyof typeof config] || {})
-      .filter(key => key !== 'identification')
-
-    const invalidChannels = resultChannelKeys.filter(channel => !validChannelKeys.includes(channel))
-    if (invalidChannels.length > 0) {
-      const channelText = invalidChannels.length === 1 ? 'Channel' : 'Channels'
-      throw new TypeError(
-        `${channelText} ${invalidChannels.join(', ')} on sensor ${sensor} ${invalidChannels.length === 1 ? 'is' : 'are'} not supported by this device`,
-      )
-    }
-  }
-
-  // Assign channel names from configuration
-  validSensors.forEach((sensorKey) => {
-    const sensorConfig = config[sensorKey as keyof typeof config]
-    if (!sensorConfig)
-      return
-
-    const validChannelKeys = Object.keys(sensorConfig).filter(key => key !== 'identification')
-
-    validChannelKeys.forEach((channelKey) => {
-      const channelConfig = sensorConfig[channelKey as keyof typeof sensorConfig] as any as TULIP3ChannelConfig
-      const channelName = channelConfig?.channelName as string | undefined
-
-      if (channelName) {
-        // @ts-expect-error - valid access to dynamic sensor and channel keys
-        if (result?.[sensorKey]?.[channelKey]) {
-          // @ts-expect-error - valid access to dynamic sensor and channel keys
-          result[sensorKey][channelKey].channelName = channelName
-        }
-      }
-    })
-  })
+  // Step 4: Assign channel names from configuration (shared logic)
+  assignChannelNames(validSensors, result, config, 'identification')
 }
 
 /**

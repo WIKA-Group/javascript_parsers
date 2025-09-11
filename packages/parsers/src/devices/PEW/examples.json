@@ -1103,6 +1103,8 @@
      }
   },
   {
+    "type": "uplink",
+    "description": "GoodCase TULIP3 identification message: Full identification message",
     "input": {
       "bytes": [
         20,
@@ -1112,7 +1114,7 @@
         3,
         4,
         1,
-        15,
+        1,
         3,
         1,
         4,
@@ -1139,6 +1141,8 @@
     },
     "output": {
       "data": {
+        "messageType": 20,
+        "messageSubType": 1,
         "identification": {
           "communicationModule": {
             "productId": 3,
@@ -1146,13 +1150,13 @@
             "channelPlan": 1,
             "connectedSensors": {
               "sensor1": true,
-              "sensor2": true,
-              "sensor3": true,
-              "sensor4": true
+              "sensor2": false,
+              "sensor3": false,
+              "sensor4": false
             },
             "firmwareVersion": "3.1.4",
             "hardwareVersion": "2.5.1",
-            "productionDate": "2024-03-15T00:00:00.000Z",
+            "productionDate": "2024-03-15",
             "serialNumberPart1": "WIKA0",
             "serialNumberPart2": "01ABC!"
           }

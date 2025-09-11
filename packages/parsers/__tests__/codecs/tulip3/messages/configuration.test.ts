@@ -1074,7 +1074,7 @@ describe('validation and transformation after decode (tests for code below TODO)
       // Check that the error message mentions sensors not expected
       expect(() => {
         decodeConfigurationRegisterRead(FullConfigurationHexString, limitedConfig)
-      }).toThrow(/are not expected for this device/)
+      }).toThrow('Sensors [sensor2, sensor3, sensor4] are not supported by this device')
     })
 
     it('should correctly filter out communicationModule from sensor validation', () => {
@@ -1116,26 +1116,12 @@ describe('validation and transformation after decode (tests for code below TODO)
           channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel1' },
           // Only channel1, no channel2
         },
+        sensor2: {},
+        sensor3: {},
+        sensor4: {},
       } as const satisfies TULIP3DeviceSensorConfig
 
-      // If the full configuration has sampling channels for channel2, it should fail
-      try {
-        decodeConfigurationRegisterRead(FullConfigurationHexString, limitedConfig)
-        // If it doesn't throw, that's also valid - depends on the data content
-      }
-      catch (error) {
-        if (error instanceof TypeError && error.message.includes('sampling enabled')) {
-          // This is the expected error for sampling channels validation
-          expect(error.message).toMatch(/are not expected to have sampling enabled/)
-        }
-        else if (error instanceof TypeError && error.message.includes('not expected for this device')) {
-          // This is the sensor validation error, which comes first
-          expect(error.message).toMatch(/are not expected for this device/)
-        }
-        else {
-          throw error // Re-throw unexpected errors
-        }
-      }
+      expect(() => decodeConfigurationRegisterRead(FullConfigurationHexString, limitedConfig)).toThrow('Sampling channels [channel2, channel3, channel4, channel5, channel6, channel7, channel8] for sensor \'sensor1\' are not expected for this device')
     })
   })
 
@@ -1262,7 +1248,7 @@ describe('validation and transformation after decode (tests for code below TODO)
       catch (error) {
         if (error instanceof TypeError) {
           // Should be sensor validation error, not sampling validation error
-          expect(error.message).toMatch(/are not expected for this device/)
+          expect(error.message).toMatch('Sensors [sensor2, sensor3, sensor4] are not supported by this device')
           expect(error.message).not.toMatch(/sampling enabled/)
         }
       }
@@ -1337,7 +1323,7 @@ describe('validation and transformation after decode (tests for code below TODO)
         }).toThrow(TypeError)
         expect(() => {
           validateAndTransformConfigurationResult(result as any, deviceConfig)
-        }).toThrow('Sensors [unknownSensor] are not expected for this device')
+        }).toThrow('Sensor [unknownSensor] is not supported by this device')
       })
 
       it('should throw TypeError when multiple sensors are not in device configuration', () => {
@@ -1355,7 +1341,7 @@ describe('validation and transformation after decode (tests for code below TODO)
         }).toThrow(TypeError)
         expect(() => {
           validateAndTransformConfigurationResult(result as any, deviceConfig)
-        }).toThrow('Sensors [unknownSensor1, unknownSensor2] are not expected for this device')
+        }).toThrow('Sensors [unknownSensor1, unknownSensor2] are not supported by this device')
       })
 
       it('should ignore communicationModule when validating sensors', () => {
@@ -1644,7 +1630,9 @@ describe('validation and transformation after decode (tests for code below TODO)
           },
         }
         const deviceConfig = {
-          sensor1: {},
+          sensor1: {
+            channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel1' },
+          },
         }
 
         expect(() => {

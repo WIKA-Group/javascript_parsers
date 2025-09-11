@@ -461,7 +461,7 @@ describe('identification messages', () => {
           },
           firmwareVersion: '3.1.4',
           hardwareVersion: '2.5.1',
-          productionDate: new Date('2024-03-15T00:00:00.000Z').toISOString(),
+          productionDate: '2024-03-15',
           serialNumberPart1: 'WIKA0',
           serialNumberPart2: '01ABC!',
         },
@@ -480,7 +480,7 @@ describe('identification messages', () => {
             },
             firmwareVersion: '2.1.0',
             hardwareVersion: '1.3.2',
-            productionDate: new Date('2023-11-20T00:00:00.000Z').toISOString(),
+            productionDate: '2023-11-20',
             serialNumberPart1: 'TEMP0',
             serialNumberPart2: '1XYZ!!',
           },
@@ -495,7 +495,7 @@ describe('identification messages', () => {
             accuracy: 0.2,
             offset: 0.5,
             gain: 0.998,
-            calibrationDate: new Date('2023-10-05T00:00:00.000Z').toISOString(),
+            calibrationDate: '2023-10-05',
           },
           channel2: {
             measurand: 'Pressure (gauge)',
@@ -508,7 +508,7 @@ describe('identification messages', () => {
             accuracy: 0.3,
             offset: 0.01,
             gain: 1.002,
-            calibrationDate: new Date('2024-02-28T00:00:00.000Z').toISOString(),
+            calibrationDate: '2024-02-28',
           },
           channel3: {
             measurand: 'Flow (vol.)',
@@ -521,7 +521,7 @@ describe('identification messages', () => {
             accuracy: 0.5,
             offset: 0.02,
             gain: 0.997,
-            calibrationDate: new Date('2024-06-17T00:00:00.000Z').toISOString(),
+            calibrationDate: '2024-06-17',
           },
           channel4: {
             measurand: 'Level',
@@ -534,7 +534,7 @@ describe('identification messages', () => {
             accuracy: 0.15,
             offset: 0.005,
             gain: 1.001,
-            calibrationDate: new Date('2025-03-05T00:00:00.000Z').toISOString(),
+            calibrationDate: '2025-03-05',
           },
           channel5: {
             measurand: 'Voltage',
@@ -547,7 +547,7 @@ describe('identification messages', () => {
             accuracy: 0.125,
             offset: 0.01,
             gain: 0.991,
-            calibrationDate: new Date('2024-09-18T00:00:00.000Z').toISOString(),
+            calibrationDate: '2024-09-18',
           },
           channel6: {
             channelName: 'sensor1Channel6',
@@ -560,7 +560,7 @@ describe('identification messages', () => {
             accuracy: 2,
             offset: 0.5,
             gain: 1.003,
-            calibrationDate: new Date('2025-05-22T00:00:00.000Z').toISOString(),
+            calibrationDate: '2025-05-22',
           },
           channel7: {
             channelName: 'sensor1Channel7',
@@ -573,7 +573,7 @@ describe('identification messages', () => {
             accuracy: 0.35,
             offset: 0.8,
             gain: 0.9985,
-            calibrationDate: new Date('2024-10-03T00:00:00.000Z').toISOString(),
+            calibrationDate: '2024-10-03',
           },
           channel8: {
             channelName: 'sensor1Channel8',
@@ -586,7 +586,7 @@ describe('identification messages', () => {
             accuracy: 0.6,
             offset: 2,
             gain: 1.008,
-            calibrationDate: new Date('2025-04-12T00:00:00.000Z').toISOString(),
+            calibrationDate: '2025-04-12',
           },
         },
         sensor2: {
@@ -604,7 +604,7 @@ describe('identification messages', () => {
             },
             firmwareVersion: '1.8.3',
             hardwareVersion: '2.0.1',
-            productionDate: new Date('2024-07-08T00:00:00.000Z').toISOString(),
+            productionDate: '2024-07-08',
             serialNumberPart1: 'FREQ0',
             serialNumberPart2: '2DEF!!',
           },
@@ -619,7 +619,7 @@ describe('identification messages', () => {
             accuracy: 0.05,
             offset: 0.01,
             gain: 1,
-            calibrationDate: new Date('2023-12-03T00:00:00.000Z').toISOString(),
+            calibrationDate: '2023-12-03',
           },
           channel2: {
             measurand: 'Current',
@@ -632,7 +632,7 @@ describe('identification messages', () => {
             accuracy: 0.1,
             offset: 2.5,
             gain: 1,
-            calibrationDate: new Date('2025-08-04T00:00:00.000Z').toISOString(),
+            calibrationDate: '2025-08-04',
           },
           channel3: {
             measurand: 'Current',
@@ -645,7 +645,7 @@ describe('identification messages', () => {
             accuracy: 0.1,
             offset: 2.5,
             gain: 1,
-            calibrationDate: new Date('2025-08-04T00:00:00.000Z').toISOString(),
+            calibrationDate: '2025-08-04',
           },
           channel4: {
             measurand: 'Current',
@@ -658,7 +658,7 @@ describe('identification messages', () => {
             accuracy: 0.1,
             offset: 2.5,
             gain: 1,
-            calibrationDate: new Date('2025-08-04T00:00:00.000Z').toISOString(),
+            calibrationDate: '2025-08-04',
           },
           channel5: {
             measurand: 'Current',
@@ -671,7 +671,7 @@ describe('identification messages', () => {
             accuracy: 0.1,
             offset: 2.5,
             gain: 1,
-            calibrationDate: new Date('2025-08-04T00:00:00.000Z').toISOString(),
+            calibrationDate: '2025-08-04',
           },
           channel6: {
             measurand: 'Current',
@@ -684,7 +684,7 @@ describe('identification messages', () => {
             accuracy: 0.1,
             offset: 2.5,
             gain: 1,
-            calibrationDate: new Date('2025-08-04T00:00:00.000Z').toISOString(),
+            calibrationDate: '2025-08-04',
           },
           channel7: {
             measurand: 'Current',
@@ -697,7 +697,7 @@ describe('identification messages', () => {
             accuracy: 0.1,
             offset: 2.5,
             gain: 1,
-            calibrationDate: new Date('2025-08-04T00:00:00.000Z').toISOString(),
+            calibrationDate: '2025-08-04',
           },
           channel8: {
             measurand: 'Current',
@@ -710,7 +710,7 @@ describe('identification messages', () => {
             accuracy: 0.1,
             offset: 2.5,
             gain: 1,
-            calibrationDate: new Date('2025-08-04T00:00:00.000Z').toISOString(),
+            calibrationDate: '2025-08-04',
           },
         },
         sensor3: {
@@ -728,7 +728,7 @@ describe('identification messages', () => {
             },
             firmwareVersion: '2.5.7',
             hardwareVersion: '1.4.0',
-            productionDate: new Date('2024-01-12T00:00:00.000Z').toISOString(),
+            productionDate: '2024-01-12',
             serialNumberPart1: 'SPEED',
             serialNumberPart2: '3GHI!!',
           },
@@ -743,7 +743,7 @@ describe('identification messages', () => {
             accuracy: 0.4,
             offset: 0.02,
             gain: 0.9975,
-            calibrationDate: new Date('2024-05-09T00:00:00.000Z').toISOString(),
+            calibrationDate: '2024-05-09',
           },
           channel2: {
             measurand: 'Current',
@@ -756,7 +756,7 @@ describe('identification messages', () => {
             accuracy: 0.1,
             offset: 2.5,
             gain: 1,
-            calibrationDate: new Date('2025-08-04T00:00:00.000Z').toISOString(),
+            calibrationDate: '2025-08-04',
           },
           channel3: {
             measurand: 'Current',
@@ -769,7 +769,7 @@ describe('identification messages', () => {
             accuracy: 0.1,
             offset: 2.5,
             gain: 1,
-            calibrationDate: new Date('2025-08-04T00:00:00.000Z').toISOString(),
+            calibrationDate: '2025-08-04',
           },
           channel4: {
             measurand: 'Current',
@@ -782,7 +782,7 @@ describe('identification messages', () => {
             accuracy: 0.1,
             offset: 2.5,
             gain: 1,
-            calibrationDate: new Date('2025-08-04T00:00:00.000Z').toISOString(),
+            calibrationDate: '2025-08-04',
           },
           channel5: {
             measurand: 'Current',
@@ -795,7 +795,7 @@ describe('identification messages', () => {
             accuracy: 0.1,
             offset: 2.5,
             gain: 1,
-            calibrationDate: new Date('2025-08-04T00:00:00.000Z').toISOString(),
+            calibrationDate: '2025-08-04',
           },
           channel6: {
             measurand: 'Current',
@@ -808,7 +808,7 @@ describe('identification messages', () => {
             accuracy: 0.1,
             offset: 2.5,
             gain: 1,
-            calibrationDate: new Date('2025-08-04T00:00:00.000Z').toISOString(),
+            calibrationDate: '2025-08-04',
           },
           channel7: {
             measurand: 'Current',
@@ -821,7 +821,7 @@ describe('identification messages', () => {
             accuracy: 0.1,
             offset: 2.5,
             gain: 1,
-            calibrationDate: new Date('2025-08-04T00:00:00.000Z').toISOString(),
+            calibrationDate: '2025-08-04',
           },
           channel8: {
             measurand: 'Current',
@@ -834,7 +834,7 @@ describe('identification messages', () => {
             accuracy: 0.1,
             offset: 2.5,
             gain: 1,
-            calibrationDate: new Date('2025-08-04T00:00:00.000Z').toISOString(),
+            calibrationDate: '2025-08-04',
           },
         },
         sensor4: {
@@ -852,7 +852,7 @@ describe('identification messages', () => {
             },
             firmwareVersion: '3.0.2',
             hardwareVersion: '2.1.5',
-            productionDate: new Date('2023-09-25T00:00:00.000Z').toISOString(),
+            productionDate: '2023-09-25',
             serialNumberPart1: 'ANGLE',
             serialNumberPart2: '4JKL!!',
           },
@@ -867,7 +867,7 @@ describe('identification messages', () => {
             accuracy: 1,
             offset: 0.1,
             gain: 1.005,
-            calibrationDate: new Date('2023-08-11T00:00:00.000Z').toISOString(),
+            calibrationDate: '2023-08-11',
           },
           channel2: {
             measurand: 'Current',
@@ -880,7 +880,7 @@ describe('identification messages', () => {
             accuracy: 0.1,
             offset: 2.5,
             gain: 1,
-            calibrationDate: new Date('2025-08-04T00:00:00.000Z').toISOString(),
+            calibrationDate: '2025-08-04',
           },
           channel3: {
             measurand: 'Current',
@@ -893,7 +893,7 @@ describe('identification messages', () => {
             accuracy: 0.1,
             offset: 2.5,
             gain: 1,
-            calibrationDate: new Date('2025-08-04T00:00:00.000Z').toISOString(),
+            calibrationDate: '2025-08-04',
           },
           channel4: {
             measurand: 'Current',
@@ -906,7 +906,7 @@ describe('identification messages', () => {
             accuracy: 0.1,
             offset: 2.5,
             gain: 1,
-            calibrationDate: new Date('2025-08-04T00:00:00.000Z').toISOString(),
+            calibrationDate: '2025-08-04',
           },
           channel5: {
             measurand: 'Current',
@@ -919,7 +919,7 @@ describe('identification messages', () => {
             accuracy: 0.1,
             offset: 2.5,
             gain: 1,
-            calibrationDate: new Date('2025-08-04T00:00:00.000Z').toISOString(),
+            calibrationDate: '2025-08-04',
           },
           channel6: {
             measurand: 'Current',
@@ -932,7 +932,7 @@ describe('identification messages', () => {
             accuracy: 0.1,
             offset: 2.5,
             gain: 1,
-            calibrationDate: new Date('2025-08-04T00:00:00.000Z').toISOString(),
+            calibrationDate: '2025-08-04',
           },
           channel7: {
             measurand: 'Current',
@@ -945,7 +945,7 @@ describe('identification messages', () => {
             accuracy: 0.1,
             offset: 2.5,
             gain: 1,
-            calibrationDate: new Date('2025-08-04T00:00:00.000Z').toISOString(),
+            calibrationDate: '2025-08-04',
           },
           channel8: {
             measurand: 'Current',
@@ -958,7 +958,7 @@ describe('identification messages', () => {
             accuracy: 0.1,
             offset: 2.5,
             gain: 1,
-            calibrationDate: new Date('2025-08-04T00:00:00.000Z').toISOString(),
+            calibrationDate: '2025-08-04',
           },
         },
       })
@@ -1818,7 +1818,7 @@ describe('validateAndTransformIdentificationResult function', () => {
 
       expect(() => {
         validateAndTransformIdentificationResult(result, configWithS1C1C2)
-      }).toThrow(/Sensor sensor3 is not supported by this device/)
+      }).toThrow('Sensor [sensor3] is not supported by this device')
     })
 
     it('should throw with multiple invalid sensors', () => {
@@ -1835,7 +1835,7 @@ describe('validateAndTransformIdentificationResult function', () => {
 
       expect(() => {
         validateAndTransformIdentificationResult(result, configWithS1C1C2)
-      }).toThrow(/Sensors sensor3, sensor4 are not supported by this device/)
+      }).toThrow('Sensors [sensor3, sensor4] are not supported by this device')
     })
 
     it('should filter communicationModule correctly', () => {
@@ -2262,7 +2262,7 @@ describe('validateAndTransformIdentificationResult function', () => {
       // Should fail on result sensors validation
       expect(() => {
         validateAndTransformIdentificationResult(result, configWithS1C1C2)
-      }).toThrow(/Sensor sensor3 is not supported by this device/)
+      }).toThrow('Sensor [sensor3] is not supported by this device')
     })
 
     it('should validate in correct order - channels after sensors', () => {

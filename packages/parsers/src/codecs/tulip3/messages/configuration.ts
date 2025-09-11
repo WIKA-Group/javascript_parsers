@@ -1,8 +1,9 @@
 import type { ConfigurationReadRegisterData, ConfigurationReadRegistersResponseUplinkOutput, ConfigurationWriteRegistersResponseUplinkOutput } from '../../../schemas/tulip3/configuration'
-import type { FullTULIP3DeviceSensorConfig, TULIP3ChannelConfig, TULIP3DeviceSensorConfig } from '../profile'
+import type { FullTULIP3DeviceSensorConfig, TULIP3DeviceSensorConfig } from '../profile'
 import type { ParseRegisterBlocksOptions } from '../registers'
 import { decodeRegisterRead, parseFrameData, validateMessageHeader } from '.'
 import { createConfigurationRegisterLookup } from '../registers/configuration'
+import { assignChannelNames, validateResultSensors, validateSensorChannels } from './shared-validation'
 
 /**
  * Validates and transforms configuration result against device sensor configuration.
@@ -21,17 +22,12 @@ export function validateAndTransformConfigurationResult<TTULIP3DeviceSensorConfi
   result: ConfigurationReadRegisterData<TTULIP3DeviceSensorConfig>,
   deviceConfig: TTULIP3DeviceSensorConfig,
 ): void {
-  // Step 1: Validate sensors against device configuration
+  // Step 1: Validate result sensors are expected for device (shared logic)
   const validSensors = Object.keys(deviceConfig)
   const resultSensors = Object.keys(result).filter(key => key !== 'communicationModule')
+  validateResultSensors(resultSensors, validSensors)
 
-  // Check if all result sensors are expected by the device profile
-  if (!resultSensors.every(sensor => validSensors.includes(sensor))) {
-    const unexpectedSensors = resultSensors.filter(sensor => !validSensors.includes(sensor))
-    throw new TypeError(`Sensors [${unexpectedSensors.join(', ')}] are not expected for this device`)
-  }
-
-  // Step 2: Validate sampling channels configuration
+  // Step 2: Validate sampling channels configuration (configuration-specific)
   resultSensors.forEach((sensor) => {
     const configChannelsForSensor = Object.keys(deviceConfig[sensor as keyof typeof deviceConfig] || {})
     const sensorSampling = result[sensor as keyof typeof result]?.configuration?.samplingChannels as {
@@ -53,22 +49,11 @@ export function validateAndTransformConfigurationResult<TTULIP3DeviceSensorConfi
     }
   })
 
-  // Step 3: Assign channel names from device configuration
-  validSensors.forEach((s) => {
-    const validChannelKeys = Object.keys(deviceConfig[s as keyof typeof deviceConfig] || {}).filter(key => key !== 'identification')
-    validChannelKeys.forEach((c) => {
-      const sensorConfig = deviceConfig[s as keyof typeof deviceConfig]
-      const channelConfig = sensorConfig[c as keyof typeof sensorConfig] as any as TULIP3ChannelConfig
-      const cName = channelConfig.channelName as string
-      // Now set the channelName inside the result
+  // Step 3: Validate channel configurations for each sensor (shared logic)
+  validateSensorChannels(resultSensors, result, deviceConfig, 'configuration')
 
-      // @ts-expect-error - valid access
-      if (result?.[s]?.[c]) {
-        // @ts-expect-error - valid access
-        result[s][c].channelName = cName
-      }
-    })
-  })
+  // Step 4: Assign channel names from device configuration (shared logic)
+  assignChannelNames(validSensors, result, deviceConfig, 'identification')
 }
 
 /**
