@@ -219,6 +219,7 @@ For more information about parser using see the [Legacy JavaScript Parser Usage]
 4.1.0
  - NETRIS1: migrate to typescript and TULIP2 codec
  - NETRIS1: add support for TULIP3
+ - Fix: default and PEW alarm flags in TULIP3 codec
 
 4.0.0
  - Major refactor: modular codec architecture and unified device parser interface enabling multiple codecs (TULIP2/TULIP3).

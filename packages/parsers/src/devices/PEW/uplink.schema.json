@@ -2784,18 +2784,6 @@
                             "alarmFlags": {
                               "type": "object",
                               "properties": {
-                                "shortCondition": {
-                                  "type": "boolean"
-                                },
-                                "openCondition": {
-                                  "type": "boolean"
-                                },
-                                "outOfMinMeasurementRange": {
-                                  "type": "boolean"
-                                },
-                                "outOfMaxMeasurementRange": {
-                                  "type": "boolean"
-                                },
                                 "outOfMinPhysicalSensorLimit": {
                                   "type": "boolean"
                                 },
@@ -2804,10 +2792,6 @@
                                 }
                               },
                               "required": [
-                                "shortCondition",
-                                "openCondition",
-                                "outOfMinMeasurementRange",
-                                "outOfMaxMeasurementRange",
                                 "outOfMinPhysicalSensorLimit",
                                 "outOfMaxPhysicalSensorLimit"
                               ]
@@ -2843,18 +2827,6 @@
                             "alarmFlags": {
                               "type": "object",
                               "properties": {
-                                "shortCondition": {
-                                  "type": "boolean"
-                                },
-                                "openCondition": {
-                                  "type": "boolean"
-                                },
-                                "outOfMinMeasurementRange": {
-                                  "type": "boolean"
-                                },
-                                "outOfMaxMeasurementRange": {
-                                  "type": "boolean"
-                                },
                                 "outOfMinPhysicalSensorLimit": {
                                   "type": "boolean"
                                 },
@@ -2863,10 +2835,6 @@
                                 }
                               },
                               "required": [
-                                "shortCondition",
-                                "openCondition",
-                                "outOfMinMeasurementRange",
-                                "outOfMaxMeasurementRange",
                                 "outOfMinPhysicalSensorLimit",
                                 "outOfMaxPhysicalSensorLimit"
                               ]
@@ -2908,18 +2876,6 @@
                           "alarmFlags": {
                             "type": "object",
                             "properties": {
-                              "shortCondition": {
-                                "type": "boolean"
-                              },
-                              "openCondition": {
-                                "type": "boolean"
-                              },
-                              "outOfMinMeasurementRange": {
-                                "type": "boolean"
-                              },
-                              "outOfMaxMeasurementRange": {
-                                "type": "boolean"
-                              },
                               "outOfMinPhysicalSensorLimit": {
                                 "type": "boolean"
                               },
@@ -2928,10 +2884,6 @@
                               }
                             },
                             "required": [
-                              "shortCondition",
-                              "openCondition",
-                              "outOfMinMeasurementRange",
-                              "outOfMaxMeasurementRange",
                               "outOfMinPhysicalSensorLimit",
                               "outOfMaxPhysicalSensorLimit"
                             ]
@@ -2967,18 +2919,6 @@
                           "alarmFlags": {
                             "type": "object",
                             "properties": {
-                              "shortCondition": {
-                                "type": "boolean"
-                              },
-                              "openCondition": {
-                                "type": "boolean"
-                              },
-                              "outOfMinMeasurementRange": {
-                                "type": "boolean"
-                              },
-                              "outOfMaxMeasurementRange": {
-                                "type": "boolean"
-                              },
                               "outOfMinPhysicalSensorLimit": {
                                 "type": "boolean"
                               },
@@ -2987,10 +2927,6 @@
                               }
                             },
                             "required": [
-                              "shortCondition",
-                              "openCondition",
-                              "outOfMinMeasurementRange",
-                              "outOfMaxMeasurementRange",
                               "outOfMinPhysicalSensorLimit",
                               "outOfMaxPhysicalSensorLimit"
                             ]
@@ -3048,15 +2984,6 @@
                     "alarmFlags": {
                       "type": "object",
                       "properties": {
-                        "localUserAccessDenied": {
-                          "type": "boolean"
-                        },
-                        "cmChipLowTemperature": {
-                          "type": "boolean"
-                        },
-                        "cmChipHighTemperature": {
-                          "type": "boolean"
-                        },
                         "airTimeLimitation": {
                           "type": "boolean"
                         },
@@ -3065,19 +2992,12 @@
                         },
                         "lowVoltage": {
                           "type": "boolean"
-                        },
-                        "highVoltage": {
-                          "type": "boolean"
                         }
                       },
                       "required": [
-                        "localUserAccessDenied",
-                        "cmChipLowTemperature",
-                        "cmChipHighTemperature",
                         "airTimeLimitation",
                         "memoryError",
-                        "lowVoltage",
-                        "highVoltage"
+                        "lowVoltage"
                       ]
                     }
                   },
@@ -3136,16 +3056,24 @@
                             "alarmFlags": {
                               "type": "object",
                               "properties": {
-                                "sensorCommunicationError": {
+                                "sensorBusy": {
                                   "type": "boolean"
                                 },
-                                "sensorNotSupported": {
+                                "sensorMemoryIntegrity": {
+                                  "type": "boolean"
+                                },
+                                "sensorALUSaturation": {
+                                  "type": "boolean"
+                                },
+                                "sensorCommunicationError": {
                                   "type": "boolean"
                                 }
                               },
                               "required": [
-                                "sensorCommunicationError",
-                                "sensorNotSupported"
+                                "sensorBusy",
+                                "sensorMemoryIntegrity",
+                                "sensorALUSaturation",
+                                "sensorCommunicationError"
                               ]
                             }
                           },
@@ -3173,16 +3101,24 @@
                           "alarmFlags": {
                             "type": "object",
                             "properties": {
-                              "sensorCommunicationError": {
+                              "sensorBusy": {
                                 "type": "boolean"
                               },
-                              "sensorNotSupported": {
+                              "sensorMemoryIntegrity": {
+                                "type": "boolean"
+                              },
+                              "sensorALUSaturation": {
+                                "type": "boolean"
+                              },
+                              "sensorCommunicationError": {
                                 "type": "boolean"
                               }
                             },
                             "required": [
-                              "sensorCommunicationError",
-                              "sensorNotSupported"
+                              "sensorBusy",
+                              "sensorMemoryIntegrity",
+                              "sensorALUSaturation",
+                              "sensorCommunicationError"
                             ]
                           }
                         },

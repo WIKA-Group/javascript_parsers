@@ -663,11 +663,7 @@
         "communicationModuleAlarms": {
           "alarmFlags": {
             "airTimeLimitation": true,
-            "cmChipHighTemperature": false,
-            "cmChipLowTemperature": false,
-            "highVoltage": true,
-            "localUserAccessDenied": false,
-            "lowVoltage": false,
+            "lowVoltage": true,
             "memoryError": false
           }
         }
@@ -695,8 +691,10 @@
         "sensorAlarms": [
           {
             "alarmFlags": {
+              "sensorALUSaturation": false,
+              "sensorBusy": false,
               "sensorCommunicationError": true,
-              "sensorNotSupported": false
+              "sensorMemoryIntegrity": false
             },
             "sensor": "sensor1",
             "sensorId": 0
@@ -729,12 +727,8 @@
         "channelAlarms": [
           {
             "alarmFlags": {
-              "openCondition": false,
-              "outOfMaxMeasurementRange": false,
               "outOfMaxPhysicalSensorLimit": false,
-              "outOfMinMeasurementRange": false,
-              "outOfMinPhysicalSensorLimit": true,
-              "shortCondition": false
+              "outOfMinPhysicalSensorLimit": true
             },
             "channel": "channel1",
             "channelId": 0,
@@ -744,12 +738,8 @@
           },
           {
             "alarmFlags": {
-              "openCondition": false,
-              "outOfMaxMeasurementRange": false,
               "outOfMaxPhysicalSensorLimit": true,
-              "outOfMinMeasurementRange": false,
-              "outOfMinPhysicalSensorLimit": false,
-              "shortCondition": false
+              "outOfMinPhysicalSensorLimit": false
             },
             "channel": "channel2",
             "channelId": 1,

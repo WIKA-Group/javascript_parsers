@@ -8,8 +8,8 @@ export const defaultCommunicationModuleAlarmFlags = defineDeviceAlarmFlags({
   cmChipHighTemperature: 0b0000_0000_0000_0100,
   airTimeLimitation: 0b0000_0000_0000_1000,
   memoryError: 0b0000_0000_0001_0000,
-  lowVoltage: 0b0000_0000_0001_0000,
-  highVoltage: 0b000_0000_0010_0000,
+  lowVoltage: 0b0000_0000_0010_0000,
+  highVoltage: 0b0000_0000_0100_0000,
 })
 
 export const defaultSensorAlarmFlags = defineDeviceAlarmFlags({
@@ -46,6 +46,46 @@ export function defineDeviceAlarmFlags<const TDeviceAlarmFlags extends DeviceAla
   return { ...merge ?? {}, ...flagsConfig }
 }
 
+type OmitDeviceAlarmFlags<TDeviceAlarmFlags extends DeviceAlarmFlags, TOmitKeys extends keyof TDeviceAlarmFlags> = {
+  [Key in keyof TDeviceAlarmFlags as Key extends TOmitKeys ? never : Key]: TDeviceAlarmFlags[Key]
+}
+
+export function omitDeviceAlarmFlags<const TDeviceAlarmFlags extends DeviceAlarmFlags, const TOmitKeys extends keyof TDeviceAlarmFlags>(
+  flagsConfig: TDeviceAlarmFlags,
+  omitKeys: TOmitKeys[],
+): OmitDeviceAlarmFlags<TDeviceAlarmFlags, TOmitKeys> {
+  const result = {} as OmitDeviceAlarmFlags<TDeviceAlarmFlags, TOmitKeys>
+
+  for (const [flagName, bitField] of Object.entries(flagsConfig)) {
+    // add the fields where the key is not in the omit list
+    if (!omitKeys.includes(flagName as TOmitKeys)) {
+      result[flagName as keyof OmitDeviceAlarmFlags<TDeviceAlarmFlags, TOmitKeys>] = bitField as any
+    }
+  }
+
+  return result
+}
+
+type PickDeviceAlarmFlags<TDeviceAlarmFlags extends DeviceAlarmFlags, TPickKeys extends keyof TDeviceAlarmFlags> = {
+  [Key in keyof TDeviceAlarmFlags as Key extends TPickKeys ? Key : never]: TDeviceAlarmFlags[Key]
+}
+
+export function pickDeviceAlarmFlags<const TDeviceAlarmFlags extends DeviceAlarmFlags, const TPickKeys extends keyof TDeviceAlarmFlags>(
+  flagsConfig: TDeviceAlarmFlags,
+  pickKeys: TPickKeys[],
+): PickDeviceAlarmFlags<TDeviceAlarmFlags, TPickKeys> {
+  const result = {} as PickDeviceAlarmFlags<TDeviceAlarmFlags, TPickKeys>
+
+  for (const [flagName, bitField] of Object.entries(flagsConfig)) {
+    // add the fields where the key is in the pick list
+    if (pickKeys.includes(flagName as TPickKeys)) {
+      result[flagName as keyof PickDeviceAlarmFlags<TDeviceAlarmFlags, TPickKeys>] = bitField as any
+    }
+  }
+
+  return result
+}
+
 /**
  * Creates alarm flags object from a bitfield value using the provided flags configuration.
  */
@@ -60,24 +100,26 @@ function createAlarmFlagsFromBitfield<TDeviceAlarmFlags extends DeviceAlarmFlags
   }
 
   return result
-}/**
-  * Decodes communication module alarm uplink message (message type 0x13, subtype 0x01).
-  *
-  * Behavior:
-  * - Sent when an alarm appears or turns off
-  * - Sent on cloud request
-  * - Alarms always enabled
-  * - Requires network server acknowledgement
-  *
-  * Payload:
-  * - data[0]: 0x13 (message type)
-  * - data[1]: 0x01 (sub message type)
-  * - data[2-3]: 16-bit alarm flags bitfield (bits 6-0 used)
-  *
-  * @param data raw byte array from uplink payload
-  * @param communicationModuleAlarmFlags configuration mapping alarm flag names to bit positions
-  * @returns Decoded DeviceAlarmMessageUplinkOutput
-  */
+}
+
+/**
+ * Decodes communication module alarm uplink message (message type 0x13, subtype 0x01).
+ *
+ * Behavior:
+ * - Sent when an alarm appears or turns off
+ * - Sent on cloud request
+ * - Alarms always enabled
+ * - Requires network server acknowledgement
+ *
+ * Payload:
+ * - data[0]: 0x13 (message type)
+ * - data[1]: 0x01 (sub message type)
+ * - data[2-3]: 16-bit alarm flags bitfield (bits 6-0 used)
+ *
+ * @param data raw byte array from uplink payload
+ * @param communicationModuleAlarmFlags configuration mapping alarm flag names to bit positions
+ * @returns Decoded DeviceAlarmMessageUplinkOutput
+ */
 export function decodeCommunicationModuleAlarmMessage<TDeviceAlarmFlags extends DeviceAlarmFlags>(
   data: number[],
   communicationModuleAlarmFlags: TDeviceAlarmFlags,
