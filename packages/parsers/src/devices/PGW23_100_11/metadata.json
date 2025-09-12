@@ -1,6 +1,6 @@
 {
   "name": "wika-pgw23.100.11-driver",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "main": "index.js",
   "description": "WIKA PGW23.100.11 LoRaWAN decoder",
   "codecId": "0001",
