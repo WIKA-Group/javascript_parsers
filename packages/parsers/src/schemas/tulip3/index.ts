@@ -10,7 +10,6 @@ import type { KeepAliveMessageUplinkOutput } from './keepAlive'
 import type { ProcessAlarmMessageUplinkOutput } from './processAlarm'
 import type { SpontaneousDownlinkAnswerUplinkOutput, SpontaneousFetchAdditionalDownlinkMessageUplinkOutput } from './spontaneous'
 import * as v from 'valibot'
-import { configurationStatusLookup } from '../../codecs/tulip3/lookups'
 import { createConfigurationReadRegistersResponseUplinkOutputSchema, createConfigurationWriteRegistersResponseUplinkOutputSchema } from './configuration'
 import { createDataMessageUplinkOutputSchema } from './data'
 import { createChannelAlarmUplinkOutputSchema, createCommunicationModuleAlarmUplinkOutputSchema, createSensorAlarmUplinkOutputSchema } from './deviceAlarm'
@@ -18,101 +17,8 @@ import { createIdentificationReadRegistersResponseUplinkOutputSchema, createIden
 import { createKeepAliveUplinkOutputSchema } from './keepAlive'
 import { createProcessAlarmUplinkOutputSchema } from './processAlarm'
 import { createSpontaneousDownlinkAnswerUplinkOutputSchema, createSpontaneousFetchAdditionalDownlinkMessageSchema } from './spontaneous'
-
-// =============================================================================
-// SHARED SCHEMAS
-// =============================================================================
-
-/**
- * Creates a validation schema for configuration status codes.
- * This is shared between identification and configuration schemas.
- *
- * @returns A Valibot picklist schema that validates against supported configuration status codes
- * @example
- * ```typescript
- * const schema = createConfigurationStatusSchema()
- * const result = v.parse(schema, "Configuration received and applied with success")
- * ```
- */
-export function createConfigurationStatusSchema() {
-  return v.picklist(Object.values(configurationStatusLookup) as (typeof configurationStatusLookup[keyof typeof configurationStatusLookup])[])
-}
-
-/**
- * Creates a validation schema for frame data used in write response messages.
- * Each frame contains a frame number and status code.
- *
- * @returns A Valibot object schema for frame data
- * @example
- * ```typescript
- * const schema = createFrameSchema()
- * const result = v.parse(schema, {
- *   frameNumber: 1,
- *   status: "Configuration received and applied with success"
- * })
- * ```
- */
-export function createFrameSchema() {
-  return v.object({
-    frameNumber: v.number(),
-    status: createConfigurationStatusSchema(),
-  })
-}
-
-/**
- * Creates a validation schema for write response data containing frame information.
- * This schema is shared between identification and configuration write responses.
- *
- * @returns A Valibot object schema for write response data
- * @example
- * ```typescript
- * const schema = createWriteResponseDataSchema()
- * const result = v.parse(schema, {
- *   revisionCounter: 123,
- *   totalWrongFrames: 0,
- *   frames: [
- *     { frameNumber: 1, status: "Configuration received and applied with success" },
- *     { frameNumber: 2, status: "Configuration received and applied with success" }
- *   ]
- * })
- * ```
- */
-export function createWriteResponseDataSchema() {
-  return v.object({
-    revisionCounter: v.optional(v.number()),
-    totalWrongFrames: v.optional(v.number()),
-    frames: v.tupleWithRest([createFrameSchema()], createFrameSchema()),
-  })
-}
-
-/**
- * Creates a generic validation schema for uplink output messages.
- * This is an internal helper function used by other schema creators.
- *
- * @param i - Configuration object containing message types and extension schema
- * @param i.messageType - Array of valid message type values (non-empty)
- * @param i.messageSubType - Array of valid message subtype values (non-empty)
- * @param i.extension - Additional object properties to include in the data schema
- * @returns A Valibot object schema for uplink messages with optional warnings
- * @template TType - Type-safe array of message type numbers
- * @template TSubType - Type-safe array of message subtype numbers
- * @template TObjectExtension - Type-safe object entries for extensions
- * @internal
- */
-export function createGenericUplinkOutputSchema<const TType extends [number, ...number[]], const TSubType extends [number, ...number[]], const TObjectExtension extends v.ObjectEntries>(i: {
-  messageType: TType
-  messageSubType: TSubType
-  extension: TObjectExtension
-}) {
-  return v.object({
-    data: v.object({
-      messageType: v.picklist(i.messageType),
-      messageSubType: v.picklist(i.messageSubType),
-      ...i.extension,
-    }),
-    warnings: v.optional(v.array(v.string())),
-  })
-}
+// Re-export shared functions to maintain API compatibility
+export { createConfigurationStatusSchema, createFrameSchema, createGenericUplinkOutputSchema, createWriteResponseDataSchema } from './_shared'
 
 type ExtractMeasurementTypes<T> = T extends { measurementTypes: infer U }
   ? U extends readonly (string | number | bigint)[]

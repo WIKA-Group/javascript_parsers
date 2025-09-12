@@ -2,7 +2,7 @@
 import * as v from 'valibot'
 import { spontaneousStatusLookup } from '../../codecs/tulip3/lookups'
 import { allowedTypeSubTypeCombinations } from '../../codecs/tulip3/messages/spontaneous'
-import { createGenericUplinkOutputSchema } from './index'
+import { createGenericUplinkOutputSchema } from './_shared'
 
 type AllowedTypeCombinationsSchema = v.UnionSchema<{
   [K in keyof typeof allowedTypeSubTypeCombinations]: v.ObjectSchema<{

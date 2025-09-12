@@ -2,7 +2,7 @@
 import type { TULIP3ChannelConfig, TULIP3DeviceSensorConfig, TULIP3SensorChannelConfig } from '../../codecs/tulip3/profile'
 import * as v from 'valibot'
 import { protocolDataTypeLookup } from '../../codecs/tulip3/lookups'
-import { createGenericUplinkOutputSchema, createWriteResponseDataSchema } from './index'
+import { createGenericUplinkOutputSchema, createWriteResponseDataSchema } from './_shared'
 
 // =============================================================================
 // BASE TYPE SCHEMAS

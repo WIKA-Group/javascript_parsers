@@ -13,6 +13,7 @@ const __dirname = import.meta.dirname
 export const TARGETS: string[] = [
   'PEW',
   'NETRIS2',
+  'NETRIS1',
 ]
 
 // Minimal base config exported as default. This config intentionally has no entries

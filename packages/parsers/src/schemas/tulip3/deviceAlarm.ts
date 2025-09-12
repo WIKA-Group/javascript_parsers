@@ -1,7 +1,8 @@
 /* eslint-disable ts/explicit-function-return-type */
 import type { DeviceAlarmFlags, TULIP3DeviceSensorConfig } from '../../codecs/tulip3/profile'
 import * as v from 'valibot'
-import { createGenericUplinkOutputSchema, createSensorChannelSchemaWithExtension, createSensorMeasurementSchemaWithExtension } from '.'
+import { createSensorChannelSchemaWithExtension, createSensorMeasurementSchemaWithExtension } from '.'
+import { createGenericUplinkOutputSchema } from './_shared'
 
 // =============================================================================
 // BASE TYPE SCHEMAS

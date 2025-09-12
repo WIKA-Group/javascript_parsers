@@ -1,6 +1,6 @@
 /* eslint-disable ts/explicit-function-return-type */
 import * as v from 'valibot'
-import { createGenericUplinkOutputSchema } from './index'
+import { createGenericUplinkOutputSchema } from './_shared'
 
 // =============================================================================
 // BASE TYPE SCHEMAS

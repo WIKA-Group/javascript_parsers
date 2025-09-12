@@ -6,7 +6,7 @@ import {
   productSubIdLookup,
   unitsLookup,
 } from '../../codecs/tulip3/lookups'
-import { createGenericUplinkOutputSchema, createWriteResponseDataSchema } from './index'
+import { createGenericUplinkOutputSchema, createWriteResponseDataSchema } from './_shared'
 
 // =============================================================================
 // BASE TYPE SCHEMAS

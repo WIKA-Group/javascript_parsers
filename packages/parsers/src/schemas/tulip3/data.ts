@@ -1,7 +1,8 @@
 import type { TULIP3DeviceSensorConfig } from '../../codecs/tulip3/profile'
 /* eslint-disable ts/explicit-function-return-type */
 import * as v from 'valibot'
-import { createFullSensorChannelSchemaWithExtension, createGenericUplinkOutputSchema } from './index'
+import { createGenericUplinkOutputSchema } from './_shared'
+import { createFullSensorChannelSchemaWithExtension } from './index'
 
 // =============================================================================
 // BASE TYPE SCHEMAS
