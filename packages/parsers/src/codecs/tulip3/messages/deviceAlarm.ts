@@ -15,6 +15,7 @@ export const defaultCommunicationModuleAlarmFlags = defineDeviceAlarmFlags({
 export const defaultSensorAlarmFlags = defineDeviceAlarmFlags({
   sensorCommunicationError: 0b0000_0000_0000_0001,
   sensorNotSupported: 0b0000_0000_0000_0010,
+  sensorInternalError: 0b0000_0000_0000_0100,
 })
 
 export const defaultChannelAlarmFlags = defineDeviceAlarmFlags({

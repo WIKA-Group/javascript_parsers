@@ -726,15 +726,6 @@
                     "alarmFlags": {
                       "type": "object",
                       "properties": {
-                        "localUserAccessDenied": {
-                          "type": "boolean"
-                        },
-                        "cmChipLowTemperature": {
-                          "type": "boolean"
-                        },
-                        "cmChipHighTemperature": {
-                          "type": "boolean"
-                        },
                         "airTimeLimitation": {
                           "type": "boolean"
                         },
@@ -743,19 +734,12 @@
                         },
                         "lowVoltage": {
                           "type": "boolean"
-                        },
-                        "highVoltage": {
-                          "type": "boolean"
                         }
                       },
                       "required": [
-                        "localUserAccessDenied",
-                        "cmChipLowTemperature",
-                        "cmChipHighTemperature",
                         "airTimeLimitation",
                         "memoryError",
-                        "lowVoltage",
-                        "highVoltage"
+                        "lowVoltage"
                       ]
                     }
                   },
@@ -814,16 +798,20 @@
                             "alarmFlags": {
                               "type": "object",
                               "properties": {
+                                "sensorIdentificationError": {
+                                  "type": "boolean"
+                                },
                                 "sensorCommunicationError": {
                                   "type": "boolean"
                                 },
-                                "sensorNotSupported": {
+                                "sensorInternalError": {
                                   "type": "boolean"
                                 }
                               },
                               "required": [
+                                "sensorIdentificationError",
                                 "sensorCommunicationError",
-                                "sensorNotSupported"
+                                "sensorInternalError"
                               ]
                             }
                           },
@@ -851,16 +839,20 @@
                           "alarmFlags": {
                             "type": "object",
                             "properties": {
+                              "sensorIdentificationError": {
+                                "type": "boolean"
+                              },
                               "sensorCommunicationError": {
                                 "type": "boolean"
                               },
-                              "sensorNotSupported": {
+                              "sensorInternalError": {
                                 "type": "boolean"
                               }
                             },
                             "required": [
+                              "sensorIdentificationError",
                               "sensorCommunicationError",
-                              "sensorNotSupported"
+                              "sensorInternalError"
                             ]
                           }
                         },
