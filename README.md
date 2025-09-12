@@ -64,8 +64,6 @@ const {
   adjustRoundingDecimals
 } = NETRIS2Parser()
 
-adjustRoundingDecimals(2)
-
 const decoding = decodeUplink(input)
 
 console.log(decoding)
@@ -84,6 +82,7 @@ Since 4.0.0 the parsers architecture have undergone a major refactor with some b
 The devices supported by the new parsers currently are:
 
 - PEW
+- NETRIS1
 
 All other devices are still available in the release but have not yet been migrated to the new parser architecture.
 
@@ -96,6 +95,14 @@ With 4.0.0 there is now a new way to adjust the measuring ranges of the sensor. 
 // adjust the measuring range of the pressure channel to -1 to 20 bar
 adjustMeasuringRange('pressure', { start: -1, end: 20 })
 ```
+
+Here are the channels for each device that support adjustable measuring ranges:
+
+| Device   | Channel Name         |
+|----------|----------------------|
+| PEW      | pressure             |
+|          | device temperature   |
+| NETRIS1  | measurement          |
 
 **A more complete documentation is following soon. It will include a quick start guide, migration guides and an overview of the APIs exposed by the parsers.**
 
@@ -209,6 +216,10 @@ console.log(output);
 For more information about parser using see the [Legacy JavaScript Parser Usage](/doc/LegacyJavaScriptUsage.md)
 
 # Release Notes
+4.1.0
+ - NETRIS1: migrate to typescript and TULIP2 codec
+ - NETRIS1: add support for TULIP3
+
 4.0.0
  - Major refactor: modular codec architecture and unified device parser interface enabling multiple codecs (TULIP2/TULIP3).
  - PEW: integrated TULIP3 codec and migrated parser/codec structure to TypeScript.
