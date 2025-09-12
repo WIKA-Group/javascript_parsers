@@ -153,6 +153,41 @@ export async function createParsersZip(selectedDirs?: string[]) {
   consola.success('Zip created')
 }
 
+// Remove export statements from all built JavaScript files in the dist directory
+function removeExportStatements() {
+  const distDir = path.join(__dirname, '..', 'dist')
+
+  if (!fs.existsSync(distDir)) {
+    consola.warn('Dist directory does not exist, skipping export removal')
+    return
+  }
+
+  // Find all index.js files in subdirectories of dist
+  const jsFiles = fs.readdirSync(distDir)
+    .map(dirName => path.join(distDir, dirName, 'index.js'))
+    .filter(filePath => fs.existsSync(filePath))
+
+  for (const filePath of jsFiles) {
+    try {
+      let content = fs.readFileSync(filePath, 'utf8')
+
+      // Find the index of "export{" and remove everything from that point to the end
+      const exportIndex = content.indexOf('export{')
+
+      if (exportIndex !== -1) {
+        content = content.substring(0, exportIndex)
+      }
+
+      // Only write back if content changed
+      fs.writeFileSync(filePath, content, 'utf8')
+      consola.info(`Removed export statements from ${path.relative(distDir, filePath)}`)
+    }
+    catch (err) {
+      consola.error(`Failed to process ${filePath}:`, err)
+    }
+  }
+}
+
 // --- Orchestration: glob -> build each standalone -> Promise.all -> zip ---
 export async function main() {
   try {
@@ -174,6 +209,9 @@ export async function main() {
     })
 
     await Promise.all(builds)
+
+    // Remove export statements from built files
+    removeExportStatements()
 
     // 3. after all succeeded, create zip
     await createParsersZip()
