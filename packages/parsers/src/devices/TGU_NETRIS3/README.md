@@ -1,6 +1,6 @@
 # TGU + Netris3
 
-![TGU_Netris3](../../../../assets/TGU_Netris3.png)
+![TGU_Netris3](../../../../../assets/TGU_Netris3.png)
 
 #### Description of the device
 

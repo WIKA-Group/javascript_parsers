@@ -1,6 +1,6 @@
 # PEU + Netris3
 
-![PEU_Netris3](../../../../assets/PEU_Netris3.png)
+![PEU_Netris3](../../../../../assets/PEU_Netris3.png)
 
 #### Description of the device
 

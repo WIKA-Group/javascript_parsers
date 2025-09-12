@@ -1,6 +1,6 @@
 # TRW
 
-![TRW](../../../../assets/TRW.png)
+![TRW](../../../../../assets/TRW.png)
 
 #### Description of the device
 

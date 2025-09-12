@@ -1,6 +1,6 @@
 # FLRU + Netris3
 
-![FLRU_Netris3](../../../../assets/FLRU_Netris3.png)
+![FLRU_Netris3](../../../../../assets/FLRU_Netris3.png)
 
 #### Description of the device
 

@@ -1,6 +1,6 @@
 # F98W6
 
-![F98W6](../../../../assets/F98W6.png)
+![F98W6](../../../../../assets/F98W6.png)
 
 #### Description of the device
 
