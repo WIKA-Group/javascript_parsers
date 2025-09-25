@@ -2,7 +2,7 @@
 import * as v from 'valibot'
 import { createSemVerSchema } from '../../../schemas'
 import { createUplinkOutputSchemaFactory } from '../../../schemas/tulip2/uplink'
-import { ALARM_EVENTS, DEVICE_ALARM_TYPES, LPP_UNITS_BY_ID, MEASUREMENT_ALARM_TYPES, PROCESS_ALARM_TYPES, TECHNICAL_ALARM_TYPES } from '../parser/tulip2/lookups'
+import { ALARM_EVENTS, DEVICE_ALARM_TYPES, LPP_MEASURANDS_BY_ID, LPP_UNITS_BY_ID, MEASUREMENT_ALARM_TYPES, PROCESS_ALARM_TYPES, TECHNICAL_ALARM_TYPES } from '../parser/tulip2/lookups'
 
 // NETRIS1 supports configurationId 0..31 (align with PEW unless specified otherwise)
 const createUplinkSchema = createUplinkOutputSchemaFactory(31)
@@ -146,7 +146,10 @@ function createDeviceInformationUplinkOutputSchema() {
         measurementRangeEnd: v.number(),
         measurand: v.pipe(v.number(), v.minValue(0), v.integer()),
         // Keep measurandName as free-form for now; could add a lookup later if desired
-        measurandName: v.string(),
+        measurandName: v.union([
+          v.picklist(Object.values(LPP_MEASURANDS_BY_ID) as string[]),
+          v.literal('Unknown'),
+        ]),
         unit: v.pipe(v.number(), v.minValue(0), v.integer()),
         unitName: v.union([
           v.picklist(Object.values(LPP_UNITS_BY_ID) as string[]),

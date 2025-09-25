@@ -2717,7 +2717,46 @@
                       "minimum": 0
                     },
                     "measurandName": {
-                      "type": "string"
+                      "anyOf": [
+                        {
+                          "enum": [
+                            "Temperature",
+                            "Temperature difference",
+                            "Pressure (gauge)",
+                            "Pressure (absolute)",
+                            "Pressure (differential)",
+                            "Flow (vol.)",
+                            "Flow (mass)",
+                            "Force",
+                            "Mass",
+                            "Level",
+                            "Length",
+                            "Volume",
+                            "Current",
+                            "Voltage",
+                            "Resistance",
+                            "Capacitance",
+                            "Inductance",
+                            "Relative",
+                            "Time",
+                            "Frequency",
+                            "Speed",
+                            "Acceleration",
+                            "Density",
+                            "Density (gauge pressure at 20 °C)",
+                            "Density (absolute pressure at 20 °C)",
+                            "Humidity (relative)",
+                            "Humidity (absolute)",
+                            "Angle of rotation / inclination",
+                            "Device specific",
+                            "Device specific",
+                            "Device specific"
+                          ]
+                        },
+                        {
+                          "const": "Unknown"
+                        }
+                      ]
                     },
                     "unit": {
                       "type": "integer",

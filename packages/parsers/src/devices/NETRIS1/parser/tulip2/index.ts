@@ -17,7 +17,7 @@ import type {
 import { NETRIS1_NAME } from '..'
 import { defineTULIP2Codec } from '../../../../codecs/tulip2'
 import { DEFAULT_ROUNDING_DECIMALS, intTuple4ToFloat32WithThreshold, roundValue, slopeValueToValue, TULIPValueToValue } from '../../../../utils'
-import { ALARM_EVENTS, DEVICE_ALARM_TYPES, LPP_UNITS_BY_ID, MEASUREMENT_ALARM_TYPES, PROCESS_ALARM_TYPES, TECHNICAL_ALARM_TYPES } from './lookups'
+import { ALARM_EVENTS, DEVICE_ALARM_TYPES, LPP_MEASURANDS_BY_ID, LPP_UNITS_BY_ID, MEASUREMENT_ALARM_TYPES, PROCESS_ALARM_TYPES, TECHNICAL_ALARM_TYPES } from './lookups'
 
 const ERROR_VALUE = 0xFFFF
 
@@ -239,7 +239,7 @@ const handleDeviceIdentificationMessage: Handler<TULIP2NETRIS1Channels, NETRIS1T
         measurementRangeStart,
         measurementRangeEnd,
         measurand,
-        measurandName: lppReturnMeasurandFromId(measurand),
+        measurandName: (LPP_MEASURANDS_BY_ID as Record<number, string>)[measurand] ?? 'Unknown',
         unit,
         unitName: (LPP_UNITS_BY_ID as Record<number, string>)[unit] ?? 'Unknown',
       } as NETRIS1TULIP2DeviceInformationData,
@@ -308,45 +308,6 @@ function resolveProductSubIdName(subId: number): string {
   const techName = tech === 0 ? 'RTD' : tech === 1 ? 'E-Signal' : tech === 2 ? 'TRW' : 'Unknown'
   return `${lpwanName} ${techName}`.trim()
 }
-
-function lppReturnMeasurandFromId(id: number): string {
-  switch (id) {
-    case 1: return 'Temperature'
-    case 2: return 'Temperature difference'
-    case 3: return 'Pressure (gauge)'
-    case 4: return 'Pressure (absolute)'
-    case 5: return 'Pressure (differential)'
-    case 6: return 'Flow (vol.)'
-    case 7: return 'Flow (mass)'
-    case 8: return 'Force'
-    case 9: return 'Mass'
-    case 10: return 'Level'
-    case 11: return 'Length'
-    case 12: return 'Volume'
-    case 13: return 'Current'
-    case 14: return 'Voltage'
-    case 15: return 'Resistance'
-    case 16: return 'Capacitance'
-    case 17: return 'Inductance'
-    case 18: return 'Relative'
-    case 19: return 'Time'
-    case 20: return 'Frequency'
-    case 21: return 'Speed'
-    case 22: return 'Acceleration'
-    case 23: return 'Density'
-    case 24: return 'Density (gauge pressure at 20 °C)'
-    case 25: return 'Density (absolute pressure at 20 °C)'
-    case 26: return 'Humidity (relative)'
-    case 27: return 'Humidity (absolute)'
-    case 28: return 'Angle of rotation / inclination'
-    case 60:
-    case 61:
-    case 62: return 'Device specific'
-    default: return 'Unknown'
-  }
-}
-
-// unitName is now derived from LPP_UNITS_BY_ID lookup
 
 // eslint-disable-next-line ts/explicit-function-return-type
 export function createTULIP2NETRIS1Codec() {

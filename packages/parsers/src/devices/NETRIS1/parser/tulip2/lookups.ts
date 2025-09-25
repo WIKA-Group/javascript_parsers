@@ -37,6 +37,41 @@ export const MEASUREMENT_ALARM_TYPES = {
   MV_STAT_WARNING_2: 16,
 } as const
 
+// LPP Measurand lookups (id -> human-readable name)
+export const LPP_MEASURANDS_BY_ID = {
+  1: 'Temperature',
+  2: 'Temperature difference',
+  3: 'Pressure (gauge)',
+  4: 'Pressure (absolute)',
+  5: 'Pressure (differential)',
+  6: 'Flow (vol.)',
+  7: 'Flow (mass)',
+  8: 'Force',
+  9: 'Mass',
+  10: 'Level',
+  11: 'Length',
+  12: 'Volume',
+  13: 'Current',
+  14: 'Voltage',
+  15: 'Resistance',
+  16: 'Capacitance',
+  17: 'Inductance',
+  18: 'Relative',
+  19: 'Time',
+  20: 'Frequency',
+  21: 'Speed',
+  22: 'Acceleration',
+  23: 'Density',
+  24: 'Density (gauge pressure at 20 °C)',
+  25: 'Density (absolute pressure at 20 °C)',
+  26: 'Humidity (relative)',
+  27: 'Humidity (absolute)',
+  28: 'Angle of rotation / inclination',
+  60: 'Device specific',
+  61: 'Device specific',
+  62: 'Device specific',
+} as const
+
 // LPP Unit lookups (id -> human-readable name)
 // Note: Some units share the same symbol (e.g., id 1 and 32 are both '°C').
 export const LPP_UNITS_BY_ID = {
