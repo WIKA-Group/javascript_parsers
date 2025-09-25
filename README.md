@@ -103,6 +103,7 @@ Here are the channels for each device that support adjustable measuring ranges:
 | PEW      | pressure             |
 |          | device temperature   |
 | NETRIS1  | measurement          |
+| TRW      | temperature          |
 
 **A more complete documentation is following soon. It will include a quick start guide, migration guides and an overview of the APIs exposed by the parsers.**
 
@@ -216,6 +217,11 @@ console.log(output);
 For more information about parser using see the [Legacy JavaScript Parser Usage](/doc/LegacyJavaScriptUsage.md)
 
 # Release Notes
+4.2.0
+ - TRW: migrate to typescript and TULIP2 codec
+ - TRW: add support for TULIP3
+ - NETRIS1: specify measurands in schema
+
 4.1.0
  - NETRIS1: migrate to typescript and TULIP2 codec
  - NETRIS1: add support for TULIP3
