@@ -14,6 +14,7 @@ export const TARGETS: string[] = [
   'PEW',
   'NETRIS2',
   'NETRIS1',
+  'TRW',
 ]
 
 // Minimal base config exported as default. This config intentionally has no entries
