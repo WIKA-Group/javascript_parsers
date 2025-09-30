@@ -6,6 +6,7 @@ export default defineConfig({
   description: 'Parsers for WIKA devices',
   appearance: false,
   base: '/javascript_parsers/',
+  head: [['link', { rel: 'icon', href: '/favicon.ico' }]],
   themeConfig: {
 
     search: {
