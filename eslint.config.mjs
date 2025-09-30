@@ -5,6 +5,8 @@ export default antfu({
   stylistic: {
     indent: 2,
   },
+  markdown: true,
+  typescript: true,
 }, {
   ignores: ['**/*.js', '**/*.(spec|test).ts', '**/*.schema.json', '**/.nitro/**'],
 })

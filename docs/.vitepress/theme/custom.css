@@ -1,0 +1,218 @@
+/**
+ * Custom VitePress Theme Colors
+ * Copy your brand colors from Figma and paste them here
+ * -------------------------------------------------------------------------- */
+
+:root {
+  /* 
+   * BRAND COLORS - WIKA Brand Colors from Figma (Exact Match)
+   * Default: #3451b2 (indigo) | Figma: #3480CF, #16489A, #002565
+   */
+  --vp-c-brand-1: #16489A; /* Default: #3451b2 → WIKA main - main links, primary text */
+  --vp-c-brand-2: #3480CF; /* Default: #3a5ccc → WIKA light - button hover states */
+  --vp-c-brand-3: #002565; /* Default: #5672cd → WIKA dark - button backgrounds, active states */
+  --vp-c-brand-soft: rgba(22, 72, 154, 0.14); /* WIKA main with transparency - badges, highlights */
+
+  /* 
+   * ACCENT COLORS - WIKA Functional Colors from Figma (Exact Match)
+   * Using exact Figma colors for consistency
+   */
+  --vp-c-green-1: #0B5926;   /* Figma: green/dark - Success text */
+  --vp-c-green-2: #149C43;   /* Figma: green/main - Success hover */
+  --vp-c-green-3: #149C43;   /* Figma: green/main - Success background */
+  --vp-c-green-soft: rgba(242, 255, 247, 0.8); /* Figma: green/light - Success badge/highlight */
+
+  --vp-c-yellow-1: #805400;  /* Figma: yellow/dark - Warning text */
+  --vp-c-yellow-2: #FFCC00;  /* Figma: yellow/main - Warning hover */
+  --vp-c-yellow-3: #FFCC00;  /* Figma: yellow/main - Warning background */
+  --vp-c-yellow-soft: rgba(255, 249, 230, 0.8); /* Figma: yellow/light - Warning badge/highlight */
+
+  --vp-c-red-1: #661B1B;     /* Figma: red/dark - Error/danger text */
+  --vp-c-red-2: #D13838;     /* Figma: red/main - Error hover */
+  --vp-c-red-3: #D13838;     /* Figma: red/main - Error background */
+  --vp-c-red-soft: rgba(255, 242, 242, 0.8); /* Figma: red/light - Error badge/highlight */
+
+  --vp-c-purple-1: #6f42c1;  /* Default: Keep default purple for important */
+  --vp-c-purple-2: #7e4cc9;  /* Default: Keep default purple hover */
+  --vp-c-purple-3: #8e5cd9;  /* Default: Keep default purple background */
+  --vp-c-purple-soft: rgba(159, 122, 234, 0.14); /* Default: Keep default purple highlight */
+
+  /* 
+   * SUPPORTING COLORS - WIKA Accent & Fresh Blue from Figma (Exact Match)
+   */
+  --vp-c-fresh-blue-light: #F2FDFF; /* Figma: Fresh Blue/Light */
+  --vp-c-fresh-blue-dark: #00CFFF;  /* Figma: Fresh Blue/Dark */
+  --vp-c-orange-main: #FE9900;      /* Figma: orange/main accent */
+
+  /* 
+   * NEUTRAL COLORS - WIKA Grays from Figma (Exact Match)
+   * Using exact Figma grey scale for perfect brand consistency
+   */
+  --vp-c-gray-1: #C6C6C6;    /* Figma: grey/medium light - borders */
+  --vp-c-gray-2: #E9E9E9;    /* Figma: grey/light - backgrounds */
+  --vp-c-gray-3: #F7F7F7;    /* Figma: grey/extra light - subtle backgrounds */
+  --vp-c-gray-soft: rgba(198, 198, 198, 0.14); /* grey/medium light with transparency */
+
+  /* 
+   * BACKGROUND COLORS - WIKA Contrast Colors from Figma
+   */
+  --vp-c-bg: #FFFFFF;        /* Figma: white - Main page background */
+  --vp-c-bg-alt: #F7F7F7;    /* Figma: grey/extra light - Sidebar, code blocks */
+  --vp-c-bg-elv: #FFFFFF;    /* Figma: white - Elevated surfaces */
+  --vp-c-bg-soft: #F7F7F7;   /* Figma: grey/extra light - Subtle backgrounds */
+
+  /* 
+   * TEXT COLORS - WIKA Grey Scale from Figma
+   */
+  --vp-c-text-1: #000000;    /* Figma: black - Primary text color */
+  --vp-c-text-2: #464646;    /* Figma: grey/dark - Secondary text */
+  --vp-c-text-3: #9B9B9B;    /* Figma: grey/medium - Tertiary text */
+
+  /* 
+   * BORDER COLORS - WIKA Grey Scale from Figma
+   */
+  --vp-c-border: #C6C6C6;    /* Figma: grey/medium light - Interactive borders */
+  --vp-c-divider: #E9E9E9;   /* Figma: grey/light - Section dividers */
+  --vp-c-gutter: #E9E9E9;    /* Figma: grey/light - Page gutters */
+
+  /* 
+   * ELEVATION/SHADOWS - WIKA Shadow System from Figma
+   * Using exact Figma elevation values for consistent depth hierarchy
+   */
+  --vp-shadow-1: 0 2px 8px 0 rgba(70, 70, 70, 0.08); /* Elevation 1: Cards, badges, elements on cards */
+  --vp-shadow-2: 0 6px 8px 2px rgba(70, 70, 70, 0.12); /* Elevation 2: Pagination, nav buttons, tooltips */
+  --vp-shadow-3: 0 4px 16px 0 rgba(70, 70, 70, 0.24); /* Elevation 3: Headers, sticky bars, modals */
+  --vp-shadow-header: 0 2px 8px 0 rgba(198, 198, 198, 1.0); /* Elevation Header: Special header shadow */
+  --vp-shadow-overlay: rgba(0, 0, 0, 1.0); /* Background Overlay: Modal backgrounds */
+
+  /* Legacy VitePress shadow variables - mapped to WIKA system */
+  --vp-shadow-4: var(--vp-shadow-3); /* Map to Elevation 3 */
+  --vp-shadow-5: var(--vp-shadow-3); /* Map to Elevation 3 */
+
+  /* 
+   * TYPOGRAPHY - WIKA Font System
+   * Using Helvetica Neue as the primary WIKA brand font
+   */
+  --vp-font-family-base: 'Helvetica Neue', 'Helvetica', 'Arial', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  --vp-font-family-mono: ui-monospace, 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', monospace;
+
+  /* 
+   * WIKA LOGO - Brand Logo Configuration
+   * Standard size from Figma: 88 x 30px, Color: WIKA Main
+   */
+  --vp-nav-logo-height: 30px; /* Figma standard height */
+  --vp-nav-logo-width: 88px;  /* Figma standard width */
+
+  /* 
+   * WIKA SPACING SYSTEM - All spacing values from Figma
+   * Complete spacing scale for consistent layout and design
+   */
+  
+  /* All spacing values */
+  --wika-space-xxxs: 4px;   /* xxxs - Micro spacing */
+  --wika-space-xxs: 8px;    /* xxs - Extra extra small */
+  --wika-space-xs: 12px;    /* xs - Extra small */
+  --wika-space-sm: 16px;    /* sm - Small */
+  --wika-space-md: 20px;    /* md - Medium */
+  --wika-space-lg: 32px;    /* lg - Large */
+  --wika-space-xl: 40px;    /* xl - Extra large */
+  --wika-space-xxl: 52px;   /* xxl - Extra extra large */
+  --wika-space-xxxl: 64px;  /* xxxl - Maximum spacing */
+
+  /* Text spacings */
+  --wika-text-spacing: 12px; /* Default between headline and copy */
+
+  /* Button spacings */
+  --wika-button-spacing-xs: 12px; /* Between two XS-Buttons */
+  --wika-button-spacing-sm: 16px; /* Between two S-Buttons */
+
+  /* Internal card spacings */
+  --wika-card-spacing-xxxs: 4px;  /* Text spacing in small cards */
+  --wika-card-spacing-xxs: 8px;   /* Default text spacing */
+  --wika-card-spacing-lg: 32px;   /* Default text spacing (larger) */
+
+  /* Page spacings (between 2 sections) */
+  --wika-page-spacing-mobile: 32px;      /* Mobile spacing */
+  --wika-page-spacing-desktop: 64px;     /* Desktop, Tablet spacing */
+
+  /* Border radius */
+  --wika-border-radius-xxxs: 4px;  /* Small border radius (images, tags, ...) */
+  --wika-border-radius-xs: 8px;    /* Default border radius (cards) */
+  --wika-border-radius-full: 9999px; /* Circular elements (high value) */
+
+  /* Legacy VitePress spacing variables - mapped to WIKA system */
+  --vp-space-xs: var(--wika-space-xxxs);
+  --vp-space-sm: var(--wika-space-xxs);
+  --vp-space-md: var(--wika-space-sm);
+  --vp-space-lg: var(--wika-space-lg);
+  --vp-space-xl: var(--wika-space-xl);
+}
+
+.dark {
+  /* 
+   * DARK MODE COLORS - WIKA Colors Adapted for Dark Theme
+   * Using WIKA color hierarchy but optimized for dark backgrounds
+   */
+  --vp-c-brand-1: #3480CF; /* WIKA light - Better visibility on dark */
+  --vp-c-brand-2: #16489A; /* WIKA main - Hover states */
+  --vp-c-brand-3: #3480CF; /* WIKA light - Backgrounds (more visible than dark) */
+  --vp-c-brand-soft: rgba(52, 128, 207, 0.16); /* WIKA light with dark mode transparency */
+
+  /* Functional colors - adapted for dark mode visibility */
+  --vp-c-green-1: #149C43;   /* WIKA green/main - Better contrast on dark */
+  --vp-c-green-2: #149C43;   /* WIKA green/main - Hover */
+  --vp-c-green-3: #0B5926;   /* WIKA green/dark - Backgrounds */
+  --vp-c-green-soft: rgba(20, 156, 67, 0.16); /* green/main with dark transparency */
+
+  --vp-c-yellow-1: #FFCC00;  /* WIKA yellow/main - Bright for dark mode */
+  --vp-c-yellow-2: #FFCC00;  /* WIKA yellow/main - Hover */
+  --vp-c-yellow-3: #805400;  /* WIKA yellow/dark - Backgrounds */
+  --vp-c-yellow-soft: rgba(255, 204, 0, 0.16); /* yellow/main with dark transparency */
+
+  --vp-c-red-1: #D13838;     /* WIKA red/main - Better visibility */
+  --vp-c-red-2: #D13838;     /* WIKA red/main - Hover */
+  --vp-c-red-3: #661B1B;     /* WIKA red/dark - Backgrounds */
+  --vp-c-red-soft: rgba(209, 56, 56, 0.16); /* red/main with dark transparency */
+
+  /* Keep default purple - it works well in dark mode */
+  --vp-c-purple-1: #c8abfa;
+  --vp-c-purple-2: #a879e6;
+  --vp-c-purple-3: #8e5cd9;
+  --vp-c-purple-soft: rgba(159, 122, 234, 0.16);
+
+  /* WIKA Grey scale adapted for dark mode */
+  --vp-c-gray-1: #9B9B9B;    /* WIKA grey/medium - Lighter for dark mode */
+  --vp-c-gray-2: #6A6A6A;    /* WIKA grey/medium dark - Mid-tone */
+  --vp-c-gray-3: #464646;    /* WIKA grey/dark - Dark backgrounds */
+  --vp-c-gray-soft: rgba(155, 155, 155, 0.16); /* grey/medium with transparency */
+
+  /* Dark backgrounds using WIKA grey hierarchy */
+  --vp-c-bg: #000000;        /* WIKA black - Main dark background */
+  --vp-c-bg-alt: #464646;    /* WIKA grey/dark - Sidebar */
+  --vp-c-bg-elv: #6A6A6A;    /* WIKA grey/medium dark - Elevated surfaces */
+  --vp-c-bg-soft: #464646;   /* WIKA grey/dark - Subtle backgrounds */
+
+  /* Dark mode text using WIKA contrast colors */
+  --vp-c-text-1: #FFFFFF;    /* WIKA white - Primary text */
+  --vp-c-text-2: #C6C6C6;    /* WIKA grey/medium light - Secondary text */
+  --vp-c-text-3: #9B9B9B;    /* WIKA grey/medium - Tertiary text */
+
+  /* Dark mode borders using WIKA greys */
+  --vp-c-border: #6A6A6A;    /* WIKA grey/medium dark - Borders */
+  --vp-c-divider: #464646;   /* WIKA grey/dark - Dividers */
+  --vp-c-gutter: #464646;    /* WIKA grey/dark - Gutters */
+
+  /* 
+   * DARK MODE ELEVATION/SHADOWS - Adapted WIKA Shadow System
+   * Adjusted for dark theme visibility while maintaining hierarchy
+   */
+  --vp-shadow-1: 0 2px 8px 0 rgba(0, 0, 0, 0.3); /* Elevation 1: Stronger shadows for dark mode */
+  --vp-shadow-2: 0 6px 8px 2px rgba(0, 0, 0, 0.4); /* Elevation 2: Enhanced contrast */
+  --vp-shadow-3: 0 4px 16px 0 rgba(0, 0, 0, 0.5); /* Elevation 3: Maximum contrast for modals */
+  --vp-shadow-header: 0 2px 8px 0 rgba(0, 0, 0, 0.4); /* Header: Dark mode header shadow */
+  --vp-shadow-overlay: rgba(0, 0, 0, 0.8); /* Background Overlay: Slightly transparent for dark mode */
+
+  /* Legacy VitePress shadow variables - mapped to dark mode system */
+  --vp-shadow-4: var(--vp-shadow-3); /* Map to Elevation 3 */
+  --vp-shadow-5: var(--vp-shadow-3); /* Map to Elevation 3 */
+}

@@ -1,6 +1,6 @@
 # GD20W
 
-![GD20W](../../../../../assets/GD20W.png)
+![GD20W](../../../../../docs/public/GD20W.png)
 
 #### Description of the device
 

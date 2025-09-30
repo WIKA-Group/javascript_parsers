@@ -29,8 +29,7 @@
   ],
   "scripts": {
     "build": "jiti ./scripts/build.ts",
-    "schema": "jiti ./scripts/schema.ts",
-    "test:shared": "vitest ./src/shared.spec.ts"
+    "schema": "jiti ./scripts/schema.ts"
   },
   "devDependencies": {
     "@swc/core": "^1.13.5",

@@ -154,37 +154,84 @@ export async function createParsersZip(selectedDirs?: string[]) {
   consola.success('Zip created')
 }
 
-// Remove export statements from all built JavaScript files in the dist directory
-function removeExportStatements() {
+// --- Post-processing helpers -------------------------------------------------
+
+/**
+ * Convert markdown lines (already split) into a single JSDoc comment block.
+ * Empty lines in markdown are preserved as a lone * line.
+ */
+function markdownLinesToJsDoc(mdRaw: string): string {
+  const jsdoc = `/**
+ * ------------------------------------------------------------
+ * Device Documentation (from JSDOC.md)
+ * ------------------------------------------------------------
+ * 
+${mdRaw.split(/\r?\n/).map(line => ` * ${line}`).join('\n')}
+*/
+`
+
+  return jsdoc
+}
+
+/**
+ * Remove trailing export statements ("export{") from built JS and append
+ * a JSDoc comment generated from an adjacent `src/devices/<DEVICE>/JSDOC.md`.
+ *
+ * Process is idempotent: if the JSDoc sentinel line already exists, the file
+ * will be skipped for doc appending (still removing export statements again
+ * if any new ones were produced by a rebuild).
+ */
+function postProcessBuiltFiles() {
   const distDir = path.join(__dirname, '..', 'dist')
+  const srcDevicesRoot = path.join(__dirname, '..', 'src', 'devices')
 
   if (!fs.existsSync(distDir)) {
-    consola.warn('Dist directory does not exist, skipping export removal')
+    consola.warn('Dist directory does not exist, skipping post-processing')
     return
   }
 
-  // Find all index.js files in subdirectories of dist
-  const jsFiles = fs.readdirSync(distDir)
-    .map(dirName => path.join(distDir, dirName, 'index.js'))
-    .filter(filePath => fs.existsSync(filePath))
+  const subDirs = fs.readdirSync(distDir).filter(name => fs.statSync(path.join(distDir, name)).isDirectory())
+  for (const deviceDir of subDirs) {
+    const builtFile = path.join(distDir, deviceDir, 'index.js')
+    if (!fs.existsSync(builtFile))
+      continue
 
-  for (const filePath of jsFiles) {
     try {
-      let content = fs.readFileSync(filePath, 'utf8')
+      let content = fs.readFileSync(builtFile, 'utf8')
 
-      // Find the index of "export{" and remove everything from that point to the end
+      // 1. Remove export block if present
       const exportIndex = content.indexOf('export{')
-
       if (exportIndex !== -1) {
         content = content.substring(0, exportIndex)
+        consola.info(`Removed export statements from ${deviceDir}/index.js`)
       }
 
-      // Only write back if content changed
-      fs.writeFileSync(filePath, content, 'utf8')
-      consola.info(`Removed export statements from ${path.relative(distDir, filePath)}`)
+      // 2. Skip adding docs if already appended (look for sentinel line)
+      if (/Device Documentation \(from JSDOC.md\)/.test(content)) {
+        fs.writeFileSync(builtFile, content, 'utf8')
+        continue
+      }
+
+      // 3. Read JSDOC.md (if exists)
+      const jsdocPath = path.join(srcDevicesRoot, deviceDir, 'JSDOC.md')
+      if (!fs.existsSync(jsdocPath)) {
+        fs.writeFileSync(builtFile, content, 'utf8')
+        consola.info(`No JSDOC.md for ${deviceDir}, skipping doc append`)
+        continue
+      }
+
+      const mdRaw = fs.readFileSync(jsdocPath, 'utf8')
+      const jsdocBlock = markdownLinesToJsDoc(mdRaw)
+
+      // 4. Ensure file ends with exactly two newlines before appending
+      const trimmed = content.replace(/\s*$/, '')
+      const appendable = `${trimmed}\n\n${jsdocBlock}`
+
+      fs.writeFileSync(builtFile, appendable, 'utf8')
+      consola.success(`Appended JSDoc to ${deviceDir}/index.js`)
     }
     catch (err) {
-      consola.error(`Failed to process ${filePath}:`, err)
+      consola.error(`Failed post-processing for ${deviceDir}:`, err)
     }
   }
 }
@@ -211,8 +258,8 @@ export async function main() {
 
     await Promise.all(builds)
 
-    // Remove export statements from built files
-    removeExportStatements()
+    // Remove export statements and append device JSDoc (if present)
+    postProcessBuiltFiles()
 
     // 3. after all succeeded, create zip
     await createParsersZip()

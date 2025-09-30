@@ -17,6 +17,9 @@ const OUTPUT_FILES = {
 
 const files = await glob('../src/devices/**/schema/index.ts', { filesOnly: true, absolute: true, cwd: import.meta.dirname })
 
+// To avoid failing when valibot cannot convert a schema, we set errorMode to 'warn' and log the issues.
+// most likely to happen if you use e.g. min() or max() AFTER using integer() -> pipe(number(), integer(), min(0), max(100)) results in error
+// pipe(number(), min(0), max(100), integer()) works fine
 const toJsonSchemaConfig: ConversionConfig = { errorMode: 'warn' }
 
 const jiti = createJiti(import.meta.url)

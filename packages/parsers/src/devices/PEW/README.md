@@ -1,6 +1,6 @@
 # PEW-1x00
 
-![PEW](../../../../../assets/PEW.png)
+![PEW](../../../../../docs/public/PEW.png)
 
 #### Description of the device
 

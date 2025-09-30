@@ -3,7 +3,6 @@ import '../../polyfills'
 
 const {
   decodeUplink,
-  encodeDownlink,
   adjustRoundingDecimals,
   decodeHexUplink,
   adjustMeasuringRange,
@@ -14,5 +13,4 @@ export {
   adjustRoundingDecimals,
   decodeHexUplink,
   decodeUplink,
-  encodeDownlink,
 }

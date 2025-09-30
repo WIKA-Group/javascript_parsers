@@ -1,6 +1,6 @@
 # Netris1
 
-![Netris1](../../../../../assets/Netris1.png)
+![Netris1](../../../../../docs/public/Netris1.png)
 
 #### Description of the device
 
