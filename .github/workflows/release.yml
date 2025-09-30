@@ -7,6 +7,7 @@ on:
   push:
     tags:
       - '*'
+  workflow_dispatch: {}
 
 concurrency:
   group: pages
@@ -14,7 +15,12 @@ concurrency:
 
 jobs:
   release:
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -69,33 +75,44 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 
-  # Build and deploy docs to GitHub Pages when a tag is pushed
+      # Docs deploy steps run as part of the release job (only on tag pushes)
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Build VitePress docs
+        run: pnpm docs:build
+
+      - name: Upload docs artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs/.vitepress/dist
+
+      - name: Deploy docs to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  # Docs deploy — manual only (run from Actions UI)
   docs-deploy:
-    needs: release
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/')
-    continue-on-error: true
     permissions:
       contents: read
       pages: write
       id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Setup Node
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Set node
         uses: actions/setup-node@v4
         with:
           node-version: lts/*
-          cache: pnpm
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
+          registry-url: https://registry.npmjs.org
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
