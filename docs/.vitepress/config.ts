@@ -21,7 +21,6 @@ export default defineConfig({
       { text: 'Users', link: '/users/how-it-works' },
       { text: 'Devices', link: '/devices/' },
       { text: 'Contributors', link: '/contributors/' },
-      { text: 'API', link: '/api/' },
     ],
 
     sidebar: [
@@ -108,7 +107,7 @@ export default defineConfig({
       },
     ],
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/WIKA-Group' },
+      { icon: 'github', link: 'https://github.com/WIKA-Group/javascript_parsers' },
     ],
   },
 })
