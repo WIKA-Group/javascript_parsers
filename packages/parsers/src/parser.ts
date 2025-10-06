@@ -69,8 +69,8 @@ export interface DeviceParser<TParserOptions extends ParserOptions<AnyCodec>> {
 export function defineParser<const TParserOptions extends ParserOptions>(options: TParserOptions): DeviceParser<TParserOptions> {
   const { codecs, throwOnMultipleDecode = true, parserName } = options
   const roundingDecimals = getRoundingDecimals(options.roundingDecimals)
-  // first check if the codecs are valid
-  checkCodecsValidity(options.codecs)
+  // first check if the codecs are valid and get channel adjustment permissions
+  const channelAdjustmentPermissions = checkCodecsValidity(options.codecs)
 
   function createError(message: string): GenericFailureUplinkOutput {
     return {
@@ -152,6 +152,17 @@ export function defineParser<const TParserOptions extends ParserOptions>(options
     decodeHexUplink,
     encodeDownlink,
     adjustMeasuringRange: (name, range) => {
+      // Check if channel exists
+      if (!(name in channelAdjustmentPermissions)) {
+        throw new Error(`Channel ${name} does not exist in parser ${parserName}. Cannot adjust measuring range.`)
+      }
+
+      // Check if adjustment is allowed for this channel
+      if (channelAdjustmentPermissions[name]) {
+        throw new Error(`Channel ${name} does not allow adjusting the measuring range in parser ${parserName}.`)
+      }
+
+      // Adjust range for all codecs
       codecs.forEach((codec) => {
         codec.adjustMeasuringRange(name, range)
       })
@@ -165,56 +176,3 @@ export function defineParser<const TParserOptions extends ParserOptions>(options
 
   } satisfies DeviceParser<TParserOptions>
 }
-
-/* const tulip2Codec = defineTULIP2Codec({
-  channels: [
-    {
-      name: 'temperature',
-      start: -40,
-      end: 125,
-    },
-    {
-      name: 'humidity',
-      start: 0,
-      end: 100,
-    },
-  ],
-  deviceName: '1',
-  encodeHandler: (i: {
-    hello: string
-  }) => [] as number[],
-  handlers: {
-
-    0x02: () => {
-      return { data: { id: 2, humidity: 55.5 } } as const
-    },
-    0x01: () => {
-      return { data: { id: 1, temperature: 22.5 } as const,
-      }
-    },
-    0x03: someParser,
-  },
-})
-
-const p = defineParser({
-  deviceName: 'MyDevice',
-  codecs: [tulip2Codec],
-})
-
-function someParser(): {
-  data: { id: 3, press: number }
-} {
-  return {
-    data: { id: 3, press: 1013 },
-  }
-}
-
-const res = p.decodeUplink({
-  bytes: [0x01, 0x02, 0x03],
-})
-
-p.encodeDownlink({
-  codec: '1TULIP2',
-  input: { hello: 'world' },
-})
- */

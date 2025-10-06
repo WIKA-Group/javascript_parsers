@@ -20,6 +20,7 @@ export interface Range {
 }
 
 export interface Channel<TName extends string = string> extends Range {
+  adjustMeasurementRangeDisallowed?: true
   name: TName
 }
 

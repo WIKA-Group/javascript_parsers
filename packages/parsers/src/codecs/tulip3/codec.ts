@@ -16,7 +16,7 @@ import { decodeSpontaneousFetchAdditionalDownlinkMessageMessage, decodeSpontaneo
 
 type ChannelNames<TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig> = {
   [S in keyof TTULIP3DeviceSensorConfig]: TTULIP3DeviceSensorConfig[S] extends TULIP3SensorChannelConfig ? {
-    [C in keyof TTULIP3DeviceSensorConfig[S]]: TTULIP3DeviceSensorConfig[S][C] extends TULIP3ChannelConfig ? TTULIP3DeviceSensorConfig[S][C]['channelName'] : never
+    [C in keyof TTULIP3DeviceSensorConfig[S]]: TTULIP3DeviceSensorConfig[S][C] extends TULIP3ChannelConfig ? TTULIP3DeviceSensorConfig[S][C]['adjustMeasurementRangeDisallowed'] extends true ? never : TTULIP3DeviceSensorConfig[S][C]['channelName'] : never
   }[keyof TTULIP3DeviceSensorConfig[S]] : never
 }[keyof TTULIP3DeviceSensorConfig]
 
@@ -117,6 +117,7 @@ export function defineTULIP3Codec<const TDeviceProfile extends TULIP3DeviceProfi
           name: channelConfig.channelName,
           start: channelConfig.start,
           end: channelConfig.end,
+          ...(channelConfig.adjustMeasurementRangeDisallowed === true ? { adjustMeasurementRangeDisallowed: true as const } : {}),
         })
       })
     })

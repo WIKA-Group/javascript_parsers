@@ -62,6 +62,49 @@ When you implement `defineTULIP2Codec`:
 - Return specific handler payload types rather than `GenericUplinkOutput`; this improves editor autocomplete for consumers.
 - Avoid reusing channel arrays between codecs. Besides the runtime mutation risk, doing so often widens the inferred tuple type to `TULIP2Channel[]`, losing literal channel names.
 
+#### Channel Range Adjustment Restrictions
+
+Channels can optionally specify `adjustMeasurementRangeDisallowed: true` to prevent runtime range modification:
+
+```typescript
+const channels = [
+  { name: 'pressure', start: 0, end: 100, channelId: 0 }, // Adjustable
+  { name: 'humidity', start: 0, end: 100, channelId: 1, adjustMeasurementRangeDisallowed: true }, // Fixed
+] as const
+```
+
+Use this flag for channels where the measuring range is constrained by hardware (battery voltage, signal strength) or protocol specifications (relative humidity always 0-100%). The parser's `adjustMeasuringRange` helper validates this flag at runtime and throws distinct errors for:
+
+1. Non-existent channels: `"Channel {name} does not exist in parser {parserName}. Cannot adjust measuring range."`
+2. Restricted channels: `"Channel {name} does not allow adjusting the measuring range in parser {parserName}."`
+
+**Important for multi-codec parsers:** When multiple codecs are used in a single parser, the `adjustMeasurementRangeDisallowed` value **must be identical** for channels with the same name across all codecs. The `checkCodecsValidity` function enforces this at parser initialization:
+
+```typescript
+// ✅ VALID - Both codecs agree
+const codec1 = defineTULIP2Codec({
+  channels: [{ name: 'humidity', start: 0, end: 100, adjustMeasurementRangeDisallowed: true }],
+  // ...
+})
+const codec2 = defineTULIP2Codec({
+  channels: [{ name: 'humidity', start: 0, end: 100, adjustMeasurementRangeDisallowed: true }],
+  // ...
+})
+
+// ❌ INVALID - Inconsistent settings
+const codec1 = defineTULIP2Codec({
+  channels: [{ name: 'humidity', start: 0, end: 100, adjustMeasurementRangeDisallowed: true }],
+  // ...
+})
+const codec2 = defineTULIP2Codec({
+  channels: [{ name: 'humidity', start: 0, end: 100 }], // undefined treated as false
+  // ...
+})
+// Throws: "Channel humidity has inconsistent adjustMeasurementRangeDisallowed settings"
+```
+
+**Type-level implications:** The `TULIP2AdjustableChannelNames` helper type extracts only adjustable channel names for the parser's type signature. If **all** channels in a codec have `adjustMeasurementRangeDisallowed: true`, the adjustable channel names type will be inferred as `never`, and TypeScript will prevent any calls to `adjustMeasuringRange` at compile time. There might even be a type error when trying to pass the codec to `defineParser` if no channels are adjustable. If this is a required use case, the types have to be adjusted accordingly (currently not supported).
+
 ### `defineTULIP3Codec`
 
 TULIP3 codecs depend on device profiles for their generics:
@@ -71,6 +114,43 @@ TULIP3 codecs depend on device profiles for their generics:
 - `TULIP3UplinkOutput<TDeviceProfile>`: Ties every decoded message back to the originating profile, ensuring the output `data` object has precise key types.
 
 Because the current implementation still relies on a default generic in the profile, you will see `// @ts-expect-error` annotations inside `decode`. These exist to keep the emitted JavaScript lean until we can simplify the type algebra. Do not remove them unless you are also addressing the underlying inference issue.
+
+#### Channel Range Adjustment Restrictions (TULIP3)
+
+TULIP3 channels support the same `adjustMeasurementRangeDisallowed` flag as TULIP2, but it's specified in the device profile's channel configuration:
+
+```typescript
+const profile = defineTULIP3DeviceProfile({
+  deviceName: 'MySensor',
+  sensorChannelConfig: {
+    sensor1: {
+      channel1: {
+        channelName: 'pressure',
+        start: 0,
+        end: 1000,
+        measurementTypes: [/* ... */],
+        // adjustMeasurementRangeDisallowed omitted = adjustable
+      },
+      channel2: {
+        channelName: 'humidity',
+        start: 0,
+        end: 100,
+        measurementTypes: [/* ... */],
+        adjustMeasurementRangeDisallowed: true, // Fixed range
+      },
+    },
+  },
+  // ...
+} as const)
+```
+
+The same validation rules apply:
+
+- **Multi-codec consistency:** When combining TULIP3 codecs with other protocol versions in a parser, channels with matching names must have identical `adjustMeasurementRangeDisallowed` values across all codecs.
+- **Type inference:** The `ChannelNames` mapped type filters out channels where `adjustMeasurementRangeDisallowed extends true`, providing compile-time safety. If all channels are restricted, the type becomes `never`.
+- **Runtime validation:** The parser throws specific errors distinguishing between non-existent channels and channels that exist but cannot be adjusted.
+
+Unlike the base `Channel` type which only allows `adjustMeasurementRangeDisallowed?: true`, TULIP3's `TULIP3ChannelConfig` accepts `adjustMeasurementRangeDisallowed?: boolean` for greater flexibility during profile authoring. However, the validation logic normalizes both `false` and `undefined` to "allowed" for consistency.
 
 ### `defineParser`
 

@@ -17,7 +17,6 @@ describe('pEW Parser', () => {
   const outputSchema = createPEWUplinkOutputSchema()
 
   adjustMeasuringRange('pressure', { start: 0, end: 10 })
-  adjustMeasuringRange('device temperature', { start: -45, end: 110 })
 
   it.each(uplinkExamples)(`should decode uplink example: $description`, (example) => {
     const output = decodeUplink(example.input as any)

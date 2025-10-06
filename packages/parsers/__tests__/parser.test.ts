@@ -174,4 +174,88 @@ describe('defineParser', () => {
     const result = parser.decodeHexUplink({ fPort: 1 } as any)
     expect(result.errors![0]).toMatch(/Input is not a valid/)
   })
+
+  describe('adjustMeasuringRange validation', () => {
+    it('should throw error if channel does not exist', () => {
+      const codec = new MockCodec({ name: 'codec1', channels: validChannels })
+      const parser = defineParser({ parserName: 'TestParser', codecs: [codec] })
+      expect(() => parser.adjustMeasuringRange('NonExistent' as any, { start: 0, end: 10 }))
+        .toThrow('Channel NonExistent does not exist in parser TestParser. Cannot adjust measuring range.')
+    })
+
+    it('should throw error if channel exists but adjustment is disallowed', () => {
+      const channels = [
+        { name: 'A', start: 0, end: 2, adjustMeasurementRangeDisallowed: true },
+        { name: 'B', start: 2, end: 4 },
+      ]
+      const codec = new MockCodec({ name: 'codec1', channels })
+      const parser = defineParser({ parserName: 'TestParser', codecs: [codec] })
+      expect(() => parser.adjustMeasuringRange('A' as any, { start: 0, end: 10 }))
+        .toThrow('Channel A does not allow adjusting the measuring range in parser TestParser.')
+    })
+
+    it('should allow adjustment if channel exists and adjustment is allowed (undefined)', () => {
+      const channels = [
+        { name: 'A', start: 0, end: 2 }, // undefined -> allowed
+        { name: 'B', start: 2, end: 4 },
+      ]
+      const codec = new MockCodec({ name: 'codec1', channels })
+      const parser = defineParser({ parserName: 'TestParser', codecs: [codec] })
+      expect(() => parser.adjustMeasuringRange('A' as any, { start: 5, end: 15 }))
+        .not
+        .toThrow()
+      expect(codec.adjustMeasuringRange).toHaveBeenCalledWith('A', { start: 5, end: 15 })
+    })
+
+    it('should allow adjustment if channel exists and adjustment is explicitly allowed', () => {
+      const channels = [
+        { name: 'A', start: 0, end: 2 }, // undefined is treated as allowed
+        { name: 'B', start: 2, end: 4 },
+      ]
+      const codec = new MockCodec({ name: 'codec1', channels })
+      const parser = defineParser({ parserName: 'TestParser', codecs: [codec] })
+      expect(() => parser.adjustMeasuringRange('A' as any, { start: 5, end: 15 }))
+        .not
+        .toThrow()
+      expect(codec.adjustMeasuringRange).toHaveBeenCalledWith('A', { start: 5, end: 15 })
+    })
+
+    it('should call adjustMeasuringRange on all codecs if allowed', () => {
+      const channels = [
+        { name: 'A', start: 0, end: 2 },
+        { name: 'B', start: 2, end: 4 },
+      ]
+      const codec1 = new MockCodec({ name: 'codec1', channels })
+      const codec2 = new MockCodec({ name: 'codec2', channels })
+      const parser = defineParser({ parserName: 'TestParser', codecs: [codec1, codec2] })
+      parser.adjustMeasuringRange('B' as any, { start: 10, end: 20 })
+      expect(codec1.adjustMeasuringRange).toHaveBeenCalledWith('B', { start: 10, end: 20 })
+      expect(codec2.adjustMeasuringRange).toHaveBeenCalledWith('B', { start: 10, end: 20 })
+    })
+
+    it('should not call adjustMeasuringRange on codecs if channel does not exist', () => {
+      const codec = new MockCodec({ name: 'codec1', channels: validChannels })
+      const parser = defineParser({ parserName: 'TestParser', codecs: [codec] })
+      try {
+        parser.adjustMeasuringRange('X' as any, { start: 0, end: 10 })
+      }
+      catch {
+        // expected to throw
+      }
+      expect(codec.adjustMeasuringRange).not.toHaveBeenCalled()
+    })
+
+    it('should not call adjustMeasuringRange on codecs if adjustment is disallowed', () => {
+      const channels = [{ name: 'A', start: 0, end: 2, adjustMeasurementRangeDisallowed: true }]
+      const codec = new MockCodec({ name: 'codec1', channels })
+      const parser = defineParser({ parserName: 'TestParser', codecs: [codec] })
+      try {
+        parser.adjustMeasuringRange('A' as any, { start: 0, end: 10 })
+      }
+      catch {
+        // expected to throw
+      }
+      expect(codec.adjustMeasuringRange).not.toHaveBeenCalled()
+    })
+  })
 })

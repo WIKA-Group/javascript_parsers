@@ -21,6 +21,7 @@ function createTULIP2PEWChannels() {
       name: 'device temperature',
       start: -45 as number,
       end: 110 as number,
+      adjustMeasurementRangeDisallowed: true,
     },
   ] as const satisfies TULIP2Channel[]
 }

@@ -34,6 +34,7 @@ export function createdTULIP3PEWDeviceProfile() {
           start: -45,
           end: 110,
           measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
+          adjustMeasurementRangeDisallowed: true,
         },
       },
     },

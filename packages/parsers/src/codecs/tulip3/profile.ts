@@ -11,6 +11,7 @@ export interface TULIP3ChannelConfig {
   end: number
   measurementTypes: typeof protocolDataTypeLookup[keyof typeof protocolDataTypeLookup][]
   channelName: string
+  adjustMeasurementRangeDisallowed?: boolean
 }
 
 export interface TULIP3SensorChannelConfig {

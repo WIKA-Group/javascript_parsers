@@ -27,7 +27,7 @@ The parser is built on the codec abstraction layer and can host multiple codecs 
 - **`encodeDownlink(input: { codec: string; input: unknown })`**:<br>
     Looks up the requested codec and runs its encoder. On success it returns the downlink frame as an array of 8-bit integers. If the codec is missing or encoding is unsupported an exception is thrown.
 - **`adjustMeasuringRange(channelName: string, range: { start: number; end: number })`**:<br>
-    Updates the measuring range for the named channel across every registered codec, enabling runtime calibration without rebuilding the bundle. Use this right after instantiating the parser to align the default ranges with your sensor’s data sheet. If the channel is unknown, an error is thrown.
+    Updates the measuring range for the named channel across every registered codec, enabling runtime calibration without rebuilding the bundle. Use this right after instantiating the parser to align the default ranges with your sensor’s data sheet. If the channel is unknown or flagged as non-adjustable because the range is fixed by hardware or protocol rules (for example internal device temperature), an error is thrown.
 - **`adjustRoundingDecimals(decimals: number)`**:<br>
     Normalizes the requested precision, then applies it to all codecs so numeric outputs round consistently.
 

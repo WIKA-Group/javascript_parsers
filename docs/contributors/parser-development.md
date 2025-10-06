@@ -89,11 +89,37 @@ Device parser development follows the same rhythm for every device:
 
 Every device parser exposes a consistent surface:
 
-- `adjustMeasuringRange(channelName, { start, end })`: Use immediately after instantiation to align ranges with the deployed probe. All codecs receive the update.
+- `adjustMeasuringRange(channelName, { start, end })`: Use immediately after instantiation to align ranges with the deployed probe. All codecs receive the update. **Note:** This function validates that the channel exists and allows adjustment before propagating the change. It throws specific errors for non-existent channels versus channels that are restricted from adjustment.
 - `adjustRoundingDecimals(decimals)`: Normalises the precision through `getRoundingDecimals` and applies it to each codec.
 - `encodeDownlink({ codec, input })`: Only available when the codec implements an encoder (for example TULIP2 maintenance actions). Guarded by runtime checks for missing support.
 
-Document how integrators should invoke these hooks when you update the device guide so the configuration stays in sync.
+### Channel Adjustment Validation
+
+The `defineParser` function performs comprehensive validation during initialization:
+
+1. **Codec validity check:** Calls `checkCodecsValidity` which returns a `Record<channelName, boolean>` indicating whether each channel allows range adjustment (`false` = allowed, `true` = disallowed).
+2. **Consistency enforcement:** Ensures that all codecs agree on the `adjustMeasurementRangeDisallowed` setting for channels with the same name. Treats `undefined` and `false` as equivalent (both mean "allowed").
+3. **Runtime guards:** When `adjustMeasuringRange` is called, the parser:
+   - First checks if the channel exists in the permissions record
+   - Then checks if adjustment is allowed for that channel
+   - Only proceeds to update all codecs if both checks pass
+
+This design prevents accidental misconfiguration and provides clear error messages to integrators:
+
+```typescript
+// Channel doesn't exist
+parser.adjustMeasuringRange('nonexistent', { start: 0, end: 100 })
+// Throws: "Channel nonexistent does not exist in parser MyDevice. Cannot adjust measuring range."
+
+// Channel exists but is restricted
+parser.adjustMeasuringRange('humidity', { start: 0, end: 50 })
+// Throws: "Channel humidity does not allow adjusting the measuring range in parser MyDevice."
+
+// Channel exists and is adjustable - succeeds
+parser.adjustMeasuringRange('pressure', { start: -1, end: 20 })
+```
+
+Document how integrators should invoke these hooks when you update the device guide so the configuration stays in sync. Make sure to clearly indicate which channels support adjustment and which have fixed ranges due to hardware or protocol constraints.
 
 ## When You Need a New Codec
 

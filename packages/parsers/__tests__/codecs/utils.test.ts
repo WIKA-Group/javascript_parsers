@@ -210,4 +210,84 @@ describe('checkCodecsValidity', () => {
     ]
     expect(() => checkCodecsValidity(codecs as any)).not.toThrow()
   })
+
+  it('should return channel adjustment permissions map', () => {
+    const channels: Channel[] = [
+      { name: 'A', start: 0, end: 2, adjustMeasurementRangeDisallowed: true },
+      { name: 'B', start: 2, end: 4 }, // undefined, treated as false
+      { name: 'C', start: 4, end: 6 }, // explicitly omitted
+    ] as const
+    const codecs = [
+      new MockCodec('codec1', channels),
+    ]
+    const result = checkCodecsValidity(codecs as any)
+    expect(result).toEqual({
+      A: true,
+      B: false,
+      C: false,
+    })
+  })
+
+  it('should treat undefined adjustMeasurementRangeDisallowed as false', () => {
+    const ch1 = [{ name: 'A', start: 0, end: 2 }] // undefined
+    const ch2 = [{ name: 'A', start: 0, end: 2 }] // also undefined
+    const codecs = [
+      new MockCodec('codec1', ch1),
+      new MockCodec('codec2', ch2),
+    ]
+    const result = checkCodecsValidity(codecs as any)
+    expect(result).toEqual({ A: false })
+  })
+
+  it('should throw if adjustMeasurementRangeDisallowed is inconsistent across codecs', () => {
+    const ch1 = [{ name: 'A', start: 0, end: 2, adjustMeasurementRangeDisallowed: true }]
+    const ch2 = [{ name: 'A', start: 0, end: 2 }] // undefined -> false
+    const codecs = [
+      new MockCodec('codec1', ch1 as any),
+      new MockCodec('codec2', ch2),
+    ]
+    expect(() => checkCodecsValidity(codecs as any)).toThrow(
+      'Channel A has inconsistent adjustMeasurementRangeDisallowed settings across codecs: true vs false',
+    )
+  })
+
+  it('should throw if adjustMeasurementRangeDisallowed is inconsistent (true vs undefined)', () => {
+    const ch1 = [{ name: 'A', start: 0, end: 2, adjustMeasurementRangeDisallowed: true }]
+    const ch2 = [{ name: 'A', start: 0, end: 2 }] // undefined -> false
+    const codecs = [
+      new MockCodec('codec1', ch1 as any),
+      new MockCodec('codec2', ch2),
+    ]
+    expect(() => checkCodecsValidity(codecs as any)).toThrow(
+      'Channel A has inconsistent adjustMeasurementRangeDisallowed settings across codecs: true vs false',
+    )
+  })
+
+  it('should not throw if all codecs agree on adjustMeasurementRangeDisallowed', () => {
+    const ch1 = [{ name: 'A', start: 0, end: 2, adjustMeasurementRangeDisallowed: true }]
+    const ch2 = [{ name: 'A', start: 0, end: 2, adjustMeasurementRangeDisallowed: true }]
+    const codecs = [
+      new MockCodec('codec1', ch1 as any),
+      new MockCodec('codec2', ch2 as any),
+    ]
+    expect(() => checkCodecsValidity(codecs as any)).not.toThrow()
+  })
+
+  it('should return correct permissions for multiple channels with mixed settings', () => {
+    const channels = [
+      { name: 'temp', start: -40, end: 125 },
+      { name: 'humidity', start: 0, end: 100, adjustMeasurementRangeDisallowed: true },
+      { name: 'pressure', start: 0, end: 1000 },
+    ]
+    const codecs = [
+      new MockCodec('codec1', channels as any),
+      new MockCodec('codec2', channels as any),
+    ]
+    const result = checkCodecsValidity(codecs as any)
+    expect(result).toEqual({
+      temp: false,
+      humidity: true,
+      pressure: false,
+    })
+  })
 })

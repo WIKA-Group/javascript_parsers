@@ -53,7 +53,11 @@ export interface TULIP2CodecOptions<TChannels extends TULIP2Channel[] = TULIP2Ch
   encodeHandler?: TEncoder
 }
 
-export type TULIP2Codec<TChannels extends TULIP2Channel[], TName extends string, THandlers extends MessageHandlers<TChannels>, TEncoder extends ((input: object) => number[]) | undefined> = Codec<`${TName}TULIP2`, ReturnTypeOfHandlers<TChannels, THandlers>, TChannels[number]['name'], TEncoder>
+type TULIP2AdjustableChannelNames<TChannels extends TULIP2Channel[]> = {
+  [K in keyof TChannels]: TChannels[K] extends TULIP2Channel ? (TChannels[K]['adjustMeasurementRangeDisallowed'] extends true ? never : TChannels[K]['name']) : never
+}[number]
+
+export type TULIP2Codec<TChannels extends TULIP2Channel[], TName extends string, THandlers extends MessageHandlers<TChannels>, TEncoder extends ((input: object) => number[]) | undefined> = Codec<`${TName}TULIP2`, ReturnTypeOfHandlers<TChannels, THandlers>, TULIP2AdjustableChannelNames<TChannels>, TEncoder>
 
 /**
  * Creates a TULIP2 protocol codec for decoding and encoding IoT device messages.
@@ -121,7 +125,7 @@ export type TULIP2Codec<TChannels extends TULIP2Channel[], TName extends string,
  * @see {@link MessageHandlers} for handler function signatures
  * @see {@link TULIP2Channel} for channel configuration interface
  */
-export function defineTULIP2Codec<TChannels extends TULIP2Channel[], TName extends string, THandlers extends MessageHandlers<TChannels>, TEncoder extends ((input: object) => number[]) | undefined>(options: TULIP2CodecOptions<TChannels, TName, THandlers, TEncoder>): TULIP2Codec<TChannels, TName, THandlers, TEncoder> {
+export function defineTULIP2Codec<const TChannels extends TULIP2Channel[], TName extends string, THandlers extends MessageHandlers<TChannels>, TEncoder extends ((input: object) => number[]) | undefined>(options: TULIP2CodecOptions<TChannels, TName, THandlers, TEncoder>): TULIP2Codec<TChannels, TName, THandlers, TEncoder> {
   const codecName = `${options.deviceName}TULIP2` as `${TName}TULIP2`
 
   let roundingDecimals = getRoundingDecimals(options.roundingDecimals)
@@ -163,6 +167,7 @@ export function defineTULIP2Codec<TChannels extends TULIP2Channel[], TName exten
       end: c.end,
       name: c.name,
       start: c.start,
+      ...(c.adjustMeasurementRangeDisallowed === true ? { adjustMeasurementRangeDisallowed: true as const } : {}),
     })),
     canTryDecode,
     decode,
