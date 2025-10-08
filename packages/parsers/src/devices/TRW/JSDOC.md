@@ -56,7 +56,7 @@ function decodeHexString(hexInput: HexUplinkInput): DecodeResult
 
 ### `setMeasurementRanges(channel, range)`
 ```ts
-// Will throw on invalid channel name
+// Will throw on invalid channel name or if the channel disallows range updates
 function setMeasurementRanges(
   channelName: AdjustableChannelName,
   range: {

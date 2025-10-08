@@ -120,9 +120,8 @@
       "recvTime": "1992-12-22T17:00:00+01:00"
     },
     "output": {
-      "data": {},
       "errors": [
-        "TGU+NETRIS3 (JS): Data message type 00 not supported"
+        "TGU+NETRIS3 (JS): Message could not be decoded. No codec matched the input."
       ]
     }
   },
@@ -139,9 +138,8 @@
       "recvTime": "1992-12-22T17:00:00+01:00"
     },
     "output": {
-      "data": {},
       "errors": [
-        "TGU+NETRIS3 (JS): Data message 01/02 needs at least 5 and maximum 7 bytes but got 3"
+        "TGU+NETRIS3 (JS): Data message 01/02 needs 5 or 7 bytes but got 3"
       ]
     }
   },
@@ -391,9 +389,8 @@
       "recvTime": "1992-12-22T17:00:00+01:00"
     },
     "output": {
-      "data": {},
       "errors": [
-        "TGU+NETRIS3 (JS): Data message type 06 not supported"
+        "TGU+NETRIS3 (JS): Message could not be decoded. No codec matched the input."
       ]
     }
   },
@@ -410,9 +407,8 @@
       "recvTime": "1992-12-22T17:00:00+01:00"
     },
     "output": {
-      "data": {},
       "errors": [
-        "TGU+NETRIS3 (JS): Data message type 06 not supported"
+        "TGU+NETRIS3 (JS): Message could not be decoded. No codec matched the input."
       ]
     }
   },

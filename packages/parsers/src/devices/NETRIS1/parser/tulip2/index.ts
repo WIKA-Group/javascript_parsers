@@ -51,6 +51,10 @@ const handleDataMessage: Handler<TULIP2NETRIS1Channels, NETRIS1TULIP2DataMessage
     ? ERROR_VALUE
     : roundValue(TULIPValueToValue(channelRaw, options.channels[0]), options.roundingDecimals)
 
+  if (value === ERROR_VALUE) {
+    throw new Error('Invalid data for channel - measurement : 0xffff, 65535')
+  }
+
   const res: NETRIS1TULIP2DataMessageUplinkOutput = {
     data: {
       configurationId,
@@ -65,12 +69,6 @@ const handleDataMessage: Handler<TULIP2NETRIS1Channels, NETRIS1TULIP2DataMessage
         ],
       },
     },
-  }
-
-  if (value === ERROR_VALUE) {
-    res.warnings = [
-      `${NETRIS1_NAME} (TS): Invalid data for channel - measurement : 0xffff, 65535`,
-    ]
   }
 
   return res
@@ -120,7 +118,7 @@ const handleProcessAlarmMessage: Handler<TULIP2NETRIS1Channels, NETRIS1TULIP2Pro
   // Check for ERROR_VALUE in process alarms and add warnings
   for (const alarm of processAlarms) {
     if (alarm.value === ERROR_VALUE) {
-      warnings.push(`${NETRIS1_NAME} (TS): Invalid data for channel - ${alarm.channelName} : 0xffff, 65535`)
+      warnings.push(`Invalid data for channel - ${alarm.channelName} : 0xffff, 65535`)
     }
   }
 

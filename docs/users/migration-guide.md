@@ -33,6 +33,8 @@ Legacy parsers rely on top-level variables (for example `PRESSURE_RANGE_START`, 
 
 4. **Validate your integration.** Run a few known uplinks through the new parser to ensure the decoded values match expectations. Pay special attention to alarms and warning messages, as the new architecture surfaces richer validation feedback.
 
+    > **Error and warning prefixes:** The `4.x.x` parsers automatically catch any errors or warnings thrown by a codec during decoding and prefix them with the codec identifier that was used. If your legacy codec prefixed messages manually, you can now throw or emit the raw error/warning object and let the parser annotate it for you.
+
 5. **Retire the legacy script.** Once verification looks good, archive the old file and roll out the new parser wherever you previously deployed the `2.x.x` version.
 
 ## Migrating from 3.x.x to 4.x.x
@@ -42,6 +44,8 @@ Only `NETRIS2` currently ships a `3.x.x` parser. The upgrade is straightforward 
 1. **Download the new script.** Deploy the `4.x.x` bundle and keep the `3.x.x` file only as a reference while you verify behavior.
 
 2. **Test alarms and configuration flows.** As the `NETRIS2` only supports 4-20 mA, there is no need to adjust the measuring ranges. The `4.x.x` architecture performs stricter validation and surfaces more granular error messages. Re-run your acceptance tests to confirm alarms, configuration status messages, and downlink acknowledgements behave as expected.
+
+    > **Error and warning prefixes:** Just like the `2.x.x` migration, the parser now prefixes decoded errors and warnings with the codec identifier automatically. Remove any manual prefixing you had in custom handlers and rely on the parser output to show which codec emitted the message.
 
 ## Troubleshooting tips
 

@@ -189,6 +189,7 @@ The generics are intentionally strict today to guarantee type safety in the publ
    - Reuse helpers in `packages/parsers/src/codecs/tulip3/messages/` for decoding alarms, registers, and spontaneous messages.
    - Add new helpers when the protocol introduces message types outside the existing enums.
    - Keep return shapes aligned with the Valibot schemas (`packages/parsers/src/schemas`).
+  - Throw raw `Error` objects (or emit warnings via the shared helpers) when decoding failures occur. The parser runtime automatically catches them and prefixes the message with the codec identifier, so you don't need to prepend the codec name yourself.
 
 4. **Add downlink encoders when needed**
    - Extend the codec return type with an `encode` function.

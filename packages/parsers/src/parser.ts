@@ -74,8 +74,12 @@ export function defineParser<const TParserOptions extends ParserOptions>(options
 
   function createError(message: string): GenericFailureUplinkOutput {
     return {
-      errors: [`${parserName} (JS): ${message}`],
+      errors: [addPrefixToMessage(message)],
     }
+  }
+
+  function addPrefixToMessage(message: string): string {
+    return `${parserName} (JS): ${message}`
   }
 
   function decode(input: UplinkInput) {
@@ -108,8 +112,12 @@ export function defineParser<const TParserOptions extends ParserOptions>(options
       if (!validatedInput.success) {
         throw new Error(`Input is not a valid for decoding. Check your input data.`)
       }
-
-      return decode(validatedInput.output)
+      const result = decode(validatedInput.output)
+      // if there are warning, we add the prefix to the messages
+      if (result.warnings) {
+        result.warnings = result.warnings.map(addPrefixToMessage)
+      }
+      return result
     }
     catch (error) {
       if (error instanceof Error) {

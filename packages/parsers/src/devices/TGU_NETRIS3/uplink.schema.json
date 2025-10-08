@@ -1,505 +1,703 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "type": "object",
-    "properties": {
-        "$schema": {
-            "type": "string"
-        },
-        "data": {
-            "$ref": "#/definitions/Data"
-        },
-        "errors": {
-            "type": "array",
-            "items": {
-                "type": "string"
-            }
-        },
-        "warnings": {
-            "type": "array",
-            "items": {
-                "type": "string"
-            }
-        }
-    },
-    "additionalProperties": false,
-    "required": [],
-    "definitions": {
-        "Data": {
-            "type": "object",
-            "properties": {
-                "messageType": {
-                    "type": "integer",
-                    "maximum": 9,
-                    "minimum": 1
-                },
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "anyOf": [
+    {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
                 "configurationId": {
-                    "type": "integer"
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 31
+                },
+                "messageType": {
+                  "enum": [
+                    1,
+                    2
+                  ]
                 },
                 "measurement": {
-                    "type": "object",
-                    "properties": {
-                        "channels": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/Channel"
-                            }
-                        }
-                    },
-                    "additionalProperties": false,
-                    "required": [
-                        "channels"
-                    ]
+                  "type": "object",
+                  "properties": {
+                    "channels": {
+                      "type": "array",
+                      "items": {
+                        "anyOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "channelId": {
+                                "const": 0
+                              },
+                              "channelName": {
+                                "const": "temperature"
+                              },
+                              "value": {
+                                "type": "number"
+                              }
+                            },
+                            "required": [
+                              "channelId",
+                              "channelName",
+                              "value"
+                            ]
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "channelId": {
+                                "const": 1
+                              },
+                              "channelName": {
+                                "const": "device temperature"
+                              },
+                              "value": {
+                                "type": "number"
+                              }
+                            },
+                            "required": [
+                              "channelId",
+                              "channelName",
+                              "value"
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "channels"
+                  ]
+                }
+              },
+              "required": [
+                "configurationId",
+                "messageType",
+                "measurement"
+              ]
+            },
+            "warnings": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "data"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "configurationId": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 31
+                },
+                "messageType": {
+                  "enum": [
+                    3
+                  ]
                 },
                 "processAlarms": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/ProcessAlarm"
-                    }
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "channelId": {
+                            "const": 0
+                          },
+                          "channelName": {
+                            "const": "temperature"
+                          },
+                          "event": {
+                            "enum": [
+                              0,
+                              1
+                            ]
+                          },
+                          "eventName": {
+                            "enum": [
+                              "triggered",
+                              "disappeared"
+                            ]
+                          },
+                          "alarmType": {
+                            "enum": [
+                              0,
+                              1,
+                              2,
+                              3,
+                              4,
+                              5
+                            ]
+                          },
+                          "alarmTypeName": {
+                            "enum": [
+                              "low threshold",
+                              "high threshold",
+                              "falling slope",
+                              "rising slope",
+                              "low threshold with delay",
+                              "high threshold with delay"
+                            ]
+                          },
+                          "value": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "channelId",
+                          "channelName",
+                          "event",
+                          "eventName",
+                          "alarmType",
+                          "alarmTypeName",
+                          "value"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "channelId": {
+                            "const": 1
+                          },
+                          "channelName": {
+                            "const": "device temperature"
+                          },
+                          "event": {
+                            "enum": [
+                              0,
+                              1
+                            ]
+                          },
+                          "eventName": {
+                            "enum": [
+                              "triggered",
+                              "disappeared"
+                            ]
+                          },
+                          "alarmType": {
+                            "enum": [
+                              0,
+                              1,
+                              2,
+                              3,
+                              4,
+                              5
+                            ]
+                          },
+                          "alarmTypeName": {
+                            "enum": [
+                              "low threshold",
+                              "high threshold",
+                              "falling slope",
+                              "rising slope",
+                              "low threshold with delay",
+                              "high threshold with delay"
+                            ]
+                          },
+                          "value": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "channelId",
+                          "channelName",
+                          "event",
+                          "eventName",
+                          "alarmType",
+                          "alarmTypeName",
+                          "value"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "configurationId",
+                "messageType",
+                "processAlarms"
+              ]
+            },
+            "warnings": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "data"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "configurationId": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 31
+                },
+                "messageType": {
+                  "enum": [
+                    4
+                  ]
                 },
                 "technicalAlarms": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/TechnicalAlarm"
-                    }
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "alarmType": {
+                        "enum": [
+                          0,
+                          1,
+                          2,
+                          3,
+                          4
+                        ]
+                      },
+                      "alarmTypeName": {
+                        "enum": [
+                          "MV_STAT channel 0",
+                          "MV_STAT channel 1",
+                          "MV_STAT channel 2",
+                          "MV_STAT channel 3",
+                          "STAT_DEV"
+                        ]
+                      },
+                      "causeOfFailure": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "causeOfFailureName": {
+                        "enum": [
+                          "STAT_DEV_ERROR",
+                          "STAT_DEV_WARNING",
+                          "STAT_DEV_RESTARTED",
+                          "MV_STAT_ERROR",
+                          "MV_STAT_WARNING"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "alarmType",
+                      "alarmTypeName",
+                      "causeOfFailure",
+                      "causeOfFailureName"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "configurationId",
+                "messageType",
+                "technicalAlarms"
+              ]
+            },
+            "warnings": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "data"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "configurationId": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 31
+                },
+                "messageType": {
+                  "enum": [
+                    5
+                  ]
                 },
                 "deviceAlarm": {
-                    "$ref": "#/definitions/RadioUnitAlarm"
+                  "type": "object",
+                  "properties": {
+                    "alarmStatus": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "alarmStatusNames": {
+                      "type": "array",
+                      "items": {
+                        "enum": [
+                          "low battery",
+                          "temperature alarm",
+                          "duty cycle alarm",
+                          "UART alarm"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "alarmStatus",
+                    "alarmStatusNames"
+                  ]
+                }
+              },
+              "required": [
+                "configurationId",
+                "messageType",
+                "deviceAlarm"
+              ]
+            },
+            "warnings": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "data"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "configurationId": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 31
+                },
+                "messageType": {
+                  "enum": [
+                    7
+                  ]
                 },
                 "deviceInformation": {
-                    "$ref": "#/definitions/RadioUnitIdentification"
+                  "type": "object",
+                  "properties": {
+                    "productId": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "productIdName": {
+                      "anyOf": [
+                        {
+                          "const": "NETRIS3"
+                        },
+                        {
+                          "type": "number"
+                        }
+                      ]
+                    },
+                    "productSubId": {
+                      "enum": [
+                        0,
+                        1
+                      ]
+                    },
+                    "productSubIdName": {
+                      "enum": [
+                        "LoRaWAN",
+                        "MIOTY"
+                      ]
+                    },
+                    "sensorDeviceTypeId": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "channelConfigurations": {
+                      "type": "array",
+                      "items": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "measurand": {
+                              "enum": [
+                                1
+                              ]
+                            },
+                            "measurandName": {
+                              "enum": [
+                                "Temperature"
+                              ]
+                            },
+                            "measurementRangeStart": {
+                              "type": "number"
+                            },
+                            "measurementRangeEnd": {
+                              "type": "number"
+                            },
+                            "unit": {
+                              "enum": [
+                                1,
+                                2,
+                                3,
+                                4
+                              ]
+                            },
+                            "unitName": {
+                              "enum": [
+                                "°C",
+                                "°F",
+                                "K",
+                                "°R"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "measurand",
+                            "measurandName",
+                            "measurementRangeStart",
+                            "measurementRangeEnd",
+                            "unit",
+                            "unitName"
+                          ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "measurand": {
+                              "enum": [
+                                1
+                              ]
+                            },
+                            "measurandName": {
+                              "enum": [
+                                "Temperature"
+                              ]
+                            },
+                            "measurementRangeStart": {
+                              "type": "number"
+                            },
+                            "measurementRangeEnd": {
+                              "type": "number"
+                            },
+                            "unit": {
+                              "enum": [
+                                1,
+                                2,
+                                3,
+                                4
+                              ]
+                            },
+                            "unitName": {
+                              "enum": [
+                                "°C",
+                                "°F",
+                                "K",
+                                "°R"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "measurand",
+                            "measurandName",
+                            "measurementRangeStart",
+                            "measurementRangeEnd",
+                            "unit",
+                            "unitName"
+                          ]
+                        }
+                      ],
+                      "minItems": 2
+                    }
+                  },
+                  "required": [
+                    "productId",
+                    "productIdName",
+                    "productSubId",
+                    "productSubIdName",
+                    "sensorDeviceTypeId",
+                    "channelConfigurations"
+                  ]
+                }
+              },
+              "required": [
+                "configurationId",
+                "messageType",
+                "deviceInformation"
+              ]
+            },
+            "warnings": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "data"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "configurationId": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 31
+                },
+                "messageType": {
+                  "enum": [
+                    8
+                  ]
                 },
                 "deviceStatistic": {
-                    "$ref": "#/definitions/KeepAlive"
+                  "type": "object",
+                  "properties": {
+                    "numberOfMeasurements": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "numberOfTransmissions": {
+                      "type": "integer",
+                      "minimum": 0
+                    }
+                  },
+                  "required": [
+                    "numberOfMeasurements",
+                    "numberOfTransmissions"
+                  ]
+                }
+              },
+              "required": [
+                "configurationId",
+                "messageType",
+                "deviceStatistic"
+              ]
+            },
+            "warnings": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "data"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "configurationId": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 31
+                },
+                "messageType": {
+                  "enum": [
+                    9
+                  ]
                 },
                 "extendedDeviceInformation": {
-                    "$ref": "#/definitions/ExtendedRadioUnitIdentification"
-                }
-            },
-            "additionalProperties": false
-        },
-        "Channel": {
-            "type": "object",
-            "properties": {
-                "value": {
-                    "type": "number"
-                },
-                "channelId": {
-                    "type": "integer",
-                    "maximum": 1,
-                    "minimum": 0
-                },
-                "channelName": {
-                    "type": "string",
-                    "enum": [
-                        "temperature",
-                        "device temperature"
-                    ]
-                }
-            },
-            "additionalProperties": false,
-            "required": [
-                "value",
-                "channelId",
-                "channelName"
-            ]
-        },
-        "ProcessAlarm": {
-            "type": "object",
-            "properties": {
-                "channelId": {
-                    "type": "integer",
-                    "maximum": 1,
-                    "minimum": 0
-                },
-                "channelName": {
-                    "type": "string",
-                    "enum": [
-                        "temperature",
-                        "device temperature"
-                    ]
-                },
-                "event": {
-                    "type": "integer",
-                    "maximum": 1,
-                    "minimum": 0
-                },
-                "eventName": {
-                    "type": "string",
-                    "enum": [
-                        "triggered",
-                        "disappeared"
-                    ]
-                },
-                "alarmType": {
-                    "type": "integer",
-                    "maximum": 7,
-                    "minimum": 0
-                },
-                "alarmTypeName": {
-                    "type": "string",
-                    "enum": [
-                        "low threshold",
-                        "high threshold",
-                        "falling slope",
-                        "rising slope",
-                        "low threshold with delay",
-                        "high threshold with delay"
-                    ]
-                },
-                "value": {
-                    "type": "number"
-                }
-            },
-            "additionalProperties": false,
-            "required": [
-                "channelId",
-                "value",
-                "channelName",
-                "event",
-                "eventName",
-                "alarmType",
-                "alarmTypeName"
-            ]
-        },
-        "TechnicalAlarm": {
-            "type": "object",
-            "properties": {
-                "alarmType": {
-                    "type": "integer",
-                    "enum": [
-                        0,
-                        1,
-                        4
-                    ],
-                    "maximum": 4,
-                    "minimum": 0
-                },
-                "alarmTypeName": {
-                    "type": "string",
-                    "enum": [
-                        "STAT_DEV",
-                        "MV_STAT channel 0",
-                        "MV_STAT channel 1"
-                    ]
-                },
-                "causeOfFailure": {
-                    "type": "integer",
-                    "maximum": 2,
-                    "minimum": 0
-                },
-                "causeOfFailureName": {
-                    "type": "string",
-                    "enum": [
-                        "STAT_DEV_ERROR",
-                        "STAT_DEV_WARNING",
-                        "STAT_DEV_RESTARTED",
-                        "MV_STAT_ERROR",
-                        "MV_STAT_WARNING"
-                    ]
-                }
-            },
-            "additionalProperties": false,
-            "required": [
-                "alarmType",
-                "alarmTypeName",
-                "causeOfFailure",
-                "causeOfFailureName"
-            ]
-        },
-        "RadioUnitAlarm": {
-            "type": "object",
-            "properties": {
-                "alarmStatus": {
-                    "type": "integer",
-                    "maximum": 32767,
-                    "minimum": 0
-                },
-                "alarmStatusNames": {
-                    "type": "array",
-                    "items": {
-                        "type": "string",
-                        "enum": [
-                            "UART alarm",
-                            "duty cycle alarm",
-                            "temperature alarm",
-                            "low battery"
-                        ]
+                  "type": "object",
+                  "properties": {
+                    "optionalFieldsMask": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 15
+                    },
+                    "wikaSensorSerialNumber": {
+                      "type": "string"
+                    },
+                    "sensorLUID": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "sensorHardwareVersion": {
+                      "type": "string",
+                      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
+                    },
+                    "deviceHardwareVersion": {
+                      "type": "string",
+                      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
+                    },
+                    "sensorFirmwareVersion": {
+                      "type": "string",
+                      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
+                    },
+                    "deviceSerialNumber": {
+                      "type": "string"
+                    },
+                    "deviceProductCode": {
+                      "type": "string"
+                    },
+                    "deviceFirmwareVersion": {
+                      "type": "string",
+                      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
                     }
+                  },
+                  "required": [
+                    "optionalFieldsMask",
+                    "deviceHardwareVersion",
+                    "deviceSerialNumber",
+                    "deviceProductCode",
+                    "deviceFirmwareVersion"
+                  ]
                 }
+              },
+              "required": [
+                "configurationId",
+                "messageType",
+                "extendedDeviceInformation"
+              ]
             },
-            "additionalProperties": false,
-            "required": [
-                "alarmStatus",
-                "alarmStatusNames"
-            ]
-        },
-        "RadioUnitIdentification": {
-            "type": "object",
-            "properties": {
-                "productId": {
-                    "type": "integer",
-                    "maximum": 15,
-                    "minimum": 15
-                },
-                "productIdName": {
-                    "type": "string",
-                    "enum": [
-                        "NETRIS3"
-                    ]
-                },
-                "productSubId": {
-                    "type": "integer",
-                    "maximum": 1,
-                    "minimum": 0
-                },
-                "productSubIdName": {
-                    "type": "string",
-                    "enum": [
-                        "LoRaWAN",
-                        "MIOTY",
-                        "Unknown"
-                    ]
-                },
-                "sensorDeviceTypeId": {
-                    "type": "integer"
-                },
-                "channelConfigurations": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/ChannelConfiguration"
-                    }
-                }
-            },
-            "additionalProperties": false,
-            "required": [
-                "productIdName",
-                "productId",
-                "productSubId",
-                "productSubIdName",
-                "sensorDeviceTypeId"
-            ]
-        },
-        "ChannelConfiguration": {
-            "type": "object",
-            "properties": {
-                "measurand": {
-                    "type": "integer",
-                    "maximum": 28,
-                    "minimum": 1
-                },
-                "measurandName": {
-                    "type": "string",
-                    "enum": [
-                        "Temperature",
-                        "Temperature difference",
-                        "Pressure (gauge)",
-                        "Pressure (absolute)",
-                        "Pressure (differential)",
-                        "Flow (vol.)",
-                        "Flow (mass)",
-                        "Force",
-                        "Mass",
-                        "Level",
-                        "Length",
-                        "Volume",
-                        "Current",
-                        "Voltage",
-                        "Resistance",
-                        "Capacitance",
-                        "Inductance",
-                        "Relative",
-                        "Time",
-                        "Frequency",
-                        "Speed",
-                        "Acceleration",
-                        "Density",
-                        "Density (gauge pressure at 20 °C)",
-                        "Density (absolute pressure at 20 °C)",
-                        "Humidity (relative)",
-                        "Humidity (absolute)",
-                        "Angle of rotation / inclination",
-                        "Device specific",
-                        "Unknown"
-                    ]
-                },
-                "measurementRangeStart": {
-                    "type": "number"
-                },
-                "measurementRangeEnd": {
-                    "type": "number"
-                },
-                "unit": {
-                    "type": "integer",
-                    "maximum": 181,
-                    "minimum": 1
-                },
-                "unitName": {
-                    "type": "string",
-                    "enum": [
-                        "°C",
-                        "°F",
-                        "K",
-                        "°R",
-                        "bar",
-                        "mbar",
-                        "µbar",
-                        "Pa",
-                        "hPa",
-                        "kPa",
-                        "MPa",
-                        "psi",
-                        "lbf/ft²",
-                        "kN/m²",
-                        "N/cm²",
-                        "atm",
-                        "kg/cm²",
-                        "kg/mm²",
-                        "µmHg",
-                        "mmHg",
-                        "cmHg",
-                        "inHg",
-                        "mmH2O",
-                        "mH2O",
-                        "inH2O",
-                        "ftH2O",
-                        "N",
-                        "daN",
-                        "kN",
-                        "MN",
-                        "kp",
-                        "lbf",
-                        "ozf",
-                        "dyn",
-                        "kg",
-                        "g",
-                        "mg",
-                        "lb",
-                        "mm",
-                        "cm",
-                        "m",
-                        "µm",
-                        "ft",
-                        "in",
-                        "l",
-                        "ml",
-                        "m³",
-                        "gal (UK)",
-                        "gal (US)",
-                        "ft³",
-                        "in³",
-                        "mΩ",
-                        "Ω",
-                        "[kΩ] kiloohm",
-                        "μV",
-                        "mV",
-                        "V",
-                        "mA",
-                        "μA",
-                        "[μF] microfarad",
-                        "[nF] nanofarad",
-                        "[pF] picofarad",
-                        "[mH] millihenry",
-                        "[μH] henry",
-                        "[%] percent",
-                        "[‰] per mille",
-                        "[ppm]",
-                        "[°] degree",
-                        "[rad] radian",
-                        "counts, counter value",
-                        "[kg/m³]",
-                        "[g/m³]",
-                        "[mg/m³]",
-                        "[μg/m³]",
-                        "[kg/l]",
-                        "[g/l]",
-                        "[lb/ft³]",
-                        "[l/min] litre per minute",
-                        "[l/s] litre per second",
-                        "[m³/h] cubic metre per hour (cbm/h)",
-                        "[m³/s] cubic metre per second",
-                        "[cfm] cubic feet per minute",
-                        "[kg/s]",
-                        "[kg/h]",
-                        "[s]",
-                        "[min]",
-                        "[h] hour",
-                        "[d] day",
-                        "[Hz]",
-                        "[kHz]",
-                        "[m/s]",
-                        "[cm/s]",
-                        "[ft/min]",
-                        "[ft/s]",
-                        "[m/s²]",
-                        "[ft/s²]",
-                        "Unknown"
-                    ]
-                }
-            },
-            "additionalProperties": false,
-            "required": [
-                "measurand",
-                "measurandName",
-                "measurementRangeStart",
-                "measurementRangeEnd",
-                "unit",
-                "unitName"
-            ]
-        },
-        "KeepAlive": {
-            "type": "object",
-            "properties": {
-                "numberOfMeasurements": {
-                    "type": "integer"
-                },
-                "numberOfTransmissions": {
-                    "type": "integer"
-                }
-            },
-            "additionalProperties": false,
-            "required": [
-                "numberOfMeasurements",
-                "numberOfTransmissions"
-            ]
-        },
-        "ExtendedRadioUnitIdentification": {
-            "type": "object",
-            "properties": {
-                "optionalFieldsMask": {
-                    "type": "integer"
-                },
-                "wikaSensorSerialNumber": {
-                    "type": "string"
-                },
-                "sensorLUID": {
-                    "type": "integer"
-                },
-                "sensorHardwareVersion": {
-                    "type": "string"
-                },
-                "deviceHardwareVersion": {
-                    "type": "string"
-                },
-                "sensorFirmwareVersion": {
-                    "type": "string"
-                },
-                "deviceSerialNumber": {
-                    "type": "string"
-                },
-                "deviceProductCode": {
-                    "type": "string"
-                },
-                "deviceFirmwareVersion": {
-                    "type": "string"
-                }
-            },
-            "additionalProperties": false,
-            "required": [
-                "deviceHardwareVersion",
-                "deviceSerialNumber",
-                "deviceProductCode",
-                "deviceFirmwareVersion"
-            ]
+            "warnings": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "data"
+          ]
         }
+      ]
+    },
+    {
+      "type": "object",
+      "properties": {
+        "errors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "errors"
+      ]
     }
+  ]
 }

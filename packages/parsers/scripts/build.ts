@@ -15,6 +15,11 @@ export const TARGETS: string[] = [
   'NETRIS2',
   'NETRIS1',
   'TRW',
+  'TGU_NETRIS3',
+  'TRU_NETRIS3',
+  'FLRU_NETRIS3',
+  'PGU_NETRIS3',
+  'PEU_NETRIS3',
 ]
 
 // Minimal base config exported as default. This config intentionally has no entries
@@ -216,7 +221,7 @@ function postProcessBuiltFiles() {
       const jsdocPath = path.join(srcDevicesRoot, deviceDir, 'JSDOC.md')
       if (!fs.existsSync(jsdocPath)) {
         fs.writeFileSync(builtFile, content, 'utf8')
-        consola.info(`No JSDOC.md for ${deviceDir}, skipping doc append`)
+        consola.warn(`No JSDOC.md for ${deviceDir}, skipping doc append`)
         continue
       }
 

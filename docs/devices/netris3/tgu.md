@@ -11,14 +11,14 @@ The WIKA measuring instrument TGU73.100 is part of the WIKA IIoT solution. With 
 
 For more information see [product site](https://www.wika.com/en-en/tgu73_100.WIKA).
 
-## JavaScript Parser API
+<script setup>
+import README from '../../../packages/parsers/src/devices/TGU_NETRIS3/README.md'
+import JSDOC from '../../../packages/parsers/src/devices/TGU_NETRIS3/JSDOC.md'
+</script>
 
-The following functions are exposed by the JavaScript parser:
+<README />
 
-- `decodeUplink(input)`
-- `decodeHexString(fPort, hexEncodedString)`
-- `decodeBase64String(fPort, base64EncodedString)`
-- `setMeasurementRanges(levelRangeStart, levelRangeEnd)`
+<JSDOC />
 
 ## NPM Module Inclusion
 

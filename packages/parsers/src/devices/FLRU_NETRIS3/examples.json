@@ -106,9 +106,8 @@
       "recvTime": "1992-12-22T17:00:00+01:00"
     },
     "output": {
-      "data": {},
       "errors": [
-        "FLRU+NETRIS3 (JS): Data message type 00 not supported"
+        "FLRU+NETRIS3 (JS): Message could not be decoded. No codec matched the input."
       ]
     }
   },
@@ -125,7 +124,6 @@
       "recvTime": "1992-12-22T17:00:00+01:00"
     },
     "output": {
-      "data": {},
       "errors": [
         "FLRU+NETRIS3 (JS): Data message 01/02 needs at least 4 and maximum 11 bytes but got 3"
       ]
@@ -145,14 +143,7 @@
       "recvTime": "1992-12-22T17:00:00+01:00"
     },
     "output": {
-      "data": {
-        "messageType": 1,
-        "configurationId": 0,
-        "measurement": {
-          "channels": []
-        }
-      },
-      "warnings": [
+      "errors": [
         "FLRU+NETRIS3 (JS): Not enough data to decode channel (level). Payload must has a length of 2 bytes, input data length: 4"
       ]
     }
@@ -382,9 +373,8 @@
       "recvTime": "1992-12-22T17:00:00+01:00"
     },
     "output": {
-      "data": {},
       "errors": [
-        "FLRU+NETRIS3 (JS): Data message type 06 not supported"
+        "FLRU+NETRIS3 (JS): Message could not be decoded. No codec matched the input."
       ]
     }
   },
@@ -401,9 +391,8 @@
       "recvTime": "1992-12-22T17:00:00+01:00"
     },
     "output": {
-      "data": {},
       "errors": [
-        "FLRU+NETRIS3 (JS): Data message type 06 not supported"
+        "FLRU+NETRIS3 (JS): Message could not be decoded. No codec matched the input."
       ]
     }
   },

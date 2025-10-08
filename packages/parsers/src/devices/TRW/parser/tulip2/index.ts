@@ -53,6 +53,10 @@ const handleDataMessage: Handler<TULIP2Channel[], TRWTULIP2DataMessageUplinkOutp
     ? ERROR_VALUE
     : roundValue(TULIPValueToValue(channelRaw, options.channels[0]), options.roundingDecimals)
 
+  if (value === ERROR_VALUE) {
+    throw new Error('Invalid data for channel - temperature : 0xffff, 65535')
+  }
+
   const res: TRWTULIP2DataMessageUplinkOutput = {
     data: {
       configurationId,
@@ -67,12 +71,6 @@ const handleDataMessage: Handler<TULIP2Channel[], TRWTULIP2DataMessageUplinkOutp
         ],
       },
     },
-  }
-
-  if (value === ERROR_VALUE) {
-    res.warnings = [
-      `${TRW_NAME} (TS): Invalid data for channel - temperature : 0xffff, 65535`,
-    ]
   }
 
   return res
@@ -126,7 +124,7 @@ const handleProcessAlarmMessage: Handler<TULIP2Channel[], TRWTULIP2ProcessAlarms
   // Check for ERROR_VALUE in process alarms and add warnings
   for (const alarm of processAlarms) {
     if (alarm.value === ERROR_VALUE) {
-      warnings.push(`${TRW_NAME} (TS): Invalid data for channel - ${alarm.channelName} : 0xffff, 65535`)
+      warnings.push(`Invalid data for channel - ${alarm.channelName} : 0xffff, 65535`)
     }
   }
 

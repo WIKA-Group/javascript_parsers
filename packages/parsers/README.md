@@ -9,11 +9,11 @@ If you are looking for a way to include javascript parsers in your project, plea
 <!-- #region devices-and-apis -->
 ## Supported Devices and Versions
 <!-- #region devices-versions-table -->
-   | Parser generation       | Version | Devices                                                             |
-   |-------------------------|---------|---------------------------------------------------------------------|
-   | Modern modular          | `4.x.x` | PEW, NETRIS1, TRW                                                   |
-   | Transitional TypeScript | `3.x.x` | NETRIS2                                                             |
-   | Legacy JavaScript       | `2.x.x` | A2G, F98W6, GD20W, PGW23, NETRIS3 family (FLRU, PEU, PGU, TGU, TRU) |
+| Parser generation       | Version | Devices                                                                           |
+|-------------------------|---------|-----------------------------------------------------------------------------------|
+| Modern modular          | `4.x.x` | PEW, NETRIS1, NETRIS3 family (FLRU, PEU, PGU, TGU, TRU), TRW                      |
+| Transitional TypeScript | `3.x.x` | NETRIS2                                                                           |
+| Legacy JavaScript       | `2.x.x` | A2G, F98W6, GD20W, PGW23                                                          |
 <!-- #endregion devices-versions-table -->
 
 ## Version 4.x.x
