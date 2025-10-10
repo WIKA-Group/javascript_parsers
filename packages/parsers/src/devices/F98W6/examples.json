@@ -66,7 +66,7 @@
             {
               "channelId": 0,
               "channelName": "strain",
-              "value": -468.687
+              "value": -468.688
             },
             {
               "channelId": 1,
@@ -108,7 +108,7 @@
             {
               "channelId": 0,
               "channelName": "strain",
-              "value": -313.187
+              "value": -313.188
             },
             {
               "channelId": 1,
@@ -142,9 +142,8 @@
       "recvTime": "1992-12-22T17:00:00+01:00"
     },
     "output": {
-      "data": {},
       "errors": [
-        "F98W6 (JS): Data message type 00 not supported"
+        "F98W6 (JS): Message could not be decoded. No codec matched the input."
       ]
     }
   },
@@ -161,7 +160,6 @@
       "recvTime": "1992-12-22T17:00:00+01:00"
     },
     "output": {
-      "data": {},
       "errors": [
         "F98W6 (JS): Data message 01/02 needs 7 bytes but got 3"
       ]
@@ -225,7 +223,7 @@
             "eventName": "disappeared",
             "alarmType": 3,
             "alarmTypeName": "rising slope",
-            "value": -43.031
+            "value": -43.032
           }
         ]
       }
@@ -386,9 +384,8 @@
       "recvTime": "1992-12-22T17:00:00+01:00"
     },
     "output": {
-      "data": {},
       "errors": [
-        "F98W6 (JS): Data message type 06 not supported"
+        "F98W6 (JS): Message could not be decoded. No codec matched the input."
       ]
     }
   },
@@ -405,9 +402,8 @@
       "recvTime": "1992-12-22T17:00:00+01:00"
     },
     "output": {
-      "data": {},
       "errors": [
-        "F98W6 (JS): Data message type 06 not supported"
+        "F98W6 (JS): Message could not be decoded. No codec matched the input."
       ]
     }
   },
