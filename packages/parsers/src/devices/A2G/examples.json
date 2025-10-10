@@ -569,9 +569,8 @@
       "recvTime": "1992-12-22T17:00:00+01:00"
     },
     "output": {
-      "data": {},
       "errors": [
-        "A2G (JS): Data message type 00 not supported"
+        "A2G (JS): Message could not be decoded. No codec matched the input."
       ]
     }
   },
@@ -588,7 +587,6 @@
       "recvTime": "1992-12-22T17:00:00+01:00"
     },
     "output": {
-      "data": {},
       "errors": [
         "A2G (JS): Data message 01 needs 6 or 27 bytes but got 3"
       ]
@@ -608,7 +606,6 @@
       "recvTime": "1992-12-22T17:00:00+01:00"
     },
     "output": {
-      "data": {},
       "errors": [
         "A2G (JS): Data message 01 needs 6 or 27 bytes but got 4"
       ]
@@ -629,9 +626,8 @@
       "recvTime": "1992-12-22T17:00:00+01:00"
     },
     "output": {
-      "data": {},
       "errors": [
-        "A2G (JS): Data message type 02 not supported"
+        "A2G (JS): Message could not be decoded. No codec matched the input."
       ]
     }
   },
@@ -651,9 +647,8 @@
       "recvTime": "1992-12-22T17:00:00+01:00"
     },
     "output": {
-      "data": {},
       "errors": [
-        "A2G (JS): Data message type 03 not supported"
+        "A2G (JS): Message could not be decoded. No codec matched the input."
       ]
     }
   },
@@ -698,9 +693,8 @@
       "recvTime": "1992-12-22T17:00:00+01:00"
     },
     "output": {
-      "data": {},
       "errors": [
-        "A2G (JS): Alarm message 04 needs 3 bytes but got 2"
+        "A2G (JS): Technical alarm message 04 needs 3 bytes but got 2"
       ]
     }
   },
@@ -755,9 +749,8 @@
       "recvTime": "1992-12-22T17:00:00+01:00"
     },
     "output": {
-      "data": {},
       "errors": [
-        "A2G (JS): Alarm message 05 needs 4 bytes but got 3"
+        "A2G (JS): Device alarm message 05 needs 4 bytes but got 3"
       ]
     }
   },
@@ -774,9 +767,8 @@
       "recvTime": "1992-12-22T17:00:00+01:00"
     },
     "output": {
-      "data": {},
       "errors": [
-        "A2G (JS): Data message type 06 not supported"
+        "A2G (JS): Message could not be decoded. No codec matched the input."
       ]
     }
   },
@@ -991,10 +983,7 @@
       "recvTime": "1992-12-22T17:00:00+01:00"
     },
     "output": {
-      "data": {
-        "messageType": 8,
-        "configurationId": 31
-      },
+
       "errors": [
         "A2G (JS): Keep Alive message 08: The device reports an error during the calculation of the battery capacity."
       ]
@@ -1014,9 +1003,8 @@
       "recvTime": "1992-12-22T17:00:00+01:00"
     },
     "output": {
-      "data": {},
       "errors": [
-        "A2G (JS): Data message type 09 not supported"
+        "A2G (JS): Message could not be decoded. No codec matched the input."
       ]
     }
   },
