@@ -14,6 +14,7 @@ import type {
 import { GD20W_NAME } from '..'
 import { defineTULIP2Codec } from '../../../../codecs/tulip2'
 import { intTuple4ToFloat32WithThreshold, roundValue, slopeValueToValue, TULIPValueToValue } from '../../../../utils'
+import { createGD20WTULIP2Channels } from './channels'
 import {
   ALARM_EVENTS,
   CONFIGURATION_STATUS_BY_ID,
@@ -28,20 +29,6 @@ import {
 
 const ERROR_VALUE = 0xFFFF
 const GD20W_ROUNDING_DECIMALS = 3
-
-// eslint-disable-next-line ts/explicit-function-return-type
-export function createGD20WTULIP2Channels() {
-  const channels: TULIP2Channel[] = [
-    { channelId: 0, name: 'channel0', start: 4, end: 20 },
-    { channelId: 1, name: 'channel1', start: 4, end: 20 },
-    { channelId: 2, name: 'channel2', start: 4, end: 20 },
-    { channelId: 3, name: 'channel3', start: 4, end: 20 },
-    { channelId: 4, name: 'channel4', start: 4, end: 20 },
-    { channelId: 5, name: 'channel5', start: 4, end: 20 },
-  ]
-
-  return channels
-}
 
 type GD20WTULIP2Channels = ReturnType<typeof createGD20WTULIP2Channels>
 
@@ -80,6 +67,7 @@ const handleDataMessage: Handler<GD20WTULIP2Channels, GD20WTULIP2DataMessageUpli
 
     return {
       channelId: channel.channelId,
+      channelName: channel.name,
       value,
     }
   })
@@ -131,6 +119,7 @@ const handleProcessAlarmMessage: Handler<GD20WTULIP2Channels, GD20WTULIP2Process
       : roundValue(TULIPValueToValue(rawValue, channel), options.roundingDecimals)
 
     processAlarms.push({
+      channelName: channel.name as any,
       channelId: channel.channelId as any,
       alarmType: alarmType as any,
       alarmTypeName: getProcessAlarmTypeName(alarmType),
@@ -149,7 +138,7 @@ const handleProcessAlarmMessage: Handler<GD20WTULIP2Channels, GD20WTULIP2Process
   }
 }
 
-const handleSensorTechnicalAlarmMessage: Handler<GD20WTULIP2Channels, GD20WTULIP2SensorTechnicalAlarmsUplinkOutput> = (input) => {
+const handleSensorTechnicalAlarmMessage: Handler<GD20WTULIP2Channels, GD20WTULIP2SensorTechnicalAlarmsUplinkOutput> = (input, options) => {
   const maxLengthBytes = 5
   const warnings: string[] = []
 
@@ -159,6 +148,7 @@ const handleSensorTechnicalAlarmMessage: Handler<GD20WTULIP2Channels, GD20WTULIP
 
   const configurationId = input.bytes[1]!
   const channelId = input.bytes[2]!
+  const channel = getChannelById(options.channels, channelId)
   const alarmBitMap = (input.bytes[3]! << 8) | input.bytes[4]!
 
   const alarms: SensorTechnicalAlarmId[] = []
@@ -184,6 +174,7 @@ const handleSensorTechnicalAlarmMessage: Handler<GD20WTULIP2Channels, GD20WTULIP
       messageType: 0x04,
       configurationId,
       sensorTechnicalAlarms: alarms.map(alarm => ({
+        channelName: channel.name as any,
         channelId: channelId as any,
         alarmType: alarm,
         alarmDescription: SENSOR_TECHNICAL_ALARMS_BY_ID[alarm],
@@ -445,7 +436,7 @@ const handleDeviceStatisticsMessage: Handler<GD20WTULIP2Channels, GD20WTULIP2Dev
   return result
 }
 
-const handleExtendedDeviceIdentificationMessage: Handler<GD20WTULIP2Channels, GD20WTULIP2ExtendedDeviceIdentificationUplinkOutput> = (input, options) => {
+const handleExtendedDeviceIdentificationMessage: Handler<GD20WTULIP2Channels, GD20WTULIP2ExtendedDeviceIdentificationUplinkOutput> = (input) => {
   const minLength = 50
 
   const warnings: string[] = []
@@ -486,16 +477,6 @@ const handleExtendedDeviceIdentificationMessage: Handler<GD20WTULIP2Channels, GD
       max: readFloat32(input.bytes, 46),
     },
   } as const
-
-  // Update channel ranges so that subsequent measurements use the new spans
-  options.channels.forEach((channel) => {
-    const key = `channel${channel.channelId}` as keyof typeof ranges
-    const range = ranges[key]
-    if (range) {
-      channel.start = range.min
-      channel.end = range.max
-    }
-  })
 
   const result: GD20WTULIP2ExtendedDeviceIdentificationUplinkOutput = {
     data: {

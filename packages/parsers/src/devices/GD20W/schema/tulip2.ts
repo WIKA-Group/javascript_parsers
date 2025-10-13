@@ -2,6 +2,9 @@
 import * as v from 'valibot'
 import { createUplinkOutputSchemaFactory } from '../../../schemas/tulip2/uplink'
 import {
+  createGD20WTULIP2Channels,
+} from '../parser/tulip2/channels'
+import {
   ALARM_EVENTS,
   CONFIGURATION_STATUS_BY_ID,
   DEVICE_ALARM_VALID_BITS,
@@ -15,7 +18,6 @@ import {
 
 const createUplinkSchema = createUplinkOutputSchemaFactory(255)
 
-const CHANNEL_IDS = [0, 1, 2, 3, 4, 5] as const
 const PROCESS_ALARM_TYPE_VALUES = Object.values(PROCESS_ALARM_TYPES)
 const PROCESS_ALARM_TYPE_NAMES = Object.keys(PROCESS_ALARM_TYPES) as (keyof typeof PROCESS_ALARM_TYPES)[]
 const ALARM_EVENT_VALUES = Object.values(ALARM_EVENTS)
@@ -29,11 +31,15 @@ const CONFIGURATION_STATUS_DESCRIPTIONS = Object.values(CONFIGURATION_STATUS_BY_
 const MEASURAND_VALUES = Object.values(MEASURANDS_BY_ID) as string[]
 const UNIT_VALUES = Object.values(UNITS_BY_ID) as string[]
 
+const CHANNEL_IDS = createGD20WTULIP2Channels().map(channel => channel.channelId) as ReturnType<typeof createGD20WTULIP2Channels>[number]['channelId'][]
+const ChANNEL_NAMES = createGD20WTULIP2Channels().map(channel => channel.name) as ReturnType<typeof createGD20WTULIP2Channels>[number]['name'][]
+
 function createMeasurementsSchema() {
   return v.object({
     channels: v.array(
       v.object({
         channelId: v.picklist(CHANNEL_IDS),
+        channelName: v.picklist(ChANNEL_NAMES),
         value: v.number(),
       }),
     ),
@@ -44,6 +50,7 @@ function createProcessAlarmsSchema() {
   return v.array(
     v.object({
       channelId: v.picklist(CHANNEL_IDS),
+      channelName: v.picklist(ChANNEL_NAMES),
       alarmType: v.picklist(PROCESS_ALARM_TYPE_VALUES),
       alarmTypeName: v.picklist(PROCESS_ALARM_TYPE_NAMES),
       event: v.picklist(ALARM_EVENT_VALUES),
@@ -57,6 +64,7 @@ function createSensorTechnicalAlarmsSchema() {
   return v.array(
     v.object({
       channelId: v.picklist(CHANNEL_IDS),
+      channelName: v.picklist(ChANNEL_NAMES),
       alarmType: v.picklist(SENSOR_ALARM_TYPE_VALUES),
       alarmDescription: v.picklist(SENSOR_ALARM_DESCRIPTIONS),
     }),

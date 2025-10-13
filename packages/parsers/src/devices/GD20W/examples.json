@@ -27,14 +27,17 @@
           "channels": [
             {
               "channelId": 0,
+              "channelName": "channel0",
               "value": 7.507
             },
             {
               "channelId": 1,
+              "channelName": "channel1",
               "value": 13.602
             },
             {
               "channelId": 4,
+              "channelName": "channel4",
               "value": 9.555
             }
           ]
@@ -57,6 +60,7 @@
         "processAlarms": [
           {
             "channelId": 0,
+            "channelName": "channel0",
             "alarmType": 0,
             "alarmTypeName": "low threshold",
             "event": 0,
@@ -83,7 +87,8 @@
           {
             "channelId": 0,
             "alarmType": 10,
-            "alarmDescription": "recurring modbus communication error"
+            "alarmDescription": "recurring modbus communication error",
+            "channelName": "channel0"
           }
         ]
       }
