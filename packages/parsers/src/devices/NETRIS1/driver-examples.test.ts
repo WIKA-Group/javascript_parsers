@@ -4,12 +4,6 @@ import examples from './examples.json' assert { type: 'json' }
 import { useParser } from './parser'
 import { createNETRIS1UplinkOutputSchema } from './schema'
 
-examples.forEach((e) => {
-  if (!e.type) {
-    throw new Error(`Example is missing type: ${JSON.stringify(e)}`)
-  }
-})
-
 const uplinkExamples = examples.filter(e => e.type.startsWith('uplink'))
 
 describe('netris1 parser', () => {

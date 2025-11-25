@@ -118,7 +118,9 @@ describe('defineParser', () => {
   it('should throw error if encodeDownlink codec not found', () => {
     const codec = new MockCodec({ name: 'codec1', channels: validChannels })
     const parser = defineParser({ parserName: 'TestParser', codecs: [codec] })
-    expect(() => parser.encodeDownlink({ codec: 'notfound', input: {} })).toThrow(/not found/)
+    const res = parser.encodeDownlink({ codec: 'notfound', input: {} })
+    // here the res.errors should have one entry about codec not found
+    expect(res.errors![0]).toMatch(/Codec notfound not found in parser./)
   })
 
   it('should call adjustMeasuringRange on all codecs', () => {

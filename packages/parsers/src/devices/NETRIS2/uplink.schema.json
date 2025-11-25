@@ -6,25 +6,21 @@
         {
           "type": "object",
           "properties": {
-            "warnings": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
             "data": {
               "type": "object",
               "properties": {
+                "configurationId": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 31
+                },
                 "messageType": {
                   "enum": [
                     1,
                     2
                   ]
                 },
-                "configurationId": {
-                  "type": "number"
-                },
-                "measurements": {
+                "measurement": {
                   "type": "object",
                   "properties": {
                     "channels": {
@@ -36,19 +32,19 @@
                               "type": "object",
                               "properties": {
                                 "channelId": {
-                                  "type": "number"
+                                  "const": 0
+                                },
+                                "channelName": {
+                                  "const": "Electrical current1"
                                 },
                                 "value": {
                                   "type": "number"
-                                },
-                                "channelName": {
-                                  "type": "string"
                                 }
                               },
                               "required": [
                                 "channelId",
-                                "value",
-                                "channelName"
+                                "channelName",
+                                "value"
                               ]
                             }
                           ],
@@ -61,38 +57,38 @@
                               "type": "object",
                               "properties": {
                                 "channelId": {
-                                  "type": "number"
+                                  "const": 0
+                                },
+                                "channelName": {
+                                  "const": "Electrical current1"
                                 },
                                 "value": {
                                   "type": "number"
-                                },
-                                "channelName": {
-                                  "type": "string"
                                 }
                               },
                               "required": [
                                 "channelId",
-                                "value",
-                                "channelName"
+                                "channelName",
+                                "value"
                               ]
                             },
                             {
                               "type": "object",
                               "properties": {
                                 "channelId": {
-                                  "type": "number"
+                                  "const": 1
+                                },
+                                "channelName": {
+                                  "const": "Electrical current2"
                                 },
                                 "value": {
                                   "type": "number"
-                                },
-                                "channelName": {
-                                  "type": "string"
                                 }
                               },
                               "required": [
                                 "channelId",
-                                "value",
-                                "channelName"
+                                "channelName",
+                                "value"
                               ]
                             }
                           ],
@@ -107,10 +103,16 @@
                 }
               },
               "required": [
-                "messageType",
                 "configurationId",
-                "measurements"
+                "messageType",
+                "measurement"
               ]
+            },
+            "warnings": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
             }
           },
           "required": [
@@ -120,78 +122,156 @@
         {
           "type": "object",
           "properties": {
-            "warnings": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
             "data": {
               "type": "object",
               "properties": {
-                "messageType": {
-                  "const": 3
-                },
                 "configurationId": {
-                  "type": "number"
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 31
+                },
+                "messageType": {
+                  "enum": [
+                    3
+                  ]
                 },
                 "processAlarms": {
                   "type": "array",
                   "items": {
-                    "type": "object",
-                    "properties": {
-                      "channelId": {
-                        "type": "number"
-                      },
-                      "channelName": {
-                        "type": "string"
-                      },
-                      "event": {
-                        "enum": [
-                          0,
-                          1
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "channelId": {
+                            "anyOf": [
+                              {
+                                "const": 0
+                              }
+                            ]
+                          },
+                          "channelName": {
+                            "const": "Electrical current1"
+                          },
+                          "event": {
+                            "enum": [
+                              0,
+                              1
+                            ]
+                          },
+                          "eventName": {
+                            "enum": [
+                              "triggered",
+                              "disappeared"
+                            ]
+                          },
+                          "alarmType": {
+                            "enum": [
+                              0,
+                              1,
+                              2,
+                              3,
+                              4,
+                              5
+                            ]
+                          },
+                          "alarmTypeName": {
+                            "enum": [
+                              "low threshold",
+                              "high threshold",
+                              "falling slope",
+                              "rising slope",
+                              "low threshold with delay",
+                              "high threshold with delay"
+                            ]
+                          },
+                          "value": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "channelId",
+                          "channelName",
+                          "event",
+                          "eventName",
+                          "alarmType",
+                          "alarmTypeName",
+                          "value"
                         ]
                       },
-                      "eventName": {
-                        "enum": [
-                          "triggered",
-                          "disappeared"
+                      {
+                        "type": "object",
+                        "properties": {
+                          "channelId": {
+                            "anyOf": [
+                              {
+                                "const": 1
+                              }
+                            ]
+                          },
+                          "channelName": {
+                            "const": "Electrical current2"
+                          },
+                          "event": {
+                            "enum": [
+                              0,
+                              1
+                            ]
+                          },
+                          "eventName": {
+                            "enum": [
+                              "triggered",
+                              "disappeared"
+                            ]
+                          },
+                          "alarmType": {
+                            "enum": [
+                              0,
+                              1,
+                              2,
+                              3,
+                              4,
+                              5
+                            ]
+                          },
+                          "alarmTypeName": {
+                            "enum": [
+                              "low threshold",
+                              "high threshold",
+                              "falling slope",
+                              "rising slope",
+                              "low threshold with delay",
+                              "high threshold with delay"
+                            ]
+                          },
+                          "value": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "channelId",
+                          "channelName",
+                          "event",
+                          "eventName",
+                          "alarmType",
+                          "alarmTypeName",
+                          "value"
                         ]
-                      },
-                      "alarmType": {
-                        "type": "number"
-                      },
-                      "alarmTypeName": {
-                        "enum": [
-                          "low threshold",
-                          "high threshold",
-                          "falling slope",
-                          "rising slope",
-                          "low threshold with delay",
-                          "high threshold with delay"
-                        ]
-                      },
-                      "value": {
-                        "type": "number"
                       }
-                    },
-                    "required": [
-                      "channelId",
-                      "channelName",
-                      "event",
-                      "eventName",
-                      "alarmType",
-                      "alarmTypeName",
-                      "value"
                     ]
                   }
                 }
               },
               "required": [
-                "messageType",
                 "configurationId",
+                "messageType",
                 "processAlarms"
               ]
+            },
+            "warnings": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
             }
           },
           "required": [
@@ -201,81 +281,148 @@
         {
           "type": "object",
           "properties": {
-            "warnings": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
             "data": {
               "type": "object",
               "properties": {
-                "messageType": {
-                  "const": 4
-                },
                 "configurationId": {
-                  "type": "number"
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 31
+                },
+                "messageType": {
+                  "enum": [
+                    4
+                  ]
                 },
                 "technicalAlarms": {
                   "type": "array",
                   "items": {
-                    "type": "object",
-                    "properties": {
-                      "channelId": {
-                        "type": "number"
-                      },
-                      "channelName": {
-                        "type": "string"
-                      },
-                      "event": {
-                        "enum": [
-                          0,
-                          1
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "channelId": {
+                            "anyOf": [
+                              {
+                                "const": 0
+                              }
+                            ]
+                          },
+                          "channelName": {
+                            "const": "Electrical current1"
+                          },
+                          "event": {
+                            "enum": [
+                              0,
+                              1
+                            ]
+                          },
+                          "eventName": {
+                            "enum": [
+                              "triggered",
+                              "disappeared"
+                            ]
+                          },
+                          "causeOfFailure": {
+                            "enum": [
+                              0,
+                              1,
+                              2,
+                              3,
+                              4,
+                              5
+                            ]
+                          },
+                          "causeOfFailureName": {
+                            "enum": [
+                              "no alarm",
+                              "open condition",
+                              "short condition",
+                              "saturated low",
+                              "saturated high",
+                              "ADC communication error"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "channelId",
+                          "channelName",
+                          "event",
+                          "eventName",
+                          "causeOfFailure",
+                          "causeOfFailureName"
                         ]
                       },
-                      "eventName": {
-                        "enum": [
-                          "triggered",
-                          "disappeared"
-                        ]
-                      },
-                      "causeOfFailure": {
-                        "enum": [
-                          0,
-                          1,
-                          2,
-                          3,
-                          4,
-                          5
-                        ]
-                      },
-                      "causeOfFailureName": {
-                        "enum": [
-                          "no alarm",
-                          "open condition",
-                          "short condition",
-                          "saturated low",
-                          "saturated high",
-                          "ADC communication error"
+                      {
+                        "type": "object",
+                        "properties": {
+                          "channelId": {
+                            "anyOf": [
+                              {
+                                "const": 1
+                              }
+                            ]
+                          },
+                          "channelName": {
+                            "const": "Electrical current2"
+                          },
+                          "event": {
+                            "enum": [
+                              0,
+                              1
+                            ]
+                          },
+                          "eventName": {
+                            "enum": [
+                              "triggered",
+                              "disappeared"
+                            ]
+                          },
+                          "causeOfFailure": {
+                            "enum": [
+                              0,
+                              1,
+                              2,
+                              3,
+                              4,
+                              5
+                            ]
+                          },
+                          "causeOfFailureName": {
+                            "enum": [
+                              "no alarm",
+                              "open condition",
+                              "short condition",
+                              "saturated low",
+                              "saturated high",
+                              "ADC communication error"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "channelId",
+                          "channelName",
+                          "event",
+                          "eventName",
+                          "causeOfFailure",
+                          "causeOfFailureName"
                         ]
                       }
-                    },
-                    "required": [
-                      "channelId",
-                      "channelName",
-                      "event",
-                      "eventName",
-                      "causeOfFailure",
-                      "causeOfFailureName"
                     ]
                   }
                 }
               },
               "required": [
-                "messageType",
                 "configurationId",
+                "messageType",
                 "technicalAlarms"
               ]
+            },
+            "warnings": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
             }
           },
           "required": [
@@ -285,20 +432,18 @@
         {
           "type": "object",
           "properties": {
-            "warnings": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
             "data": {
               "type": "object",
               "properties": {
-                "messageType": {
-                  "const": 6
-                },
                 "configurationId": {
-                  "type": "number"
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 31
+                },
+                "messageType": {
+                  "enum": [
+                    6
+                  ]
                 },
                 "configurationStatus": {
                   "type": "object",
@@ -327,10 +472,16 @@
                 }
               },
               "required": [
-                "messageType",
                 "configurationId",
+                "messageType",
                 "configurationStatus"
               ]
+            },
+            "warnings": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
             }
           },
           "required": [
@@ -340,20 +491,18 @@
         {
           "type": "object",
           "properties": {
-            "warnings": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
             "data": {
               "type": "object",
               "properties": {
-                "messageType": {
-                  "const": 7
-                },
                 "configurationId": {
-                  "type": "number"
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 31
+                },
+                "messageType": {
+                  "enum": [
+                    7
+                  ]
                 },
                 "radioUnitIdentification": {
                   "type": "object",
@@ -361,20 +510,30 @@
                     "productId": {
                       "const": 14
                     },
+                    "productIdName": {
+                      "const": "NETRIS2"
+                    },
                     "productSubId": {
                       "const": 0
                     },
+                    "productSubIdName": {
+                      "const": "standard"
+                    },
                     "radioUnitModemFirmwareVersion": {
-                      "type": "string"
+                      "type": "string",
+                      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
                     },
                     "radioUnitModemHardwareVersion": {
-                      "type": "string"
+                      "type": "string",
+                      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
                     },
                     "radioUnitFirmwareVersion": {
-                      "type": "string"
+                      "type": "string",
+                      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
                     },
                     "radioUnitHardwareVersion": {
-                      "type": "string"
+                      "type": "string",
+                      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
                     },
                     "serialNumber": {
                       "type": "string"
@@ -382,7 +541,9 @@
                   },
                   "required": [
                     "productId",
+                    "productIdName",
                     "productSubId",
+                    "productSubIdName",
                     "radioUnitModemFirmwareVersion",
                     "radioUnitModemHardwareVersion",
                     "radioUnitFirmwareVersion",
@@ -392,10 +553,16 @@
                 }
               },
               "required": [
-                "messageType",
                 "configurationId",
+                "messageType",
                 "radioUnitIdentification"
               ]
+            },
+            "warnings": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
             }
           },
           "required": [
@@ -405,35 +572,37 @@
         {
           "type": "object",
           "properties": {
-            "warnings": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
             "data": {
               "type": "object",
               "properties": {
-                "messageType": {
-                  "const": 8
-                },
                 "configurationId": {
-                  "type": "number"
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 31
+                },
+                "messageType": {
+                  "enum": [
+                    8
+                  ]
                 },
                 "deviceStatistic": {
                   "type": "object",
                   "properties": {
                     "numberOfMeasurements": {
-                      "type": "number"
+                      "type": "integer",
+                      "minimum": 0
                     },
                     "numberOfTransmissions": {
-                      "type": "number"
+                      "type": "integer",
+                      "minimum": 0
                     },
                     "batteryResetSinceLastKeepAlive": {
                       "type": "boolean"
                     },
                     "estimatedBatteryPercent": {
-                      "type": "number"
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 100
                     },
                     "batteryCalculationError": {
                       "type": "boolean"
@@ -453,10 +622,16 @@
                 }
               },
               "required": [
-                "messageType",
                 "configurationId",
+                "messageType",
                 "deviceStatistic"
               ]
+            },
+            "warnings": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
             }
           },
           "required": [

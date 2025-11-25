@@ -1,7 +1,7 @@
 /* eslint-disable ts/explicit-function-return-type */
 import type { AnyCodec, Codec } from './codecs/codec'
 import type { HexUplinkInput, UplinkInput } from './schemas'
-import type { GenericFailureUplinkOutput, GenericUplinkOutput } from './types'
+import type { DownlinkOutput, GenericUplinkOutput, GenericUplinkOutputFailure, MultipleDownlinkOutput } from './types'
 import { safeParse } from 'valibot'
 import { checkCodecsValidity } from './codecs/utils'
 import { createHexUplinkInputSchema, createUplinkInputSchema } from './schemas'
@@ -11,12 +11,22 @@ type ChannelNamesFromCodec<TCodecs extends AnyCodec> = {
   [C in TCodecs as C['name']]: C extends Codec<any, any, infer N, any> ? N : never
 }[TCodecs['name']]
 
-type EncodeInput<TCodecs extends AnyCodec> = {
-  [Codec in TCodecs as Codec['name']]: Codec extends { encode: infer THandler extends (input: any) => any } ? {
-    codec: Codec['name']
-    input: Parameters<THandler>[0]
-  } : never
-}[TCodecs['name']]
+type EncodeInput<TCodecs extends AnyCodec> = TCodecs extends { encode: infer THandler extends (input: any) => any }
+  ? THandler extends (input: infer TInput) => any ? {
+    codec: TCodecs['name']
+    input: TInput
+  }
+    : never : never
+
+type EncodeMultipleInput<TCodecs extends AnyCodec> = TCodecs extends { encodeMultiple: infer THandler extends (input: any) => any }
+  ? THandler extends (input: infer TInput) => any ? {
+    codec: TCodecs['name']
+    input: TInput
+  }
+    : never : never
+
+type HasEncoder<TParserOptions extends ParserOptions<AnyCodec>> = TParserOptions['codecs'][number] extends { encode: (input: any) => any } ? true : false
+type HasMultipleEncoder<TParserOptions extends ParserOptions<AnyCodec>> = TParserOptions['codecs'][number] extends { encodeMultiple: (input: any) => any } ? true : false
 
 interface ParserOptions<TCodec extends AnyCodec = AnyCodec> {
   parserName: string
@@ -41,7 +51,7 @@ interface ParserOptions<TCodec extends AnyCodec = AnyCodec> {
   roundingDecimals?: number
 }
 
-export interface DeviceParser<TParserOptions extends ParserOptions<AnyCodec>> {
+export type DeviceParser<TParserOptions extends ParserOptions<AnyCodec>> = {
   /**
    * Adjust the rounding of decimal values in the parsed data.
    * @param decimals The number of decimal places to round to.
@@ -63,8 +73,13 @@ export interface DeviceParser<TParserOptions extends ParserOptions<AnyCodec>> {
   decodeBase64String: (input: string) => GenericUplinkOutput<ReturnType<TParserOptions['codecs'][number]['decode']>>
   */
 
-  encodeDownlink: (input: EncodeInput<TParserOptions['codecs'][number]>) => number[]
-}
+} & (HasEncoder<TParserOptions> extends true ? {
+  encodeDownlink: (input: EncodeInput<TParserOptions['codecs'][number]>) => DownlinkOutput
+// eslint-disable-next-line ts/no-empty-object-type
+} : {}) & (HasMultipleEncoder<TParserOptions> extends true ? {
+  encodeMultipleDownlinks: (input: EncodeMultipleInput<TParserOptions['codecs'][number]>) => MultipleDownlinkOutput
+// eslint-disable-next-line ts/no-empty-object-type
+} : {})
 
 export function defineParser<const TParserOptions extends ParserOptions>(options: TParserOptions): DeviceParser<TParserOptions> {
   const { codecs, throwOnMultipleDecode = true, parserName } = options
@@ -72,7 +87,7 @@ export function defineParser<const TParserOptions extends ParserOptions>(options
   // first check if the codecs are valid and get channel adjustment permissions
   const channelAdjustmentPermissions = checkCodecsValidity(options.codecs)
 
-  function createError(message: string): GenericFailureUplinkOutput {
+  function createError(message: string): GenericUplinkOutputFailure {
     return {
       errors: [addPrefixToMessage(message)],
     }
@@ -144,21 +159,49 @@ export function defineParser<const TParserOptions extends ParserOptions>(options
     })
   }
 
-  function encodeDownlink(input: EncodeInput<TParserOptions['codecs'][number]>): number[] {
-    const codec = codecs.find(c => c.name === input.codec)
-    if (!codec) {
-      throw new Error(`Codec ${input.codec} not found in parser. Input could not be encoded.`)
+  function encodeDownlink(input: EncodeInput<TParserOptions['codecs'][number]>): DownlinkOutput {
+    try {
+      const codec = codecs.find(c => c.name === input.codec)
+      if (!codec) {
+        throw new Error(`Codec ${input.codec} not found in parser. Available codecs: ${codecs.map(c => c.name).join(', ')}`)
+      }
+      if (!('encode' in codec)) {
+        throw new Error(`Codec ${input.codec} does not support encoding. Input could not be encoded.`)
+      }
+      return codec.encode!(input.input)
     }
-    if (!codec.encode) {
-      throw new Error(`Codec ${input.codec} does not support encoding. Input could not be encoded.`)
+    catch (error) {
+      if (error instanceof Error) {
+        return createError(error.message)
+      }
+      return createError(`Unknown error occurred during encoding in parser ${parserName} with input ${JSON.stringify(input)}`)
     }
-    return codec.encode(input.input)
+  }
+
+  function encodeMultipleDownlinks(input: EncodeMultipleInput<TParserOptions['codecs'][number]>): MultipleDownlinkOutput {
+    try {
+      const codec = codecs.find(c => c.name === input.codec)
+      if (!codec) {
+        throw new Error(`Codec ${input.codec} not found in parser. Available codecs: ${codecs.map(c => c.name).join(', ')}`)
+      }
+      if (!('encodeMultiple' in codec)) {
+        throw new Error(`Codec ${input.codec} does not support multiple encoding. Input could not be encoded.`)
+      }
+      return codec.encodeMultiple!(input.input)
+    }
+    catch (error) {
+      if (error instanceof Error) {
+        return createError(error.message)
+      }
+      return createError(`Unknown error occurred during multiple encoding in parser ${parserName} with input ${JSON.stringify(input)}`)
+    }
   }
 
   return {
     decodeUplink,
     decodeHexUplink,
     encodeDownlink,
+    encodeMultipleDownlinks,
     adjustMeasuringRange: (name, range) => {
       // Check if channel exists
       if (!(name in channelAdjustmentPermissions)) {
@@ -172,6 +215,7 @@ export function defineParser<const TParserOptions extends ParserOptions>(options
 
       // Adjust range for all codecs
       codecs.forEach((codec) => {
+        // @ts-expect-error - string not assignable to never (when there are no channels that allow)
         codec.adjustMeasuringRange(name, range)
       })
     },

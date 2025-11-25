@@ -34,7 +34,7 @@ The following list shows whether a device is included in the package.
 |F98W6         |    ❌    |  ❌  |
 |GD20W         |    ❌    |  ❌  |
 |NETRIS1       |    ❌    |  ❌  |
-|NETRIS2       |    ✔️    |    `NETRIS2parser` |
+|NETRIS2       |    ✔️    |    `NETRIS2Parser` |
 |FLRU+NETRIS3  |    ❌    |  ❌  |
 |PEU+NETRIS3   |    ❌    |  ❌  |
 |PGU+NETRIS3   |    ❌    |  ❌  |

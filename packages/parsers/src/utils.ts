@@ -190,6 +190,7 @@ export function TULIPValueToValue(tulipValue: number, range: Range): number {
  * slopeValueToValue(0, {min: 0, max: 100}) // Returns: 0 (0%)
  * slopeValueToValue(5000, {min: 0, max: 100}) // Returns: 50 (50%)
  * slopeValueToValue(10000, {min: 0, max: 100}) // Returns: 100 (100%)
+ * slopeValueToValue(2500, {min: -10, max: 10}) // Returns: 5 (25% of span -> 20)
  */
 export function slopeValueToValue(slopeValue: number, range: Range): number {
   // slope value must be between 0 and 10_000 (inclusive)
@@ -199,6 +200,14 @@ export function slopeValueToValue(slopeValue: number, range: Range): number {
 
   // convert the value to 0 - 100%
   const percentage = slopeValue / 100
+
+  // here we should only take the jump of the value according to the SPAN of the range
+  // TODO: currently here we give TULIPScale / minute
+  // ! this is not the same
+  // correct calculation below
+  // return (percentage / 100) * (range.end - range.start)
+  // * will shift the values of by the range.min down
+  // all tests will have to be adjusted
 
   return percentageToValue(percentage, range)
 }

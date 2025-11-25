@@ -1,0 +1,3 @@
+export const DEFAULT_CONFIGURATION_ID = 1
+
+export const DEFAULT_BYTE_LIMIT = 51

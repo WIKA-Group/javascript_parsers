@@ -1,1 +1,1 @@
-export * from './wrappers/NETRIS2'
+export * from './parsers/netris2'

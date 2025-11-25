@@ -11,21 +11,23 @@ If you are looking for a way to include javascript parsers in your project, plea
 <!-- #region devices-versions-table -->
 | Parser generation       | Version | Devices                                                                           |
 |-------------------------|---------|-----------------------------------------------------------------------------------|
-| Modern modular          | `4.x.x` | PEW, NETRIS1, NETRIS3 family (FLRU, PEU, PGU, TGU, TRU), TRW                      |
-| Transitional TypeScript | `3.x.x` | NETRIS2                                                                           |
+| Modern modular          | `4.x.x` | PEW, NETRIS1, NETRIS3 family (FLRU, PEU, PGU, TGU, TRU), TRW, Netris2             |
+| Transitional TypeScript | `3.x.x` | - (previously NETRIS2)                                                            |
 | Legacy JavaScript       | `2.x.x` | A2G, F98W6, GD20W, PGW23                                                          |
 <!-- #endregion devices-versions-table -->
 
 ## Version 4.x.x
 
-The parser is built on the codec abstraction layer and can host multiple codecs at once. Each codec ships with sensible default measuring ranges, but you should always tune them for the concrete probe you deploy.
+The parser is built on the codec abstraction layer and can host multiple codecs at once. Each codec ships with default measuring ranges, but you should always tune them for the concrete probe you deploy.
 
 - **`decodeUplink(input: { bytes: number[], fPort: number, recvTime?: string })`**:<br>
     Validates `bytes`, `fPort`, and optional `recvTime` before selecting the matching codec and decoding measurements or status messages. Returns a typed `data` payload for the chosen codec or an `errors` array when decoding fails.
 - **`decodeHexUplink(input: { bytes: string; fPort: number; recvTime?: string })`**:<br>
     Accepts hexadecimal payloads, converts them to integer arrays, and delegates to `decodeUplink`. Useful when integrations provide the payload as hex rather than raw byte arrays.
 - **`encodeDownlink(input: { codec: string; input: unknown })`**:<br>
-    Looks up the requested codec and runs its encoder. On success it returns the downlink frame as an array of 8-bit integers. If the codec is missing or encoding is unsupported an exception is thrown.
+    Looks up the requested codec and runs its encoder. On success it returns the downlink frame as an array of 8-bit integers. If the codec is missing or encoding is unsupported an exception is thrown. Only outputs a single frame.
+- **`encodeMultipleDownlinks(inputs: { codec: string; input: unknown })`**:<br>
+    Essentially the same as `encodeDownlink` but outputs one or more frames depending on the codec’s capabilities and the requested action. Uses a byteLimit input to determine how many frames to generate when the action requires multiple frames and how they should be split. The input is specified per device in the device documentation.
 - **`adjustMeasuringRange(channelName: string, range: { start: number; end: number })`**:<br>
     Updates the measuring range for the named channel across every registered codec, enabling runtime calibration without rebuilding the bundle. Use this right after instantiating the parser to align the default ranges with your sensor’s data sheet. If the channel is unknown or flagged as non-adjustable because the range is fixed by hardware or protocol rules (for example internal device temperature), an error is thrown.
 - **`adjustRoundingDecimals(decimals: number)`**:<br>
@@ -33,7 +35,7 @@ The parser is built on the codec abstraction layer and can host multiple codecs 
 
 ## Version 3.x.x
 
-Only the `NETRIS2` device uses this format.
+Previously, the `NETRIS2` device used this format. It has now been migrated to `4.x.x`.
 The parser is written in TypeScript and ships as a function that returns the helpers below.
 
 - **`decodeUplink(input: { bytes: number[], fPort: number, recvTime?: string })`**:<br>

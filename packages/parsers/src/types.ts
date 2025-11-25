@@ -6,13 +6,43 @@ export interface GenericSuccessfulUplinkOutput {
   errors?: never
 }
 
-export interface GenericFailureUplinkOutput {
+export interface GenericUplinkOutputFailure {
   errors: string[]
   warnings?: never
   data?: never
 }
 
-export type GenericUplinkOutput<TData extends GenericSuccessfulUplinkOutput = GenericSuccessfulUplinkOutput> = TData | GenericFailureUplinkOutput
+export type DownlinkFrame = number[]
+
+export interface DownlinkOutputFailure {
+  errors: string[]
+  warnings?: never
+  fPort?: never
+  bytes?: never
+}
+
+export interface MultipleDownlinkOutputFailure {
+  errors: string[]
+  warnings?: never
+  fPort?: never
+  frames?: never
+}
+
+export type DownlinkOutput = {
+  fPort: number
+  bytes: DownlinkFrame
+  warnings?: string[]
+  errors?: never
+} | DownlinkOutputFailure
+
+export type MultipleDownlinkOutput = {
+  fPort: number
+  frames: DownlinkFrame[]
+  warnings?: string[]
+  errors?: never
+} | MultipleDownlinkOutputFailure
+
+export type GenericUplinkOutput<TData extends GenericSuccessfulUplinkOutput = GenericSuccessfulUplinkOutput> = TData | GenericUplinkOutputFailure
 
 export interface Range {
   start: number

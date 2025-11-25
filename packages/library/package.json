@@ -30,7 +30,7 @@
     "stub": "tsdown --watch"
   },
   "peerDependencies": {
-    "valibot": "^1.1.0"
+    "valibot": ">=1.1.0 <2.0.0"
   },
   "devDependencies": {
     "tsdown": "^0.14.2"

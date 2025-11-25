@@ -1,3 +1,4 @@
+import type { DownlinkOutput } from '../../../src/types'
 import { describe, expect, it } from 'vitest'
 import { defineTULIP2Codec } from '../../../src/codecs/tulip2'
 
@@ -18,7 +19,10 @@ describe('defineTULIP2Codec (non-decode methods)', () => {
     channels,
     roundingDecimals: 2,
     handlers,
-    encodeHandler: () => [0x00],
+    encoderFactory: () => () => ({
+      bytes: [0x00],
+      fPort: 1,
+    } satisfies DownlinkOutput),
   })
 
   it('should have the correct name', () => {
@@ -59,7 +63,10 @@ describe('defineTULIP2Codec (non-decode methods)', () => {
 
   it('encode is the encode handler provided', () => {
     const out = codec.encode()
-    expect(out).toEqual([0x00])
+    expect(out).toEqual({
+      bytes: [0x00],
+      fPort: 1,
+    })
   })
 })
 
@@ -69,7 +76,10 @@ describe('defineTULIP2Codec (decoding + validations)', () => {
       deviceName: 'D',
       channels: [{ name: 'c', start: 0, end: 1, channelId: 0 }],
       handlers: { 0x00: (() => ({})) as any },
-      encodeHandler: () => [],
+      encoderFactory: () => () => ({
+        bytes: [0x00],
+        fPort: 1,
+      } satisfies DownlinkOutput),
     })
 
     expect(() => (codec.decode as any)({ bytes: [0x01] })).toThrow(/No handler registered/)
@@ -84,7 +94,10 @@ describe('defineTULIP2Codec (decoding + validations)', () => {
           { name: 'dup', start: 0, end: 5, channelId: 1 },
         ],
         handlers: {},
-        encodeHandler: () => [],
+        encoderFactory: () => () => ({
+          bytes: [0x00],
+          fPort: 1,
+        } satisfies DownlinkOutput),
       })
 
     expect(options).toThrow(/Duplicate channel name found: dup/)
@@ -96,7 +109,10 @@ describe('defineTULIP2Codec (decoding + validations)', () => {
         deviceName: 'BadRange',
         channels: [{ name: 'bad', start: 10, end: 10, channelId: 0 }],
         handlers: {},
-        encodeHandler: () => [],
+        encoderFactory: () => () => ({
+          bytes: [0x00],
+          fPort: 1,
+        } satisfies DownlinkOutput),
       })
 
     expect(options).toThrow()

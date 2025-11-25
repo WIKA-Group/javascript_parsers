@@ -1,5 +1,5 @@
 import type { UplinkInput } from '../../schemas'
-import type { Channel, GenericUplinkOutput } from '../../types'
+import type { Channel, DownlinkOutput, GenericUplinkOutput, MultipleDownlinkOutput } from '../../types'
 import type { Codec } from '../codec'
 import { getRoundingDecimals } from '../../utils'
 import { checkChannelsValidity } from '../utils'
@@ -7,6 +7,16 @@ import { checkChannelsValidity } from '../utils'
 export interface TULIP2Channel extends Channel {
   channelId: number
 }
+
+export type Encoder<TInput = any> = (input: TInput) => DownlinkOutput
+
+export type MultipleEncoder<TInput = any> = (input: TInput) => MultipleDownlinkOutput
+
+export type EncoderFactory<TInput = any> = (options: { getChannels: () => TULIP2Channel[] }) => Encoder<TInput>
+
+export type MultipleEncoderFactory<TInput = any> = (options: { getChannels: () => TULIP2Channel[] }) => MultipleEncoder<TInput>
+
+type ReturnOfFactory<TFactory extends EncoderFactory<any> | MultipleEncoderFactory<any> | undefined> = TFactory extends (...args: any[]) => infer TResult ? TResult : undefined
 
 export type Handler<TChannels extends TULIP2Channel[] = TULIP2Channel[], TReturn extends GenericUplinkOutput = GenericUplinkOutput> = (input: UplinkInput, options: { roundingDecimals: number, channels: TChannels }) => TReturn
 
@@ -27,7 +37,7 @@ export type ReturnTypeOfHandlers<TChannels extends TULIP2Channel[], THandlers ex
   [K in keyof THandlers]: THandlers[K] extends Handler<TChannels, infer TReturn> ? TReturn : never
 }[keyof THandlers]
 
-export interface TULIP2CodecOptions<TChannels extends TULIP2Channel[] = TULIP2Channel[], TName extends string = string, THandlers extends MessageHandlers<TChannels> = MessageHandlers<TChannels>, TEncoder extends ((input: object) => number[]) | undefined = undefined> {
+export interface TULIP2CodecOptions<TChannels extends TULIP2Channel[] = TULIP2Channel[], TName extends string = string, THandlers extends MessageHandlers<TChannels> = MessageHandlers<TChannels>, TEncoderFactory extends EncoderFactory<any> | undefined = undefined, TMultipleEncoderFactory extends MultipleEncoderFactory<any> | undefined = undefined> {
   deviceName: TName
   /**
    * The list of channels to use for this codec.
@@ -50,14 +60,19 @@ export interface TULIP2CodecOptions<TChannels extends TULIP2Channel[] = TULIP2Ch
   /**
    * The encoding function for this codec.
    */
-  encodeHandler?: TEncoder
+  encoderFactory?: TEncoderFactory
+
+  /**
+   * The multiple message encoding function for this codec.
+   */
+  multipleEncodeFactory?: TMultipleEncoderFactory
 }
 
 type TULIP2AdjustableChannelNames<TChannels extends TULIP2Channel[]> = {
   [K in keyof TChannels]: TChannels[K] extends TULIP2Channel ? (TChannels[K]['adjustMeasurementRangeDisallowed'] extends true ? never : TChannels[K]['name']) : never
 }[number]
 
-export type TULIP2Codec<TChannels extends TULIP2Channel[], TName extends string, THandlers extends MessageHandlers<TChannels>, TEncoder extends ((input: object) => number[]) | undefined> = Codec<`${TName}TULIP2`, ReturnTypeOfHandlers<TChannels, THandlers>, TULIP2AdjustableChannelNames<TChannels>, TEncoder>
+export type TULIP2Codec<TChannels extends TULIP2Channel[], TName extends string, THandlers extends MessageHandlers<TChannels>, TEncoderFactory extends EncoderFactory<any> | undefined = undefined, TMultipleEncoderFactory extends MultipleEncoderFactory<any> | undefined = undefined> = Codec<`${TName}TULIP2`, ReturnTypeOfHandlers<TChannels, THandlers>, TULIP2AdjustableChannelNames<TChannels>, ReturnOfFactory<TEncoderFactory>, ReturnOfFactory<TMultipleEncoderFactory>>
 
 /**
  * Creates a TULIP2 protocol codec for decoding and encoding IoT device messages.
@@ -125,7 +140,7 @@ export type TULIP2Codec<TChannels extends TULIP2Channel[], TName extends string,
  * @see {@link MessageHandlers} for handler function signatures
  * @see {@link TULIP2Channel} for channel configuration interface
  */
-export function defineTULIP2Codec<const TChannels extends TULIP2Channel[], TName extends string, THandlers extends MessageHandlers<TChannels>, TEncoder extends ((input: object) => number[]) | undefined>(options: TULIP2CodecOptions<TChannels, TName, THandlers, TEncoder>): TULIP2Codec<TChannels, TName, THandlers, TEncoder> {
+export function defineTULIP2Codec<const TChannels extends TULIP2Channel[], TName extends string, THandlers extends MessageHandlers<TChannels>, TEncoderFactory extends EncoderFactory<any> | undefined = undefined, TMultipleEncoderFactory extends MultipleEncoderFactory<any> | undefined = undefined>(options: TULIP2CodecOptions<TChannels, TName, THandlers, TEncoderFactory, TMultipleEncoderFactory>): TULIP2Codec<TChannels, TName, THandlers, TEncoderFactory, TMultipleEncoderFactory> {
   const codecName = `${options.deviceName}TULIP2` as `${TName}TULIP2`
 
   let roundingDecimals = getRoundingDecimals(options.roundingDecimals)
@@ -160,15 +175,18 @@ export function defineTULIP2Codec<const TChannels extends TULIP2Channel[], TName
     throw new TypeError(`No handler registered for byte ${firstByte} in ${codecName} Codec`)
   }
 
-  return {
-    name: codecName,
-    encode: options.encodeHandler,
-    getChannels: () => options.channels.map(c => ({
+  function getChannels(): Channel[] {
+    return options.channels.map(c => ({
       end: c.end,
       name: c.name,
       start: c.start,
-      ...(c.adjustMeasurementRangeDisallowed === true ? { adjustMeasurementRangeDisallowed: true as const } : {}),
-    })),
+      ...(c.adjustMeasurementRangeDisallowed ? { adjustMeasurementRangeDisallowed: true as const } : {}),
+    }))
+  }
+
+  const codec = {
+    name: codecName,
+    getChannels,
     canTryDecode,
     decode,
     adjustMeasuringRange: (name, range) => {
@@ -182,5 +200,16 @@ export function defineTULIP2Codec<const TChannels extends TULIP2Channel[], TName
     adjustRoundingDecimals: (decimals: number) => {
       roundingDecimals = getRoundingDecimals(decimals, roundingDecimals)
     },
-  } as TULIP2Codec<TChannels, TName, THandlers, TEncoder>
+  } as TULIP2Codec<TChannels, TName, THandlers, TEncoderFactory, TMultipleEncoderFactory>
+
+  if (options.encoderFactory) {
+    // @ts-expect-error - TS cannot infer correctly here
+    codec.encode = options.encoderFactory({ getChannels: () => options.channels }) as ReturnOfFactory<TEncoderFactory>
+  }
+  if (options.multipleEncodeFactory) {
+    // @ts-expect-error - TS cannot infer correctly here
+    codec.encodeMultiple = options.multipleEncodeFactory({ getChannels: () => options.channels }) as ReturnOfFactory<TMultipleEncoderFactory>
+  }
+
+  return codec
 }

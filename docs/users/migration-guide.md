@@ -39,11 +39,15 @@ Legacy parsers rely on top-level variables (for example `PRESSURE_RANGE_START`, 
 
 ## Migrating from 3.x.x to 4.x.x
 
-Only `NETRIS2` currently ships a `3.x.x` parser. The upgrade is straightforward because channel scaling already relied on internal validation.
+Only `NETRIS2` used to ship a `3.x.x` parser. The upgrade is straightforward because channel scaling already relied on internal validation.
 
 1. **Download the new script.** Deploy the `4.x.x` bundle and keep the `3.x.x` file only as a reference while you verify behavior.
 
-2. **Test alarms and configuration flows.** As the `NETRIS2` only supports 4-20 mA, there is no need to adjust the measuring ranges. The `4.x.x` architecture performs stricter validation and surfaces more granular error messages. Re-run your acceptance tests to confirm alarms, configuration status messages, and downlink acknowledgements behave as expected.
+2. **Update channel names.** The channel names for `NETRIS2` have been updated to be unique. You will need to update your integration to use the new channel names.
+
+3. **Update downlink encoding.** The downlink encoding for `NETRIS2` has changed. Please refer to the `4.x.x` documentation for the new downlink format.
+
+4. **Test alarms and configuration flows.** As the `NETRIS2` only supports 4-20 mA, there is no need to adjust the measuring ranges. The `4.x.x` architecture performs stricter validation and surfaces more granular error messages. Re-run your acceptance tests to confirm alarms, configuration status messages, and downlink acknowledgements behave as expected.
 
     > **Error and warning prefixes:** Just like the `2.x.x` migration, the parser now prefixes decoded errors and warnings with the codec identifier automatically. Remove any manual prefixing you had in custom handlers and rely on the parser output to show which codec emitted the message.
 
