@@ -15,6 +15,10 @@ describe('gd20w parser', () => {
 
     expect(output).toEqual(example.output)
 
-    expect(() => v.parse(outputSchema, output)).not.toThrow()
+    const result = v.safeParse(outputSchema, output)
+    if (!result.success) {
+      console.error('Schema validation failed:', JSON.stringify(result.issues, null, 2))
+    }
+    expect(result.success).toBe(true)
   })
 })

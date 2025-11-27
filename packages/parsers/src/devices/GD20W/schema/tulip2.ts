@@ -18,6 +18,19 @@ import {
 
 const createUplinkSchema = createUplinkOutputSchemaFactory(255)
 
+// Measurand and Unit lists
+const MEASURAND_IDS = Object.keys(MEASURANDS_BY_ID).map(key => Number.parseInt(key)) as (keyof typeof MEASURANDS_BY_ID)[]
+const MEASURAND_NAMES = Object.values(MEASURANDS_BY_ID) as (typeof MEASURANDS_BY_ID)[keyof typeof MEASURANDS_BY_ID][]
+
+const UNIT_IDS = Object.keys(UNITS_BY_ID).map(key => Number.parseInt(key)) as (keyof typeof UNITS_BY_ID)[]
+const UNIT_NAMES = Object.values(UNITS_BY_ID) as (typeof UNITS_BY_ID)[keyof typeof UNITS_BY_ID][]
+
+export type MeasurandName = typeof MEASURANDS_BY_ID[keyof typeof MEASURANDS_BY_ID]
+export type MeasurandId = keyof typeof MEASURANDS_BY_ID
+
+export type UnitName = typeof UNITS_BY_ID[keyof typeof UNITS_BY_ID]
+export type UnitId = keyof typeof UNITS_BY_ID
+
 const PROCESS_ALARM_TYPE_VALUES = Object.values(PROCESS_ALARM_TYPES)
 const PROCESS_ALARM_TYPE_NAMES = Object.keys(PROCESS_ALARM_TYPES) as (keyof typeof PROCESS_ALARM_TYPES)[]
 const ALARM_EVENT_VALUES = Object.values(ALARM_EVENTS)
@@ -28,8 +41,6 @@ const DEVICE_ALARM_VALUES = DEVICE_ALARM_VALID_BITS
 const DEVICE_ALARM_DESCRIPTIONS = Object.values(DEVICE_ALARMS_BY_ID) as string[]
 const CONFIGURATION_STATUS_VALUES = Object.keys(CONFIGURATION_STATUS_BY_ID).map(Number)
 const CONFIGURATION_STATUS_DESCRIPTIONS = Object.values(CONFIGURATION_STATUS_BY_ID)
-const MEASURAND_VALUES = Object.values(MEASURANDS_BY_ID) as string[]
-const UNIT_VALUES = Object.values(UNITS_BY_ID) as string[]
 
 const CHANNEL_IDS = createGD20WTULIP2Channels().map(channel => channel.channelId) as ReturnType<typeof createGD20WTULIP2Channels>[number]['channelId'][]
 const ChANNEL_NAMES = createGD20WTULIP2Channels().map(channel => channel.name) as ReturnType<typeof createGD20WTULIP2Channels>[number]['name'][]
@@ -136,10 +147,14 @@ function createGasMixturesSchema() {
 
 function createChannelIdentificationSchema() {
   return v.object({
-    measurand: v.picklist(MEASURAND_VALUES),
-    unit: v.picklist(UNIT_VALUES),
+    measurandId: v.picklist(MEASURAND_IDS),
+    measurand: v.picklist(MEASURAND_NAMES),
+    unitId: v.picklist(UNIT_IDS),
+    unit: v.picklist(UNIT_NAMES),
   })
 }
+
+export type ChannelIdentification = v.InferOutput<ReturnType<typeof createChannelIdentificationSchema>>
 
 function createDeviceIdentificationSchema() {
   return v.object({

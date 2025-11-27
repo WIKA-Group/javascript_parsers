@@ -23,9 +23,11 @@ type ProcessAlarmTypeName = keyof typeof PROCESS_ALARM_TYPES
 type TechnicalCauseName = keyof typeof TECHNICAL_ALARM_CAUSE_OF_FAILURE
 type DeviceAlarmTypeName = keyof typeof DEVICE_ALARM_TYPES
 type DeviceAlarmCauseName = keyof typeof DEVICE_ALARM_CAUSE_OF_FAILURE
-type PressureTypeName = keyof typeof PRESSURE_TYPES
-type PressureUnitName = keyof typeof PRESSURE_UNITS
-type TemperatureUnitName = keyof typeof TEMPERATURE_UNITS
+export type PressureTypeName = keyof typeof PRESSURE_TYPES
+export type PressureUnitName = keyof typeof PRESSURE_UNITS
+export type PressureUnitValues = typeof PRESSURE_UNITS[PressureUnitName]
+export type TemperatureUnitName = keyof typeof TEMPERATURE_UNITS
+export type TemperatureUnitValues = typeof TEMPERATURE_UNITS[TemperatureUnitName]
 
 const PROCESS_ALARM_CHANNEL_NAME_LIST = Object.keys(PROCESS_ALARM_CHANNEL_NAMES) as ProcessAlarmChannelName[]
 const ALARM_EVENT_NAME_LIST = Object.keys(ALARM_EVENTS) as AlarmEventName[]
@@ -35,9 +37,9 @@ const DEVICE_ALARM_TYPE_NAME_LIST = Object.keys(DEVICE_ALARM_TYPES) as DeviceAla
 const DEVICE_ALARM_CAUSE_NAME_LIST = Object.keys(DEVICE_ALARM_CAUSE_OF_FAILURE) as DeviceAlarmCauseName[]
 const PRESSURE_TYPE_NAME_LIST = Object.keys(PRESSURE_TYPES) as PressureTypeName[]
 const PRESSURE_UNIT_NAME_LIST = Object.keys(PRESSURE_UNITS) as PressureUnitName[]
-const PRESSURE_UNIT_VALUES = Object.values(PRESSURE_UNITS) as number[]
+const PRESSURE_UNIT_VALUES = Object.values(PRESSURE_UNITS) as PressureUnitValues[]
 const TEMPERATURE_UNIT_NAME_LIST = Object.keys(TEMPERATURE_UNITS) as TemperatureUnitName[]
-const TEMPERATURE_UNIT_VALUES = Object.values(TEMPERATURE_UNITS) as number[]
+const TEMPERATURE_UNIT_VALUES = Object.values(TEMPERATURE_UNITS) as TemperatureUnitValues[]
 
 function createChannelMeasurement<TName extends keyof typeof MEASUREMENT_CHANNELS>(name: TName) {
   return v.object({
@@ -202,6 +204,8 @@ function createDeviceInformationUplinkOutputSchema() {
     },
   })
 }
+
+export type PGW23_100_11TULIP2UplinkOutputDeviceInformation = v.InferOutput<ReturnType<typeof createDeviceInformationUplinkOutputSchema>>
 
 export function createPGW23_100_11TULIP2UplinkOutputSchema() {
   return v.union([

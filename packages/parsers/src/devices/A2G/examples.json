@@ -588,7 +588,7 @@
     },
     "output": {
       "errors": [
-        "A2G (JS): Data message 01 needs 6 or 27 bytes but got 3"
+        "A2G (JS): Data message (0x01) requires 6 or 27 bytes, but received 3 bytes"
       ]
     }
   },
@@ -607,7 +607,7 @@
     },
     "output": {
       "errors": [
-        "A2G (JS): Data message 01 needs 6 or 27 bytes but got 4"
+        "A2G (JS): Data message (0x01) requires 6 or 27 bytes, but received 4 bytes"
       ]
     }
   },
@@ -694,7 +694,7 @@
     },
     "output": {
       "errors": [
-        "A2G (JS): Technical alarm message 04 needs 3 bytes but got 2"
+        "A2G (JS): Technical alarm message (0x04) requires 3 bytes, but received 2 bytes"
       ]
     }
   },
@@ -750,7 +750,7 @@
     },
     "output": {
       "errors": [
-        "A2G (JS): Device alarm message 05 needs 4 bytes but got 3"
+        "A2G (JS): Device alarm message (0x05) requires 4 bytes, but received 3 bytes"
       ]
     }
   },

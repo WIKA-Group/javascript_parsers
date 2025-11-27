@@ -40,7 +40,7 @@ type ChannelName = 'pressure' | 'device temperature'
 ```
 Channels that support adjusting the measurement range:
 ```ts
-type AdjustableChannelName = 'pressure'
+type AdjustableChannelName = 'pressure' | 'device temperature'
 ```
 
 ### `decodeUplink(input)`

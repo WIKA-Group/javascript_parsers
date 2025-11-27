@@ -399,30 +399,16 @@
                   "type": "object",
                   "properties": {
                     "productId": {
-                      "type": "integer",
-                      "minimum": 0
+                      "const": 15
                     },
                     "productIdName": {
-                      "anyOf": [
-                        {
-                          "const": "NETRIS3"
-                        },
-                        {
-                          "type": "number"
-                        }
-                      ]
+                      "const": "NETRIS3"
                     },
                     "productSubId": {
-                      "enum": [
-                        0,
-                        1
-                      ]
+                      "const": 0
                     },
                     "productSubIdName": {
-                      "enum": [
-                        "LoRaWAN",
-                        "MIOTY"
-                      ]
+                      "const": "LoRaWAN"
                     },
                     "sensorDeviceTypeId": {
                       "type": "integer",
@@ -434,6 +420,12 @@
                         {
                           "type": "object",
                           "properties": {
+                            "channelId": {
+                              "const": 0
+                            },
+                            "channelName": {
+                              "const": "temperature"
+                            },
                             "measurand": {
                               "enum": [
                                 1
@@ -468,6 +460,8 @@
                             }
                           },
                           "required": [
+                            "channelId",
+                            "channelName",
                             "measurand",
                             "measurandName",
                             "measurementRangeStart",
@@ -479,6 +473,12 @@
                         {
                           "type": "object",
                           "properties": {
+                            "channelId": {
+                              "const": 1
+                            },
+                            "channelName": {
+                              "const": "device temperature"
+                            },
                             "measurand": {
                               "enum": [
                                 1
@@ -513,6 +513,8 @@
                             }
                           },
                           "required": [
+                            "channelId",
+                            "channelName",
                             "measurand",
                             "measurandName",
                             "measurementRangeStart",

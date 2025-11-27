@@ -39,29 +39,25 @@ type TechnicalCauseOfFailureName = (typeof TECHNICAL_CAUSE_OF_FAILURE_ENTRIES_BY
 function resolveCauseOfFailureName(alarmType: number, causeOfFailure: number): TechnicalCauseOfFailureName {
   const entries = TECHNICAL_CAUSE_OF_FAILURE_ENTRIES_BY_ALARM_TYPE[alarmType as TechnicalAlarmTypeId]
   if (!entries) {
-    throw new Error(`Unknown technical alarm type ${alarmType}`)
+    throw new Error(`Unknown technical alarm type ${alarmType} in technical alarm message`)
   }
 
   const match = entries.find(entry => (causeOfFailure & entry.mask) !== 0)
   if (!match) {
-    throw new Error(`Unknown causeOfFailure ${causeOfFailure} for technical alarm type ${alarmType}`)
+    throw new Error(`Unknown causeOfFailure ${causeOfFailure} for technical alarm type ${alarmType} in technical alarm message`)
   }
 
   return match.name
 }
 
 const handleDataMessage: Handler<TULIP2FLRUChannels, FLRUTULIP2DataMessageUplinkOutput> = (input, options) => {
-  if (input.bytes.length < 4 || input.bytes.length > 11) {
-    throw new Error(`Data message 01/02 needs at least 4 and maximum 11 bytes but got ${input.bytes.length}`)
+  if (input.bytes.length < 5 || input.bytes.length > 11) {
+    throw new Error(`Data message (0x01/0x02) requires at least 5 and at most 11 bytes, but received ${input.bytes.length} bytes`)
   }
 
   const messageType = input.bytes[0]! as 1 | 2
   const configurationId = input.bytes[1]!
   const channel = options.channels[0]
-
-  if (input.bytes.length < 5) {
-    throw new Error(`Not enough data to decode channel (level). Payload must has a length of 2 bytes, input data length: ${input.bytes.length}`)
-  }
 
   const rawValue = (input.bytes[3]! << 8) | input.bytes[4]!
   if (rawValue === ERROR_VALUE) {
@@ -89,7 +85,7 @@ const handleDataMessage: Handler<TULIP2FLRUChannels, FLRUTULIP2DataMessageUplink
 
 const handleProcessAlarmMessage: Handler<TULIP2FLRUChannels, FLRUTULIP2ProcessAlarmsUplinkOutput> = (input, options) => {
   if (input.bytes.length < 6 || (input.bytes.length - 3) % 3 !== 0) {
-    throw new Error(`Process alarm 03 needs at least 6 bytes and got ${input.bytes.length}. Also all bytes for each alarm needed`)
+    throw new Error(`Process alarm message (0x03) requires at least 6 bytes (and target byte count 3n+3), but received ${input.bytes.length} bytes`)
   }
 
   const configurationId = input.bytes[1]!
@@ -162,7 +158,7 @@ const handleProcessAlarmMessage: Handler<TULIP2FLRUChannels, FLRUTULIP2ProcessAl
 
 const handleTechnicalAlarmMessage: Handler<TULIP2FLRUChannels, FLRUTULIP2TechnicalAlarmsUplinkOutput> = (input) => {
   if (input.bytes.length < 6 || (input.bytes.length - 3) % 3 !== 0) {
-    throw new Error(`Technical alarm 04 needs 6 bytes but got ${input.bytes.length}`)
+    throw new Error(`Technical alarm message (0x04) requires at least 6 bytes (and target byte count 3n+3), but received ${input.bytes.length} bytes`)
   }
 
   const configurationId = input.bytes[1]!
@@ -172,7 +168,7 @@ const handleTechnicalAlarmMessage: Handler<TULIP2FLRUChannels, FLRUTULIP2Technic
     const alarmType = input.bytes[byteIndex]!
     const alarmTypeNameEntry = Object.entries(TECHNICAL_ALARM_TYPES).find(([, id]) => id === alarmType)
     if (!alarmTypeNameEntry) {
-      throw new Error(`Unknown technical alarm type ${alarmType}`)
+      throw new Error(`Unknown technical alarm type ${alarmType} in technical alarm message`)
     }
     const alarmTypeName = alarmTypeNameEntry[0] as keyof typeof TECHNICAL_ALARM_TYPES
     const causeOfFailure = input.bytes[byteIndex + 2]!
@@ -198,7 +194,7 @@ const handleTechnicalAlarmMessage: Handler<TULIP2FLRUChannels, FLRUTULIP2Technic
 
 const handleDeviceAlarmMessage: Handler<TULIP2FLRUChannels, FLRUTULIP2DeviceAlarmsUplinkOutput> = (input) => {
   if (input.bytes.length !== 4) {
-    throw new Error(`Device alarm 05 needs at least 4 bytes got ${input.bytes.length}`)
+    throw new Error(`Device alarm message (0x05) requires 4 bytes, but received ${input.bytes.length} bytes`)
   }
 
   const configurationId = input.bytes[1]!
@@ -231,7 +227,7 @@ const handleDeviceAlarmMessage: Handler<TULIP2FLRUChannels, FLRUTULIP2DeviceAlar
 function resolveProductSubIdName(productSubId: number): keyof typeof PRODUCT_SUB_ID_NAMES {
   const entry = Object.entries(PRODUCT_SUB_ID_NAMES).find(([, value]) => value === productSubId)
   if (!entry) {
-    throw new Error(`Unknown productSubId ${productSubId} in device identification message`)
+    throw new Error(`Unknown productSubId ${productSubId} in device identification message. Only LoRaWAN (0) is supported.`)
   }
   return entry[0] as keyof typeof PRODUCT_SUB_ID_NAMES
 }
@@ -252,13 +248,9 @@ function resolveUnitName(id: number): (typeof LPP_UNITS_BY_ID)[keyof typeof LPP_
   return name
 }
 
-function toFixedFloat(value: number): number {
-  return Number.parseFloat(value.toFixed(6))
-}
-
-const handleDeviceIdentificationMessage: Handler<TULIP2FLRUChannels, FLRUTULIP2DeviceInformationUplinkOutput> = (input) => {
+const handleDeviceIdentificationMessage: Handler<TULIP2FLRUChannels, FLRUTULIP2DeviceInformationUplinkOutput> = (input, options) => {
   if (input.bytes.length < 16 || input.bytes.length > 56) {
-    throw new Error(`Identification message 07 needs at least 16 and maximum 56 bytes, but got ${input.bytes.length}`)
+    throw new Error(`Device identification message (0x07) requires at least 16 and at most 56 bytes, but received ${input.bytes.length} bytes`)
   }
 
   const messageType = 0x07
@@ -272,19 +264,19 @@ const handleDeviceIdentificationMessage: Handler<TULIP2FLRUChannels, FLRUTULIP2D
   const measurand = input.bytes[6]!
   const measurandName = resolveMeasurandName(measurand)
 
-  const measurementRangeStart = toFixedFloat(intTuple4ToFloat32WithThreshold([
+  const measurementRangeStart = intTuple4ToFloat32WithThreshold([
     input.bytes[7]!,
     input.bytes[8]!,
     input.bytes[9]!,
     input.bytes[10]!,
-  ]))
+  ])
 
-  const measurementRangeEnd = toFixedFloat(intTuple4ToFloat32WithThreshold([
+  const measurementRangeEnd = intTuple4ToFloat32WithThreshold([
     input.bytes[11]!,
     input.bytes[12]!,
     input.bytes[13]!,
     input.bytes[14]!,
-  ]))
+  ])
 
   const unit = input.bytes[15]!
   const unitName = resolveUnitName(unit)
@@ -301,6 +293,8 @@ const handleDeviceIdentificationMessage: Handler<TULIP2FLRUChannels, FLRUTULIP2D
         sensorDeviceTypeId,
         channelConfigurations: [
           {
+            channelId: options.channels[0].channelId,
+            channelName: options.channels[0].name,
             measurand,
             measurandName,
             measurementRangeStart,
@@ -316,7 +310,7 @@ const handleDeviceIdentificationMessage: Handler<TULIP2FLRUChannels, FLRUTULIP2D
 
 const handleKeepAliveMessage: Handler<TULIP2FLRUChannels, FLRUTULIP2DeviceStatisticsUplinkOutput> = (input) => {
   if (input.bytes.length !== 10) {
-    throw new Error(`Keep alive message 08 needs 10 bytes but got ${input.bytes.length}`)
+    throw new Error(`Keep alive message (0x08) requires 10 bytes, but received ${input.bytes.length} bytes`)
   }
 
   const configurationId = input.bytes[1]!
@@ -337,7 +331,7 @@ const handleKeepAliveMessage: Handler<TULIP2FLRUChannels, FLRUTULIP2DeviceStatis
 
 const handleExtendedDeviceIdentificationMessage: Handler<TULIP2FLRUChannels, FLRUTULIP2ExtendedDeviceInformationUplinkOutput> = (input) => {
   if (input.bytes.length < 20 || input.bytes.length > 42) {
-    throw new Error(`Extended device identification message 09 needs at least 20 and maximum 42 bytes but got ${input.bytes.length}`)
+    throw new Error(`Extended device identification message (0x09) requires at least 20 and at most 42 bytes, but received ${input.bytes.length} bytes`)
   }
 
   const configurationId = input.bytes[1]!

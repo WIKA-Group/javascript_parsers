@@ -125,7 +125,7 @@
     },
     "output": {
       "errors": [
-        "TRU+NETRIS3 (JS): Data message 01 and 02 needs 5 or 7 bytes but got 3"
+        "TRU+NETRIS3 (JS): Data message (0x01/0x02) requires 5 or 7 bytes, but received 3 bytes"
       ]
     }
   },
@@ -417,6 +417,8 @@
           "sensorDeviceTypeId": 16,
           "channelConfigurations": [
             {
+              "channelId": 0,
+              "channelName": "temperature",
               "measurand": 1,
               "measurandName": "Temperature",
               "measurementRangeStart": -20.0,

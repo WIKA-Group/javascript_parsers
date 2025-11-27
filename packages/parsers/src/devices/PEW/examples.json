@@ -119,7 +119,7 @@
     },
     "output": {
       "errors": [
-        "PEW-1000 (JS): Data message 01/02 needs 7 bytes but got 3"
+        "PEW-1000 (JS): Data message (0x01/0x02) requires 7 bytes, but received 3 bytes"
       ]
     }
   },

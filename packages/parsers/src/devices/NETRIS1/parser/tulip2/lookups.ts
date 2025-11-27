@@ -37,6 +37,27 @@ export const MEASUREMENT_ALARM_TYPES = {
   MV_STAT_WARNING_2: 16,
 } as const
 
+// Product ID lookups (byte 2)
+export const PRODUCT_IDS_BY_ID = {
+  0x0F: 'NETRIS1',
+  0x10: 'NETRIS©1 BLE+LPWAN',
+  0x11: 'NETRIS©1 BLE',
+} as const
+
+// Sensor ID lookups (bits 4-0 of byte 3)
+export const SENSOR_IDS_BY_ID = {
+  0: 'RTD',
+  1: 'E-Signal',
+  2: 'TRW',
+} as const
+
+// LPWAN ID lookups (bits 7-5 of byte 3)
+export const LPWAN_IDS_BY_ID = {
+  0: 'Reserved',
+  1: 'mioty',
+  2: 'LoRaWAN',
+} as const
+
 // LPP Measurand lookups (id -> human-readable name)
 export const LPP_MEASURANDS_BY_ID = {
   1: 'Temperature',

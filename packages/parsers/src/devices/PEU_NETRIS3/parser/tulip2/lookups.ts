@@ -71,18 +71,26 @@ export const PRODUCT_SUB_ID_NAMES = {
   MIOTY: 1,
 } as const
 
-export const LPP_MEASURANDS_BY_ID = {
-  0x01: 'Temperature',
+// Pressure channel measurands (channel 0)
+export const LPP_MEASURANDS_PRESSURE = {
   0x03: 'Pressure (gauge)',
   0x04: 'Pressure (absolute)',
   0x05: 'Pressure (differential)',
-} as const
+} as const satisfies Record<number, string>
 
-export const LPP_UNITS_BY_ID = {
-  0x01: '°C',
-  0x02: '°F',
-  0x03: 'K',
-  0x04: '°R',
+// Temperature channel measurands (channel 1)
+export const LPP_MEASURANDS_TEMPERATURE = {
+  0x01: 'Temperature',
+} as const satisfies Record<number, string>
+
+// Combined measurands lookup
+export const LPP_MEASURANDS_BY_ID = {
+  ...LPP_MEASURANDS_TEMPERATURE,
+  ...LPP_MEASURANDS_PRESSURE,
+} as const satisfies Record<number, string>
+
+// Pressure channel units (channel 0)
+export const LPP_UNITS_PRESSURE = {
   0x07: 'bar',
   0x08: 'mbar',
   0x09: 'µbar',
@@ -102,7 +110,21 @@ export const LPP_UNITS_BY_ID = {
   0x17: 'cmHg',
   0x18: 'inHg',
   0x19: 'mmH2O',
-  0x1A: 'mH2O',
-  0x1B: 'inH2O',
-  0x1C: 'ftH2O',
-} as const
+  0x20: 'mH2O',
+  0x21: 'inH2O',
+  0x22: 'ftH2O',
+} as const satisfies Record<number, string>
+
+// Temperature channel units (channel 1)
+export const LPP_UNITS_TEMPERATURE = {
+  0x01: '°C',
+  0x02: '°F',
+  0x03: 'K',
+  0x04: '°R',
+} as const satisfies Record<number, string>
+
+// Combined units lookup
+export const LPP_UNITS_BY_ID = {
+  ...LPP_UNITS_TEMPERATURE,
+  ...LPP_UNITS_PRESSURE,
+} as const satisfies Record<number, string>

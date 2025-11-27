@@ -13,14 +13,11 @@ describe('a2g parser', () => {
   const {
     decodeUplink,
     decodeHexUplink,
-    adjustMeasuringRange,
     adjustRoundingDecimals,
   } = useParser()
 
   const outputSchema = createA2GUplinkOutputSchema()
 
-  adjustMeasuringRange('pressure', { start: -2500, end: 2500 })
-  adjustMeasuringRange('flow', { start: 0, end: 10_000 })
   adjustRoundingDecimals(4)
 
   it.each(uplinkExamples)(`should decode uplink example: $description`, (example) => {

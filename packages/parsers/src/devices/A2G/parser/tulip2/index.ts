@@ -5,6 +5,12 @@ import type {
   A2GTULIP2DeviceInformationUplinkOutput,
   A2GTULIP2DeviceStatisticsUplinkOutput,
   A2GTULIP2TechnicalAlarmsUplinkOutput,
+  FlowUnitId,
+  FlowUnitName,
+  PressureUnitId,
+  PressureUnitName,
+  UnitId,
+  UnitName,
 } from '../../schema/tulip2'
 import { A2G_NAME } from '..'
 import { defineTULIP2Codec } from '../../../../codecs/tulip2'
@@ -13,6 +19,8 @@ import {
   DEVICE_ALARM_FLAGS,
   HARDWARE_ASSEMBLY_TYPE_NAMES,
   LPP_MEASURAND_NAMES,
+  LPP_MEASURAND_NAMES_FLOW,
+  LPP_MEASURAND_NAMES_PRESSURE,
   LPP_UNIT_NAMES,
   MEASUREMENT_CHANNELS,
   PRODUCT_SUB_ID_NAMES,
@@ -34,42 +42,55 @@ function createTULIP2A2GChannels() {
     {
       channelId: MEASUREMENT_CHANNELS.pressure,
       name: 'pressure',
-      start: -5000 as number,
-      end: 5000 as number,
+      // start and end not used as values are in float
+      start: 0 as number,
+      end: 100 as number,
+      adjustMeasurementRangeDisallowed: true,
     },
     {
       channelId: MEASUREMENT_CHANNELS.flow,
       name: 'flow',
-      start: -10000 as number,
-      end: 10000 as number,
+      // start and end not used as values are in float
+      start: 0 as number,
+      end: 100 as number,
+      adjustMeasurementRangeDisallowed: true,
     },
     {
       channelId: MEASUREMENT_CHANNELS.input_1,
       name: 'input_1',
-      start: -1000 as number,
-      end: 1000 as number,
+      // start and end not used as values are in float
+      start: 0 as number,
+      end: 100 as number,
+      adjustMeasurementRangeDisallowed: true,
     },
     {
       channelId: MEASUREMENT_CHANNELS.input_2,
       name: 'input_2',
-      start: -1000 as number,
-      end: 1000 as number,
+      // start and end not used as values are in float
+      start: 0 as number,
+      end: 100 as number,
+      adjustMeasurementRangeDisallowed: true,
     },
     {
       channelId: MEASUREMENT_CHANNELS.input_3,
       name: 'input_3',
-      start: -1000 as number,
-      end: 1000 as number,
+      // start and end not used as values are in float
+      start: 0 as number,
+      end: 100 as number,
+      adjustMeasurementRangeDisallowed: true,
     },
     {
       channelId: MEASUREMENT_CHANNELS.input_4,
       name: 'input_4',
+      // start and end not used as values are in float
       start: 0 as number,
       end: 1 as number,
+      adjustMeasurementRangeDisallowed: true,
     },
     {
       channelId: MEASUREMENT_CHANNELS.relay_status_1,
       name: 'relay_status_1',
+      // start and end not used as values are in float
       start: 0 as number,
       end: 1 as number,
       adjustMeasurementRangeDisallowed: true,
@@ -77,6 +98,7 @@ function createTULIP2A2GChannels() {
     {
       channelId: MEASUREMENT_CHANNELS.relay_status_2,
       name: 'relay_status_2',
+      // start and end not used as values are in float
       start: 0 as number,
       end: 1 as number,
       adjustMeasurementRangeDisallowed: true,
@@ -88,7 +110,7 @@ export type TULIP2A2GChannels = ReturnType<typeof createTULIP2A2GChannels>
 
 function createFloatFromTuple(tuple: [number, number, number, number], roundingDecimals: number): number {
   if (isErrorTuple(tuple)) {
-    throw new Error('Invalid measurement payload value 0xFFFF encountered in data message 01')
+    throw new Error('Invalid data for channel - measurement: 0xffff, 65535')
   }
   const value = intTuple4ToFloat32WithThreshold(tuple)
   return roundValue(value, roundingDecimals)
@@ -96,7 +118,7 @@ function createFloatFromTuple(tuple: [number, number, number, number], roundingD
 
 const handleDataMessage: Handler<TULIP2A2GChannels, A2GTULIP2DataMessageUplinkOutput> = (input, options) => {
   if (input.bytes.length !== 6 && input.bytes.length !== 27) {
-    throw new Error(`Data message 01 needs 6 or 27 bytes but got ${input.bytes.length}`)
+    throw new Error(`Data message (0x01) requires 6 or 27 bytes, but received ${input.bytes.length} bytes`)
   }
 
   const [messageType, configurationId] = [input.bytes[0]! as 1, input.bytes[1]!]
@@ -194,7 +216,7 @@ const handleDataMessage: Handler<TULIP2A2GChannels, A2GTULIP2DataMessageUplinkOu
 
 const handleTechnicalAlarmMessage: Handler<TULIP2A2GChannels, A2GTULIP2TechnicalAlarmsUplinkOutput> = (input) => {
   if (input.bytes.length !== 3) {
-    throw new Error(`Technical alarm message 04 needs 3 bytes but got ${input.bytes.length}`)
+    throw new Error(`Technical alarm message (0x04) requires 3 bytes, but received ${input.bytes.length} bytes`)
   }
 
   const configurationId = input.bytes[1]!
@@ -215,7 +237,7 @@ const handleTechnicalAlarmMessage: Handler<TULIP2A2GChannels, A2GTULIP2Technical
 
 const handleDeviceAlarmMessage: Handler<TULIP2A2GChannels, A2GTULIP2DeviceAlarmsUplinkOutput> = (input) => {
   if (input.bytes.length !== 4) {
-    throw new Error(`Device alarm message 05 needs 4 bytes but got ${input.bytes.length}`)
+    throw new Error(`Device alarm message (0x05) requires 4 bytes, but received ${input.bytes.length} bytes`)
   }
 
   const configurationId = input.bytes[1]!
@@ -240,13 +262,13 @@ const handleDeviceAlarmMessage: Handler<TULIP2A2GChannels, A2GTULIP2DeviceAlarms
 
 const handleDeviceIdentificationMessage: Handler<TULIP2A2GChannels, A2GTULIP2DeviceInformationUplinkOutput> = (input) => {
   if (input.bytes.length !== 33 && input.bytes.length !== 38) {
-    throw new Error(`Device identification 07 needs 33 or 38 bytes but got ${input.bytes.length}`)
+    throw new Error(`Device identification message (0x07) requires 33 or 38 bytes, but received ${input.bytes.length} bytes`)
   }
 
   const configurationId = input.bytes[1]!
   const productId = input.bytes[2]!
   if (productId !== 13) {
-    throw new Error(`Unsupported product identifier ${productId} in device identification message 07`)
+    throw new Error(`Invalid productId ${productId} in device identification message. Expected 13 (A2G).`)
   }
 
   const productSubId = input.bytes[3]!
@@ -258,7 +280,7 @@ const handleDeviceIdentificationMessage: Handler<TULIP2A2GChannels, A2GTULIP2Dev
   const hardwareAssemblyTypeId = input.bytes[7]!
   const hardwareAssemblyTypeName = (HARDWARE_ASSEMBLY_TYPE_NAMES)[hardwareAssemblyTypeId as keyof typeof PRODUCT_SUB_ID_NAMES]
   if (!hardwareAssemblyTypeName) {
-    throw new Error(`Unsupported hardware assembly type ${hardwareAssemblyTypeId} in device identification message 07`)
+    throw new Error(`Unknown hardware assembly type ${hardwareAssemblyTypeId} in device identification message`)
   }
 
   let serialNumber = ''
@@ -287,17 +309,17 @@ const handleDeviceIdentificationMessage: Handler<TULIP2A2GChannels, A2GTULIP2Dev
   const pressureUnit = input.bytes[32]!
   const pressureUnitName = LPP_UNIT_NAMES[pressureUnit as keyof typeof LPP_UNIT_NAMES]
   if (!pressureUnitName) {
-    throw new Error(`Unsupported pressure unit ${pressureUnit} in device identification message 07`)
+    throw new Error(`Unknown pressure unit ${pressureUnit} in device identification message`)
   }
 
   const channelConfigurations: A2GTULIP2DeviceInformationUplinkOutput['data']['deviceInformation']['channelConfigurations'] = [
     {
       measurand: 3,
-      measurandName: LPP_MEASURAND_NAMES[3],
+      measurandName: LPP_MEASURAND_NAMES_PRESSURE[3],
       measurementRangeStart: measurementRangeStartPressure,
       measurementRangeEnd: measurementRangeEndPressure,
-      unit: pressureUnit,
-      unitName: pressureUnitName,
+      unit: pressureUnit as PressureUnitId,
+      unitName: pressureUnitName as PressureUnitName,
     },
   ]
 
@@ -325,64 +347,64 @@ const handleDeviceIdentificationMessage: Handler<TULIP2A2GChannels, A2GTULIP2Dev
   const flowUnit = input.bytes[33]!
   const flowUnitName = (LPP_UNIT_NAMES)[flowUnit as keyof typeof LPP_UNIT_NAMES]
   if (!flowUnitName) {
-    throw new Error(`Unsupported flow unit ${flowUnit} in device identification message 07`)
+    throw new Error(`Unknown flow unit ${flowUnit} in device identification message`)
   }
 
   const input1Unit = input.bytes[34]!
   const input1UnitName = (LPP_UNIT_NAMES)[input1Unit as keyof typeof LPP_UNIT_NAMES]
   if (!input1UnitName) {
-    throw new Error(`Unsupported input 1 unit ${input1Unit} in device identification message 07`)
+    throw new Error(`Unknown input 1 unit ${input1Unit} in device identification message`)
   }
 
   const input2Unit = input.bytes[35]!
   const input2UnitName = (LPP_UNIT_NAMES)[input2Unit as keyof typeof LPP_UNIT_NAMES]
   if (!input2UnitName) {
-    throw new Error(`Unsupported input 2 unit ${input2Unit} in device identification message 07`)
+    throw new Error(`Unknown input 2 unit ${input2Unit} in device identification message`)
   }
 
   const input3Unit = input.bytes[36]!
   const input3UnitName = (LPP_UNIT_NAMES)[input3Unit as keyof typeof LPP_UNIT_NAMES]
   if (!input3UnitName) {
-    throw new Error(`Unsupported input 3 unit ${input3Unit} in device identification message 07`)
+    throw new Error(`Unknown input 3 unit ${input3Unit} in device identification message`)
   }
 
   const input4Unit = input.bytes[37]!
   const input4UnitName = (LPP_UNIT_NAMES)[input4Unit as keyof typeof LPP_UNIT_NAMES]
   if (!input4UnitName) {
-    throw new Error(`Unsupported input 4 unit ${input4Unit} in device identification message 07`)
+    throw new Error(`Unknown input 4 unit ${input4Unit} in device identification message`)
   }
 
   const completeChannelConfiguration: A2GTULIP2DeviceInformationUplinkOutput['data']['deviceInformation']['channelConfigurations'] = [
     channelConfigurations[0],
     {
       measurand: 6,
-      measurandName: LPP_MEASURAND_NAMES[6],
-      unit: flowUnit,
-      unitName: flowUnitName,
+      measurandName: LPP_MEASURAND_NAMES_FLOW[6],
+      unit: flowUnit as FlowUnitId,
+      unitName: flowUnitName as FlowUnitName,
     },
     {
       measurand: 70,
       measurandName: LPP_MEASURAND_NAMES[70],
-      unit: input1Unit,
-      unitName: input1UnitName,
+      unit: input1Unit as UnitId,
+      unitName: input1UnitName as UnitName,
     },
     {
       measurand: 71,
       measurandName: LPP_MEASURAND_NAMES[71],
-      unit: input2Unit,
-      unitName: input2UnitName,
+      unit: input2Unit as UnitId,
+      unitName: input2UnitName as UnitName,
     },
     {
       measurand: 72,
       measurandName: LPP_MEASURAND_NAMES[72],
-      unit: input3Unit,
-      unitName: input3UnitName,
+      unit: input3Unit as UnitId,
+      unitName: input3UnitName as UnitName,
     },
     {
       measurand: 73,
       measurandName: LPP_MEASURAND_NAMES[73],
-      unit: input4Unit,
-      unitName: input4UnitName,
+      unit: input4Unit as UnitId,
+      unitName: input4UnitName as UnitName,
     },
   ]
 
@@ -408,7 +430,7 @@ const handleDeviceIdentificationMessage: Handler<TULIP2A2GChannels, A2GTULIP2Dev
 
 const handleKeepAliveMessage: Handler<TULIP2A2GChannels, A2GTULIP2DeviceStatisticsUplinkOutput> = (input) => {
   if (input.bytes.length !== 3) {
-    throw new Error(`Keep alive message 08 needs 3 bytes but got ${input.bytes.length}`)
+    throw new Error(`Keep alive message (0x08) requires 3 bytes, but received ${input.bytes.length} bytes`)
   }
 
   const configurationId = input.bytes[1]!

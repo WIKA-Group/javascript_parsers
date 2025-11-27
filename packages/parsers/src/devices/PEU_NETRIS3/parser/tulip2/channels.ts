@@ -12,7 +12,6 @@ export const PEUTULIP2_DEVICE_TEMPERATURE_CHANNEL = {
   channelId: 1 as const,
   start: -40 as number,
   end: 60 as number,
-  adjustMeasuringRangeDisallowed: true,
 } as const
 
 // eslint-disable-next-line ts/explicit-function-return-type

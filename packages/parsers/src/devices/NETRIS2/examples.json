@@ -57,7 +57,7 @@
     },
     "output": {
       "errors": [
-        "NETRIS2 (JS): Data message contains more than 7 bytes. Contains 15 bytes."
+        "NETRIS2 (JS): Data message (0x01/0x02) requires at least 5 and at most 7 bytes, but received 15 bytes"
       ]
     }
   },
@@ -111,7 +111,7 @@
       "recvTime": "1992-12-22T17:00:00+01:00"
     },
     "output": {
-      "errors": ["NETRIS2 (JS): Data message 01/02 needs at least 5 bytes but got 3"]
+      "errors": ["NETRIS2 (JS): Data message (0x01/0x02) requires at least 5 and at most 7 bytes, but received 3 bytes"]
     }
   },
   {
@@ -123,7 +123,7 @@
       "recvTime": "1992-12-22T17:00:00+01:00"
     },
     "output": {
-      "errors": ["NETRIS2 (JS): Data message 01/02 needs at least 5 bytes but got 4"]
+      "errors": ["NETRIS2 (JS): Data message (0x01/0x02) requires at least 5 and at most 7 bytes, but received 4 bytes"]
     }
   },
   {
@@ -222,7 +222,7 @@
       "recvTime": "1992-12-22T17:00:00+01:00"
     },
     "output": {
-      "errors": ["NETRIS2 (JS): Process alarm message 03 needs at least 6 bytes but got 4"]
+      "errors": ["NETRIS2 (JS): Process alarm message (0x03) requires at least 6 bytes (and target byte count 3n), but received 4 bytes"]
     }
   },
   {
@@ -234,7 +234,7 @@
       "recvTime": "1992-12-22T17:00:00+01:00"
     },
     "output": {
-      "errors": ["NETRIS2 (JS): Process alarm message 03 bytes must have a length of 6, 9, 12, ... (3n + 6), but got 8"]
+      "errors": ["NETRIS2 (JS): Process alarm message (0x03) requires at least 6 bytes (and target byte count 3n), but received 8 bytes"]
     }
   },
   {
@@ -354,7 +354,7 @@
       "recvTime": "1992-12-22T17:00:00+01:00"
     },
     "output": {
-      "errors": ["NETRIS2 (JS): Configuration status message contains invalid status: 33, expected 0x20, 0x30, 0x60, or 0x70"]
+      "errors": ["NETRIS2 (JS): Unknown status 33 in configuration status message"]
     }
   },
   {
@@ -393,7 +393,7 @@
     },
     "output": {
       "errors": [
-        "NETRIS2 (JS): Radio unit identification message 07 needs at least 24 bytes but got 20"
+        "NETRIS2 (JS): Device identification message (0x07) requires 24 bytes, but received 20 bytes"
       ]
     }
   },
@@ -407,7 +407,7 @@
     },
     "output": {
       "errors": [
-        "NETRIS2 (JS): Radio unit identification message contains an invalid product ID: 0, expected 0xe (14)"
+        "NETRIS2 (JS): Invalid productId 0 in device identification message. Expected 14 (NETRIS2)."
       ]
     }
   },
@@ -421,7 +421,7 @@
     },
     "output": {
       "errors": [
-        "NETRIS2 (JS): Radio unit identification message contains an invalid product Sub ID: 10, expected 0x0 (0)"
+        "NETRIS2 (JS): Unknown productSubId 10 in device identification message. Only LoRaWAN (0) is supported."
       ]
     }
   },
@@ -457,7 +457,7 @@
       "recvTime": "1992-12-22T17:00:00+01:00"
     },
     "output": {
-      "errors": ["NETRIS2 (JS): Keep alive message 08 needs at least 12 bytes but got 10"]
+      "errors": ["NETRIS2 (JS): Keep alive message (0x08) requires 12 bytes, but received 10 bytes"]
     }
   },
   {

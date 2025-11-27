@@ -3,14 +3,21 @@ import * as v from 'valibot'
 import { createSemVerSchema } from '../../../schemas'
 import { createUplinkOutputSchemaFactory } from '../../../schemas/tulip2/uplink'
 import { PGUTULIP2_DEVICE_TEMPERATURE_CHANNEL, PGUTULIP2_PRESSURE_CHANNEL } from '../parser/tulip2/channels'
-import { ALARM_EVENTS, DEVICE_ALARM_STATUS_TYPES, LPP_MEASURANDS_BY_ID, LPP_UNITS_BY_ID, PROCESS_ALARM_TYPES, PRODUCT_SUB_ID_NAMES, TECHNICAL_ALARM_TYPES, TECHNICAL_CAUSE_OF_FAILURE_NAMES } from '../parser/tulip2/lookups'
+import { ALARM_EVENTS, DEVICE_ALARM_STATUS_TYPES, LPP_MEASURANDS_PRESSURE, LPP_MEASURANDS_TEMPERATURE, LPP_UNITS_PRESSURE, LPP_UNITS_TEMPERATURE, PROCESS_ALARM_TYPES, TECHNICAL_ALARM_TYPES, TECHNICAL_CAUSE_OF_FAILURE_NAMES } from '../parser/tulip2/lookups'
 
 const createUplinkSchema = createUplinkOutputSchemaFactory(31)
 
-const MEASURAND_IDS = Object.keys(LPP_MEASURANDS_BY_ID).map(key => Number.parseInt(key, 10)) as (keyof typeof LPP_MEASURANDS_BY_ID)[]
-const MEASURAND_NAMES = Object.values(LPP_MEASURANDS_BY_ID) as (typeof LPP_MEASURANDS_BY_ID)[keyof typeof LPP_MEASURANDS_BY_ID][]
-const UNIT_IDS = Object.keys(LPP_UNITS_BY_ID).map(key => Number.parseInt(key, 10)) as (keyof typeof LPP_UNITS_BY_ID)[]
-const UNIT_NAMES = Object.values(LPP_UNITS_BY_ID) as (typeof LPP_UNITS_BY_ID)[keyof typeof LPP_UNITS_BY_ID][]
+// Pressure channel (channel 0) typed arrays
+const PRESSURE_MEASURAND_IDS = Object.keys(LPP_MEASURANDS_PRESSURE).map(key => Number.parseInt(key, 10)) as (keyof typeof LPP_MEASURANDS_PRESSURE)[]
+const PRESSURE_MEASURAND_NAMES = Object.values(LPP_MEASURANDS_PRESSURE) as (typeof LPP_MEASURANDS_PRESSURE)[keyof typeof LPP_MEASURANDS_PRESSURE][]
+const PRESSURE_UNIT_IDS = Object.keys(LPP_UNITS_PRESSURE).map(key => Number.parseInt(key, 10)) as (keyof typeof LPP_UNITS_PRESSURE)[]
+const PRESSURE_UNIT_NAMES = Object.values(LPP_UNITS_PRESSURE) as (typeof LPP_UNITS_PRESSURE)[keyof typeof LPP_UNITS_PRESSURE][]
+
+// Temperature channel (channel 1) typed arrays
+const TEMPERATURE_MEASURAND_IDS = Object.keys(LPP_MEASURANDS_TEMPERATURE).map(key => Number.parseInt(key, 10)) as (keyof typeof LPP_MEASURANDS_TEMPERATURE)[]
+const TEMPERATURE_MEASURAND_NAMES = Object.values(LPP_MEASURANDS_TEMPERATURE) as (typeof LPP_MEASURANDS_TEMPERATURE)[keyof typeof LPP_MEASURANDS_TEMPERATURE][]
+const TEMPERATURE_UNIT_IDS = Object.keys(LPP_UNITS_TEMPERATURE).map(key => Number.parseInt(key, 10)) as (keyof typeof LPP_UNITS_TEMPERATURE)[]
+const TEMPERATURE_UNIT_NAMES = Object.values(LPP_UNITS_TEMPERATURE) as (typeof LPP_UNITS_TEMPERATURE)[keyof typeof LPP_UNITS_TEMPERATURE][]
 
 const pressureMeasurementChannelSchema = v.object({
   channelId: v.literal(PGUTULIP2_PRESSURE_CHANNEL.channelId),
@@ -104,14 +111,29 @@ function createDeviceAlarmsUplinkOutputSchema() {
   })
 }
 
-function createChannelConfigurationSchema() {
+function createPressureChannelConfigurationSchema() {
   return v.object({
-    measurand: v.picklist(MEASURAND_IDS),
-    measurandName: v.picklist(MEASURAND_NAMES),
+    channelId: v.literal(PGUTULIP2_PRESSURE_CHANNEL.channelId),
+    channelName: v.literal(PGUTULIP2_PRESSURE_CHANNEL.name),
+    measurand: v.picklist(PRESSURE_MEASURAND_IDS),
+    measurandName: v.picklist(PRESSURE_MEASURAND_NAMES),
     measurementRangeStart: v.number(),
     measurementRangeEnd: v.number(),
-    unit: v.picklist(UNIT_IDS),
-    unitName: v.picklist(UNIT_NAMES),
+    unit: v.picklist(PRESSURE_UNIT_IDS),
+    unitName: v.picklist(PRESSURE_UNIT_NAMES),
+  })
+}
+
+function createTemperatureChannelConfigurationSchema() {
+  return v.object({
+    channelId: v.literal(PGUTULIP2_DEVICE_TEMPERATURE_CHANNEL.channelId),
+    channelName: v.literal(PGUTULIP2_DEVICE_TEMPERATURE_CHANNEL.name),
+    measurand: v.picklist(TEMPERATURE_MEASURAND_IDS),
+    measurandName: v.picklist(TEMPERATURE_MEASURAND_NAMES),
+    measurementRangeStart: v.number(),
+    measurementRangeEnd: v.number(),
+    unit: v.picklist(TEMPERATURE_UNIT_IDS),
+    unitName: v.picklist(TEMPERATURE_UNIT_NAMES),
   })
 }
 
@@ -120,19 +142,15 @@ function createDeviceInformationUplinkOutputSchema() {
     messageType: [0x07],
     extension: {
       deviceInformation: v.object({
-        productId: v.pipe(v.number(), v.minValue(0), v.integer()),
-        productIdName: v.union([
-          v.literal('NETRIS3'),
-          v.number(),
-        ]),
-        productSubId: v.picklist(Object.values(PRODUCT_SUB_ID_NAMES)),
-        productSubIdName: v.picklist(Object.keys(PRODUCT_SUB_ID_NAMES) as (keyof typeof PRODUCT_SUB_ID_NAMES)[]),
+        productId: v.literal(0x0F),
+        productIdName: v.literal('NETRIS3'),
+        productSubId: v.literal(0 as const),
+        productSubIdName: v.literal('LoRaWAN' as const),
         sensorDeviceTypeId: v.pipe(v.number(), v.minValue(0), v.integer()),
-        channelConfigurations: v.pipe(
-          v.array(createChannelConfigurationSchema()),
-          v.minLength(1),
-          v.maxLength(2),
-        ),
+        channelConfigurations: v.tuple([
+          createPressureChannelConfigurationSchema(),
+          createTemperatureChannelConfigurationSchema(),
+        ]),
       }),
     },
   })

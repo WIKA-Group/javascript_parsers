@@ -50,7 +50,14 @@
     "description": "Good case uplink- process alarm message for channel 0 with high threshold alarm",
     "input": {
       "fPort": 1,
-      "bytes": [3, 7, 0, 0, 9, 191],
+      "bytes": [
+        3,
+        7,
+        0,
+        0,
+        9,
+        191
+      ],
       "recvTime": "1992-12-22T17:00:00+01:00"
     },
     "output": {
@@ -76,7 +83,13 @@
     "description": "Good case uplink - sensor technical alarm message for channel 0 with alarmtype 0400",
     "input": {
       "fPort": 1,
-      "bytes": [4, 5, 0, 4, 0],
+      "bytes": [
+        4,
+        5,
+        0,
+        4,
+        0
+      ],
       "recvTime": "1992-12-22T17:00:00+01:00"
     },
     "output": {
@@ -99,7 +112,12 @@
     "description": "Good case uplink - Device alarm message with battery low alarm triggered",
     "input": {
       "fPort": 1,
-      "bytes": [5, 2, 0, 1],
+      "bytes": [
+        5,
+        2,
+        0,
+        1
+      ],
       "recvTime": "1992-12-22T17:00:00+01:00"
     },
     "output": {
@@ -220,27 +238,39 @@
           "channels": {
             "channel0": {
               "measurand": "Pressure absolute",
-              "unit": "bar"
+              "measurandId": 4,
+              "unit": "bar",
+              "unitId": 7
             },
             "channel1": {
               "measurand": "Pressure gauge",
-              "unit": "Pa"
+              "measurandId": 3,
+              "unit": "Pa",
+              "unitId": 10
             },
             "channel2": {
               "measurand": "Temperature",
-              "unit": "°C"
+              "measurandId": 1,
+              "unit": "°C",
+              "unitId": 1
             },
             "channel3": {
               "measurand": "Density",
-              "unit": "kg/m³"
+              "measurandId": 23,
+              "unit": "kg/m³",
+              "unitId": 110
             },
             "channel4": {
               "measurand": "Pressure absolute",
-              "unit": "kPa"
+              "measurandId": 4,
+              "unit": "kPa",
+              "unitId": 12
             },
             "channel5": {
               "measurand": "Pressure gauge",
-              "unit": "bar"
+              "measurandId": 3,
+              "unit": "bar",
+              "unitId": 7
             }
           },
           "gasMixtures": {
@@ -262,7 +292,11 @@
     "description": "Good case uplink - Keep alive message with restart event and 99% battery estimation",
     "input": {
       "fPort": 1,
-      "bytes": [8, 0, 99],
+      "bytes": [
+        8,
+        0,
+        99
+      ],
       "recvTime": "1992-12-22T17:00:00+01:00"
     },
     "output": {

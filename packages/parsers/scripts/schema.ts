@@ -46,7 +46,7 @@ const ps = files.map(async (file) => {
   }
 
   if (downlinkSchema) {
-    const writePath = join(file, '..', OUTPUT_FILES.DownlinkInputSchema)
+    const writePath = join(file, '../..', OUTPUT_FILES.DownlinkInputSchema)
     const jsonSchema = toJsonSchema(downlinkSchema, toJsonSchemaConfig)
 
     const p = writeFile(writePath, JSON.stringify(jsonSchema, null, 2))

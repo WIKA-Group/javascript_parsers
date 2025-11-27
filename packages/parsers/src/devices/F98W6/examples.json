@@ -66,12 +66,12 @@
             {
               "channelId": 0,
               "channelName": "strain",
-              "value": -468.688
+              "value": -468.6875
             },
             {
               "channelId": 1,
               "channelName": "device temperature",
-              "value": -83.734
+              "value": -83.7345
             },
             {
               "channelId": 2,
@@ -108,7 +108,7 @@
             {
               "channelId": 0,
               "channelName": "strain",
-              "value": -313.188
+              "value": -313.1875
             },
             {
               "channelId": 1,
@@ -161,7 +161,7 @@
     },
     "output": {
       "errors": [
-        "F98W6 (JS): Data message 01/02 needs 7 bytes but got 3"
+        "F98W6 (JS): Data message (0x01/0x02) requires 7 bytes, but received 3 bytes"
       ]
     }
   },
@@ -223,7 +223,7 @@
             "eventName": "disappeared",
             "alarmType": 3,
             "alarmTypeName": "rising slope",
-            "value": -43.032
+            "value": -43.0315
           }
         ]
       }

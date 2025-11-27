@@ -125,7 +125,7 @@
     },
     "output": {
       "errors": [
-        "FLRU+NETRIS3 (JS): Data message 01/02 needs at least 4 and maximum 11 bytes but got 3"
+        "FLRU+NETRIS3 (JS): Data message (0x01/0x02) requires at least 5 and at most 11 bytes, but received 3 bytes"
       ]
     }
   },
@@ -144,7 +144,7 @@
     },
     "output": {
       "errors": [
-        "FLRU+NETRIS3 (JS): Not enough data to decode channel (level). Payload must has a length of 2 bytes, input data length: 4"
+        "FLRU+NETRIS3 (JS): Data message (0x01/0x02) requires at least 5 and at most 11 bytes, but received 4 bytes"
       ]
     }
   },
@@ -433,6 +433,8 @@
           "sensorDeviceTypeId": 20,
           "channelConfigurations": [
             {
+              "channelId": 0,
+              "channelName": "level",
               "measurand": 10,
               "measurandName": "Level",
               "measurementRangeStart": 0.0,

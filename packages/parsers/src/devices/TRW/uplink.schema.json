@@ -2713,42 +2713,37 @@
                       "type": "number"
                     },
                     "measurand": {
-                      "type": "integer",
-                      "minimum": 0
+                      "enum": [
+                        1,
+                        13,
+                        14,
+                        18
+                      ]
                     },
                     "measurandName": {
-                      "anyOf": [
-                        {
-                          "enum": [
-                            "Temperature",
-                            "Current",
-                            "Voltage",
-                            "Relative"
-                          ]
-                        },
-                        {
-                          "const": "Unknown"
-                        }
+                      "enum": [
+                        "Temperature",
+                        "Current",
+                        "Voltage",
+                        "Relative"
                       ]
                     },
                     "unit": {
-                      "type": "integer",
-                      "minimum": 0
+                      "enum": [
+                        1,
+                        2,
+                        88,
+                        90,
+                        100
+                      ]
                     },
                     "unitName": {
-                      "anyOf": [
-                        {
-                          "enum": [
-                            "°C",
-                            "°F",
-                            "V",
-                            "mA",
-                            "%"
-                          ]
-                        },
-                        {
-                          "const": "Unknown"
-                        }
+                      "enum": [
+                        "°C",
+                        "°F",
+                        "V",
+                        "mA",
+                        "%"
                       ]
                     }
                   },

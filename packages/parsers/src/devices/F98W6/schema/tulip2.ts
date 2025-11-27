@@ -6,15 +6,29 @@ import {
   ALARM_EVENTS,
   DEVICE_ALARM_CAUSE_OF_FAILURE_NAMES_BY_VALUE,
   DEVICE_ALARM_TYPES,
-  PHYSICAL_UNIT_NAMES_BY_ID,
+  PHYSICAL_UNIT_NAMES_STRAIN,
+  PHYSICAL_UNIT_NAMES_TEMPERATURE,
   PROCESS_ALARM_CHANNEL_NAMES_BY_ID,
   PROCESS_ALARM_TYPES,
-  PRODUCT_SUB_ID_NAMES,
   STRAIN_TYPES_BY_ID,
   TECHNICAL_ALARM_TYPES,
 } from '../parser/tulip2/lookups'
 
 const createUplinkSchema = createUplinkOutputSchemaFactory(255)
+
+// Strain unit lists
+const STRAIN_UNIT_ID_LIST = Object.keys(PHYSICAL_UNIT_NAMES_STRAIN).map(Number) as (keyof typeof PHYSICAL_UNIT_NAMES_STRAIN)[]
+const STRAIN_UNIT_NAME_LIST = Object.values(PHYSICAL_UNIT_NAMES_STRAIN) as typeof PHYSICAL_UNIT_NAMES_STRAIN[keyof typeof PHYSICAL_UNIT_NAMES_STRAIN][]
+
+export type StrainUnitName = typeof PHYSICAL_UNIT_NAMES_STRAIN[keyof typeof PHYSICAL_UNIT_NAMES_STRAIN]
+export type StrainUnitId = keyof typeof PHYSICAL_UNIT_NAMES_STRAIN
+
+// Temperature unit lists
+const TEMPERATURE_UNIT_ID_LIST = Object.keys(PHYSICAL_UNIT_NAMES_TEMPERATURE).map(Number) as (keyof typeof PHYSICAL_UNIT_NAMES_TEMPERATURE)[]
+const TEMPERATURE_UNIT_NAME_LIST = Object.values(PHYSICAL_UNIT_NAMES_TEMPERATURE) as typeof PHYSICAL_UNIT_NAMES_TEMPERATURE[keyof typeof PHYSICAL_UNIT_NAMES_TEMPERATURE][]
+
+export type TemperatureUnitName = typeof PHYSICAL_UNIT_NAMES_TEMPERATURE[keyof typeof PHYSICAL_UNIT_NAMES_TEMPERATURE]
+export type TemperatureUnitId = keyof typeof PHYSICAL_UNIT_NAMES_TEMPERATURE
 
 function createDataMessageUplinkOutputSchema() {
   return createUplinkSchema({
@@ -100,12 +114,12 @@ function createDeviceInformationUplinkOutputSchema() {
     messageType: [0x07],
     extension: {
       deviceInformation: v.object({
-        productId: v.pipe(v.number(), v.integer()),
+        productId: v.literal(18),
         productIdName:
           v.literal('F98W6'),
-        productSubId: v.pipe(v.number(), v.minValue(0), v.integer()),
+        productSubId: v.literal(0x00),
         productSubIdName:
-          v.picklist(Object.keys(PRODUCT_SUB_ID_NAMES) as (keyof typeof PRODUCT_SUB_ID_NAMES)[]),
+          v.literal('LoRaWAN'),
         wirelessModuleFirmwareVersion: v.string(),
         wirelessModuleHardwareVersion: v.string(),
         serialNumber: v.string(),
@@ -115,12 +129,10 @@ function createDeviceInformationUplinkOutputSchema() {
         measurementRangeEndStrain: v.number(),
         measurementRangeStartDeviceTemperature: v.number(),
         measurementRangeEndDeviceTemperature: v.number(),
-        strainUnit: v.pipe(v.number(), v.minValue(0), v.integer()),
-        strainUnitName:
-          v.picklist(Object.values(PHYSICAL_UNIT_NAMES_BY_ID) as (typeof PHYSICAL_UNIT_NAMES_BY_ID)[keyof typeof PHYSICAL_UNIT_NAMES_BY_ID][]),
-        deviceTemperatureUnit: v.pipe(v.number(), v.minValue(0), v.integer()),
-        deviceTemperatureUnitName:
-          v.picklist(Object.values(PHYSICAL_UNIT_NAMES_BY_ID) as (typeof PHYSICAL_UNIT_NAMES_BY_ID)[keyof typeof PHYSICAL_UNIT_NAMES_BY_ID][]),
+        strainUnit: v.picklist(STRAIN_UNIT_ID_LIST),
+        strainUnitName: v.picklist(STRAIN_UNIT_NAME_LIST),
+        deviceTemperatureUnit: v.picklist(TEMPERATURE_UNIT_ID_LIST),
+        deviceTemperatureUnitName: v.picklist(TEMPERATURE_UNIT_NAME_LIST),
       }),
     },
   })

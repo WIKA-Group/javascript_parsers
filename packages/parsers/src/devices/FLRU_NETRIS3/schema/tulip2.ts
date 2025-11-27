@@ -3,7 +3,7 @@ import * as v from 'valibot'
 import { createSemVerSchema } from '../../../schemas'
 import { createUplinkOutputSchemaFactory } from '../../../schemas/tulip2/uplink'
 import { FLRUTULIP2_LEVEL_CHANNEL } from '../parser/tulip2/channels'
-import { ALARM_EVENTS, DEVICE_ALARM_STATUS_TYPES, LPP_MEASURANDS_BY_ID, LPP_UNITS_BY_ID, PROCESS_ALARM_TYPES, PRODUCT_SUB_ID_NAMES, TECHNICAL_ALARM_TYPES, TECHNICAL_CAUSE_OF_FAILURE_NAMES } from '../parser/tulip2/lookups'
+import { ALARM_EVENTS, DEVICE_ALARM_STATUS_TYPES, PROCESS_ALARM_TYPES, TECHNICAL_ALARM_TYPES, TECHNICAL_CAUSE_OF_FAILURE_NAMES } from '../parser/tulip2/lookups'
 
 const createUplinkSchema = createUplinkOutputSchemaFactory(31)
 
@@ -78,22 +78,21 @@ function createDeviceInformationUplinkOutputSchema() {
     messageType: [0x07],
     extension: {
       deviceInformation: v.object({
-        productId: v.pipe(v.number(), v.minValue(0), v.integer()),
-        productIdName: v.union([
-          v.literal('NETRIS3'),
-          v.number(),
-        ]),
-        productSubId: v.pipe(v.number(), v.minValue(0), v.integer()),
-        productSubIdName: v.picklist(Object.keys(PRODUCT_SUB_ID_NAMES) as (keyof typeof PRODUCT_SUB_ID_NAMES)[]),
-        sensorDeviceTypeId: v.pipe(v.number(), v.minValue(0), v.integer()),
+        productId: v.literal(15),
+        productIdName: v.literal('NETRIS3'),
+        productSubId: v.literal(0),
+        productSubIdName: v.literal('LoRaWAN'),
+        sensorDeviceTypeId: v.literal(20),
         channelConfigurations: v.tuple([
           v.object({
-            measurand: v.picklist(Object.keys(LPP_MEASURANDS_BY_ID).map(key => Number.parseInt(key, 10)) as (keyof typeof LPP_MEASURANDS_BY_ID)[]),
-            measurandName: v.picklist(Object.values(LPP_MEASURANDS_BY_ID) as (typeof LPP_MEASURANDS_BY_ID)[keyof typeof LPP_MEASURANDS_BY_ID][]),
+            channelId: v.literal(FLRUTULIP2_LEVEL_CHANNEL.channelId),
+            channelName: v.literal(FLRUTULIP2_LEVEL_CHANNEL.name),
+            measurand: v.literal(10),
+            measurandName: v.literal('Level'),
             measurementRangeStart: v.number(),
             measurementRangeEnd: v.number(),
-            unit: v.picklist(Object.keys(LPP_UNITS_BY_ID).map(key => Number.parseInt(key, 10)) as (keyof typeof LPP_UNITS_BY_ID)[]),
-            unitName: v.picklist(Object.values(LPP_UNITS_BY_ID) as (typeof LPP_UNITS_BY_ID)[keyof typeof LPP_UNITS_BY_ID][]),
+            unit: v.picklist([0x3C, 0x3D, 0x3E, 0x3F, 0x40, 0x41] as const),
+            unitName: v.picklist(['mm', 'cm', 'm', 'µm', 'ft', 'in'] as const),
           }),
         ]),
       }),

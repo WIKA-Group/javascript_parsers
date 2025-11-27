@@ -1,5 +1,6 @@
 import type { Handler, TULIP2Channel } from '../../../../codecs/tulip2'
 import type {
+  ChannelIdentification,
   GD20WTULIP2ChannelConfigurationData,
   GD20WTULIP2ConfigurationStatusUplinkOutput,
   GD20WTULIP2DataMessageUplinkOutput,
@@ -41,7 +42,7 @@ type DeviceAlarmId = keyof typeof DEVICE_ALARMS_BY_ID
 const handleDataMessage: Handler<GD20WTULIP2Channels, GD20WTULIP2DataMessageUplinkOutput> = (input, options) => {
   const minLengthForData = 5
   if (input.bytes.length < minLengthForData) {
-    throw new Error(`Data message must contain at least ${minLengthForData} bytes`)
+    throw new Error(`Data message (0x01/0x02) requires at least ${minLengthForData} bytes, but received ${input.bytes.length} bytes`)
   }
 
   const hasInvalidLength = (input.bytes.length - 2) % 3 !== 0
@@ -91,12 +92,8 @@ const handleDataMessage: Handler<GD20WTULIP2Channels, GD20WTULIP2DataMessageUpli
 }
 
 const handleProcessAlarmMessage: Handler<GD20WTULIP2Channels, GD20WTULIP2ProcessAlarmsUplinkOutput> = (input, options) => {
-  const minLengthBytes = 6
-  if (input.bytes.length < minLengthBytes) {
-    throw new Error(`Process alarm message must contain at least ${minLengthBytes} bytes. Contains ${input.bytes.length} bytes.`)
-  }
-  if ((input.bytes.length - 2) % 4 !== 0) {
-    throw new Error(`Process alarm message must contain 4n + 6 bytes, contains ${input.bytes.length}.`)
+  if (input.bytes.length < 6 || (input.bytes.length - 2) % 4 !== 0) {
+    throw new Error(`Process alarm message (0x03) requires at least 6 bytes (and target byte count 4n+2), but received ${input.bytes.length} bytes`)
   }
 
   const configurationId = input.bytes[1]!
@@ -192,7 +189,7 @@ const handleSensorTechnicalAlarmMessage: Handler<GD20WTULIP2Channels, GD20WTULIP
 const handleDeviceAlarmMessage: Handler<GD20WTULIP2Channels, GD20WTULIP2DeviceAlarmsUplinkOutput> = (input) => {
   const requiredLength = 4
   if (input.bytes.length < requiredLength) {
-    throw new Error(`Device alarm message must contain ${requiredLength} bytes. Contains ${input.bytes.length} bytes.`)
+    throw new Error(`Device alarm message (0x05) requires ${requiredLength} bytes, but received ${input.bytes.length} bytes`)
   }
 
   const warnings: string[] = []
@@ -244,12 +241,12 @@ const handleConfigurationStatusMessage: Handler<GD20WTULIP2Channels, GD20WTULIP2
   const status = input.bytes[2]! >> 4
 
   if (!(status in CONFIGURATION_STATUS_BY_ID)) {
-    throw new Error(`Configuration status message contains an invalid status: ${status}`)
+    throw new Error(`Unknown status ${status} in configuration status message`)
   }
 
   const commandType = input.bytes[3]!
   if (commandType !== 0x04 && commandType < 0x40) {
-    throw new Error(`Configuration status message contains an invalid command type: ${commandType}`)
+    throw new Error(`Unknown command type ${commandType} in configuration status message`)
   }
 
   const warnings: string[] = []
@@ -305,13 +302,28 @@ const handleConfigurationStatusMessage: Handler<GD20WTULIP2Channels, GD20WTULIP2
   return result
 }
 
+function createChannelIdentification(measurandByte: number, unitByte: number, channelNum: number): ChannelIdentification {
+  if (!(measurandByte in MEASURANDS_BY_ID)) {
+    throw new Error(`Unknown measurand ${measurandByte} for channel ${channelNum} in device identification message`)
+  }
+  if (!(unitByte in UNITS_BY_ID)) {
+    throw new Error(`Unknown unit ${unitByte} for channel ${channelNum} in device identification message`)
+  }
+  return {
+    measurandId: measurandByte as keyof typeof MEASURANDS_BY_ID,
+    measurand: MEASURANDS_BY_ID[measurandByte as keyof typeof MEASURANDS_BY_ID],
+    unitId: unitByte as keyof typeof UNITS_BY_ID,
+    unit: UNITS_BY_ID[unitByte as keyof typeof UNITS_BY_ID],
+  }
+}
+
 const handleDeviceIdentificationMessage: Handler<GD20WTULIP2Channels, GD20WTULIP2DeviceIdentificationUplinkOutput> = (input) => {
   const minLength = 39
 
   const warnings: string[] = []
 
   if (input.bytes.length < minLength) {
-    throw new Error(`Device identification message must contain at least ${minLength} bytes. Contains ${input.bytes.length} bytes.`)
+    throw new Error(`Device identification message (0x07) requires at least ${minLength} bytes, but received ${input.bytes.length} bytes`)
   }
 
   if (input.bytes.length > minLength) {
@@ -321,11 +333,11 @@ const handleDeviceIdentificationMessage: Handler<GD20WTULIP2Channels, GD20WTULIP
   const configurationId = input.bytes[1]!
   const productId = input.bytes[2]!
   if (productId !== 0x15) {
-    throw new Error(`Device identification message contains an invalid product ID: ${productId}, expected 0x15 (21).`)
+    throw new Error(`Invalid productId ${productId} in device identification message. Expected 21 (GD20W).`)
   }
   const productSubId = input.bytes[3]!
   if (productSubId !== 0x40) {
-    throw new Error(`Device identification message contains an invalid product sub ID: ${productSubId}, expected 0x00 (0).`)
+    throw new Error(`Unknown productSubId ${productSubId} in device identification message. Only LoRaWAN (0) is supported.`)
   }
 
   const wirelessModuleFirmwareVersion = `${input.bytes[4]! >> 4}.${input.bytes[4]! & 0x0F}.${input.bytes[5]!}`
@@ -342,31 +354,13 @@ const handleDeviceIdentificationMessage: Handler<GD20WTULIP2Channels, GD20WTULIP
   const serialNumber = String.fromCharCode(...input.bytes.slice(8, 18))
 
   const channels = {
-    channel0: {
-      measurand: lookupValue(MEASURANDS_BY_ID, input.bytes[19]!, 'Device identification message contains an invalid measurand for channel 0'),
-      unit: lookupValue(UNITS_BY_ID, input.bytes[20]!, 'Device identification message contains an invalid unit for channel 0'),
-    },
-    channel1: {
-      measurand: lookupValue(MEASURANDS_BY_ID, input.bytes[21]!, 'Device identification message contains an invalid measurand for channel 1'),
-      unit: lookupValue(UNITS_BY_ID, input.bytes[22]!, 'Device identification message contains an invalid unit for channel 1'),
-    },
-    channel2: {
-      measurand: lookupValue(MEASURANDS_BY_ID, input.bytes[23]!, 'Device identification message contains an invalid measurand for channel 2'),
-      unit: lookupValue(UNITS_BY_ID, input.bytes[24]!, 'Device identification message contains an invalid unit for channel 2'),
-    },
-    channel3: {
-      measurand: lookupValue(MEASURANDS_BY_ID, input.bytes[25]!, 'Device identification message contains an invalid measurand for channel 3'),
-      unit: lookupValue(UNITS_BY_ID, input.bytes[26]!, 'Device identification message contains an invalid unit for channel 3'),
-    },
-    channel4: {
-      measurand: lookupValue(MEASURANDS_BY_ID, input.bytes[27]!, 'Device identification message contains an invalid measurand for channel 4'),
-      unit: lookupValue(UNITS_BY_ID, input.bytes[28]!, 'Device identification message contains an invalid unit for channel 4'),
-    },
-    channel5: {
-      measurand: lookupValue(MEASURANDS_BY_ID, input.bytes[29]!, 'Device identification message contains an invalid measurand for channel 5'),
-      unit: lookupValue(UNITS_BY_ID, input.bytes[30]!, 'Device identification message contains an invalid unit for channel 5'),
-    },
-  }
+    channel0: createChannelIdentification(input.bytes[19]!, input.bytes[20]!, 0),
+    channel1: createChannelIdentification(input.bytes[21]!, input.bytes[22]!, 1),
+    channel2: createChannelIdentification(input.bytes[23]!, input.bytes[24]!, 2),
+    channel3: createChannelIdentification(input.bytes[25]!, input.bytes[26]!, 3),
+    channel4: createChannelIdentification(input.bytes[27]!, input.bytes[28]!, 4),
+    channel5: createChannelIdentification(input.bytes[29]!, input.bytes[30]!, 5),
+  } as const
 
   const gasMixtures = {
     SF6: input.bytes[31]!,
@@ -405,7 +399,7 @@ const handleDeviceIdentificationMessage: Handler<GD20WTULIP2Channels, GD20WTULIP
 const handleDeviceStatisticsMessage: Handler<GD20WTULIP2Channels, GD20WTULIP2DeviceStatisticsUplinkOutput> = (input) => {
   const minLength = 3
   if (input.bytes.length < minLength) {
-    throw new Error(`Keep alive message must contain at least ${minLength} bytes. Contains ${input.bytes.length} bytes.`)
+    throw new Error(`Keep alive message (0x08) requires at least ${minLength} bytes, but received ${input.bytes.length} bytes`)
   }
 
   const warnings: string[] = []
@@ -442,7 +436,7 @@ const handleExtendedDeviceIdentificationMessage: Handler<GD20WTULIP2Channels, GD
   const warnings: string[] = []
 
   if (input.bytes.length < minLength) {
-    throw new Error(`Extended device identification message must contain at least ${minLength} bytes. Contains ${input.bytes.length} bytes.`)
+    throw new Error(`Extended device identification message (0x09) requires at least ${minLength} bytes, but received ${input.bytes.length} bytes`)
   }
 
   if (input.bytes.length > minLength) {
@@ -526,7 +520,7 @@ function getProcessAlarmType(byte: number): { sense: 0 | 1, alarmType: number } 
   const alarmType = (byte & 0b0000_0111) as (typeof PROCESS_ALARM_TYPES)[ProcessAlarmType]
 
   if (!Number.isInteger(alarmType) || alarmType < 0 || alarmType > 5) {
-    throw new Error(`Invalid alarmType in process alarm: ${alarmType}`)
+    throw new Error(`Unknown alarmType ${alarmType} in process alarm message`)
   }
 
   return { sense, alarmType }
@@ -535,7 +529,7 @@ function getProcessAlarmType(byte: number): { sense: 0 | 1, alarmType: number } 
 function getProcessAlarmTypeName(alarmType: number): ProcessAlarmType {
   const entry = Object.entries(PROCESS_ALARM_TYPES).find(([, value]) => value === alarmType)
   if (!entry) {
-    throw new Error(`Unknown process alarm type ${alarmType}`)
+    throw new Error(`Unknown alarmType ${alarmType} in process alarm message`)
   }
   return entry[0] as ProcessAlarmType
 }
@@ -543,7 +537,7 @@ function getProcessAlarmTypeName(alarmType: number): ProcessAlarmType {
 function getProcessAlarmEventName(event: number): keyof typeof ALARM_EVENTS {
   const entry = Object.entries(ALARM_EVENTS).find(([, value]) => value === event)
   if (!entry) {
-    throw new Error(`Unknown process alarm event ${event}`)
+    throw new Error(`Unknown event ${event} in process alarm message`)
   }
   return entry[0] as keyof typeof ALARM_EVENTS
 }
@@ -627,7 +621,7 @@ function parseChannelConfigurationData(input: { bytes: number[] }, warnings: str
   return channelConfiguration
 }
 
-function lookupValue<T extends Record<number, string>>(dictionary: T, key: number, errorMessage: string): T[keyof T] {
+function _lookupValue<T extends Record<number, string>>(dictionary: T, key: number, errorMessage: string): T[keyof T] {
   const value = dictionary[key as keyof T]
   if (!value) {
     throw new Error(errorMessage)

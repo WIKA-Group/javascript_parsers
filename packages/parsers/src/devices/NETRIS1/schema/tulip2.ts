@@ -2,10 +2,36 @@
 import * as v from 'valibot'
 import { createSemVerSchema } from '../../../schemas'
 import { createUplinkOutputSchemaFactory } from '../../../schemas/tulip2/uplink'
-import { ALARM_EVENTS, DEVICE_ALARM_TYPES, LPP_MEASURANDS_BY_ID, LPP_UNITS_BY_ID, MEASUREMENT_ALARM_TYPES, PROCESS_ALARM_TYPES, TECHNICAL_ALARM_TYPES } from '../parser/tulip2/lookups'
+import { ALARM_EVENTS, DEVICE_ALARM_TYPES, LPP_MEASURANDS_BY_ID, LPP_UNITS_BY_ID, LPWAN_IDS_BY_ID, MEASUREMENT_ALARM_TYPES, PROCESS_ALARM_TYPES, PRODUCT_IDS_BY_ID, SENSOR_IDS_BY_ID, TECHNICAL_ALARM_TYPES } from '../parser/tulip2/lookups'
 
 // NETRIS1 supports configurationId 0..31 (align with PEW unless specified otherwise)
 const createUplinkSchema = createUplinkOutputSchemaFactory(31)
+
+// Measurand and Unit lists
+const MEASURAND_IDS = Object.keys(LPP_MEASURANDS_BY_ID).map(key => Number.parseInt(key, 10)) as (keyof typeof LPP_MEASURANDS_BY_ID)[]
+const MEASURAND_NAMES = Object.values(LPP_MEASURANDS_BY_ID) as (typeof LPP_MEASURANDS_BY_ID)[keyof typeof LPP_MEASURANDS_BY_ID][]
+
+const UNIT_IDS = Object.keys(LPP_UNITS_BY_ID).map(key => Number.parseInt(key, 10)) as (keyof typeof LPP_UNITS_BY_ID)[]
+const UNIT_NAMES = Object.values(LPP_UNITS_BY_ID) as (typeof LPP_UNITS_BY_ID)[keyof typeof LPP_UNITS_BY_ID][]
+
+const PRODUCT_IDS = Object.keys(PRODUCT_IDS_BY_ID).map(key => Number.parseInt(key)) as (keyof typeof PRODUCT_IDS_BY_ID)[]
+const PRODUCT_ID_NAMES = Object.values(PRODUCT_IDS_BY_ID) as (typeof PRODUCT_IDS_BY_ID)[keyof typeof PRODUCT_IDS_BY_ID][]
+
+const SENSOR_IDS = Object.keys(SENSOR_IDS_BY_ID).map(key => Number.parseInt(key)) as (keyof typeof SENSOR_IDS_BY_ID)[]
+const SENSOR_ID_NAMES = Object.values(SENSOR_IDS_BY_ID) as (typeof SENSOR_IDS_BY_ID)[keyof typeof SENSOR_IDS_BY_ID][]
+
+const LPWAN_IDS = Object.keys(LPWAN_IDS_BY_ID).map(key => Number.parseInt(key)) as [number, ...number[]]
+const LPWAN_ID_NAMES = Object.values(LPWAN_IDS_BY_ID) as [string, ...string[]]
+
+export type MeasurandName = typeof LPP_MEASURANDS_BY_ID[keyof typeof LPP_MEASURANDS_BY_ID]
+export type MeasurandId = keyof typeof LPP_MEASURANDS_BY_ID
+
+export type UnitName = typeof LPP_UNITS_BY_ID[keyof typeof LPP_UNITS_BY_ID]
+export type UnitId = keyof typeof LPP_UNITS_BY_ID
+
+export type ProductIdName = typeof PRODUCT_IDS_BY_ID[keyof typeof PRODUCT_IDS_BY_ID]
+export type SensorIdName = typeof SENSOR_IDS_BY_ID[keyof typeof SENSOR_IDS_BY_ID]
+export type LpwanIdName = typeof LPWAN_IDS_BY_ID[keyof typeof LPWAN_IDS_BY_ID]
 
 // Data message (0x01, 0x02) — single channel measurement
 function createDataMessageUplinkOutputSchema() {
@@ -135,26 +161,23 @@ function createDeviceInformationUplinkOutputSchema() {
     messageType: [0x07],
     extension: {
       deviceInformation: v.object({
-        productIdName: v.string(),
-        productId: v.pipe(v.number(), v.minValue(0), v.integer()),
-        productSubId: v.pipe(v.number(), v.minValue(0), v.integer()),
+        productId: v.picklist(PRODUCT_IDS),
+        productIdName: v.picklist(PRODUCT_ID_NAMES),
+        sensorId: v.picklist(SENSOR_IDS),
+        sensorIdName: v.picklist(SENSOR_ID_NAMES),
+        productSubId: v.pipe(v.number(), v.integer()),
         productSubIdName: v.string(),
+        lpwanId: v.picklist(LPWAN_IDS),
+        lpwanIdName: v.picklist(LPWAN_ID_NAMES),
         wirelessModuleFirmwareVersion: createSemVerSchema(),
         wirelessModuleHardwareVersion: createSemVerSchema(),
         serialNumber: v.string(),
         measurementRangeStart: v.number(),
         measurementRangeEnd: v.number(),
-        measurand: v.pipe(v.number(), v.minValue(0), v.integer()),
-        // Keep measurandName as free-form for now; could add a lookup later if desired
-        measurandName: v.union([
-          v.picklist(Object.values(LPP_MEASURANDS_BY_ID) as string[]),
-          v.literal('Unknown'),
-        ]),
-        unit: v.pipe(v.number(), v.minValue(0), v.integer()),
-        unitName: v.union([
-          v.picklist(Object.values(LPP_UNITS_BY_ID) as string[]),
-          v.literal('Unknown'),
-        ]),
+        measurand: v.picklist(MEASURAND_IDS),
+        measurandName: v.picklist(MEASURAND_NAMES),
+        unit: v.picklist(UNIT_IDS),
+        unitName: v.picklist(UNIT_NAMES),
       }),
     },
   })

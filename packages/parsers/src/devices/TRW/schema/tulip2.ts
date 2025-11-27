@@ -144,17 +144,11 @@ function createDeviceInformationUplinkOutputSchema() {
         serialNumber: v.string(),
         measurementRangeStart: v.number(),
         measurementRangeEnd: v.number(),
-        measurand: v.pipe(v.number(), v.minValue(0), v.integer()),
+        measurand: v.picklist(Object.keys(LPP_MEASURANDS_BY_ID).map(key => Number.parseInt(key, 10)) as (keyof typeof LPP_MEASURANDS_BY_ID)[]),
         // Keep measurandName as free-form for now; could add a lookup later if desired
-        measurandName: v.union([
-          v.picklist(Object.values(LPP_MEASURANDS_BY_ID) as string[]),
-          v.literal('Unknown'),
-        ]),
-        unit: v.pipe(v.number(), v.minValue(0), v.integer()),
-        unitName: v.union([
-          v.picklist(Object.values(LPP_UNITS_BY_ID) as string[]),
-          v.literal('Unknown'),
-        ]),
+        measurandName: v.picklist(Object.values(LPP_MEASURANDS_BY_ID) as (typeof LPP_MEASURANDS_BY_ID)[keyof typeof LPP_MEASURANDS_BY_ID][]),
+        unit: v.picklist(Object.keys(LPP_UNITS_BY_ID).map(key => Number.parseInt(key, 10)) as (keyof typeof LPP_UNITS_BY_ID)[]),
+        unitName: v.picklist(Object.values(LPP_UNITS_BY_ID) as (typeof LPP_UNITS_BY_ID)[keyof typeof LPP_UNITS_BY_ID][]),
       }),
     },
   })

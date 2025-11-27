@@ -7,6 +7,9 @@ import type {
   PGW23_100_11TULIP2ProcessAlarmsData,
   PGW23_100_11TULIP2ProcessAlarmsUplinkOutput,
   PGW23_100_11TULIP2TechnicalAlarmsUplinkOutput,
+  PGW23_100_11TULIP2UplinkOutputDeviceInformation,
+  PressureUnitValues,
+  TemperatureUnitValues,
 } from '../../schema/tulip2'
 import { PGW23_100_11_NAME } from '..'
 import { defineTULIP2Codec } from '../../../../codecs/tulip2'
@@ -39,7 +42,6 @@ function createTULIP2PGWChannels() {
       name: 'device temperature',
       start: -40 as number,
       end: 60 as number,
-      adjustMeasurementRangeDisallowed: true,
     },
   ] as const satisfies TULIP2Channel[]
 }
@@ -48,7 +50,7 @@ type TULIP2PGWChannels = ReturnType<typeof createTULIP2PGWChannels>
 
 const handleDataMessage: Handler<TULIP2PGWChannels, PGW23_100_11TULIP2DataMessageUplinkOutput> = (input, options) => {
   if (input.bytes.length !== 7) {
-    throw new Error(`Data message 01/02 needs 7 bytes but got ${input.bytes.length}`)
+    throw new Error(`Data message (0x01/0x02) requires 7 bytes, but received ${input.bytes.length} bytes`)
   }
 
   const messageType = input.bytes[0]! as 1 | 2
@@ -90,7 +92,7 @@ const handleDataMessage: Handler<TULIP2PGWChannels, PGW23_100_11TULIP2DataMessag
 
 const handleProcessAlarmMessage: Handler<TULIP2PGWChannels, PGW23_100_11TULIP2ProcessAlarmsUplinkOutput> = (input, options) => {
   if (input.bytes.length < 5 || ((input.bytes.length - 2) % 3) !== 0) {
-    throw new Error(`Process alarm 03 needs at least 5 bytes and got ${input.bytes.length}. Also all bytes for each alarm needed`)
+    throw new Error(`Process alarm message (0x03) requires at least 5 bytes (and target byte count 3n+2), but received ${input.bytes.length} bytes`)
   }
 
   const configurationId = input.bytes[1]!
@@ -146,7 +148,7 @@ const handleProcessAlarmMessage: Handler<TULIP2PGWChannels, PGW23_100_11TULIP2Pr
 
 const handleTechnicalAlarmMessage: Handler<TULIP2PGWChannels, PGW23_100_11TULIP2TechnicalAlarmsUplinkOutput> = (input, options) => {
   if (input.bytes.length < 5 || ((input.bytes.length - 2) % 3) !== 0) {
-    throw new Error(`Technical alarm 04 needs at least 5 bytes and got ${input.bytes.length}. Also all bytes for each alarm needed`)
+    throw new Error(`Technical alarm message (0x04) requires at least 5 bytes (and target byte count 3n+2), but received ${input.bytes.length} bytes`)
   }
 
   const configurationId = input.bytes[1]!
@@ -197,7 +199,7 @@ const handleTechnicalAlarmMessage: Handler<TULIP2PGWChannels, PGW23_100_11TULIP2
 
 const handleDeviceAlarmMessage: Handler<TULIP2PGWChannels, PGW23_100_11TULIP2DeviceAlarmsUplinkOutput> = (input) => {
   if (input.bytes.length !== 4) {
-    throw new Error(`Device alarm 05 needs 4 bytes but got ${input.bytes.length}`)
+    throw new Error(`Device alarm message (0x05) requires 4 bytes, but received ${input.bytes.length} bytes`)
   }
 
   const configurationId = input.bytes[1]!
@@ -225,9 +227,9 @@ const handleDeviceAlarmMessage: Handler<TULIP2PGWChannels, PGW23_100_11TULIP2Dev
   }
 }
 
-const handleDeviceIdentificationMessage: Handler<TULIP2PGWChannels, PGW23_100_11TULIP2DeviceInformationUplinkOutput> = (input, options) => {
+const handleDeviceIdentificationMessage: Handler<TULIP2PGWChannels, PGW23_100_11TULIP2DeviceInformationUplinkOutput> = (input) => {
   if (input.bytes.length < 41) {
-    throw new Error(`Device identification 07 needs at least 41 bytes but got ${input.bytes.length}`)
+    throw new Error(`Device identification message (0x07) requires at least 41 bytes, but received ${input.bytes.length} bytes`)
   }
 
   const configurationId = input.bytes[1]!
@@ -251,48 +253,48 @@ const handleDeviceIdentificationMessage: Handler<TULIP2PGWChannels, PGW23_100_11
   const pressureTypeId = input.bytes[22]!
   const pressureTypeEntry = Object.entries(PRESSURE_TYPES).find(([, candidate]) => candidate === pressureTypeId)
   if (!pressureTypeEntry) {
-    throw new Error(`Unsupported pressure type: ${pressureTypeId}`)
+    throw new Error(`Unknown pressure type ${pressureTypeId} in device identification message`)
   }
   const pressureType = pressureTypeEntry[0] as keyof typeof PRESSURE_TYPES
 
-  const measurementRangeStartPressure = roundValue(intTuple4ToFloat32WithThreshold([
+  const measurementRangeStartPressure = intTuple4ToFloat32WithThreshold([
     input.bytes[26]!,
     input.bytes[25]!,
     input.bytes[24]!,
     input.bytes[23]!,
-  ]), options.roundingDecimals)
+  ])
 
-  const measurementRangeEndPressure = roundValue(intTuple4ToFloat32WithThreshold([
+  const measurementRangeEndPressure = intTuple4ToFloat32WithThreshold([
     input.bytes[30]!,
     input.bytes[29]!,
     input.bytes[28]!,
     input.bytes[27]!,
-  ]), options.roundingDecimals)
+  ])
 
-  const measurementRangeStartDeviceTemperature = roundValue(intTuple4ToFloat32WithThreshold([
+  const measurementRangeStartDeviceTemperature = intTuple4ToFloat32WithThreshold([
     input.bytes[34]!,
     input.bytes[33]!,
     input.bytes[32]!,
     input.bytes[31]!,
-  ]), options.roundingDecimals)
+  ])
 
-  const measurementRangeEndDeviceTemperature = roundValue(intTuple4ToFloat32WithThreshold([
+  const measurementRangeEndDeviceTemperature = intTuple4ToFloat32WithThreshold([
     input.bytes[38]!,
     input.bytes[37]!,
     input.bytes[36]!,
     input.bytes[35]!,
-  ]), options.roundingDecimals)
+  ])
 
   const pressureUnit = input.bytes[39]!
   const pressureUnitEntry = Object.entries(PRESSURE_UNITS).find(([, candidate]) => candidate === pressureUnit)
   if (!pressureUnitEntry) {
-    throw new Error(`Unsupported pressure unit: ${pressureUnit}`)
+    throw new Error(`Unknown pressure unit ${pressureUnit} in device identification message`)
   }
   const pressureUnitName = pressureUnitEntry[0] as keyof typeof PRESSURE_UNITS
   const deviceTemperatureUnit = input.bytes[40]!
   const deviceTemperatureUnitEntry = Object.entries(TEMPERATURE_UNITS).find(([, candidate]) => candidate === deviceTemperatureUnit)
   if (!deviceTemperatureUnitEntry) {
-    throw new Error(`Unsupported device temperature unit: ${deviceTemperatureUnit}`)
+    throw new Error(`Unknown temperature unit ${deviceTemperatureUnit} in device identification message`)
   }
   const deviceTemperatureUnitName = deviceTemperatureUnitEntry[0] as keyof typeof TEMPERATURE_UNITS
 
@@ -313,18 +315,18 @@ const handleDeviceIdentificationMessage: Handler<TULIP2PGWChannels, PGW23_100_11
         measurementRangeEndPressure,
         measurementRangeStartDeviceTemperature,
         measurementRangeEndDeviceTemperature,
-        pressureUnit,
+        pressureUnit: pressureUnit as PressureUnitValues,
         pressureUnitName,
-        deviceTemperatureUnit,
+        deviceTemperatureUnit: deviceTemperatureUnit as TemperatureUnitValues,
         deviceTemperatureUnitName,
       },
     },
-  }
+  } satisfies PGW23_100_11TULIP2UplinkOutputDeviceInformation
 }
 
 const handleKeepAliveMessage: Handler<TULIP2PGWChannels, PGW23_100_11TULIP2DeviceStatisticsUplinkOutput> = (input) => {
   if (input.bytes.length !== 3) {
-    throw new Error(`Keep alive message 08 needs 3 bytes but got ${input.bytes.length}`)
+    throw new Error(`Keep alive message (0x08) requires 3 bytes, but received ${input.bytes.length} bytes`)
   }
 
   const configurationId = input.bytes[1]!

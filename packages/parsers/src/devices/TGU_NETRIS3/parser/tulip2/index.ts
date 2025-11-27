@@ -22,8 +22,8 @@ import { createTULIP2TGUChannels, TGUTULIP2_DEVICE_TEMPERATURE_CHANNEL, TGUTULIP
 import {
   ALARM_EVENTS,
   DEVICE_ALARM_STATUS_TYPES,
-  LPP_MEASURANDS_BY_ID,
-  LPP_UNITS_BY_ID,
+  LPP_MEASURANDS_TEMPERATURE,
+  LPP_UNITS_TEMPERATURE,
   PROCESS_ALARM_TYPES,
   PRODUCT_SUB_ID_NAMES,
   TECHNICAL_ALARM_TYPES,
@@ -34,31 +34,24 @@ const ERROR_VALUE = 0xFFFF
 
 type TULIP2TGUChannels = ReturnType<typeof createTULIP2TGUChannels>
 
-type ProductSubId = (typeof PRODUCT_SUB_ID_NAMES)[keyof typeof PRODUCT_SUB_ID_NAMES]
-type ProductSubIdName = keyof typeof PRODUCT_SUB_ID_NAMES
-interface ResolvedProductSubId {
-  id: ProductSubId
-  name: ProductSubIdName
-}
-
-type DeviceInformationChannelConfiguration = TGUTULIP2DeviceInformationData['channelConfigurations'][number]
-type MeasurandId = DeviceInformationChannelConfiguration['measurand']
-type MeasurandName = DeviceInformationChannelConfiguration['measurandName']
-type UnitId = DeviceInformationChannelConfiguration['unit']
-type UnitName = DeviceInformationChannelConfiguration['unitName']
-
 type TechnicalAlarmTypeId = (typeof TECHNICAL_ALARM_TYPES)[keyof typeof TECHNICAL_ALARM_TYPES]
 type TechnicalCauseOfFailureName = (typeof TECHNICAL_CAUSE_OF_FAILURE_ENTRIES_BY_ALARM_TYPE)[keyof typeof TECHNICAL_CAUSE_OF_FAILURE_ENTRIES_BY_ALARM_TYPE][number]['name']
+
+// Temperature channel types (used for both channels)
+type TemperatureMeasurandId = keyof typeof LPP_MEASURANDS_TEMPERATURE
+type TemperatureMeasurandName = (typeof LPP_MEASURANDS_TEMPERATURE)[TemperatureMeasurandId]
+type TemperatureUnitId = keyof typeof LPP_UNITS_TEMPERATURE
+type TemperatureUnitName = (typeof LPP_UNITS_TEMPERATURE)[TemperatureUnitId]
 
 function resolveCauseOfFailureName(alarmType: number, causeOfFailure: number): TechnicalCauseOfFailureName {
   const entries = TECHNICAL_CAUSE_OF_FAILURE_ENTRIES_BY_ALARM_TYPE[alarmType as TechnicalAlarmTypeId]
   if (!entries) {
-    throw new Error(`Unknown technical alarm type ${alarmType}`)
+    throw new Error(`Unknown technical alarm type ${alarmType} in technical alarm message`)
   }
 
   const match = entries.find(entry => (causeOfFailure & entry.mask) !== 0)
   if (!match) {
-    throw new Error(`Unknown causeOfFailure ${causeOfFailure} for technical alarm type ${alarmType}`)
+    throw new Error(`Unknown causeOfFailure ${causeOfFailure} for technical alarm type ${alarmType} in technical alarm message`)
   }
 
   return match.name
@@ -79,7 +72,7 @@ function findChannel(
 function findChannel(channels: TULIP2TGUChannels, channelId: number): TULIP2TGUChannels[number] {
   const channel = channels.find(candidate => candidate.channelId === channelId)
   if (!channel) {
-    throw new Error(`Channel configuration missing for channelId ${channelId}`)
+    throw new Error(`Channel configuration missing for channelId ${channelId} in data message`)
   }
   return channel
 }
@@ -87,7 +80,7 @@ function findChannel(channels: TULIP2TGUChannels, channelId: number): TULIP2TGUC
 const handleDataMessage: Handler<TULIP2TGUChannels, TGUTULIP2DataMessageUplinkOutput> = (input, options) => {
   const length = input.bytes.length
   if (length !== 5 && length !== 7) {
-    throw new Error(`Data message 01/02 needs 5 or 7 bytes but got ${length}`)
+    throw new Error(`Data message (0x01/0x02) requires 5 or 7 bytes, but received ${length} bytes`)
   }
 
   const messageType = input.bytes[0]! as 1 | 2
@@ -146,7 +139,7 @@ const handleDataMessage: Handler<TULIP2TGUChannels, TGUTULIP2DataMessageUplinkOu
 
 const handleProcessAlarmMessage: Handler<TULIP2TGUChannels, TGUTULIP2ProcessAlarmsUplinkOutput> = (input, options) => {
   if (input.bytes.length < 6 || (input.bytes.length - 3) % 3 !== 0) {
-    throw new Error(`Process alarm 03 needs at least 6 bytes and got ${input.bytes.length}. Also all bytes for each alarm needed`)
+    throw new Error(`Process alarm message (0x03) requires at least 6 bytes (and target byte count 3n+3), but received ${input.bytes.length} bytes`)
   }
 
   const configurationId = input.bytes[1]!
@@ -215,7 +208,7 @@ const handleProcessAlarmMessage: Handler<TULIP2TGUChannels, TGUTULIP2ProcessAlar
 
 const handleTechnicalAlarmMessage: Handler<TULIP2TGUChannels, TGUTULIP2TechnicalAlarmsUplinkOutput> = (input) => {
   if (input.bytes.length < 6 || (input.bytes.length - 3) % 3 !== 0) {
-    throw new Error(`Technical alarm 04 needs 6 bytes but got ${input.bytes.length}`)
+    throw new Error(`Technical alarm message (0x04) requires at least 6 bytes (and target byte count 3n+3), but received ${input.bytes.length} bytes`)
   }
 
   const configurationId = input.bytes[1]!
@@ -225,7 +218,7 @@ const handleTechnicalAlarmMessage: Handler<TULIP2TGUChannels, TGUTULIP2Technical
     const alarmType = input.bytes[byteIndex]!
     const alarmTypeNameEntry = Object.entries(TECHNICAL_ALARM_TYPES).find(([, id]) => id === alarmType)
     if (!alarmTypeNameEntry) {
-      throw new Error(`Unknown technical alarm type ${alarmType}`)
+      throw new Error(`Unknown technical alarm type ${alarmType} in technical alarm message`)
     }
     const alarmTypeName = alarmTypeNameEntry[0] as keyof typeof TECHNICAL_ALARM_TYPES
     const causeOfFailure = input.bytes[byteIndex + 2]!
@@ -251,7 +244,7 @@ const handleTechnicalAlarmMessage: Handler<TULIP2TGUChannels, TGUTULIP2Technical
 
 const handleDeviceAlarmMessage: Handler<TULIP2TGUChannels, TGUTULIP2DeviceAlarmsUplinkOutput> = (input) => {
   if (input.bytes.length !== 4) {
-    throw new Error(`Device alarm 05 needs at least 4 bytes got ${input.bytes.length}`)
+    throw new Error(`Device alarm message (0x05) requires 4 bytes, but received ${input.bytes.length} bytes`)
   }
 
   const configurationId = input.bytes[1]!
@@ -281,122 +274,125 @@ const handleDeviceAlarmMessage: Handler<TULIP2TGUChannels, TGUTULIP2DeviceAlarms
   }
 }
 
-function resolveProductSubId(productSubId: ProductSubId): ResolvedProductSubId {
-  const entry = Object.entries(PRODUCT_SUB_ID_NAMES).find(([, value]) => value === productSubId)
-  if (!entry) {
-    throw new Error(`Unknown productSubId ${productSubId} in device identification message`)
+function resolveProductSubId(productSubId: number): { id: 0, name: 'LoRaWAN' } {
+  if (productSubId !== PRODUCT_SUB_ID_NAMES.LoRaWAN) {
+    throw new Error(`Unknown productSubId ${productSubId} in device identification message. Only LoRaWAN (0) is supported.`)
   }
-  return {
-    id: entry[1] as ProductSubId,
-    name: entry[0] as ProductSubIdName,
-  }
+  return { id: 0 as const, name: 'LoRaWAN' as const }
 }
 
-function resolveMeasurand(id: MeasurandId): { id: MeasurandId, name: MeasurandName } {
-  const name = LPP_MEASURANDS_BY_ID[id as keyof typeof LPP_MEASURANDS_BY_ID]
+function resolveTemperatureMeasurand(measurand: number): { id: TemperatureMeasurandId, name: TemperatureMeasurandName } {
+  const name = LPP_MEASURANDS_TEMPERATURE[measurand as TemperatureMeasurandId]
   if (!name) {
-    throw new Error(`Unknown measurand ${id} in device identification message`)
+    throw new Error(`Unknown temperature measurand ${measurand} in device identification message`)
   }
   return {
-    id,
+    id: measurand as TemperatureMeasurandId,
     name,
   }
 }
 
-function resolveUnit(id: UnitId): { id: UnitId, name: UnitName } {
-  const name = LPP_UNITS_BY_ID[id as keyof typeof LPP_UNITS_BY_ID]
+function resolveTemperatureUnit(unit: number): { id: TemperatureUnitId, name: TemperatureUnitName } {
+  const name = LPP_UNITS_TEMPERATURE[unit as TemperatureUnitId]
   if (!name) {
-    throw new Error(`Unknown unit ${id} in device identification message`)
+    throw new Error(`Unknown temperature unit ${unit} in device identification message`)
   }
   return {
-    id,
+    id: unit as TemperatureUnitId,
     name,
   }
 }
 
-function toFixedFloat(value: number): number {
-  return Number.parseFloat(value.toFixed(6))
-}
-
-const handleDeviceIdentificationMessage: Handler<TULIP2TGUChannels, TGUTULIP2DeviceInformationUplinkOutput> = (input) => {
+const handleDeviceIdentificationMessage: Handler<TULIP2TGUChannels, TGUTULIP2DeviceInformationUplinkOutput> = (input, options) => {
   if (input.bytes.length !== 26) {
-    throw new Error(`Identification message 07 needs 26 bytes, but got ${input.bytes.length}`)
+    throw new Error(`Device identification message (0x07) requires 26 bytes, but received ${input.bytes.length} bytes`)
   }
 
   const messageType = 0x07
   const configurationId = input.bytes[1]!
   const productId = input.bytes[2]!
-  const productIdName = productId === 15 ? 'NETRIS3' : productId
-  const productSubId = input.bytes[3]! as ProductSubId
-  const { name: productSubIdName } = resolveProductSubId(productSubId)
+
+  if (productId !== 0x0F) {
+    throw new Error(`Invalid productId ${productId} in device identification message. Expected 15 (NETRIS3).`)
+  }
+
+  const { id: productSubId, name: productSubIdName } = resolveProductSubId(input.bytes[3]!)
   const sensorDeviceTypeId = (input.bytes[4]! << 8) | input.bytes[5]!
 
-  const channel0Measurand = resolveMeasurand(input.bytes[6]! as MeasurandId)
-  const channel0RangeStart = toFixedFloat(intTuple4ToFloat32WithThreshold([
+  // Channel 0 (temperature)
+  const channel0Measurand = resolveTemperatureMeasurand(input.bytes[6]!)
+  const channel0RangeStart = intTuple4ToFloat32WithThreshold([
     input.bytes[7]!,
     input.bytes[8]!,
     input.bytes[9]!,
     input.bytes[10]!,
-  ]))
-  const channel0RangeEnd = toFixedFloat(intTuple4ToFloat32WithThreshold([
+  ])
+  const channel0RangeEnd = intTuple4ToFloat32WithThreshold([
     input.bytes[11]!,
     input.bytes[12]!,
     input.bytes[13]!,
     input.bytes[14]!,
-  ]))
-  const channel0Unit = resolveUnit(input.bytes[15]! as UnitId)
+  ])
+  const channel0Unit = resolveTemperatureUnit(input.bytes[15]!)
 
-  const channel1Measurand = resolveMeasurand(input.bytes[16]! as MeasurandId)
-  const channel1RangeStart = toFixedFloat(intTuple4ToFloat32WithThreshold([
+  // Channel 1 (device temperature)
+  const channel1Measurand = resolveTemperatureMeasurand(input.bytes[16]!)
+  const channel1RangeStart = intTuple4ToFloat32WithThreshold([
     input.bytes[17]!,
     input.bytes[18]!,
     input.bytes[19]!,
     input.bytes[20]!,
-  ]))
-  const channel1RangeEnd = toFixedFloat(intTuple4ToFloat32WithThreshold([
+  ])
+  const channel1RangeEnd = intTuple4ToFloat32WithThreshold([
     input.bytes[21]!,
     input.bytes[22]!,
     input.bytes[23]!,
     input.bytes[24]!,
-  ]))
-  const channel1Unit = resolveUnit(input.bytes[25]! as UnitId)
+  ])
+  const channel1Unit = resolveTemperatureUnit(input.bytes[25]!)
+
+  const channelConfigurations: TGUTULIP2DeviceInformationData['channelConfigurations'] = [
+    {
+      channelId: options.channels[0].channelId,
+      channelName: options.channels[0].name,
+      measurand: channel0Measurand.id,
+      measurandName: channel0Measurand.name,
+      measurementRangeStart: channel0RangeStart,
+      measurementRangeEnd: channel0RangeEnd,
+      unit: channel0Unit.id,
+      unitName: channel0Unit.name,
+    },
+    {
+      channelId: options.channels[1].channelId,
+      channelName: options.channels[1].name,
+      measurand: channel1Measurand.id,
+      measurandName: channel1Measurand.name,
+      measurementRangeStart: channel1RangeStart,
+      measurementRangeEnd: channel1RangeEnd,
+      unit: channel1Unit.id,
+      unitName: channel1Unit.name,
+    },
+  ]
 
   return {
     data: {
       messageType,
       configurationId,
       deviceInformation: {
-        productId,
-        productIdName,
+        productId: 0x0F as const,
+        productIdName: 'NETRIS3' as const,
         productSubId,
         productSubIdName,
         sensorDeviceTypeId,
-        channelConfigurations: [
-          {
-            measurand: channel0Measurand.id,
-            measurandName: channel0Measurand.name,
-            measurementRangeStart: channel0RangeStart,
-            measurementRangeEnd: channel0RangeEnd,
-            unit: channel0Unit.id,
-            unitName: channel0Unit.name,
-          },
-          {
-            measurand: channel1Measurand.id,
-            measurandName: channel1Measurand.name,
-            measurementRangeStart: channel1RangeStart,
-            measurementRangeEnd: channel1RangeEnd,
-            unit: channel1Unit.id,
-            unitName: channel1Unit.name,
-          },
-        ],
-      } as TGUTULIP2DeviceInformationData,
+        channelConfigurations,
+      },
     },
   }
 }
 
 const handleKeepAliveMessage: Handler<TULIP2TGUChannels, TGUTULIP2DeviceStatisticsUplinkOutput> = (input) => {
   if (input.bytes.length !== 10) {
-    throw new Error(`Keep alive message 08 needs 10 bytes but got ${input.bytes.length}`)
+    throw new Error(`Keep alive message (0x08) requires 10 bytes, but received ${input.bytes.length} bytes`)
   }
 
   const configurationId = input.bytes[1]!
@@ -417,7 +413,7 @@ const handleKeepAliveMessage: Handler<TULIP2TGUChannels, TGUTULIP2DeviceStatisti
 
 const handleExtendedDeviceIdentificationMessage: Handler<TULIP2TGUChannels, TGUTULIP2ExtendedDeviceInformationUplinkOutput> = (input) => {
   if (input.bytes.length !== 42) {
-    throw new Error(`Extended device identification message 09 needs 42 bytes but got ${input.bytes.length}`)
+    throw new Error(`Extended device identification message (0x09) requires 42 bytes, but received ${input.bytes.length} bytes`)
   }
 
   const configurationId = input.bytes[1]!

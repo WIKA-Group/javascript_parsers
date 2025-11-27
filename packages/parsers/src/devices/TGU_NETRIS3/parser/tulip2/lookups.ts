@@ -68,16 +68,17 @@ export const ALARM_EVENTS = {
 
 export const PRODUCT_SUB_ID_NAMES = {
   LoRaWAN: 0,
-  MIOTY: 1,
 } as const
 
-export const LPP_MEASURANDS_BY_ID = {
+// Temperature measurand (both channel 0 and channel 1)
+export const LPP_MEASURANDS_TEMPERATURE = {
   0x01: 'Temperature',
-} as const
+} as const satisfies Record<number, string>
 
-export const LPP_UNITS_BY_ID = {
+// Temperature units (both channel 0 and channel 1)
+export const LPP_UNITS_TEMPERATURE = {
   0x01: '°C',
   0x02: '°F',
   0x03: 'K',
   0x04: '°R',
-} as const
+} as const satisfies Record<number, string>

@@ -4,8 +4,12 @@ import { createSemVerSchema } from '../../../schemas'
 import { createUplinkOutputSchemaFactory } from '../../../schemas/tulip2/uplink'
 import {
   HARDWARE_ASSEMBLY_TYPE_NAMES,
-  LPP_MEASURAND_NAMES,
+  LPP_MEASURAND_NAMES_FLOW,
+  LPP_MEASURAND_NAMES_INPUT,
+  LPP_MEASURAND_NAMES_PRESSURE,
   LPP_UNIT_NAMES,
+  LPP_UNIT_NAMES_FLOW,
+  LPP_UNIT_NAMES_PRESSURE,
   MEASUREMENT_CHANNELS,
   PRODUCT_SUB_ID_NAMES,
 } from '../parser/tulip2/lookups'
@@ -18,16 +22,33 @@ type HardwareAssemblyTypeName = (typeof HARDWARE_ASSEMBLY_TYPE_NAMES)[keyof type
 
 type ProductSubIdName = (typeof PRODUCT_SUB_ID_NAMES)[keyof typeof PRODUCT_SUB_ID_NAMES] | 'Unknown'
 
-type LppMeasurandName = (typeof LPP_MEASURAND_NAMES)[keyof typeof LPP_MEASURAND_NAMES]
-
-type LppUnitName = (typeof LPP_UNIT_NAMES)[keyof typeof LPP_UNIT_NAMES]
+type LppMeasurandNamePressure = typeof LPP_MEASURAND_NAMES_PRESSURE[keyof typeof LPP_MEASURAND_NAMES_PRESSURE]
+type LppMeasurandNameFlow = typeof LPP_MEASURAND_NAMES_FLOW[keyof typeof LPP_MEASURAND_NAMES_FLOW]
+type LppMeasurandNameInput = typeof LPP_MEASURAND_NAMES_INPUT[keyof typeof LPP_MEASURAND_NAMES_INPUT]
 
 const HARDWARE_ASSEMBLY_TYPE_ID_LIST = Object.keys(HARDWARE_ASSEMBLY_TYPE_NAMES).map(Number)
 const HARDWARE_ASSEMBLY_TYPE_NAME_LIST = Object.values(HARDWARE_ASSEMBLY_TYPE_NAMES) as HardwareAssemblyTypeName[]
 const PRODUCT_SUB_ID_LIST = Object.keys(PRODUCT_SUB_ID_NAMES).map(Number)
 const PRODUCT_SUB_ID_NAME_LIST = [...Object.values(PRODUCT_SUB_ID_NAMES), 'Unknown'] as ProductSubIdName[]
-const LPP_UNIT_ID_LIST = Object.keys(LPP_UNIT_NAMES).map(Number)
-const LPP_UNIT_NAME_LIST = Object.values(LPP_UNIT_NAMES) as LppUnitName[]
+
+// Unit lists per measurand type
+const LPP_UNIT_ID_LIST_PRESSURE = Object.keys(LPP_UNIT_NAMES_PRESSURE).map(Number) as (keyof typeof LPP_UNIT_NAMES_PRESSURE)[]
+const LPP_UNIT_NAME_LIST_PRESSURE = Object.values(LPP_UNIT_NAMES_PRESSURE) as typeof LPP_UNIT_NAMES_PRESSURE[keyof typeof LPP_UNIT_NAMES_PRESSURE][]
+
+export type PressureUnitName = typeof LPP_UNIT_NAMES_PRESSURE[keyof typeof LPP_UNIT_NAMES_PRESSURE]
+export type PressureUnitId = keyof typeof LPP_UNIT_NAMES_PRESSURE
+
+const LPP_UNIT_ID_LIST_FLOW = Object.keys(LPP_UNIT_NAMES_FLOW).map(Number) as (keyof typeof LPP_UNIT_NAMES_FLOW)[]
+const LPP_UNIT_NAME_LIST_FLOW = Object.values(LPP_UNIT_NAMES_FLOW) as typeof LPP_UNIT_NAMES_FLOW[keyof typeof LPP_UNIT_NAMES_FLOW][]
+
+export type FlowUnitName = typeof LPP_UNIT_NAMES_FLOW[keyof typeof LPP_UNIT_NAMES_FLOW]
+export type FlowUnitId = keyof typeof LPP_UNIT_NAMES_FLOW
+
+const LPP_UNIT_ID_LIST = Object.keys(LPP_UNIT_NAMES).map(Number) as (keyof typeof LPP_UNIT_NAMES)[]
+const LPP_UNIT_NAME_LIST = Object.values(LPP_UNIT_NAMES) as typeof LPP_UNIT_NAMES[keyof typeof LPP_UNIT_NAMES][]
+
+export type UnitName = typeof LPP_UNIT_NAMES[keyof typeof LPP_UNIT_NAMES]
+export type UnitId = keyof typeof LPP_UNIT_NAMES
 
 function createMeasurementChannelSchema<TName extends MeasurementChannelName>(name: TName) {
   return v.object({
@@ -121,18 +142,18 @@ function createDeviceAlarmsUplinkOutputSchema() {
 
 const PRESSURE_CHANNEL_CONFIGURATION_SCHEMA = v.object({
   measurand: v.literal(3),
-  measurandName: v.literal(LPP_MEASURAND_NAMES[3] as LppMeasurandName),
+  measurandName: v.literal(LPP_MEASURAND_NAMES_PRESSURE[3] as LppMeasurandNamePressure),
   measurementRangeStart: v.number(),
   measurementRangeEnd: v.number(),
-  unit: v.picklist(LPP_UNIT_ID_LIST),
-  unitName: v.picklist(LPP_UNIT_NAME_LIST),
+  unit: v.picklist(LPP_UNIT_ID_LIST_PRESSURE),
+  unitName: v.picklist(LPP_UNIT_NAME_LIST_PRESSURE),
 })
 
 const FLOW_CHANNEL_CONFIGURATION_SCHEMA = v.object({
   measurand: v.literal(6),
-  measurandName: v.literal(LPP_MEASURAND_NAMES[6] as LppMeasurandName),
-  unit: v.picklist(LPP_UNIT_ID_LIST),
-  unitName: v.picklist(LPP_UNIT_NAME_LIST),
+  measurandName: v.literal(LPP_MEASURAND_NAMES_FLOW[6] as LppMeasurandNameFlow),
+  unit: v.picklist(LPP_UNIT_ID_LIST_FLOW),
+  unitName: v.picklist(LPP_UNIT_NAME_LIST_FLOW),
   measurementRangeStart: v.optional(v.number()),
   measurementRangeEnd: v.optional(v.number()),
 })
@@ -140,7 +161,7 @@ const FLOW_CHANNEL_CONFIGURATION_SCHEMA = v.object({
 function createInputChannelConfigurationSchema<TMeasurand extends 70 | 71 | 72 | 73>(measurand: TMeasurand) {
   return v.object({
     measurand: v.literal(measurand),
-    measurandName: v.literal(LPP_MEASURAND_NAMES[measurand] as LppMeasurandName),
+    measurandName: v.literal(LPP_MEASURAND_NAMES_INPUT[measurand] as LppMeasurandNameInput),
     unit: v.picklist(LPP_UNIT_ID_LIST),
     unitName: v.picklist(LPP_UNIT_NAME_LIST),
     measurementRangeStart: v.optional(v.number()),

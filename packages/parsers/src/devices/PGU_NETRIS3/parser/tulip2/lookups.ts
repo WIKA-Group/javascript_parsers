@@ -68,21 +68,28 @@ export const DEVICE_ALARM_STATUS_TYPES = {
 
 export const PRODUCT_SUB_ID_NAMES = {
   LoRaWAN: 0,
-  MIOTY: 1,
 } as const
 
-export const LPP_MEASURANDS_BY_ID = {
-  0x01: 'Temperature',
+// Pressure channel (channel 0) measurands
+export const LPP_MEASURANDS_PRESSURE = {
   0x03: 'Pressure (gauge)',
   0x04: 'Pressure (absolute)',
   0x05: 'Pressure (differential)',
+} as const satisfies Record<number, string>
+
+// Temperature channel (channel 1) measurand
+export const LPP_MEASURANDS_TEMPERATURE = {
+  0x01: 'Temperature',
+} as const satisfies Record<number, string>
+
+// Combined measurands lookup (for backwards compatibility)
+export const LPP_MEASURANDS_BY_ID = {
+  ...LPP_MEASURANDS_TEMPERATURE,
+  ...LPP_MEASURANDS_PRESSURE,
 } as const
 
-export const LPP_UNITS_BY_ID = {
-  0x01: '°C',
-  0x02: '°F',
-  0x03: 'K',
-  0x04: '°R',
+// Pressure channel (channel 0) units
+export const LPP_UNITS_PRESSURE = {
   0x07: 'bar',
   0x08: 'mbar',
   0x09: 'µbar',
@@ -102,7 +109,21 @@ export const LPP_UNITS_BY_ID = {
   0x17: 'cmHg',
   0x18: 'inHg',
   0x19: 'mmH2O',
-  0x1A: 'mH2O',
-  0x1B: 'inH2O',
-  0x1C: 'ftH2O',
+  0x20: 'mH2O',
+  0x21: 'inH2O',
+  0x22: 'ftH2O',
+} as const satisfies Record<number, string>
+
+// Temperature channel (channel 1) units
+export const LPP_UNITS_TEMPERATURE = {
+  0x01: '°C',
+  0x02: '°F',
+  0x03: 'K',
+  0x04: '°R',
+} as const satisfies Record<number, string>
+
+// Combined units lookup (for backwards compatibility)
+export const LPP_UNITS_BY_ID = {
+  ...LPP_UNITS_TEMPERATURE,
+  ...LPP_UNITS_PRESSURE,
 } as const

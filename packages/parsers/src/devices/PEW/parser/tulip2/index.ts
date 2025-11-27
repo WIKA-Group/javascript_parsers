@@ -21,7 +21,7 @@ function createTULIP2PEWChannels() {
       name: 'device temperature',
       start: -45 as number,
       end: 110 as number,
-      adjustMeasurementRangeDisallowed: true,
+      adjustMeasurementRangeDisallowed: true, // constant
     },
   ] as const satisfies TULIP2Channel[]
 }
@@ -31,7 +31,7 @@ type TULIP2PEWChannels = ReturnType<typeof createTULIP2PEWChannels>
 const handleDataMessage: Handler<TULIP2PEWChannels, PEWTULIP2DataMessageUplinkOutput> = (input, options) => {
   // validate that the message needs to be 7 bytes long
   if (input.bytes.length !== 7) {
-    throw new Error(`Data message 01/02 needs 7 bytes but got ${input.bytes.length}`)
+    throw new Error(`Data message (0x01/0x02) requires 7 bytes, but received ${input.bytes.length} bytes`)
   }
 
   const messageType = input.bytes[0]! as 1 | 2
@@ -74,7 +74,7 @@ const handleDataMessage: Handler<TULIP2PEWChannels, PEWTULIP2DataMessageUplinkOu
 const handleProcessAlarmMessage: Handler<TULIP2PEWChannels, PEWTULIP2ProcessAlarmsUplinkOutput> = (input, options) => {
   // validate that it needs atleast 5 bytes AND that length-2 % 3
   if (input.bytes.length < 5 || (input.bytes.length - 2) % 3 !== 0) {
-    throw new Error(`Process alarm 03 needs at least 5 bytes and got ${input.bytes.length}. Also all bytes for each alarm needed`)
+    throw new Error(`Process alarm message (0x03) requires at least 5 bytes (and target byte count 3n+2), but received ${input.bytes.length} bytes`)
   }
 
   const configurationId = input.bytes[1]!
@@ -133,7 +133,7 @@ const handleProcessAlarmMessage: Handler<TULIP2PEWChannels, PEWTULIP2ProcessAlar
 const handleTechnicalAlarmMessage: Handler<TULIP2PEWChannels, PEWTULIP2TechnicalAlarmsUplinkOutput> = (input) => {
   // Technical alarm messages are exactly 3 bytes: [0x04, configurationId, alarmByte]
   if (input.bytes.length !== 3) {
-    throw new Error(`Technical alarm 04 needs 3 bytes but got ${input.bytes.length}.`)
+    throw new Error(`Technical alarm message (0x04) requires 3 bytes, but received ${input.bytes.length} bytes`)
   }
 
   const configurationId = input.bytes[1]!
@@ -176,7 +176,7 @@ const handleTechnicalAlarmMessage: Handler<TULIP2PEWChannels, PEWTULIP2Technical
 const handleDeviceAlarmMessage: Handler<TULIP2PEWChannels, PEWTULIP2DeviceAlarmsUplinkOutput> = (input) => {
   // Device alarm messages are 3 or 4 bytes: [0x05, configurationId, alarmByte, [value]]
   if (input.bytes.length < 3 || input.bytes.length > 4) {
-    throw new Error(`Device alarm 05 needs 3 or 4 bytes but got ${input.bytes.length}.`)
+    throw new Error(`Device alarm message (0x05) requires 3 or 4 bytes, but received ${input.bytes.length} bytes`)
   }
 
   const configurationId = input.bytes[1]!
@@ -225,7 +225,7 @@ const handleDeviceAlarmMessage: Handler<TULIP2PEWChannels, PEWTULIP2DeviceAlarms
 const handleDeviceIdentificationMessage: Handler<TULIP2PEWChannels, PEWTULIP2DeviceInformationUplinkOutput> = (input) => {
   // validate if 8 or 38 bytes are present
   if (input.bytes.length !== 8 && input.bytes.length !== 38) {
-    throw new Error(`Identification message 07 needs 8 or 38 bytes but got ${input.bytes.length}`)
+    throw new Error(`Device identification message (0x07) requires 8 or 38 bytes, but received ${input.bytes.length} bytes`)
   }
 
   const configurationId = input.bytes[1]!
@@ -233,7 +233,7 @@ const handleDeviceIdentificationMessage: Handler<TULIP2PEWChannels, PEWTULIP2Dev
   const productId = input.bytes[2]!
 
   if (productId !== 11) {
-    throw new Error(`Identification message 07 needs productId 11 but got ${productId}`)
+    throw new Error(`Invalid productId ${productId} in device identification message. Expected 11 (PEW).`)
   }
 
   const productIdName = 'PEW'
@@ -241,7 +241,7 @@ const handleDeviceIdentificationMessage: Handler<TULIP2PEWChannels, PEWTULIP2Dev
   const productSubId = input.bytes[3]!
 
   if (productSubId !== 0) {
-    throw new Error(`Identification message 07 needs productSubId 0 but got ${productSubId}`)
+    throw new Error(`Unknown productSubId ${productSubId} in device identification message. Only LoRaWAN (0) is supported.`)
   }
 
   // firmware version is semver with nibble.nibble.byte
@@ -272,24 +272,24 @@ const handleDeviceIdentificationMessage: Handler<TULIP2PEWChannels, PEWTULIP2Dev
   const pressureTypeId = input.bytes[19]!
 
   if (!(pressureTypeId === 1) && !(pressureTypeId === 2)) {
-    throw new Error(`Identification message 07 needs pressureTypeId 1 or 2 but got ${pressureTypeId}`)
+    throw new Error(`Unknown pressure type ${pressureTypeId} in device identification message. Expected 1 (relative) or 2 (absolute).`)
   }
 
   const pressureType = Object.keys(PRESSURE_TYPES).find(typeName => (PRESSURE_TYPES)[typeName as keyof typeof PRESSURE_TYPES] === pressureTypeId)! as keyof typeof PRESSURE_TYPES
 
-  const measurementRangeStartPressure = roundValue(intTuple4ToFloat32WithThreshold([input.bytes[20]!, input.bytes[21]!, input.bytes[22]!, input.bytes[23]!]))
+  const measurementRangeStartPressure = intTuple4ToFloat32WithThreshold([input.bytes[20]!, input.bytes[21]!, input.bytes[22]!, input.bytes[23]!])
 
-  const measurementRangeEndPressure = roundValue(intTuple4ToFloat32WithThreshold([input.bytes[24]!, input.bytes[25]!, input.bytes[26]!, input.bytes[27]!]))
+  const measurementRangeEndPressure = intTuple4ToFloat32WithThreshold([input.bytes[24]!, input.bytes[25]!, input.bytes[26]!, input.bytes[27]!])
 
-  const measurementRangeStartDeviceTemperature = roundValue(intTuple4ToFloat32WithThreshold([input.bytes[28]!, input.bytes[29]!, input.bytes[30]!, input.bytes[31]!]))
+  const measurementRangeStartDeviceTemperature = intTuple4ToFloat32WithThreshold([input.bytes[28]!, input.bytes[29]!, input.bytes[30]!, input.bytes[31]!])
 
-  const measurementRangeEndDeviceTemperature = roundValue(intTuple4ToFloat32WithThreshold([input.bytes[32]!, input.bytes[33]!, input.bytes[34]!, input.bytes[35]!]))
+  const measurementRangeEndDeviceTemperature = intTuple4ToFloat32WithThreshold([input.bytes[32]!, input.bytes[33]!, input.bytes[34]!, input.bytes[35]!])
 
   const pressureUnit = input.bytes[36]!
 
   // must be 6,7, or 237
   if (![6, 7, 237].includes(pressureUnit)) {
-    throw new Error(`Identification message 07 needs pressureUnit 6, 7, or 237 but got ${pressureUnit}`)
+    throw new Error(`Unknown pressure unit ${pressureUnit} in device identification message. Expected 6 (bar), 7 (mbar), or 237 (MPa).`)
   }
   const pressureUnitName = Object.keys(PRESSURE_UNITS).find(key => PRESSURE_UNITS[key as keyof typeof PRESSURE_UNITS] === pressureUnit)!
 
@@ -297,7 +297,7 @@ const handleDeviceIdentificationMessage: Handler<TULIP2PEWChannels, PEWTULIP2Dev
 
   // must be 32
   if (deviceTemperatureUnit !== 32) {
-    throw new Error(`Identification message 07 needs deviceTemperatureUnit 32 but got ${deviceTemperatureUnit}`)
+    throw new Error(`Unknown temperature unit ${deviceTemperatureUnit} in device identification message. Expected 32 (°C).`)
   }
 
   return {
@@ -329,7 +329,7 @@ const handleDeviceIdentificationMessage: Handler<TULIP2PEWChannels, PEWTULIP2Dev
 const handleKeepAliveMessage: Handler<TULIP2PEWChannels, PEWTULIP2DeviceStatisticsUplinkOutput> = (input) => {
   // Keep alive message is 3 bytes: [0x08, configurationId, batteryByte]
   if (input.bytes.length !== 3) {
-    throw new Error(`Keep alive message 08 needs 3 bytes but got ${input.bytes.length}.`)
+    throw new Error(`Keep alive message (0x08) requires 3 bytes, but received ${input.bytes.length} bytes`)
   }
 
   const configurationId = input.bytes[1]!

@@ -345,6 +345,12 @@
                         {
                           "type": "object",
                           "properties": {
+                            "channelId": {
+                              "const": 0
+                            },
+                            "channelName": {
+                              "const": "temperature"
+                            },
                             "measurand": {
                               "enum": [
                                 1
@@ -377,6 +383,8 @@
                             }
                           },
                           "required": [
+                            "channelId",
+                            "channelName",
                             "measurand",
                             "measurandName",
                             "measurementRangeStart",

@@ -2681,19 +2681,53 @@
                 "deviceInformation": {
                   "type": "object",
                   "properties": {
-                    "productIdName": {
-                      "type": "string"
-                    },
                     "productId": {
-                      "type": "integer",
-                      "minimum": 0
+                      "enum": [
+                        15,
+                        16,
+                        17
+                      ]
+                    },
+                    "productIdName": {
+                      "enum": [
+                        "NETRIS1",
+                        "NETRIS©1 BLE+LPWAN",
+                        "NETRIS©1 BLE"
+                      ]
+                    },
+                    "sensorId": {
+                      "enum": [
+                        0,
+                        1,
+                        2
+                      ]
+                    },
+                    "sensorIdName": {
+                      "enum": [
+                        "RTD",
+                        "E-Signal",
+                        "TRW"
+                      ]
                     },
                     "productSubId": {
-                      "type": "integer",
-                      "minimum": 0
+                      "type": "integer"
                     },
                     "productSubIdName": {
                       "type": "string"
+                    },
+                    "lpwanId": {
+                      "enum": [
+                        0,
+                        1,
+                        2
+                      ]
+                    },
+                    "lpwanIdName": {
+                      "enum": [
+                        "Reserved",
+                        "mioty",
+                        "LoRaWAN"
+                      ]
                     },
                     "wirelessModuleFirmwareVersion": {
                       "type": "string",
@@ -2713,50 +2747,49 @@
                       "type": "number"
                     },
                     "measurand": {
-                      "type": "integer",
-                      "minimum": 0
+                      "enum": [
+                        1,
+                        13,
+                        14,
+                        18
+                      ]
                     },
                     "measurandName": {
-                      "anyOf": [
-                        {
-                          "enum": [
-                            "Temperature",
-                            "Current",
-                            "Voltage",
-                            "Relative"
-                          ]
-                        },
-                        {
-                          "const": "Unknown"
-                        }
+                      "enum": [
+                        "Temperature",
+                        "Current",
+                        "Voltage",
+                        "Relative"
                       ]
                     },
                     "unit": {
-                      "type": "integer",
-                      "minimum": 0
+                      "enum": [
+                        1,
+                        2,
+                        88,
+                        90,
+                        100
+                      ]
                     },
                     "unitName": {
-                      "anyOf": [
-                        {
-                          "enum": [
-                            "°C",
-                            "°F",
-                            "V",
-                            "mA",
-                            "%"
-                          ]
-                        },
-                        {
-                          "const": "Unknown"
-                        }
+                      "enum": [
+                        "°C",
+                        "°F",
+                        "V",
+                        "mA",
+                        "%"
                       ]
                     }
                   },
                   "required": [
-                    "productIdName",
                     "productId",
+                    "productIdName",
+                    "sensorId",
+                    "sensorIdName",
                     "productSubId",
                     "productSubIdName",
+                    "lpwanId",
+                    "lpwanIdName",
                     "wirelessModuleFirmwareVersion",
                     "wirelessModuleHardwareVersion",
                     "serialNumber",

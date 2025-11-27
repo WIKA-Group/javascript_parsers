@@ -93,7 +93,7 @@ The schema script loads each device’s valibot factories, converts them to JSON
 
 - Adding a new device involves creating a profile under `packages/parsers/src/devices/<DEVICE>`, defining its codecs (TULIP2, TULIP3, or a new protocol generation), and wiring the parser export.
 - Because codecs are modular, specialised protocol forks (for example, a device-specific telemetry mode) can coexist simply by implementing the codec interface and registering it with `defineParser`.
-- Legacy 2.x.x/3.x.x assets remain under the same `devices/` directories, often with JavaScript entry files and older schema formats. They continue to build through the same scripts until fully migrated to TypeScript codecs.
+- All devices now use the modern `4.x.x` TypeScript codec architecture, providing a consistent development experience across the entire device matrix.
 - The library package (`@w2a-iiot/parsers`) selectively wraps devices that are ready for external consumption, while the raw package exposes the full matrix for tooling such as the [WIKA IIoT Toolbox](https://wika-group.github.io/iiot_toolbox).
 
 With this mental model in place, proceed to [Parser Development](/contributors/parser-development) for hands-on guidance when adding devices or evolving codecs.

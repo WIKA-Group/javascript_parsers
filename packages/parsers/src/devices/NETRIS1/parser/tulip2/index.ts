@@ -17,7 +17,7 @@ import type {
 import { NETRIS1_NAME } from '..'
 import { defineTULIP2Codec } from '../../../../codecs/tulip2'
 import { DEFAULT_ROUNDING_DECIMALS, intTuple4ToFloat32WithThreshold, roundValue, slopeValueToValue, TULIPValueToValue } from '../../../../utils'
-import { ALARM_EVENTS, DEVICE_ALARM_TYPES, LPP_MEASURANDS_BY_ID, LPP_UNITS_BY_ID, MEASUREMENT_ALARM_TYPES, PROCESS_ALARM_TYPES, TECHNICAL_ALARM_TYPES } from './lookups'
+import { ALARM_EVENTS, DEVICE_ALARM_TYPES, LPP_MEASURANDS_BY_ID, LPP_UNITS_BY_ID, LPWAN_IDS_BY_ID, MEASUREMENT_ALARM_TYPES, PROCESS_ALARM_TYPES, PRODUCT_IDS_BY_ID, SENSOR_IDS_BY_ID, TECHNICAL_ALARM_TYPES } from './lookups'
 
 const ERROR_VALUE = 0xFFFF
 
@@ -28,8 +28,8 @@ function createTULIP2NETRIS1Channels() {
     {
       channelId: 0,
       name: 'measurement',
-      start: 0 as number, // placeholder; actual range comes from device config at runtime
-      end: 10 as number, // placeholder; actual range comes from device config at runtime
+      start: 0 as number,
+      end: 10 as number,
     },
   ] as const satisfies TULIP2Channel[]
 }
@@ -39,7 +39,7 @@ type TULIP2NETRIS1Channels = ReturnType<typeof createTULIP2NETRIS1Channels>
 const handleDataMessage: Handler<TULIP2NETRIS1Channels, NETRIS1TULIP2DataMessageUplinkOutput> = (input, options) => {
   // Data message: 0x01/0x02, length 5 bytes expected for single channel
   if (input.bytes.length !== 5) {
-    throw new Error(`Data message 01/02 needs 5 bytes but got ${input.bytes.length}`)
+    throw new Error(`Data message (0x01/0x02) requires 5 bytes, but received ${input.bytes.length} bytes`)
   }
 
   const messageType = input.bytes[0]! as 1 | 2
@@ -77,7 +77,7 @@ const handleDataMessage: Handler<TULIP2NETRIS1Channels, NETRIS1TULIP2DataMessage
 const handleProcessAlarmMessage: Handler<TULIP2NETRIS1Channels, NETRIS1TULIP2ProcessAlarmsUplinkOutput> = (input, options) => {
   // Needs at least 6 bytes and (len - 3) % 3 === 0
   if (input.bytes.length < 6 || ((input.bytes.length - 3) % 3) !== 0) {
-    throw new Error(`Process alarm 03 needs at least 6 bytes and got ${input.bytes.length}. Also all bytes for each alarm needed`)
+    throw new Error(`Process alarm message (0x03) requires at least 6 bytes (and target byte count 3n+3), but received ${input.bytes.length} bytes`)
   }
 
   const configurationId = input.bytes[1]!
@@ -132,7 +132,7 @@ const handleProcessAlarmMessage: Handler<TULIP2NETRIS1Channels, NETRIS1TULIP2Pro
 const handleTechnicalAlarmMessage: Handler<TULIP2NETRIS1Channels, NETRIS1TULIP2TechnicalAlarmsUplinkOutput> = (input) => {
   // Technical alarm is 5 bytes: [0x04, confId, sensorId, alarmTypeHi, alarmTypeLo]
   if (input.bytes.length !== 5) {
-    throw new Error(`Technical alarm 04 needs 5 bytes but got ${input.bytes.length}.`)
+    throw new Error(`Technical alarm message (0x04) requires 5 bytes, but received ${input.bytes.length} bytes`)
   }
 
   const configurationId = input.bytes[1]!
@@ -162,7 +162,7 @@ const handleTechnicalAlarmMessage: Handler<TULIP2NETRIS1Channels, NETRIS1TULIP2T
 const handleDeviceAlarmMessage: Handler<TULIP2NETRIS1Channels, NETRIS1TULIP2DeviceAlarmsUplinkOutput> = (input) => {
   // Device alarm is 4 bytes: [0x05, confId, alarmHi, alarmLo]
   if (input.bytes.length !== 4) {
-    throw new Error(`Device alarm 05 needs at least 4 bytes got ${input.bytes.length}.`)
+    throw new Error(`Device alarm message (0x05) requires 4 bytes, but received ${input.bytes.length} bytes`)
   }
 
   const configurationId = input.bytes[1]!
@@ -190,21 +190,19 @@ const handleDeviceAlarmMessage: Handler<TULIP2NETRIS1Channels, NETRIS1TULIP2Devi
 const handleDeviceIdentificationMessage: Handler<TULIP2NETRIS1Channels, NETRIS1TULIP2DeviceInformationUplinkOutput> = (input) => {
   // According to our schema we require extended identification (>= 29 bytes)
   if (input.bytes.length < 29) {
-    throw new Error(`Identification message 07 needs at least 29 bytes but got ${input.bytes.length}`)
+    throw new Error(`Device identification message (0x07) requires at least 29 bytes, but received ${input.bytes.length} bytes`)
   }
 
   const configurationId = input.bytes[1]!
   const productId = input.bytes[2]!
-
-  const productIdName = (() => {
-    switch (productId) {
-      case 16: return 'NETRIS©1 BLE+LPWAN'
-      case 17: return 'NETRIS©1 BLE'
-      default: return 'Unknown'
-    }
-  })()
+  const productIdName = (PRODUCT_IDS_BY_ID as Record<number, string>)[productId] ?? 'Unknown'
 
   const productSubId = input.bytes[3]!
+  const sensorId = productSubId & 0x1F // Bits 4-0
+  const sensorIdName = (SENSOR_IDS_BY_ID as Record<number, string>)[sensorId] ?? 'Unknown'
+  const lpwanId = (productSubId >> 5) & 0x07 // Bits 7-5
+  const lpwanIdName = (LPWAN_IDS_BY_ID as Record<number, string>)[lpwanId] ?? 'Unknown'
+  const productSubIdName = `${sensorIdName} ${lpwanIdName}`
 
   const wirelessModuleFirmwareVersion = `${(input.bytes[4]! >> 4) & 0x0F}.${input.bytes[4]! & 0x0F}.${input.bytes[5]!}`
   const wirelessModuleHardwareVersion = `${(input.bytes[6]! >> 4) & 0x0F}.${input.bytes[6]! & 0x0F}.${input.bytes[7]!}`
@@ -217,29 +215,35 @@ const handleDeviceIdentificationMessage: Handler<TULIP2NETRIS1Channels, NETRIS1T
   }
   const serialNumber = String.fromCharCode(...serialBytes.slice(0, lastNonZero + 1))
 
-  const measurementRangeStart = roundValue(intTuple4ToFloat32WithThreshold([input.bytes[19]!, input.bytes[20]!, input.bytes[21]!, input.bytes[22]!]))
-  const measurementRangeEnd = roundValue(intTuple4ToFloat32WithThreshold([input.bytes[23]!, input.bytes[24]!, input.bytes[25]!, input.bytes[26]!]))
+  const measurementRangeStart = intTuple4ToFloat32WithThreshold([input.bytes[19]!, input.bytes[20]!, input.bytes[21]!, input.bytes[22]!])
+  const measurementRangeEnd = intTuple4ToFloat32WithThreshold([input.bytes[23]!, input.bytes[24]!, input.bytes[25]!, input.bytes[26]!])
   const measurand = input.bytes[27]!
+  const measurandName = (LPP_MEASURANDS_BY_ID as Record<number, string>)[measurand] ?? 'Unknown'
   const unit = input.bytes[28]!
+  const unitName = (LPP_UNITS_BY_ID as Record<number, string>)[unit] ?? 'Unknown'
 
   return {
     data: {
       messageType: 0x07,
       configurationId,
       deviceInformation: {
-        productIdName,
         productId,
-        productSubId,
-        productSubIdName: resolveProductSubIdName(productSubId),
+        productIdName,
+        sensorId,
+        sensorIdName,
+        lpwanId,
+        lpwanIdName,
         wirelessModuleFirmwareVersion,
         wirelessModuleHardwareVersion,
         serialNumber,
         measurementRangeStart,
         measurementRangeEnd,
         measurand,
-        measurandName: (LPP_MEASURANDS_BY_ID as Record<number, string>)[measurand] ?? 'Unknown',
+        measurandName,
         unit,
-        unitName: (LPP_UNITS_BY_ID as Record<number, string>)[unit] ?? 'Unknown',
+        unitName,
+        productSubId,
+        productSubIdName,
       } as NETRIS1TULIP2DeviceInformationData,
     },
   }
@@ -247,7 +251,7 @@ const handleDeviceIdentificationMessage: Handler<TULIP2NETRIS1Channels, NETRIS1T
 
 const handleKeepAliveMessage: Handler<TULIP2NETRIS1Channels, NETRIS1TULIP2DeviceStatisticsUplinkOutput> = (input) => {
   if (input.bytes.length !== 3) {
-    throw new Error(`Keep alive message 08 needs 3 bytes but got ${input.bytes.length}.`)
+    throw new Error(`Keep alive message (0x08) requires 3 bytes, but received ${input.bytes.length} bytes`)
   }
 
   const configurationId = input.bytes[1]!
@@ -270,7 +274,7 @@ const handleKeepAliveMessage: Handler<TULIP2NETRIS1Channels, NETRIS1TULIP2Device
 
 const handleChannelFailureAlarmMessage: Handler<TULIP2NETRIS1Channels, NETRIS1TULIP2ChannelFailureAlarmUplinkOutput> = (input) => {
   if (input.bytes.length !== 5) {
-    throw new Error(`Channel failure alarm 09 needs 5 bytes but got ${input.bytes.length}.`)
+    throw new Error(`Channel failure alarm message (0x09) requires 5 bytes, but received ${input.bytes.length} bytes`)
   }
 
   const configurationId = input.bytes[1]!
@@ -297,14 +301,6 @@ const handleChannelFailureAlarmMessage: Handler<TULIP2NETRIS1Channels, NETRIS1TU
       } as NETRIS1TULIP2ChannelFailureAlarmData,
     },
   }
-}
-
-function resolveProductSubIdName(subId: number): string {
-  const lpwan = (0x07 & (subId >> 5))
-  const tech = (0x1F & subId)
-  const lpwanName = lpwan === 0 ? 'No LPWAN' : lpwan === 1 ? 'MIOTY' : lpwan === 2 ? 'LoRa' : 'Unknown'
-  const techName = tech === 0 ? 'RTD' : tech === 1 ? 'E-Signal' : tech === 2 ? 'TRW' : 'Unknown'
-  return `${lpwanName} ${techName}`.trim()
 }
 
 // eslint-disable-next-line ts/explicit-function-return-type

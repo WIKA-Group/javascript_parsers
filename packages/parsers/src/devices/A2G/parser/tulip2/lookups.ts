@@ -36,14 +36,29 @@ export const HARDWARE_ASSEMBLY_TYPE_NAMES = {
   130: 'A2G LC3 BAT',
 } as const satisfies Record<number, string>
 
-export const LPP_MEASURAND_NAMES = {
-  1: 'Temperature',
-  2: 'Temperature difference',
+export const LPP_MEASURAND_NAMES_PRESSURE = {
   3: 'Pressure (gauge)',
   4: 'Pressure (absolute)',
   5: 'Pressure (differential)',
+} as const satisfies Record<number, string>
+
+export const LPP_MEASURAND_NAMES_FLOW = {
   6: 'Flow (vol.)',
   7: 'Flow (mass)',
+} as const satisfies Record<number, string>
+
+export const LPP_MEASURAND_NAMES_INPUT = {
+  70: 'Input 1',
+  71: 'Input 2',
+  72: 'Input 3',
+  73: 'Input 4',
+} as const satisfies Record<number, string>
+
+export const LPP_MEASURAND_NAMES = {
+  1: 'Temperature',
+  2: 'Temperature difference',
+  ...LPP_MEASURAND_NAMES_PRESSURE,
+  ...LPP_MEASURAND_NAMES_FLOW,
   8: 'Force',
   9: 'Mass',
   10: 'Level',
@@ -68,27 +83,30 @@ export const LPP_MEASURAND_NAMES = {
   60: 'Device specific',
   61: 'Device specific',
   62: 'Device specific',
-  70: 'Input 1',
-  71: 'Input 2',
-  72: 'Input 3',
-  73: 'Input 4',
+  ...LPP_MEASURAND_NAMES_INPUT,
   75: 'Relay Status 1',
   76: 'Relay Status 2',
 } as const satisfies Record<number, string>
 
-export const LPP_UNIT_NAMES = {
-  0: 'None',
+export const LPP_UNIT_NAMES_PRESSURE = {
   1: 'Pa',
   2: 'kPa',
   3: 'mbar',
   4: 'mmWC',
   5: 'inWC',
+} as const satisfies Record<number, string>
+
+export const LPP_UNIT_NAMES_FLOW = {
   10: '[m³/s] cubic metre per second',
   11: '[m³/h] cubic metre per hour (cbm/h)',
   12: '[l/s] litre per second',
   13: '[cfm] cubic feet per minute',
   14: '[m/s]',
   15: '[ft/min]',
+} as const satisfies Record<number, string>
+
+export const LPP_UNIT_NAMES_INPUT = {
+  0: 'None',
   20: '% rH',
   21: '[g/m³]',
   22: '[g/ft³]',
@@ -101,6 +119,12 @@ export const LPP_UNIT_NAMES = {
   41: '°F',
   45: 'V',
   46: 'bin',
+} as const satisfies Record<number, string>
+
+export const LPP_UNIT_NAMES = {
+  ...LPP_UNIT_NAMES_PRESSURE,
+  ...LPP_UNIT_NAMES_FLOW,
+  ...LPP_UNIT_NAMES_INPUT,
 } as const satisfies Record<number, string>
 
 export const TECHNICAL_ALARM_FLAGS = [

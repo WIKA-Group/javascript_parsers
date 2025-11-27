@@ -8,15 +8,22 @@ If you are looking for a way to include javascript parsers in your project, plea
 
 <!-- #region devices-and-apis -->
 ## Supported Devices and Versions
-<!-- #region devices-versions-table -->
-| Parser generation       | Version | Devices                                                                           |
-|-------------------------|---------|-----------------------------------------------------------------------------------|
-| Modern modular          | `4.x.x` | PEW, NETRIS1, NETRIS3 family (FLRU, PEU, PGU, TGU, TRU), TRW, Netris2             |
-| Transitional TypeScript | `3.x.x` | - (previously NETRIS2)                                                            |
-| Legacy JavaScript       | `2.x.x` | A2G, F98W6, GD20W, PGW23                                                          |
-<!-- #endregion devices-versions-table -->
 
-## Version 4.x.x
+> **All devices now use the modern `4.x.x` architecture.** The `2.x.x` and `3.x.x` parser generations are no longer shipped.
+
+| Device                                    | Current | Previous |
+|-------------------------------------------|:-------:|:--------:|
+| A2G                                       | `4.x.x` | `2.x.x`  |
+| F98W6                                     | `4.x.x` | `2.x.x`  |
+| GD20W                                     | `4.x.x` | `2.x.x`  |
+| PGW23                                     | `4.x.x` | `2.x.x`  |
+| NETRIS2                                   | `4.x.x` | `3.x.x`  |
+| NETRIS1                                   | `4.x.x` | `2.x.x`  |
+| NETRIS3 family (FLRU, PEU, PGU, TGU, TRU) | `4.x.x` | `2.x.x`  |
+| TRW                                       | `4.x.x` | `2.x.x`  |
+| PEW                                       | `4.x.x` | `2.x.x`  |
+
+## Version 4.x.x (Current)
 
 The parser is built on the codec abstraction layer and can host multiple codecs at once. Each codec ships with default measuring ranges, but you should always tune them for the concrete probe you deploy.
 
@@ -33,23 +40,26 @@ The parser is built on the codec abstraction layer and can host multiple codecs 
 - **`adjustRoundingDecimals(decimals: number)`**:<br>
     Normalizes the requested precision, then applies it to all codecs so numeric outputs round consistently.
 
-## Version 3.x.x
+## Version 3.x.x (Legacy)
 
-Previously, the `NETRIS2` device used this format. It has now been migrated to `4.x.x`.
-The parser is written in TypeScript and ships as a function that returns the helpers below.
+> **Note:** NETRIS2 has been migrated to `4.x.x`. The information below is preserved to help users migrate from `3.x.x`.
+
+The parser was written in TypeScript and shipped as a function that returned the helpers below.
 
 - **`decodeUplink(input: { bytes: number[], fPort: number, recvTime?: string })`**:<br>
-    Performs schema validation on the uplink structure, inspects the message type byte, and decodes measurements, process alarms, technical alarms, configuration status, identification, or keep-alive frames.
+    Performed schema validation on the uplink structure, inspected the message type byte, and decoded measurements, process alarms, technical alarms, configuration status, identification, or keep-alive frames.
 - **`decodeHexUplink(input: { bytes: string; fPort: number; recvTime?: string })`**:<br>
-   Ensures the `bytes` field is a valid hexadecimal string, converts it to an integer array, and forwards the request to `decodeUplink`.
+   Ensured the `bytes` field was a valid hexadecimal string, converted it to an integer array, and forwarded the request to `decodeUplink`.
 - **`encodeDownlink(input: DownlinkInput): number[]`**:<br>
-    Accepts one of the typed `NETRIS2` actions (factory reset, battery reset, channel disable, main configuration update, process alarm configuration, measurement offset, or start-up time). Returns the downlink frame as an array of 8-bit integers on success or throws an exception when validation fails. Input varies based on the device.
+    Accepted one of the typed `NETRIS2` actions (factory reset, battery reset, channel disable, main configuration update, process alarm configuration, measurement offset, or start-up time). Returned the downlink frame as an array of 8-bit integers on success or threw an exception when validation failed.
 - **`adjustRoundingDecimals(decimals: number)`**:<br>
-    Overrides the default rounding precision used when presenting channel values.
+    Overrode the default rounding precision used when presenting channel values.
 
-## Version 2.x.x
+## Version 2.x.x (Legacy)
 
-The parser is delivered as a single JavaScript file that manipulates global measurement ranges. Before the decoding helpers can be used you must edit the top-level variables (for example `FORCE_RANGE_START`, `FORCE_RANGE_END`, `DEVICE_TEMPERATURE_RANGE_START`, `DEVICE_TEMPERATURE_RANGE_END`) so they reflect the sensor-specific measuring span published in the device documentation.
+> **Note:** A2G, F98W6, GD20W, and PGW23 have been migrated to `4.x.x`. The information below is preserved to help users migrate from `2.x.x`.
+
+The parser was delivered as a single JavaScript file that manipulated global measurement ranges. Before the decoding helpers could be used you had to edit the top-level variables (for example `FORCE_RANGE_START`, `FORCE_RANGE_END`, `DEVICE_TEMPERATURE_RANGE_START`, `DEVICE_TEMPERATURE_RANGE_END`) so they reflected the sensor-specific measuring span published in the device documentation.
 
 - **`decodeUplink(input: { bytes: number[]; fPort: number; recvTime?: Date })`**:<br>
     Decodes strain, device temperature, and battery voltage readings when the measurement ranges are defined. Populates the `data` object with the scaled values or records parsing errors in `errors`.

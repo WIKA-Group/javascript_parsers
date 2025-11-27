@@ -88,6 +88,8 @@ function createDeviceInformationUplinkOutputSchema() {
         sensorDeviceTypeId: v.pipe(v.number(), v.minValue(0), v.integer()),
         channelConfigurations: v.tuple([
           v.object({
+            channelId: v.literal(TRUTULIP2_TEMPERATURE_CHANNEL.channelId),
+            channelName: v.literal(TRUTULIP2_TEMPERATURE_CHANNEL.name),
             measurand: v.picklist(Object.keys(LPP_MEASURANDS_BY_ID).map(key => Number.parseInt(key, 10)) as (keyof typeof LPP_MEASURANDS_BY_ID)[]),
             measurandName: v.picklist(Object.values(LPP_MEASURANDS_BY_ID) as (typeof LPP_MEASURANDS_BY_ID)[keyof typeof LPP_MEASURANDS_BY_ID][]),
             measurementRangeStart: v.number(),

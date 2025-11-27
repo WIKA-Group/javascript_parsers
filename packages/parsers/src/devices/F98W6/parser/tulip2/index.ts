@@ -9,6 +9,10 @@ import type {
   F98W6TULIP2ProcessAlarmsUplinkOutput,
   F98W6TULIP2TechnicalAlarmsData,
   F98W6TULIP2TechnicalAlarmsUplinkOutput,
+  StrainUnitId,
+  StrainUnitName,
+  TemperatureUnitId,
+  TemperatureUnitName,
 } from '../../schema/tulip2'
 import { F98W6_NAME } from '..'
 import { defineTULIP2Codec } from '../../../../codecs/tulip2'
@@ -34,7 +38,7 @@ type AlarmEvent = (typeof ALARM_EVENTS)[keyof typeof ALARM_EVENTS]
 
 const handleDataMessage: Handler<F98W6Channels, F98W6TULIP2DataMessageUplinkOutput> = (input, options) => {
   if (input.bytes.length !== 7) {
-    throw new Error(`Data message 01/02 needs 7 bytes but got ${input.bytes.length}`)
+    throw new Error(`Data message (0x01/0x02) requires 7 bytes, but received ${input.bytes.length} bytes`)
   }
 
   const messageType = input.bytes[0]! as 1 | 2
@@ -82,7 +86,7 @@ const handleDataMessage: Handler<F98W6Channels, F98W6TULIP2DataMessageUplinkOutp
 
 const handleProcessAlarmMessage: Handler<F98W6Channels, F98W6TULIP2ProcessAlarmsUplinkOutput> = (input, options) => {
   if (input.bytes.length < 5 || ((input.bytes.length - 2) % 3) !== 0) {
-    throw new Error(`Process alarm 03 needs at least 5 bytes and got ${input.bytes.length}. Also all bytes for each alarm needed`)
+    throw new Error(`Process alarm message (0x03) requires at least 5 bytes (and target byte count 3n+2), but received ${input.bytes.length} bytes`)
   }
 
   const configurationId = input.bytes[1]!
@@ -114,7 +118,7 @@ const handleProcessAlarmMessage: Handler<F98W6Channels, F98W6TULIP2ProcessAlarms
 
     const channel = options.channels.find(candidate => candidate.channelId === channelId)
     if (!channel) {
-      throw new Error(`Channel configuration missing for channelId ${channelId}`)
+      throw new Error(`Channel configuration missing for channelId ${channelId} in process alarm message`)
     }
 
     let value: number
@@ -160,7 +164,7 @@ const handleProcessAlarmMessage: Handler<F98W6Channels, F98W6TULIP2ProcessAlarms
 
 const handleTechnicalAlarmMessage: Handler<F98W6Channels, F98W6TULIP2TechnicalAlarmsUplinkOutput> = (input) => {
   if (input.bytes.length !== 3) {
-    throw new Error(`Technical alarm 04 needs 3 bytes but got ${input.bytes.length}`)
+    throw new Error(`Technical alarm message (0x04) requires 3 bytes, but received ${input.bytes.length} bytes`)
   }
 
   const configurationId = input.bytes[1]!
@@ -175,7 +179,7 @@ const handleTechnicalAlarmMessage: Handler<F98W6Channels, F98W6TULIP2TechnicalAl
 
   const alarmTypeEntry = (Object.entries(TECHNICAL_ALARM_TYPES) as [keyof typeof TECHNICAL_ALARM_TYPES, number][]).find(([, mask]) => (alarmType & mask) !== 0)
   if (!alarmTypeEntry) {
-    throw new Error(`Unknown technical alarm type ${alarmType}`)
+    throw new Error(`Unknown technical alarm type ${alarmType} in technical alarm message`)
   }
 
   const [alarmTypeName, normalizedAlarmType] = alarmTypeEntry
@@ -198,7 +202,7 @@ const handleTechnicalAlarmMessage: Handler<F98W6Channels, F98W6TULIP2TechnicalAl
 
 const handleDeviceAlarmMessage: Handler<F98W6Channels, F98W6TULIP2DeviceAlarmsUplinkOutput> = (input) => {
   if (input.bytes.length < 3 || input.bytes.length > 4) {
-    throw new Error(`Device alarm 05 needs at least 3 bytes and maximum 4 but got ${input.bytes.length}`)
+    throw new Error(`Device alarm message (0x05) requires 3 or 4 bytes, but received ${input.bytes.length} bytes`)
   }
 
   const configurationId = input.bytes[1]!
@@ -246,9 +250,9 @@ const handleDeviceAlarmMessage: Handler<F98W6Channels, F98W6TULIP2DeviceAlarmsUp
   }
 }
 
-const handleDeviceIdentificationMessage: Handler<F98W6Channels, F98W6TULIP2DeviceInformationUplinkOutput> = (input, options) => {
+const handleDeviceIdentificationMessage: Handler<F98W6Channels, F98W6TULIP2DeviceInformationUplinkOutput> = (input) => {
   if (input.bytes.length < 8 || input.bytes.length > 38) {
-    throw new Error(`Identification message 07 needs at least 8 and maxium 38 bytes, but got ${input.bytes.length}`)
+    throw new Error(`Device identification message (0x07) requires at least 8 and at most 38 bytes, but received ${input.bytes.length} bytes`)
   }
 
   if (input.bytes.length < 38) {
@@ -258,14 +262,14 @@ const handleDeviceIdentificationMessage: Handler<F98W6Channels, F98W6TULIP2Devic
   const configurationId = input.bytes[1]!
   const productId = input.bytes[2]!
   if (productId !== 18) {
-    throw new Error(`Unknown productId ${productId} in device identification message`)
+    throw new Error(`Invalid productId ${productId} in device identification message. Expected 18 (F98W6).`)
   }
   const productIdName = 'F98W6'
   const productSubId = input.bytes[3]!
   const productSubIdName = (Object.entries(PRODUCT_SUB_ID_NAMES) as [keyof typeof PRODUCT_SUB_ID_NAMES, number][]).find(([, id]) => id === productSubId)?.[0]
 
   if (!productSubIdName) {
-    throw new Error(`Unknown productSubId ${productSubId} in device identification message`)
+    throw new Error(`Unknown productSubId ${productSubId} in device identification message. Only LoRaWAN (0) is supported.`)
   }
 
   const wirelessModuleFirmwareVersion = `${(input.bytes[4]! >> 4) & 0x0F}.${input.bytes[4]! & 0x0F}.${input.bytes[5]!}`
@@ -282,33 +286,33 @@ const handleDeviceIdentificationMessage: Handler<F98W6Channels, F98W6TULIP2Devic
 
   const strainType = STRAIN_TYPES_BY_ID[input.bytes[19]! as keyof typeof STRAIN_TYPES_BY_ID] ?? 'unknown'
 
-  const measurementRangeStartStrain = roundValue(intTuple4ToFloat32WithThreshold([
+  const measurementRangeStartStrain = intTuple4ToFloat32WithThreshold([
     input.bytes[20]!,
     input.bytes[21]!,
     input.bytes[22]!,
     input.bytes[23]!,
-  ]), options.roundingDecimals)
+  ])
 
-  const measurementRangeEndStrain = roundValue(intTuple4ToFloat32WithThreshold([
+  const measurementRangeEndStrain = intTuple4ToFloat32WithThreshold([
     input.bytes[24]!,
     input.bytes[25]!,
     input.bytes[26]!,
     input.bytes[27]!,
-  ]), options.roundingDecimals)
+  ])
 
-  const measurementRangeStartDeviceTemperature = roundValue(intTuple4ToFloat32WithThreshold([
+  const measurementRangeStartDeviceTemperature = intTuple4ToFloat32WithThreshold([
     input.bytes[28]!,
     input.bytes[29]!,
     input.bytes[30]!,
     input.bytes[31]!,
-  ]), options.roundingDecimals)
+  ])
 
-  const measurementRangeEndDeviceTemperature = roundValue(intTuple4ToFloat32WithThreshold([
+  const measurementRangeEndDeviceTemperature = intTuple4ToFloat32WithThreshold([
     input.bytes[32]!,
     input.bytes[33]!,
     input.bytes[34]!,
     input.bytes[35]!,
-  ]), options.roundingDecimals)
+  ])
 
   const strainUnit = input.bytes[36]!
   const strainUnitName = PHYSICAL_UNIT_NAMES_BY_ID[strainUnit as keyof typeof PHYSICAL_UNIT_NAMES_BY_ID] ?? 'Unknown'
@@ -322,8 +326,8 @@ const handleDeviceIdentificationMessage: Handler<F98W6Channels, F98W6TULIP2Devic
       deviceInformation: {
         productId,
         productIdName,
-        productSubId,
-        productSubIdName,
+        productSubId: productSubId as 0,
+        productSubIdName: productSubIdName as 'LoRaWAN',
         wirelessModuleFirmwareVersion,
         wirelessModuleHardwareVersion,
         serialNumber,
@@ -332,10 +336,10 @@ const handleDeviceIdentificationMessage: Handler<F98W6Channels, F98W6TULIP2Devic
         measurementRangeEndStrain,
         measurementRangeStartDeviceTemperature,
         measurementRangeEndDeviceTemperature,
-        strainUnit,
-        strainUnitName,
-        deviceTemperatureUnit,
-        deviceTemperatureUnitName,
+        strainUnit: strainUnit as StrainUnitId,
+        strainUnitName: strainUnitName as StrainUnitName,
+        deviceTemperatureUnit: deviceTemperatureUnit as TemperatureUnitId,
+        deviceTemperatureUnitName: deviceTemperatureUnitName as TemperatureUnitName,
       },
     },
   } satisfies F98W6TULIP2DeviceInformationUplinkOutput
@@ -343,7 +347,7 @@ const handleDeviceIdentificationMessage: Handler<F98W6Channels, F98W6TULIP2Devic
 
 const handleKeepAliveMessage: Handler<F98W6Channels, F98W6TULIP2DeviceStatisticsUplinkOutput> = (input) => {
   if (input.bytes.length !== 3) {
-    throw new Error(`Keep alive message 08 needs 3 bytes but got ${input.bytes.length}`)
+    throw new Error(`Keep alive message (0x08) requires 3 bytes, but received ${input.bytes.length} bytes`)
   }
 
   const configurationId = input.bytes[1]!
@@ -365,7 +369,7 @@ const handleKeepAliveMessage: Handler<F98W6Channels, F98W6TULIP2DeviceStatistics
 export function createF98W6TULIP2Codec() {
   return defineTULIP2Codec({
     deviceName: F98W6_NAME,
-    roundingDecimals: DEFAULT_ROUNDING_DECIMALS - 1,
+    roundingDecimals: DEFAULT_ROUNDING_DECIMALS,
     channels: createF98W6TULIP2Channels(),
     handlers: {
       0x01: handleDataMessage,

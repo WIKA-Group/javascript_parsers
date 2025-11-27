@@ -1,5 +1,7 @@
 # Migration Guide
 
+> **Note:** All devices have been migrated to the modern `4.x.x` architecture. This guide is preserved for users who are still running legacy `2.x.x` or `3.x.x` parsers and need to upgrade.
+
 This guide walks you through upgrading the prebuilt JavaScript parsers that are typically embedded in LoRaWAN network servers. The focus is on the practical steps required when moving from the legacy `2.x.x` bundles to the modular `4.x.x` architecture, plus the smaller hop from `3.x.x` to `4.x.x`.
 
 ## Before you start
@@ -12,7 +14,7 @@ This guide walks you through upgrading the prebuilt JavaScript parsers that are 
 
 ## Migrating from 2.x.x to 4.x.x
 
-Legacy parsers rely on top-level variables (for example `PRESSURE_RANGE_START`, `DEVICE_TEMPERATURE_RANGE_END`) that you edit directly in the script. The `4.x.x` parsers removes those globals. Instead, you apply measuring ranges by calling the global `adjustMeasuringRange` helper for each channel before decoding any messages.
+Legacy parsers relied on top-level variables (for example `PRESSURE_RANGE_START`, `DEVICE_TEMPERATURE_RANGE_END`) that you edited directly in the script. The `4.x.x` parsers removed those globals. Instead, you apply measuring ranges by calling the global `adjustMeasuringRange` helper for each channel before decoding any messages.
 
 1. **Download the new script.** Keep the legacy file alongside it so you can reference the configured ranges, but deploy only the freshly generated `index.js` to your network server.
 
@@ -39,7 +41,7 @@ Legacy parsers rely on top-level variables (for example `PRESSURE_RANGE_START`, 
 
 ## Migrating from 3.x.x to 4.x.x
 
-Only `NETRIS2` used to ship a `3.x.x` parser. The upgrade is straightforward because channel scaling already relied on internal validation.
+Only `NETRIS2` shipped a `3.x.x` parser. The upgrade is straightforward because channel scaling already relied on internal validation.
 
 1. **Download the new script.** Deploy the `4.x.x` bundle and keep the `3.x.x` file only as a reference while you verify behavior.
 
@@ -57,4 +59,4 @@ Only `NETRIS2` used to ship a `3.x.x` parser. The upgrade is straightforward bec
 
 ## NPM package users
 
-There are no `2.x.x` parsers provided in the npm package. The migration from `3.x.x` to `4.x.x` is identical to the steps outlined above, except you import the parser from the package instead of using a prebuilt script. The package is shipped with typed definitions, so you get compile-time validation when calling the helpers. Take a look at the type issues provided there if you run into problems.
+All parsers in the npm package now use the `4.x.x` architecture. If you were previously using `3.x.x` parsers, follow the migration steps outlined above. The package is shipped with typed definitions, so you get compile-time validation when calling the helpers. Take a look at the type issues provided there if you run into problems.

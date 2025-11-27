@@ -1,4 +1,4 @@
-# TGU + Netris3 Parser Quick Start
+# F98W6 Parser Quick Start
 
 ## Parser API
 
@@ -31,16 +31,16 @@ type Result = {
 }
 ```
 
-To understand the data field, take a look at the [examples](https://github.com/WIKA-Group/javascript_parsers/blob/main/packages/parsers/src/devices/TGU_NETRIS3/examples.json) and the [schema definition](https://github.com/WIKA-Group/javascript_parsers/blob/main/packages/parsers/src/devices/TGU_NETRIS3/uplink.schema.json).
+To understand the data field, take a look at the [examples](https://github.com/WIKA-Group/javascript_parsers/blob/main/packages/parsers/src/devices/F98W6/examples.json) and the [schema definition](https://github.com/WIKA-Group/javascript_parsers/blob/main/packages/parsers/src/devices/F98W6/uplink.schema.json).
 
 Supported `channels` to identify different sensors by:
 ```ts
 // Is used in the returned data
-type ChannelName = 'temperature' | 'device temperature'
+type ChannelName = 'strain' | 'device temperature' | 'battery voltage'
 ```
 Channels that support adjusting the measurement range:
 ```ts
-type AdjustableChannelName = 'temperature' | 'device temperature'
+type AdjustableChannelName = 'strain'
 ```
 
 ### `decodeUplink(input)`
@@ -48,9 +48,9 @@ type AdjustableChannelName = 'temperature' | 'device temperature'
 function decodeUplink(input: UplinkInput): Result
 ```
 
-### `decodeHexUplink(input)`
+### `decodeHexUplink(hexInput)`
 ```ts
-function decodeHexUplink(input: HexUplinkInput): Result
+function decodeHexUplink(hexInput: HexUplinkInput): Result
 ```
 `bytes` must have even length; case-insensitive.
 
@@ -87,5 +87,5 @@ Your device ranges might not be the default. Insert your desired ranges before d
 
 // Quick start guide...
 
-adjustMeasuringRange('temperature', { start: 0, end: 100 })
+adjustMeasuringRange('strain', { start: -312.5, end: 312.5 })
 ```

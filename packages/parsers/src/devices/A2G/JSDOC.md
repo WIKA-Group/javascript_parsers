@@ -33,33 +33,6 @@ type Result = {
 
 To understand the `data` field, review the [examples](https://github.com/WIKA-Group/javascript_parsers/blob/main/packages/parsers/src/devices/A2G/examples.json) and the [schema definition](https://github.com/WIKA-Group/javascript_parsers/blob/main/packages/parsers/src/devices/A2G/uplink.schema.json).
 
-Supported `channels` exposed in the decoded payload:
-```ts
-// Channel identifiers available in measurement output
-// (payloads with 6 bytes only contain the pressure channel)
-type ChannelName
-  = | 'pressure'
-    | 'flow'
-    | 'input_1'
-    | 'input_2'
-    | 'input_3'
-    | 'input_4'
-    | 'relay_status_1'
-    | 'relay_status_2'
-```
-
-Channels that support adjusting the measurement range:
-```ts
-// Relay status channels are boolean flags and cannot be adjusted
-type AdjustableChannelName
-  = | 'pressure'
-    | 'flow'
-    | 'input_1'
-    | 'input_2'
-    | 'input_3'
-    | 'input_4'
-```
-
 ### `decodeUplink(input)`
 ```ts
 function decodeUplink(input: UplinkInput): Result
@@ -70,19 +43,6 @@ function decodeUplink(input: UplinkInput): Result
 function decodeHexString(hexInput: HexUplinkInput): DecodeResult
 ```
 `bytes` must have even length; case-insensitive.
-
-### `setMeasurementRanges(channel, range)`
-```ts
-// Will throw on invalid channel name or if the channel disallows range updates
-function setMeasurementRanges(
-  channelName: AdjustableChannelName,
-  range: {
-    start: number
-    end: number
-  }
-): void
-```
-Applies to future decodes only.
 
 ### `adjustRoundingDecimals(decimals)`
 ```ts

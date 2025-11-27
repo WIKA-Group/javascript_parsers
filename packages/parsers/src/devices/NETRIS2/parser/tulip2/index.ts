@@ -31,15 +31,8 @@ const ERROR_VALUE = 0xFFFF
 type TULIP2NETRIS2Channels = ReturnType<typeof createTULIP2NETRIS2Channels>
 
 const handleDataMessage: Handler<TULIP2NETRIS2Channels, NETRIS2TULIP2DataMessageUplinkOutput> = (input, options) => {
-  const minLengthForData = 5
-  const maxLengthForData = 7
-
-  if (input.bytes.length < minLengthForData) {
-    throw new Error(`Data message 01/02 needs at least ${minLengthForData} bytes but got ${input.bytes.length}`)
-  }
-
-  if (input.bytes.length > maxLengthForData) {
-    throw new Error(`Data message contains more than ${maxLengthForData} bytes. Contains ${input.bytes.length} bytes.`)
+  if (input.bytes.length < 5 || input.bytes.length > 7) {
+    throw new Error(`Data message (0x01/0x02) requires at least 5 and at most 7 bytes, but received ${input.bytes.length} bytes`)
   }
 
   const warnings: string[] = []
@@ -55,8 +48,8 @@ const handleDataMessage: Handler<TULIP2NETRIS2Channels, NETRIS2TULIP2DataMessage
 
   const channel0Valid = channelMask & 0x01
   const channel1Valid = channelMask & 0x02
-  const hasChannel0 = input.bytes.length >= minLengthForData
-  const hasChannel1 = input.bytes.length >= maxLengthForData
+  const hasChannel0 = input.bytes.length >= 5
+  const hasChannel1 = input.bytes.length >= 7
 
   interface ChannelData {
     channelId: 0 | 1
@@ -69,7 +62,7 @@ const handleDataMessage: Handler<TULIP2NETRIS2Channels, NETRIS2TULIP2DataMessage
   if (hasChannel0 && channel0Valid) {
     const rawValue = (input.bytes[3]! << 8) | input.bytes[4]!
     if (rawValue === ERROR_VALUE) {
-      throw new Error('Invalid data for channel 0: 0xffff, 65535')
+      throw new Error('Invalid data for channel - channel 0: 0xffff, 65535')
     }
     const channel = options.channels[0]
     const value = roundValue(TULIPValueToValue(rawValue, channel), options.roundingDecimals)
@@ -83,7 +76,7 @@ const handleDataMessage: Handler<TULIP2NETRIS2Channels, NETRIS2TULIP2DataMessage
   if (hasChannel1 && channel1Valid) {
     const rawValue = (input.bytes[5]! << 8) | input.bytes[6]!
     if (rawValue === ERROR_VALUE) {
-      throw new Error('Invalid data for channel 1: 0xffff, 65535')
+      throw new Error('Invalid data for channel - channel 1: 0xffff, 65535')
     }
     const channel = options.channels[1]
     const value = roundValue(TULIPValueToValue(rawValue, channel), options.roundingDecimals)
@@ -116,14 +109,8 @@ const handleDataMessage: Handler<TULIP2NETRIS2Channels, NETRIS2TULIP2DataMessage
 }
 
 const handleProcessAlarmMessage: Handler<TULIP2NETRIS2Channels, NETRIS2TULIP2ProcessAlarmsUplinkOutput> = (input, options) => {
-  const minLengthBytes = 6
-
-  if (input.bytes.length < minLengthBytes) {
-    throw new Error(`Process alarm message 03 needs at least ${minLengthBytes} bytes but got ${input.bytes.length}`)
-  }
-
-  if (input.bytes.length % 3 !== 0) {
-    throw new Error(`Process alarm message 03 bytes must have a length of 6, 9, 12, ... (3n + 6), but got ${input.bytes.length}`)
+  if (input.bytes.length < 6 || input.bytes.length % 3 !== 0) {
+    throw new Error(`Process alarm message (0x03) requires at least 6 bytes (and target byte count 3n), but received ${input.bytes.length} bytes`)
   }
 
   const configurationId = input.bytes[1]!
@@ -195,15 +182,8 @@ const handleProcessAlarmMessage: Handler<TULIP2NETRIS2Channels, NETRIS2TULIP2Pro
 }
 
 const handleTechnicalAlarmMessage: Handler<TULIP2NETRIS2Channels, NETRIS2TULIP2TechnicalAlarmsUplinkOutput> = (input) => {
-  const minLengthBytes = 4
-  const maxLengthBytes = 5
-
-  if (input.bytes.length < minLengthBytes) {
-    throw new Error(`Technical alarm message 04 needs at least ${minLengthBytes} bytes but got ${input.bytes.length}`)
-  }
-
-  if (input.bytes.length > maxLengthBytes) {
-    throw new Error(`Technical alarm message contains more than ${maxLengthBytes} bytes. Contains ${input.bytes.length} bytes.`)
+  if (input.bytes.length < 4 || input.bytes.length > 5) {
+    throw new Error(`Technical alarm message (0x04) requires at least 4 and at most 5 bytes, but received ${input.bytes.length} bytes`)
   }
 
   const warnings: string[] = []
@@ -279,14 +259,8 @@ const handleTechnicalAlarmMessage: Handler<TULIP2NETRIS2Channels, NETRIS2TULIP2T
 }
 
 const handleConfigurationStatusMessage: Handler<TULIP2NETRIS2Channels, NETRIS2TULIP2ConfigurationStatusUplinkOutput> = (input) => {
-  const minLength = 3
-
-  if (input.bytes.length < minLength) {
-    throw new Error(`Configuration status message 06 needs at least ${minLength} bytes but got ${input.bytes.length}`)
-  }
-
-  if (input.bytes.length > minLength) {
-    throw new Error(`Configuration status message contains more than ${minLength} bytes. Contains ${input.bytes.length} bytes.`)
+  if (input.bytes.length !== 3) {
+    throw new Error(`Configuration status message (0x06) requires 3 bytes, but received ${input.bytes.length} bytes`)
   }
 
   const warnings: string[] = []
@@ -296,7 +270,7 @@ const handleConfigurationStatusMessage: Handler<TULIP2NETRIS2Channels, NETRIS2TU
 
   const validStatuses = [0x20, 0x30, 0x60, 0x70] as const
   if (!validStatuses.includes(statusId)) {
-    throw new Error(`Configuration status message contains invalid status: ${statusId}, expected 0x20, 0x30, 0x60, or 0x70`)
+    throw new Error(`Unknown status ${statusId} in configuration status message`)
   }
 
   const status = CONFIGURATION_STATUS_TYPES[statusId]
@@ -320,14 +294,8 @@ const handleConfigurationStatusMessage: Handler<TULIP2NETRIS2Channels, NETRIS2TU
 }
 
 const handleRadioUnitIdentificationMessage: Handler<TULIP2NETRIS2Channels, NETRIS2TULIP2RadioUnitIdentificationUplinkOutput> = (input) => {
-  const minLength = 24
-
-  if (input.bytes.length < minLength) {
-    throw new Error(`Radio unit identification message 07 needs at least ${minLength} bytes but got ${input.bytes.length}`)
-  }
-
-  if (input.bytes.length > minLength) {
-    throw new Error(`Radio unit identification message contains more than ${minLength} bytes. Contains ${input.bytes.length} bytes.`)
+  if (input.bytes.length !== 24) {
+    throw new Error(`Device identification message (0x07) requires 24 bytes, but received ${input.bytes.length} bytes`)
   }
 
   const warnings: string[] = []
@@ -337,12 +305,12 @@ const handleRadioUnitIdentificationMessage: Handler<TULIP2NETRIS2Channels, NETRI
 
   if (productId !== NETRIS2_PRODUCT_ID) {
     // product ID also in hex
-    throw new Error(`Radio unit identification message contains an invalid product ID: ${productId}, expected 0x${NETRIS2_PRODUCT_ID.toString(16)} (${NETRIS2_PRODUCT_ID})`)
+    throw new Error(`Invalid productId ${productId} in device identification message. Expected ${NETRIS2_PRODUCT_ID} (NETRIS2).`)
   }
 
   const productSubId = input.bytes[3]!
   if (productSubId !== NETRIS2_PRODUCT_SUB_ID) {
-    throw new Error(`Radio unit identification message contains an invalid product Sub ID: ${productSubId}, expected 0x${NETRIS2_PRODUCT_SUB_ID.toString(16)} (${NETRIS2_PRODUCT_SUB_ID})`)
+    throw new Error(`Unknown productSubId ${productSubId} in device identification message. Only LoRaWAN (0) is supported.`)
   }
 
   const radioUnitModemFirmwareVersion = `${input.bytes[4]! >> 4}.${input.bytes[4]! & 0x0F}.${input.bytes[5]}` as `${number}.${number}.${number}`
@@ -381,14 +349,8 @@ const handleRadioUnitIdentificationMessage: Handler<TULIP2NETRIS2Channels, NETRI
 }
 
 const handleKeepAliveMessage: Handler<TULIP2NETRIS2Channels, NETRIS2TULIP2DeviceStatisticsUplinkOutput> = (input) => {
-  const minLength = 12
-
-  if (input.bytes.length < minLength) {
-    throw new Error(`Keep alive message 08 needs at least ${minLength} bytes but got ${input.bytes.length}`)
-  }
-
-  if (input.bytes.length > minLength) {
-    throw new Error(`Keep alive message contains more than ${minLength} bytes. Contains ${input.bytes.length} bytes.`)
+  if (input.bytes.length !== 12) {
+    throw new Error(`Keep alive message (0x08) requires 12 bytes, but received ${input.bytes.length} bytes`)
   }
 
   const warnings: string[] = []

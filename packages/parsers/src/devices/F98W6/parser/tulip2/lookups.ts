@@ -54,6 +54,20 @@ export const STRAIN_TYPES_BY_ID = {
   2: 'gauge / relative',
 } as const
 
+export const PHYSICAL_UNIT_NAMES_STRAIN = {
+  29: 'strain / dehnung',
+  45: 'N',
+  47: 'KN',
+  55: 'kg',
+  56: 'g',
+  185: 'µeps',
+} as const
+
+export const PHYSICAL_UNIT_NAMES_TEMPERATURE = {
+  32: '°C',
+  33: '°F',
+} as const
+
 export const PHYSICAL_UNIT_NAMES_BY_ID = {
   1: 'inH2O',
   2: 'inHg',
@@ -69,13 +83,8 @@ export const PHYSICAL_UNIT_NAMES_BY_ID = {
   12: 'kPa',
   13: 'Torr',
   14: 'at',
-  29: 'strain / dehnung',
-  32: '°C',
-  33: '°F',
-  45: 'N',
-  47: 'KN',
-  55: 'kg',
-  56: 'g',
+  ...PHYSICAL_UNIT_NAMES_STRAIN,
+  ...PHYSICAL_UNIT_NAMES_TEMPERATURE,
   145: 'inH2O (60 °F)',
   170: 'cmH2O (4 °C)',
   171: 'mH2O (4 °C)',
@@ -88,7 +97,6 @@ export const PHYSICAL_UNIT_NAMES_BY_ID = {
   178: 'ftH2O (60 °F)',
   179: 'mHg',
   180: 'Mpsi',
-  185: 'µeps',
   237: 'MPa',
   238: 'inH2O (4 °C)',
   239: 'mmH2O (4 °C)',

@@ -312,32 +312,19 @@
                   "type": "object",
                   "properties": {
                     "productId": {
-                      "type": "integer",
-                      "minimum": 0
+                      "const": 15
                     },
                     "productIdName": {
-                      "anyOf": [
-                        {
-                          "const": "NETRIS3"
-                        },
-                        {
-                          "type": "number"
-                        }
-                      ]
+                      "const": "NETRIS3"
                     },
                     "productSubId": {
-                      "type": "integer",
-                      "minimum": 0
+                      "const": 0
                     },
                     "productSubIdName": {
-                      "enum": [
-                        "LoRaWAN",
-                        "MIOTY"
-                      ]
+                      "const": "LoRaWAN"
                     },
                     "sensorDeviceTypeId": {
-                      "type": "integer",
-                      "minimum": 0
+                      "const": 20
                     },
                     "channelConfigurations": {
                       "type": "array",
@@ -345,15 +332,17 @@
                         {
                           "type": "object",
                           "properties": {
+                            "channelId": {
+                              "const": 0
+                            },
+                            "channelName": {
+                              "const": "level"
+                            },
                             "measurand": {
-                              "enum": [
-                                10
-                              ]
+                              "const": 10
                             },
                             "measurandName": {
-                              "enum": [
-                                "Level"
-                              ]
+                              "const": "Level"
                             },
                             "measurementRangeStart": {
                               "type": "number"
@@ -383,6 +372,8 @@
                             }
                           },
                           "required": [
+                            "channelId",
+                            "channelName",
                             "measurand",
                             "measurandName",
                             "measurementRangeStart",
