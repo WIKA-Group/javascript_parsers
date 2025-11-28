@@ -8,20 +8,6 @@ import { build } from 'tsdown'
 
 const __dirname = import.meta.dirname
 
-// Edit this array to list the device directory names you want to build.
-// If empty, the script will build all devices found under src/devices.
-export const TARGETS: string[] = [
-  'PEW',
-  'NETRIS2',
-  'NETRIS1',
-  'TRW',
-  'TGU_NETRIS3',
-  'TRU_NETRIS3',
-  'FLRU_NETRIS3',
-  'PGU_NETRIS3',
-  'PEU_NETRIS3',
-]
-
 // Minimal base config exported as default. This config intentionally has no entries
 // because builds should be performed per-file (standalone) by using
 // `makeBuildConfigFor` together with an external orchestrator script.
@@ -55,21 +41,12 @@ export function cleanDist(outDir = 'dist') {
 }
 
 // Return a list of source entry files for device parsers.
-export async function globEntryFiles(dirNames: string[]) {
-  // When this script lives in `src/scripts`, the device sources are in
-  // ../devices relative to this file. Use the parent `src` as the cwd so
-  // glob returns device paths like 'devices/NETRIS2/index.ts'. Return
-  // absolute paths to make downstream usage simpler.
+// Discovers all devices by globbing for devices/*/index.ts files.
+export async function globEntryFiles() {
   const srcRoot = path.join(__dirname, '../src')
 
-  if (dirNames.length === 0) {
-    return []
-  }
-
-  const globPattern = dirNames.length > 1 ? `(${dirNames.join('|')})` : dirNames[0]
-
   consola.log('Globbing in', srcRoot)
-  const srcFiles = await fg(`./devices/${globPattern}/index.ts`, { cwd: srcRoot, absolute: true })
+  const srcFiles = await fg(`./devices/*/index.ts`, { cwd: srcRoot, absolute: true })
   return srcFiles
 }
 
@@ -99,55 +76,71 @@ export function makeBuildConfigFor(srcFile: string) {
 // the tsdown `onSuccess` hook; it has been moved out so callers can invoke
 // it after they have built all files (for example after Promise.all of
 // separate builds).
-export async function createParsersZip(selectedDirs?: string[]) {
+export async function createParsersZip() {
   consola.info('Creating zip')
 
   const zip = new JSZip()
   const srcRoot = path.join(__dirname, '..')
 
-  // which directories to include
-  let dirsToProcess: string[] = []
-  if (selectedDirs && selectedDirs.length > 0) {
-    dirsToProcess = selectedDirs.map(d => d)
+  // Discover all device directories by globbing for their index.ts files
+  const srcFiles = await fg('src/devices/*/index.ts', { cwd: srcRoot, absolute: true })
+  const dirsToProcess: string[] = []
+  for (const file of srcFiles) {
+    const dir = path.dirname(file)
+    dirsToProcess.push(path.basename(dir))
   }
-  else {
-    const srcFiles = await fg('src/devices/**/index.(ts|js)', { cwd: srcRoot, absolute: true })
-    for (const rel of srcFiles) {
-      const file = path.join(srcRoot, rel)
-      const dir = path.dirname(file)
-      dirsToProcess.push(path.basename(dir))
-    }
-    // dedupe
-    dirsToProcess = Array.from(new Set(dirsToProcess))
-  }
+  // dedupe
+  const uniqueDirs = Array.from(new Set(dirsToProcess))
 
-  for (const dirName of dirsToProcess) {
+  for (const dirName of uniqueDirs) {
     const dir = path.join(srcRoot, 'src/devices', dirName)
 
-    const relatedFiles = [
-      'index.js',
+    const requiredFiles = [
       'examples.json',
       'metadata.json',
       'README.md',
-      'uplink.json',
-      'downlink.json',
       'uplink.schema.json',
-      'downlink.schema.json',
       'driver.yaml',
     ]
 
-    for (const relatedFile of relatedFiles) {
+    const optionalFiles = [
+      'downlink.schema.json',
+    ]
+
+    // Add built index.js from dist
+    const distFilePath = path.join(__dirname, '..', 'dist', dirName, 'index.js')
+    if (fs.existsSync(distFilePath)) {
+      const content = fs.readFileSync(distFilePath)
+      zip.folder(`${dirName}`)?.file('index.js', content)
+      consola.success(`Added ${dirName}/index.js to zip`)
+    }
+    else {
+      consola.error(`Missing built file: ${dirName}/index.js`)
+      throw new Error(`Required built file not found: ${distFilePath}`)
+    }
+
+    for (const relatedFile of requiredFiles) {
       const filePath = path.join(dir, relatedFile)
       if (fs.existsSync(filePath)) {
         const content = fs.readFileSync(filePath)
         zip.folder(`${dirName}`)?.file(relatedFile, content)
+        consola.success(`Added ${dirName}/${relatedFile} to zip`)
       }
-      else if (relatedFile === 'index.js') {
-        const distFilePath = path.join(__dirname, '..', 'dist', dirName, 'index.js')
-        if (fs.existsSync(distFilePath)) {
-          const content = fs.readFileSync(distFilePath)
-          zip.folder(`${dirName}`)?.file('index.js', content)
-        }
+      else {
+        consola.error(`Missing required file: ${dirName}/${relatedFile}`)
+        throw new Error(`Required file not found: ${filePath}`)
+      }
+    }
+
+    for (const optionalFile of optionalFiles) {
+      const filePath = path.join(dir, optionalFile)
+      if (fs.existsSync(filePath)) {
+        const content = fs.readFileSync(filePath)
+        zip.folder(`${dirName}`)?.file(optionalFile, content)
+        consola.success(`Added ${dirName}/${optionalFile} to zip`)
+      }
+      else {
+        consola.info(`Optional file not present: ${dirName}/${optionalFile}`)
       }
     }
   }
@@ -243,38 +236,34 @@ function postProcessBuiltFiles() {
 
 // --- Orchestration: glob -> build each standalone -> Promise.all -> zip ---
 export async function main() {
-  try {
-    // 0. clear dist
-    cleanDist('dist')
+  // 0. clear dist
+  cleanDist('dist')
 
-    // 1. glob all entry files
-    const entries = await globEntryFiles(TARGETS)
-    if (entries.length === 0) {
-      consola.warn('No entry files found; nothing to build')
-      return
-    }
-
-    // 2. build each file standalone (map -> Promise.all)
-    const builds = entries.map((src) => {
-      const cfg = makeBuildConfigFor(src)
-      // tsdown's `build` returns a Promise
-      return build(cfg)
-    })
-
-    await Promise.all(builds)
-
-    // Remove export statements and append device JSDoc (if present)
-    postProcessBuiltFiles()
-
-    // 3. after all succeeded, create zip
-    await createParsersZip()
-
-    consola.success('All builds completed and zip created')
+  // 1. glob all entry files
+  const entries = await globEntryFiles()
+  if (entries.length === 0) {
+    consola.warn('No entry files found; nothing to build')
+    return
   }
-  catch (err) {
-    consola.error('Build process failed:', err)
-    throw err
-  }
+
+  consola.log(`Found ${entries.length} device(s) to build`)
+
+  // 2. build each file standalone (map -> Promise.all)
+  const builds = entries.map((src) => {
+    const cfg = makeBuildConfigFor(src)
+    // tsdown's `build` returns a Promise
+    return build(cfg)
+  })
+
+  await Promise.all(builds)
+
+  // Remove export statements and append device JSDoc (if present)
+  postProcessBuiltFiles()
+
+  // 3. after all succeeded, create zip
+  await createParsersZip()
+
+  consola.success('All builds completed and zip created')
 }
 
 main()

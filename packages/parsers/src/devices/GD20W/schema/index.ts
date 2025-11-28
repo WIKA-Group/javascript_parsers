@@ -10,6 +10,8 @@ export function createGD20WUplinkOutputSchema() {
   ])
 }
 
+const UplinkOutputSchema = createGD20WUplinkOutputSchema
+
 export {
-  createGD20WTULIP2UplinkOutputSchema,
+  UplinkOutputSchema,
 }
