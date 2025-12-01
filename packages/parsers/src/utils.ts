@@ -202,14 +202,13 @@ export function slopeValueToValue(slopeValue: number, range: Range): number {
   const percentage = slopeValue / 100
 
   // here we should only take the jump of the value according to the SPAN of the range
-  // TODO: currently here we give TULIPScale / minute
-  // ! this is not the same
-  // correct calculation below
-  // return (percentage / 100) * (range.end - range.start)
-  // * will shift the values of by the range.min down
-  // all tests will have to be adjusted
+  const span = range.end - range.start
+  return (percentage / 100) * span
 
-  return percentageToValue(percentage, range)
+  // previously this was the implementation, keeping for reference
+  // value was actually tulipscale / minute which is wrong
+  // adjustment values will now be Math.abs(range.start) + prev_value
+  // return percentageToValue(percentage, range)
 }
 
 /**

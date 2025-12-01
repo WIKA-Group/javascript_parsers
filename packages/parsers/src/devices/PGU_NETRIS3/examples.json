@@ -229,7 +229,7 @@
             "eventName": "disappeared",
             "alarmType": 3,
             "alarmTypeName": "rising slope",
-            "value": -37.83
+            "value": 2.17
           }
         ]
       }
