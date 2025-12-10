@@ -639,5 +639,581 @@
         }
       }
     }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase TULIP3 data message: data message with compact encoding for 2 channels",
+    "input": {
+      "bytes": [16, 1, 6, 46, 151, 14, 21, 47],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 16,
+        "messageSubType": 1,
+        "measurements": [
+          {
+            "channel": "channel1",
+            "channelId": 0,
+            "channelName": "temperature",
+            "sensor": "sensor1",
+            "sensorId": 0,
+            "sourceDataType": "uint16 - TULIP scale 2500 - 12500",
+            "value": 94.27,
+            "valueAcquisitionError": false
+          },
+          {
+            "channel": "channel2",
+            "channelId": 1,
+            "channelName": "device temperature",
+            "sensor": "sensor1",
+            "sensorId": 0,
+            "sourceDataType": "uint16 - TULIP scale 2500 - 12500",
+            "value": -10.77,
+            "valueAcquisitionError": false
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase TULIP3 process alarm message: low threshold alarm of 2nd channel appears",
+    "input": {
+      "bytes": [18, 1, 8, 128],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageSubType": 1,
+        "messageType": 18,
+        "processAlarms": [
+          {
+            "alarmFlags": {
+              "fallingSlope": false,
+              "highThreshold": false,
+              "highThresholdWithDelay": false,
+              "lowThreshold": true,
+              "lowThresholdWithDelay": false,
+              "risingSlope": false
+            },
+            "channel": "channel2",
+            "channelId": 1,
+            "channelName": "device temperature",
+            "sensor": "sensor1",
+            "sensorId": 0
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase TULIP3 process alarm message: process alarm message when low threshold alarm disappears",
+    "input": {
+      "bytes": [18, 1, 8, 0],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageSubType": 1,
+        "messageType": 18,
+        "processAlarms": [
+          {
+            "alarmFlags": {
+              "fallingSlope": false,
+              "highThreshold": false,
+              "highThresholdWithDelay": false,
+              "lowThreshold": false,
+              "lowThresholdWithDelay": false,
+              "risingSlope": false
+            },
+            "channel": "channel2",
+            "channelId": 1,
+            "channelName": "device temperature",
+            "sensor": "sensor1",
+            "sensorId": 0
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase TULIP3 device alarm message: Communication module alarms - low voltage and air time limitation",
+    "input": {
+      "bytes": [19, 1, 0, 40],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 19,
+        "messageSubType": 1,
+        "communicationModuleAlarms": {
+          "alarmFlags": {
+            "airTimeLimitation": true,
+            "lowVoltage": true,
+            "memoryError": false
+          }
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase TULIP3 device alarm message: Sensor module alarms - sensor communication error",
+    "input": {
+      "bytes": [19, 2, 0, 0, 1],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 19,
+        "messageSubType": 2,
+        "sensorAlarms": [
+          {
+            "alarmFlags": {
+              "sensorALUSaturation": false,
+              "sensorBusy": false,
+              "sensorCommunicationError": true,
+              "sensorMemoryIntegrity": false
+            },
+            "sensor": "sensor1",
+            "sensorId": 0
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase TULIP3 device alarm message: Channel alarms - minimum physical limit for channel 1 (temperature) and maximum physical limit for channel 2 (device temperature)",
+    "input": {
+      "bytes": [19, 3, 0, 0, 16, 8, 0, 32],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 19,
+        "messageSubType": 3,
+        "channelAlarms": [
+          {
+            "alarmFlags": {
+              "outOfMaxPhysicalSensorLimit": false,
+              "outOfMinPhysicalSensorLimit": true
+            },
+            "channel": "channel1",
+            "channelId": 0,
+            "channelName": "temperature",
+            "sensor": "sensor1",
+            "sensorId": 0
+          },
+          {
+            "alarmFlags": {
+              "outOfMaxPhysicalSensorLimit": true
+            },
+            "channel": "channel2",
+            "channelId": 1,
+            "channelName": "device temperature",
+            "sensor": "sensor1",
+            "sensorId": 0
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase TULIP3 keep alive message: Battery powered, 2 configs have been made and battery at 100%",
+    "input": {
+      "bytes": [22, 1, 96, 0, 2, 100],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageSubType": 1,
+        "messageType": 22,
+        "keepAliveData": {
+          "batteryLevel": 100,
+          "revisionCounter": 2,
+          "status": {
+            "ableToComputeBatteryLevel": true,
+            "hasCommunicationModuleRestarted": true,
+            "mainPowered": false
+          }
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase TULIP3 device alarm message: Communication module alarms - no alarms active",
+    "input": {
+      "bytes": [19, 1, 0, 0],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 19,
+        "messageSubType": 1,
+        "communicationModuleAlarms": {
+          "alarmFlags": {
+            "airTimeLimitation": false,
+            "lowVoltage": false,
+            "memoryError": false
+          }
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase TULIP3 process alarm message: Multiple channels - no alarm on ch1, high threshold with delay on ch2",
+    "input": {
+      "bytes": [18, 1, 0, 0, 8, 4],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageSubType": 1,
+        "messageType": 18,
+        "processAlarms": [
+          {
+            "alarmFlags": {
+              "fallingSlope": false,
+              "highThreshold": false,
+              "highThresholdWithDelay": false,
+              "lowThreshold": false,
+              "lowThresholdWithDelay": false,
+              "risingSlope": false
+            },
+            "channel": "channel1",
+            "channelId": 0,
+            "channelName": "temperature",
+            "sensor": "sensor1",
+            "sensorId": 0
+          },
+          {
+            "alarmFlags": {
+              "fallingSlope": false,
+              "highThreshold": false,
+              "highThresholdWithDelay": true,
+              "lowThreshold": false,
+              "lowThresholdWithDelay": false,
+              "risingSlope": false
+            },
+            "channel": "channel2",
+            "channelId": 1,
+            "channelName": "device temperature",
+            "sensor": "sensor1",
+            "sensorId": 0
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase TULIP3 identification message: Read identification response with serial number",
+    "input": {
+      "bytes": [20, 2, 1, 171, 49, 65, 48, 49, 50, 51, 65, 66, 67, 52, 53],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageSubType": 2,
+        "messageType": 20,
+        "identification": {
+          "communicationModule": {
+            "serialNumberPart1": "1A012",
+            "serialNumberPart2": "3ABC45"
+          }
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase TULIP3 identification message: Write identification response - success",
+    "input": {
+      "bytes": [20, 3, 0, 1, 0, 3, 0],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageSubType": 3,
+        "messageType": 20,
+        "identification": {
+          "frames": [
+            {
+              "frameNumber": 0,
+              "status": "Configuration received and applied with success"
+            }
+          ],
+          "revisionCounter": 3,
+          "totalWrongFrames": 0
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase TULIP3 configuration message: Read configuration response - alarm settings part 1",
+    "input": {
+      "bytes": [21, 2, 9, 9, 128, 62, 41, 251, 231, 62, 153, 153, 154],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageSubType": 2,
+        "messageType": 21,
+        "configuration": {
+          "sensor1": {
+            "channel1": {
+              "channelName": "temperature",
+              "lowThresholdAlarmValue": 0.3,
+              "processAlarmDeadBand": 0.166,
+              "processAlarmEnabled": {
+                "fallingSlope": false,
+                "highThreshold": false,
+                "highThresholdWithDelay": false,
+                "lowThreshold": true,
+                "lowThresholdWithDelay": false,
+                "risingSlope": false
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase TULIP3 configuration message: Read configuration response - alarm settings part 2",
+    "input": {
+      "bytes": [21, 2, 10, 44, 65, 79, 174, 20, 57, 81, 183, 23, 61, 161, 202, 193],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageSubType": 2,
+        "messageType": 21,
+        "configuration": {
+          "sensor1": {
+            "channel1": {
+              "channelName": "temperature",
+              "fallingSlopeAlarmValue": 0,
+              "highThresholdAlarmValue": 12.98,
+              "risingSlopeAlarmValue": 0.079
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase TULIP3 configuration message: Write configuration response - not applied yet",
+    "input": {
+      "bytes": [21, 3, 0, 0],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageSubType": 3,
+        "messageType": 21,
+        "configuration": {
+          "frames": [
+            {
+              "frameNumber": 0,
+              "status": "Configuration received but not applied"
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase TULIP3 configuration message: Write configuration response - frame 1 not applied",
+    "input": {
+      "bytes": [21, 3, 4, 0],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageSubType": 3,
+        "messageType": 21,
+        "configuration": {
+          "frames": [
+            {
+              "frameNumber": 1,
+              "status": "Configuration received but not applied"
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase TULIP3 configuration message: Write configuration response - applied with success",
+    "input": {
+      "bytes": [21, 3, 8, 1, 0, 10, 0],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageSubType": 3,
+        "messageType": 21,
+        "configuration": {
+          "frames": [
+            {
+              "frameNumber": 2,
+              "status": "Configuration received and applied with success"
+            }
+          ],
+          "revisionCounter": 10,
+          "totalWrongFrames": 0
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase TULIP3 spontaneous message: Generic downlink answer - success",
+    "input": {
+      "bytes": [23, 1, 1, 1, 0],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageSubType": 1,
+        "messageType": 23,
+        "spontaneousDownlinkAnswer": {
+          "answeredDownlink": {
+            "type": 1,
+            "subType": 1
+          },
+          "status": "Success"
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase TULIP3 spontaneous message: Generic downlink answer - unsupported command",
+    "input": {
+      "bytes": [23, 1, 1, 2, 1],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageSubType": 1,
+        "messageType": 23,
+        "spontaneousDownlinkAnswer": {
+          "answeredDownlink": {
+            "type": 1,
+            "subType": 2
+          },
+          "status": "Unsupported command"
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase TULIP3 spontaneous message: Fetch additional downlink",
+    "input": {
+      "bytes": [23, 2],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageSubType": 2,
+        "messageType": 23
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase TULIP3 identification message: Full initial identification message",
+    "input": {
+      "bytes": [
+        20,
+        1,
+        0,
+        24,
+        3,
+        4,
+        1,
+        1,
+        3,
+        1,
+        4,
+        2,
+        5,
+        1,
+        24,
+        3,
+        15,
+        87,
+        73,
+        75,
+        65,
+        48,
+        48,
+        49,
+        65,
+        66,
+        67,
+        33
+      ],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 20,
+        "messageSubType": 1,
+        "identification": {
+          "communicationModule": {
+            "productId": 3,
+            "productSubId": "LoRaWAN class C",
+            "channelPlan": 1,
+            "connectedSensors": {
+              "sensor1": true,
+              "sensor2": false,
+              "sensor3": false,
+              "sensor4": false
+            },
+            "firmwareVersion": "3.1.4",
+            "hardwareVersion": "2.5.1",
+            "productionDate": "2024-03-15",
+            "serialNumberPart1": "WIKA0",
+            "serialNumberPart2": "01ABC!"
+          }
+        }
+      }
+    }
   }
 ]

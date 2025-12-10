@@ -1,5 +1,6 @@
 import { defineParser } from '../../../parser'
 import { createFLRUTULIP2Codec } from './tulip2'
+import { createTULIP3FLRUCodec } from './tulip3'
 
 export const FLRU_NETRIS3_NAME = 'FLRU+NETRIS3'
 
@@ -7,7 +8,7 @@ export const FLRU_NETRIS3_NAME = 'FLRU+NETRIS3'
 export function useParser() {
   return defineParser({
     parserName: FLRU_NETRIS3_NAME,
-    codecs: [createFLRUTULIP2Codec()],
+    codecs: [createFLRUTULIP2Codec(), createTULIP3FLRUCodec()],
   })
 }
 

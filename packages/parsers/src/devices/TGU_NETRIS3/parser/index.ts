@@ -1,5 +1,6 @@
 import { defineParser } from '../../../parser'
 import { createTGUTULIP2Codec } from './tulip2'
+import { createTULIP3TGUCodec } from './tulip3'
 
 export const TGU_NETRIS3_NAME = 'TGU+NETRIS3'
 
@@ -7,7 +8,7 @@ export const TGU_NETRIS3_NAME = 'TGU+NETRIS3'
 export function useParser() {
   return defineParser({
     parserName: TGU_NETRIS3_NAME,
-    codecs: [createTGUTULIP2Codec()],
+    codecs: [createTGUTULIP2Codec(), createTULIP3TGUCodec()],
   })
 }
 

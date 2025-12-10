@@ -15,7 +15,7 @@ function createAllowedTULIP3TypeSubTypeCombinationsSchema() {
   return v.union(
     Object.entries(allowedTypeSubTypeCombinations).map(([type, subTypes]) => {
       return v.object({
-        type: v.literal(type),
+        type: v.literal(Number.parseInt(type)),
         subType: v.picklist(subTypes),
       })
     }),
