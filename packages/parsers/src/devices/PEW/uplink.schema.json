@@ -2393,22 +2393,7 @@
                         "transmissionRateAlarmOn": {
                           "type": "number"
                         },
-                        "overVoltageThreshold": {
-                          "type": "number"
-                        },
                         "underVoltageThreshold": {
-                          "type": "number"
-                        },
-                        "overTemperatureCmChip": {
-                          "type": "number"
-                        },
-                        "underTemperatureCmChip": {
-                          "type": "number"
-                        },
-                        "downlinkAnswerTimeout": {
-                          "type": "number"
-                        },
-                        "fetchAdditionalDownlinkTimeInterval": {
                           "type": "number"
                         },
                         "enableBleAdvertising": {
@@ -2431,45 +2416,12 @@
                                 },
                                 "channel2": {
                                   "type": "boolean"
-                                },
-                                "channel3": {
-                                  "const": false
-                                },
-                                "channel4": {
-                                  "const": false
-                                },
-                                "channel5": {
-                                  "const": false
-                                },
-                                "channel6": {
-                                  "const": false
-                                },
-                                "channel7": {
-                                  "const": false
-                                },
-                                "channel8": {
-                                  "const": false
                                 }
                               },
                               "required": [
                                 "channel1",
-                                "channel2",
-                                "channel3",
-                                "channel4",
-                                "channel5",
-                                "channel6",
-                                "channel7",
-                                "channel8"
+                                "channel2"
                               ]
-                            },
-                            "bootTime": {
-                              "type": "number"
-                            },
-                            "communicationTimeout": {
-                              "type": "number"
-                            },
-                            "communicationRetryCount": {
-                              "type": "number"
                             }
                           },
                           "required": []
@@ -2477,17 +2429,6 @@
                         "channel1": {
                           "type": "object",
                           "properties": {
-                            "channelName": {
-                              "const": "pressure"
-                            },
-                            "protocolDataType": {
-                              "enum": [
-                                "float - IEEE754",
-                                "int 24 - Fixed-point s16.7 (Q16.7)",
-                                "int 16 - Fixed-point s10.5 (Q10.5)",
-                                "uint16 - TULIP scale 2500 - 12500"
-                              ]
-                            },
                             "processAlarmEnabled": {
                               "type": "object",
                               "properties": {
@@ -2538,6 +2479,9 @@
                             },
                             "highThresholdWithDelayAlarmDelay": {
                               "type": "number"
+                            },
+                            "channelName": {
+                              "const": "pressure"
                             }
                           },
                           "required": [
@@ -2547,17 +2491,6 @@
                         "channel2": {
                           "type": "object",
                           "properties": {
-                            "channelName": {
-                              "const": "device temperature"
-                            },
-                            "protocolDataType": {
-                              "enum": [
-                                "float - IEEE754",
-                                "int 24 - Fixed-point s16.7 (Q16.7)",
-                                "int 16 - Fixed-point s10.5 (Q10.5)",
-                                "uint16 - TULIP scale 2500 - 12500"
-                              ]
-                            },
                             "processAlarmEnabled": {
                               "type": "object",
                               "properties": {
@@ -2608,6 +2541,9 @@
                             },
                             "highThresholdWithDelayAlarmDelay": {
                               "type": "number"
+                            },
+                            "channelName": {
+                              "const": "device temperature"
                             }
                           },
                           "required": [
@@ -3281,6 +3217,519 @@
                           "type": "object",
                           "properties": {
                             "sensor": {
+                              "const": "alarmFlags"
+                            },
+                            "sensorId": {
+                              "const": null
+                            },
+                            "channel": {
+                              "const": "airTimeLimitation"
+                            },
+                            "channelId": {
+                              "const": null
+                            },
+                            "channelName": {},
+                            "alarmFlags": {
+                              "type": "object",
+                              "properties": {
+                                "lowThreshold": {
+                                  "type": "boolean"
+                                },
+                                "highThreshold": {
+                                  "type": "boolean"
+                                },
+                                "fallingSlope": {
+                                  "type": "boolean"
+                                },
+                                "risingSlope": {
+                                  "type": "boolean"
+                                },
+                                "lowThresholdWithDelay": {
+                                  "type": "boolean"
+                                },
+                                "highThresholdWithDelay": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "required": [
+                                "lowThreshold",
+                                "highThreshold",
+                                "fallingSlope",
+                                "risingSlope",
+                                "lowThresholdWithDelay",
+                                "highThresholdWithDelay"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "sensor",
+                            "sensorId",
+                            "channel",
+                            "channelId",
+                            "channelName",
+                            "alarmFlags"
+                          ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "sensor": {
+                              "const": "alarmFlags"
+                            },
+                            "sensorId": {
+                              "const": null
+                            },
+                            "channel": {
+                              "const": "memoryError"
+                            },
+                            "channelId": {
+                              "const": null
+                            },
+                            "channelName": {},
+                            "alarmFlags": {
+                              "type": "object",
+                              "properties": {
+                                "lowThreshold": {
+                                  "type": "boolean"
+                                },
+                                "highThreshold": {
+                                  "type": "boolean"
+                                },
+                                "fallingSlope": {
+                                  "type": "boolean"
+                                },
+                                "risingSlope": {
+                                  "type": "boolean"
+                                },
+                                "lowThresholdWithDelay": {
+                                  "type": "boolean"
+                                },
+                                "highThresholdWithDelay": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "required": [
+                                "lowThreshold",
+                                "highThreshold",
+                                "fallingSlope",
+                                "risingSlope",
+                                "lowThresholdWithDelay",
+                                "highThresholdWithDelay"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "sensor",
+                            "sensorId",
+                            "channel",
+                            "channelId",
+                            "channelName",
+                            "alarmFlags"
+                          ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "sensor": {
+                              "const": "alarmFlags"
+                            },
+                            "sensorId": {
+                              "const": null
+                            },
+                            "channel": {
+                              "const": "lowVoltage"
+                            },
+                            "channelId": {
+                              "const": null
+                            },
+                            "channelName": {},
+                            "alarmFlags": {
+                              "type": "object",
+                              "properties": {
+                                "lowThreshold": {
+                                  "type": "boolean"
+                                },
+                                "highThreshold": {
+                                  "type": "boolean"
+                                },
+                                "fallingSlope": {
+                                  "type": "boolean"
+                                },
+                                "risingSlope": {
+                                  "type": "boolean"
+                                },
+                                "lowThresholdWithDelay": {
+                                  "type": "boolean"
+                                },
+                                "highThresholdWithDelay": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "required": [
+                                "lowThreshold",
+                                "highThreshold",
+                                "fallingSlope",
+                                "risingSlope",
+                                "lowThresholdWithDelay",
+                                "highThresholdWithDelay"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "sensor",
+                            "sensorId",
+                            "channel",
+                            "channelId",
+                            "channelName",
+                            "alarmFlags"
+                          ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "sensor": {
+                              "const": "registerConfig"
+                            },
+                            "sensorId": {
+                              "const": null
+                            },
+                            "channel": {
+                              "const": "tulip3ConfigurationRegisters"
+                            },
+                            "channelId": {
+                              "const": null
+                            },
+                            "channelName": {},
+                            "alarmFlags": {
+                              "type": "object",
+                              "properties": {
+                                "lowThreshold": {
+                                  "type": "boolean"
+                                },
+                                "highThreshold": {
+                                  "type": "boolean"
+                                },
+                                "fallingSlope": {
+                                  "type": "boolean"
+                                },
+                                "risingSlope": {
+                                  "type": "boolean"
+                                },
+                                "lowThresholdWithDelay": {
+                                  "type": "boolean"
+                                },
+                                "highThresholdWithDelay": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "required": [
+                                "lowThreshold",
+                                "highThreshold",
+                                "fallingSlope",
+                                "risingSlope",
+                                "lowThresholdWithDelay",
+                                "highThresholdWithDelay"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "sensor",
+                            "sensorId",
+                            "channel",
+                            "channelId",
+                            "channelName",
+                            "alarmFlags"
+                          ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "sensor": {
+                              "const": "registerConfig"
+                            },
+                            "sensorId": {
+                              "const": null
+                            },
+                            "channel": {
+                              "const": "tulip3IdentificationRegisters"
+                            },
+                            "channelId": {
+                              "const": null
+                            },
+                            "channelName": {},
+                            "alarmFlags": {
+                              "type": "object",
+                              "properties": {
+                                "lowThreshold": {
+                                  "type": "boolean"
+                                },
+                                "highThreshold": {
+                                  "type": "boolean"
+                                },
+                                "fallingSlope": {
+                                  "type": "boolean"
+                                },
+                                "risingSlope": {
+                                  "type": "boolean"
+                                },
+                                "lowThresholdWithDelay": {
+                                  "type": "boolean"
+                                },
+                                "highThresholdWithDelay": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "required": [
+                                "lowThreshold",
+                                "highThreshold",
+                                "fallingSlope",
+                                "risingSlope",
+                                "lowThresholdWithDelay",
+                                "highThresholdWithDelay"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "sensor",
+                            "sensorId",
+                            "channel",
+                            "channelId",
+                            "channelName",
+                            "alarmFlags"
+                          ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "sensor": {
+                              "const": "registerConfig"
+                            },
+                            "sensorId": {
+                              "const": null
+                            },
+                            "channel": {
+                              "const": "communicationModuleSpecificConfigurationRegisters"
+                            },
+                            "channelId": {
+                              "const": null
+                            },
+                            "channelName": {},
+                            "alarmFlags": {
+                              "type": "object",
+                              "properties": {
+                                "lowThreshold": {
+                                  "type": "boolean"
+                                },
+                                "highThreshold": {
+                                  "type": "boolean"
+                                },
+                                "fallingSlope": {
+                                  "type": "boolean"
+                                },
+                                "risingSlope": {
+                                  "type": "boolean"
+                                },
+                                "lowThresholdWithDelay": {
+                                  "type": "boolean"
+                                },
+                                "highThresholdWithDelay": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "required": [
+                                "lowThreshold",
+                                "highThreshold",
+                                "fallingSlope",
+                                "risingSlope",
+                                "lowThresholdWithDelay",
+                                "highThresholdWithDelay"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "sensor",
+                            "sensorId",
+                            "channel",
+                            "channelId",
+                            "channelName",
+                            "alarmFlags"
+                          ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "sensor": {
+                              "const": "registerConfig"
+                            },
+                            "sensorId": {
+                              "const": null
+                            },
+                            "channel": {
+                              "const": "communicationModuleSpecificIdentificationRegisters"
+                            },
+                            "channelId": {
+                              "const": null
+                            },
+                            "channelName": {},
+                            "alarmFlags": {
+                              "type": "object",
+                              "properties": {
+                                "lowThreshold": {
+                                  "type": "boolean"
+                                },
+                                "highThreshold": {
+                                  "type": "boolean"
+                                },
+                                "fallingSlope": {
+                                  "type": "boolean"
+                                },
+                                "risingSlope": {
+                                  "type": "boolean"
+                                },
+                                "lowThresholdWithDelay": {
+                                  "type": "boolean"
+                                },
+                                "highThresholdWithDelay": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "required": [
+                                "lowThreshold",
+                                "highThreshold",
+                                "fallingSlope",
+                                "risingSlope",
+                                "lowThresholdWithDelay",
+                                "highThresholdWithDelay"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "sensor",
+                            "sensorId",
+                            "channel",
+                            "channelId",
+                            "channelName",
+                            "alarmFlags"
+                          ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "sensor": {
+                              "const": "sensor1"
+                            },
+                            "sensorId": {
+                              "const": 0
+                            },
+                            "channel": {
+                              "const": "alarmFlags"
+                            },
+                            "channelId": {
+                              "const": null
+                            },
+                            "channelName": {},
+                            "alarmFlags": {
+                              "type": "object",
+                              "properties": {
+                                "lowThreshold": {
+                                  "type": "boolean"
+                                },
+                                "highThreshold": {
+                                  "type": "boolean"
+                                },
+                                "fallingSlope": {
+                                  "type": "boolean"
+                                },
+                                "risingSlope": {
+                                  "type": "boolean"
+                                },
+                                "lowThresholdWithDelay": {
+                                  "type": "boolean"
+                                },
+                                "highThresholdWithDelay": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "required": [
+                                "lowThreshold",
+                                "highThreshold",
+                                "fallingSlope",
+                                "risingSlope",
+                                "lowThresholdWithDelay",
+                                "highThresholdWithDelay"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "sensor",
+                            "sensorId",
+                            "channel",
+                            "channelId",
+                            "channelName",
+                            "alarmFlags"
+                          ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "sensor": {
+                              "const": "sensor1"
+                            },
+                            "sensorId": {
+                              "const": 0
+                            },
+                            "channel": {
+                              "const": "registerConfig"
+                            },
+                            "channelId": {
+                              "const": null
+                            },
+                            "channelName": {},
+                            "alarmFlags": {
+                              "type": "object",
+                              "properties": {
+                                "lowThreshold": {
+                                  "type": "boolean"
+                                },
+                                "highThreshold": {
+                                  "type": "boolean"
+                                },
+                                "fallingSlope": {
+                                  "type": "boolean"
+                                },
+                                "risingSlope": {
+                                  "type": "boolean"
+                                },
+                                "lowThresholdWithDelay": {
+                                  "type": "boolean"
+                                },
+                                "highThresholdWithDelay": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "required": [
+                                "lowThreshold",
+                                "highThreshold",
+                                "fallingSlope",
+                                "risingSlope",
+                                "lowThresholdWithDelay",
+                                "highThresholdWithDelay"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "sensor",
+                            "sensorId",
+                            "channel",
+                            "channelId",
+                            "channelName",
+                            "alarmFlags"
+                          ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "sensor": {
                               "const": "sensor1"
                             },
                             "sensorId": {
@@ -3401,6 +3850,519 @@
                   "minItems": 1,
                   "additionalItems": {
                     "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "sensor": {
+                            "const": "alarmFlags"
+                          },
+                          "sensorId": {
+                            "const": null
+                          },
+                          "channel": {
+                            "const": "airTimeLimitation"
+                          },
+                          "channelId": {
+                            "const": null
+                          },
+                          "channelName": {},
+                          "alarmFlags": {
+                            "type": "object",
+                            "properties": {
+                              "lowThreshold": {
+                                "type": "boolean"
+                              },
+                              "highThreshold": {
+                                "type": "boolean"
+                              },
+                              "fallingSlope": {
+                                "type": "boolean"
+                              },
+                              "risingSlope": {
+                                "type": "boolean"
+                              },
+                              "lowThresholdWithDelay": {
+                                "type": "boolean"
+                              },
+                              "highThresholdWithDelay": {
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "lowThreshold",
+                              "highThreshold",
+                              "fallingSlope",
+                              "risingSlope",
+                              "lowThresholdWithDelay",
+                              "highThresholdWithDelay"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "sensor",
+                          "sensorId",
+                          "channel",
+                          "channelId",
+                          "channelName",
+                          "alarmFlags"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "sensor": {
+                            "const": "alarmFlags"
+                          },
+                          "sensorId": {
+                            "const": null
+                          },
+                          "channel": {
+                            "const": "memoryError"
+                          },
+                          "channelId": {
+                            "const": null
+                          },
+                          "channelName": {},
+                          "alarmFlags": {
+                            "type": "object",
+                            "properties": {
+                              "lowThreshold": {
+                                "type": "boolean"
+                              },
+                              "highThreshold": {
+                                "type": "boolean"
+                              },
+                              "fallingSlope": {
+                                "type": "boolean"
+                              },
+                              "risingSlope": {
+                                "type": "boolean"
+                              },
+                              "lowThresholdWithDelay": {
+                                "type": "boolean"
+                              },
+                              "highThresholdWithDelay": {
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "lowThreshold",
+                              "highThreshold",
+                              "fallingSlope",
+                              "risingSlope",
+                              "lowThresholdWithDelay",
+                              "highThresholdWithDelay"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "sensor",
+                          "sensorId",
+                          "channel",
+                          "channelId",
+                          "channelName",
+                          "alarmFlags"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "sensor": {
+                            "const": "alarmFlags"
+                          },
+                          "sensorId": {
+                            "const": null
+                          },
+                          "channel": {
+                            "const": "lowVoltage"
+                          },
+                          "channelId": {
+                            "const": null
+                          },
+                          "channelName": {},
+                          "alarmFlags": {
+                            "type": "object",
+                            "properties": {
+                              "lowThreshold": {
+                                "type": "boolean"
+                              },
+                              "highThreshold": {
+                                "type": "boolean"
+                              },
+                              "fallingSlope": {
+                                "type": "boolean"
+                              },
+                              "risingSlope": {
+                                "type": "boolean"
+                              },
+                              "lowThresholdWithDelay": {
+                                "type": "boolean"
+                              },
+                              "highThresholdWithDelay": {
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "lowThreshold",
+                              "highThreshold",
+                              "fallingSlope",
+                              "risingSlope",
+                              "lowThresholdWithDelay",
+                              "highThresholdWithDelay"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "sensor",
+                          "sensorId",
+                          "channel",
+                          "channelId",
+                          "channelName",
+                          "alarmFlags"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "sensor": {
+                            "const": "registerConfig"
+                          },
+                          "sensorId": {
+                            "const": null
+                          },
+                          "channel": {
+                            "const": "tulip3ConfigurationRegisters"
+                          },
+                          "channelId": {
+                            "const": null
+                          },
+                          "channelName": {},
+                          "alarmFlags": {
+                            "type": "object",
+                            "properties": {
+                              "lowThreshold": {
+                                "type": "boolean"
+                              },
+                              "highThreshold": {
+                                "type": "boolean"
+                              },
+                              "fallingSlope": {
+                                "type": "boolean"
+                              },
+                              "risingSlope": {
+                                "type": "boolean"
+                              },
+                              "lowThresholdWithDelay": {
+                                "type": "boolean"
+                              },
+                              "highThresholdWithDelay": {
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "lowThreshold",
+                              "highThreshold",
+                              "fallingSlope",
+                              "risingSlope",
+                              "lowThresholdWithDelay",
+                              "highThresholdWithDelay"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "sensor",
+                          "sensorId",
+                          "channel",
+                          "channelId",
+                          "channelName",
+                          "alarmFlags"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "sensor": {
+                            "const": "registerConfig"
+                          },
+                          "sensorId": {
+                            "const": null
+                          },
+                          "channel": {
+                            "const": "tulip3IdentificationRegisters"
+                          },
+                          "channelId": {
+                            "const": null
+                          },
+                          "channelName": {},
+                          "alarmFlags": {
+                            "type": "object",
+                            "properties": {
+                              "lowThreshold": {
+                                "type": "boolean"
+                              },
+                              "highThreshold": {
+                                "type": "boolean"
+                              },
+                              "fallingSlope": {
+                                "type": "boolean"
+                              },
+                              "risingSlope": {
+                                "type": "boolean"
+                              },
+                              "lowThresholdWithDelay": {
+                                "type": "boolean"
+                              },
+                              "highThresholdWithDelay": {
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "lowThreshold",
+                              "highThreshold",
+                              "fallingSlope",
+                              "risingSlope",
+                              "lowThresholdWithDelay",
+                              "highThresholdWithDelay"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "sensor",
+                          "sensorId",
+                          "channel",
+                          "channelId",
+                          "channelName",
+                          "alarmFlags"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "sensor": {
+                            "const": "registerConfig"
+                          },
+                          "sensorId": {
+                            "const": null
+                          },
+                          "channel": {
+                            "const": "communicationModuleSpecificConfigurationRegisters"
+                          },
+                          "channelId": {
+                            "const": null
+                          },
+                          "channelName": {},
+                          "alarmFlags": {
+                            "type": "object",
+                            "properties": {
+                              "lowThreshold": {
+                                "type": "boolean"
+                              },
+                              "highThreshold": {
+                                "type": "boolean"
+                              },
+                              "fallingSlope": {
+                                "type": "boolean"
+                              },
+                              "risingSlope": {
+                                "type": "boolean"
+                              },
+                              "lowThresholdWithDelay": {
+                                "type": "boolean"
+                              },
+                              "highThresholdWithDelay": {
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "lowThreshold",
+                              "highThreshold",
+                              "fallingSlope",
+                              "risingSlope",
+                              "lowThresholdWithDelay",
+                              "highThresholdWithDelay"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "sensor",
+                          "sensorId",
+                          "channel",
+                          "channelId",
+                          "channelName",
+                          "alarmFlags"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "sensor": {
+                            "const": "registerConfig"
+                          },
+                          "sensorId": {
+                            "const": null
+                          },
+                          "channel": {
+                            "const": "communicationModuleSpecificIdentificationRegisters"
+                          },
+                          "channelId": {
+                            "const": null
+                          },
+                          "channelName": {},
+                          "alarmFlags": {
+                            "type": "object",
+                            "properties": {
+                              "lowThreshold": {
+                                "type": "boolean"
+                              },
+                              "highThreshold": {
+                                "type": "boolean"
+                              },
+                              "fallingSlope": {
+                                "type": "boolean"
+                              },
+                              "risingSlope": {
+                                "type": "boolean"
+                              },
+                              "lowThresholdWithDelay": {
+                                "type": "boolean"
+                              },
+                              "highThresholdWithDelay": {
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "lowThreshold",
+                              "highThreshold",
+                              "fallingSlope",
+                              "risingSlope",
+                              "lowThresholdWithDelay",
+                              "highThresholdWithDelay"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "sensor",
+                          "sensorId",
+                          "channel",
+                          "channelId",
+                          "channelName",
+                          "alarmFlags"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "sensor": {
+                            "const": "sensor1"
+                          },
+                          "sensorId": {
+                            "const": 0
+                          },
+                          "channel": {
+                            "const": "alarmFlags"
+                          },
+                          "channelId": {
+                            "const": null
+                          },
+                          "channelName": {},
+                          "alarmFlags": {
+                            "type": "object",
+                            "properties": {
+                              "lowThreshold": {
+                                "type": "boolean"
+                              },
+                              "highThreshold": {
+                                "type": "boolean"
+                              },
+                              "fallingSlope": {
+                                "type": "boolean"
+                              },
+                              "risingSlope": {
+                                "type": "boolean"
+                              },
+                              "lowThresholdWithDelay": {
+                                "type": "boolean"
+                              },
+                              "highThresholdWithDelay": {
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "lowThreshold",
+                              "highThreshold",
+                              "fallingSlope",
+                              "risingSlope",
+                              "lowThresholdWithDelay",
+                              "highThresholdWithDelay"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "sensor",
+                          "sensorId",
+                          "channel",
+                          "channelId",
+                          "channelName",
+                          "alarmFlags"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "sensor": {
+                            "const": "sensor1"
+                          },
+                          "sensorId": {
+                            "const": 0
+                          },
+                          "channel": {
+                            "const": "registerConfig"
+                          },
+                          "channelId": {
+                            "const": null
+                          },
+                          "channelName": {},
+                          "alarmFlags": {
+                            "type": "object",
+                            "properties": {
+                              "lowThreshold": {
+                                "type": "boolean"
+                              },
+                              "highThreshold": {
+                                "type": "boolean"
+                              },
+                              "fallingSlope": {
+                                "type": "boolean"
+                              },
+                              "risingSlope": {
+                                "type": "boolean"
+                              },
+                              "lowThresholdWithDelay": {
+                                "type": "boolean"
+                              },
+                              "highThresholdWithDelay": {
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "lowThreshold",
+                              "highThreshold",
+                              "fallingSlope",
+                              "risingSlope",
+                              "lowThresholdWithDelay",
+                              "highThresholdWithDelay"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "sensor",
+                          "sensorId",
+                          "channel",
+                          "channelId",
+                          "channelName",
+                          "alarmFlags"
+                        ]
+                      },
                       {
                         "type": "object",
                         "properties": {
@@ -3567,7 +4529,7 @@
                               "type": "object",
                               "properties": {
                                 "type": {
-                                  "const": "1"
+                                  "const": 1
                                 },
                                 "subType": {
                                   "enum": [
@@ -3585,7 +4547,7 @@
                               "type": "object",
                               "properties": {
                                 "type": {
-                                  "const": "2"
+                                  "const": 2
                                 },
                                 "subType": {
                                   "enum": [
@@ -3603,7 +4565,7 @@
                               "type": "object",
                               "properties": {
                                 "type": {
-                                  "const": "3"
+                                  "const": 3
                                 },
                                 "subType": {
                                   "enum": [
@@ -3622,7 +4584,7 @@
                               "type": "object",
                               "properties": {
                                 "type": {
-                                  "const": "4"
+                                  "const": 4
                                 },
                                 "subType": {
                                   "enum": [
@@ -3639,7 +4601,7 @@
                               "type": "object",
                               "properties": {
                                 "type": {
-                                  "const": "5"
+                                  "const": 5
                                 },
                                 "subType": {
                                   "enum": [
@@ -3691,7 +4653,7 @@
                               "type": "object",
                               "properties": {
                                 "type": {
-                                  "const": "1"
+                                  "const": 1
                                 },
                                 "subType": {
                                   "enum": [
@@ -3709,7 +4671,7 @@
                               "type": "object",
                               "properties": {
                                 "type": {
-                                  "const": "2"
+                                  "const": 2
                                 },
                                 "subType": {
                                   "enum": [
@@ -3727,7 +4689,7 @@
                               "type": "object",
                               "properties": {
                                 "type": {
-                                  "const": "3"
+                                  "const": 3
                                 },
                                 "subType": {
                                   "enum": [
@@ -3746,7 +4708,7 @@
                               "type": "object",
                               "properties": {
                                 "type": {
-                                  "const": "4"
+                                  "const": 4
                                 },
                                 "subType": {
                                   "enum": [
@@ -3763,7 +4725,7 @@
                               "type": "object",
                               "properties": {
                                 "type": {
-                                  "const": "5"
+                                  "const": 5
                                 },
                                 "subType": {
                                   "enum": [
