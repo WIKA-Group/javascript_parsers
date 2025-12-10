@@ -1,7 +1,7 @@
 {
   "name": "wika-driver-monorepo",
   "type": "module",
-  "version": "4.2.1",
+  "version": "4.3.0",
   "private": "true",
   "packageManager": "pnpm@10.15.0",
   "description": "WIKA LoRaWAN driver npm packaged",
