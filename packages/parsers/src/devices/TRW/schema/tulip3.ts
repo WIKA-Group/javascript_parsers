@@ -7,8 +7,5 @@ export function createTRWTULIP3UplinkOutputSchema() {
   const TRW_TULIP3_PROFILE = createTULIP3TRWDeviceProfile()
   return createTULIP3UplinkOutputSchema(
     TRW_TULIP3_PROFILE.sensorChannelConfig,
-    TRW_TULIP3_PROFILE.deviceAlarmConfig.communicationModuleAlarms,
-    TRW_TULIP3_PROFILE.deviceAlarmConfig.sensorAlarms,
-    TRW_TULIP3_PROFILE.deviceAlarmConfig.sensorChannelAlarms,
   )
 }

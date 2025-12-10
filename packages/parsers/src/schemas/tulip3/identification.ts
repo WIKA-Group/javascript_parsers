@@ -1,4 +1,4 @@
-import type { TULIP3ChannelConfig, TULIP3DeviceSensorConfig, TULIP3SensorChannelConfig } from '../../codecs/tulip3/profile'
+import type { TULIP3ChannelConfig, TULIP3DeviceConfig, TULIP3SensorConfig } from '../../codecs/tulip3/profile'
 /* eslint-disable ts/explicit-function-return-type */
 import * as v from 'valibot'
 import {
@@ -106,7 +106,7 @@ function createUnitSchema() {
  * const result = v.parse(schema, { sensor1: true, sensor2: false, sensor3: false, sensor4: false })
  * ```
  */
-function createConnectedSensorsSchema<const TConfig extends TULIP3DeviceSensorConfig>(config: TConfig) {
+function createConnectedSensorsSchema<const TConfig extends TULIP3DeviceConfig>(config: TConfig) {
   const allSensors = ['sensor1', 'sensor2', 'sensor3', 'sensor4'] as const
 
   type ExistingSensors = {
@@ -132,7 +132,7 @@ function createConnectedSensorsSchema<const TConfig extends TULIP3DeviceSensorCo
  * const result = v.parse(schema, { channel1: true, channel2: true, channel3: false, channel4: false, channel5: false, channel6: false, channel7: false, channel8: false })
  * ```
  */
-function createExistingChannelsSchema<const TConfig extends TULIP3SensorChannelConfig>(config: TConfig) {
+function createExistingChannelsSchema<const TConfig extends TULIP3SensorConfig>(config: TConfig) {
   const allChannels = ['channel1', 'channel2', 'channel3', 'channel4', 'channel5', 'channel6', 'channel7', 'channel8'] as const
 
   type ExistingChannels = {
@@ -151,47 +151,101 @@ function createExistingChannelsSchema<const TConfig extends TULIP3SensorChannelC
 // IDENTIFICATION SCHEMAS
 // =============================================================================
 
+// Lookup type for communication module identification fields - avoids deep conditional chains
+export interface CommunicationModuleIdentificationFieldSchemas<TConfig extends TULIP3DeviceConfig> {
+  productId: v.OptionalSchema<v.NumberSchema<undefined>, undefined>
+  productSubId: v.OptionalSchema<ReturnType<typeof createProductSubIdSchema>, undefined>
+  channelPlan: v.OptionalSchema<ReturnType<typeof createChannelPlanSchema>, undefined>
+  connectedSensors: v.OptionalSchema<ReturnType<typeof createConnectedSensorsSchema<TConfig>>, undefined>
+  firmwareVersion: v.OptionalSchema<v.StringSchema<undefined>, undefined>
+  hardwareVersion: v.OptionalSchema<v.StringSchema<undefined>, undefined>
+  productionDate: v.OptionalSchema<v.SchemaWithPipe<[v.StringSchema<undefined>, v.IsoDateAction<string, undefined>]>, undefined>
+  serialNumberPart1: v.OptionalSchema<v.StringSchema<undefined>, undefined>
+  serialNumberPart2: v.OptionalSchema<v.StringSchema<undefined>, undefined>
+}
+
+type EnabledCommunicationModuleIdentificationFields<TConfig extends TULIP3DeviceConfig> = {
+  [K in keyof TConfig['registerConfig']['tulip3IdentificationRegisters'] as TConfig['registerConfig']['tulip3IdentificationRegisters'][K] extends true ? K : never]: K extends keyof CommunicationModuleIdentificationFieldSchemas<TConfig> ? CommunicationModuleIdentificationFieldSchemas<TConfig>[K] : never
+}
+
 /**
  * Creates a validation schema for communication module identification data.
  * Contains hardware and software information about the communication module.
+ * Only includes fields that are enabled in the device configuration flags.
  *
  * @param config - Device sensor config object (keys are sensor names)
  * @returns A Valibot object schema for communication module identification
- * @template TSensors - Type-safe array of sensor names
+ * @template TConfig - Type-safe device configuration
  * @example
  * ```typescript
- * const schema = createCommunicationModuleIdentificationSchema(["sensor1", "sensor2"])
+ * const config = {
+ *   sensor1: {},
+ *   registerConfig: {
+ *     tulip3IdentificationRegisters: {
+ *       productId: true,
+ *       firmwareVersion: true
+ *     }
+ *   }
+ * }
+ * const schema = createCommunicationModuleIdentificationSchema(config)
  * const result = v.parse(schema, {
  *   productId: 0x0B, // PEW-1000
- *   firmwareVersion: "1.2.3",
- *   connectedSensors: { sensor1: true }
+ *   firmwareVersion: "1.2.3"
  * })
  * ```
  */
-function createCommunicationModuleIdentificationSchema<const TConfig extends TULIP3DeviceSensorConfig>(config: TConfig) {
-  return v.object({
-    productId: v.optional(v.number()), // uint8, 0x0B = PEW-1000
-    productSubId: v.optional(createProductSubIdSchema()),
-    channelPlan: v.optional(createChannelPlanSchema()),
-    connectedSensors: v.optional(createConnectedSensorsSchema(config)),
-    firmwareVersion: v.optional(v.string()), // semver format: major.minor.patch
-    hardwareVersion: v.optional(v.string()), // semver format: major.minor.patch
-    productionDate: v.optional(v.pipe(v.string(), v.isoDate())), // ISO date format: YYYY-MM-DD
-    serialNumberPart1: v.optional(v.string()), // ASCII characters, not null-terminated
-    serialNumberPart2: v.optional(v.string()), // ASCII characters, not null-terminated
-  })
+function createCommunicationModuleIdentificationSchema<const TConfig extends TULIP3DeviceConfig>(config: TConfig) {
+  const flags = config.registerConfig.tulip3IdentificationRegisters
+  const schema: Record<string, any> = {}
+
+  if (flags.productId)
+    schema.productId = v.optional(v.number())
+  if (flags.productSubId)
+    schema.productSubId = v.optional(createProductSubIdSchema())
+  if (flags.channelPlan)
+    schema.channelPlan = v.optional(createChannelPlanSchema())
+  if (flags.connectedSensors)
+    schema.connectedSensors = v.optional(createConnectedSensorsSchema(config))
+  if (flags.firmwareVersion)
+    schema.firmwareVersion = v.optional(v.string())
+  if (flags.hardwareVersion)
+    schema.hardwareVersion = v.optional(v.string())
+  if (flags.productionDate)
+    schema.productionDate = v.optional(v.pipe(v.string(), v.isoDate()))
+  if (flags.serialNumberPart1)
+    schema.serialNumberPart1 = v.optional(v.string())
+  if (flags.serialNumberPart2)
+    schema.serialNumberPart2 = v.optional(v.string())
+
+  return v.object(schema as EnabledCommunicationModuleIdentificationFields<TConfig>)
+}
+
+// Lookup type for sensor identification fields - avoids deep conditional chains
+export interface SensorIdentificationFieldSchemas<TConfig extends TULIP3SensorConfig> {
+  sensorType: v.OptionalSchema<v.NumberSchema<undefined>, undefined>
+  existingChannels: v.OptionalSchema<ReturnType<typeof createExistingChannelsSchema<TConfig>>, undefined>
+  firmwareVersion: v.OptionalSchema<v.StringSchema<undefined>, undefined>
+  hardwareVersion: v.OptionalSchema<v.StringSchema<undefined>, undefined>
+  productionDate: v.OptionalSchema<v.SchemaWithPipe<[v.StringSchema<undefined>, v.IsoDateAction<string, undefined>]>, undefined>
+  serialNumberPart1: v.OptionalSchema<v.StringSchema<undefined>, undefined>
+  serialNumberPart2: v.OptionalSchema<v.StringSchema<undefined>, undefined>
+}
+
+type EnabledSensorIdentificationFields<TConfig extends TULIP3SensorConfig> = {
+  [K in keyof TConfig['registerConfig']['tulip3IdentificationRegisters'] as TConfig['registerConfig']['tulip3IdentificationRegisters'][K] extends true ? K : never]: K extends keyof SensorIdentificationFieldSchemas<TConfig> ? SensorIdentificationFieldSchemas<TConfig>[K] : never
 }
 
 /**
  * Creates a validation schema for sensor identification data.
  * Contains hardware and software information about individual sensors.
+ * Only includes fields that are enabled in the sensor configuration flags.
  *
  * @param config - Sensor channel config object (keys are channel names)
  * @returns A Valibot object schema for sensor identification
- * @template TChannels - Type-safe array of channel numbers
+ * @template TConfig - Type-safe sensor configuration
  * @example
  * ```typescript
- * const schema = createSensorIdentificationSchema([1, 2, 3])
+ * const schema = createSensorIdentificationSchema(config)
  * const result = v.parse(schema, {
  *   sensorType: 0x0000,
  *   existingChannels: { channel1: true, channel2: true },
@@ -199,26 +253,60 @@ function createCommunicationModuleIdentificationSchema<const TConfig extends TUL
  * })
  * ```
  */
-function createSensorIdentificationSchema<const TConfig extends TULIP3SensorChannelConfig>(config: TConfig) {
-  return v.object({
-    sensorType: v.optional(v.number()), // uint16, = 0x0000
-    existingChannels: v.optional(createExistingChannelsSchema(config)), // bit flags for existing channels
-    firmwareVersion: v.optional(v.string()), // semver format: major.minor.patch
-    hardwareVersion: v.optional(v.string()), // semver format: major.minor.patch
-    productionDate: v.optional(v.pipe(v.string(), v.isoDate())), // ISO date format: YYYY-MM-DD
-    serialNumberPart1: v.optional(v.string()), // ASCII characters, not null-terminated
-    serialNumberPart2: v.optional(v.string()), // ASCII characters, not null-terminated
-  })
+function createSensorIdentificationSchema<const TConfig extends TULIP3SensorConfig>(config: TConfig) {
+  const flags = config.registerConfig.tulip3IdentificationRegisters
+  const schema: Record<string, any> = {}
+
+  if (flags.sensorType)
+    schema.sensorType = v.optional(v.number())
+  if (flags.existingChannels)
+    schema.existingChannels = v.optional(createExistingChannelsSchema(config))
+  if (flags.firmwareVersion)
+    schema.firmwareVersion = v.optional(v.string())
+  if (flags.hardwareVersion)
+    schema.hardwareVersion = v.optional(v.string())
+  if (flags.productionDate)
+    schema.productionDate = v.optional(v.pipe(v.string(), v.isoDate()))
+  if (flags.serialNumberPart1)
+    schema.serialNumberPart1 = v.optional(v.string())
+  if (flags.serialNumberPart2)
+    schema.serialNumberPart2 = v.optional(v.string())
+
+  return v.object(schema as EnabledSensorIdentificationFields<TConfig>)
 }
+
+// Lookup type for channel identification fields - avoids deep conditional chains
+export interface ChannelIdentificationFieldSchemas<TChannelName extends string> {
+  measurand: v.OptionalSchema<ReturnType<typeof createMeasurandSchema>, undefined>
+  unit: v.OptionalSchema<ReturnType<typeof createUnitSchema>, undefined>
+  minMeasureRange: v.OptionalSchema<v.NumberSchema<undefined>, undefined>
+  maxMeasureRange: v.OptionalSchema<v.NumberSchema<undefined>, undefined>
+  minPhysicalLimit: v.OptionalSchema<v.NumberSchema<undefined>, undefined>
+  maxPhysicalLimit: v.OptionalSchema<v.NumberSchema<undefined>, undefined>
+  accuracy: v.OptionalSchema<v.NumberSchema<undefined>, undefined>
+  offset: v.OptionalSchema<v.NumberSchema<undefined>, undefined>
+  gain: v.OptionalSchema<v.NumberSchema<undefined>, undefined>
+  calibrationDate: v.OptionalSchema<v.SchemaWithPipe<[v.StringSchema<undefined>, v.IsoDateAction<string, undefined>]>, undefined>
+  channelName: v.LiteralSchema<TChannelName, undefined>
+}
+
+type EnabledChannelIdentificationFields<TConfig extends TULIP3ChannelConfig, TChannelName extends string> = {
+  [K in keyof TConfig['registerConfig']['tulip3IdentificationRegisters'] as TConfig['registerConfig']['tulip3IdentificationRegisters'][K] extends true ? K : never]: K extends keyof ChannelIdentificationFieldSchemas<TChannelName> ? ChannelIdentificationFieldSchemas<TChannelName>[K] : never
+} & { channelName: v.LiteralSchema<TChannelName, undefined> }
 
 /**
  * Creates a validation schema for channel identification and configuration data.
  * Defines the measurement parameters and calibration information for a sensor channel.
+ * Only includes fields that are enabled in the channel configuration flags.
  *
+ * @param name - Channel name literal
+ * @param config - Channel configuration with register flags
  * @returns A Valibot object schema for channel identification
+ * @template TChannelName - Type-safe channel name literal
+ * @template TConfig - Type-safe channel configuration
  * @example
  * ```typescript
- * const schema = createChannelIdentificationSchema()
+ * const schema = createChannelIdentificationSchema('channel1', config)
  * const result = v.parse(schema, {
  *   measurand: "temperature",
  *   unit: "°C",
@@ -228,20 +316,33 @@ function createSensorIdentificationSchema<const TConfig extends TULIP3SensorChan
  * })
  * ```
  */
-function createChannelIdentificationSchema<TChannelName extends string>(name: TChannelName) {
-  return v.object({
-    measurand: v.optional(createMeasurandSchema()),
-    unit: v.optional(createUnitSchema()),
-    minMeasureRange: v.optional(v.number()), // float, in channel physical unit
-    maxMeasureRange: v.optional(v.number()), // float, in channel physical unit
-    minPhysicalLimit: v.optional(v.number()), // float, in channel physical unit
-    maxPhysicalLimit: v.optional(v.number()), // float, in channel physical unit
-    accuracy: v.optional(v.number()), // uint16, expressed in 0.001%
-    offset: v.optional(v.number()), // float, in channel physical unit
-    gain: v.optional(v.number()), // float
-    calibrationDate: v.optional(v.pipe(v.string(), v.isoDate())), // ISO date format: YYYY-MM-DD
-    channelName: v.literal(name), // Channel name
-  })
+function createChannelIdentificationSchema<TChannelName extends string, const TConfig extends TULIP3ChannelConfig>(name: TChannelName, config: TConfig) {
+  const flags = config.registerConfig.tulip3IdentificationRegisters
+  const schema: Record<string, any> = {}
+
+  if (flags.measurand)
+    schema.measurand = v.optional(createMeasurandSchema())
+  if (flags.unit)
+    schema.unit = v.optional(createUnitSchema())
+  if (flags.minMeasureRange)
+    schema.minMeasureRange = v.optional(v.number())
+  if (flags.maxMeasureRange)
+    schema.maxMeasureRange = v.optional(v.number())
+  if (flags.minPhysicalLimit)
+    schema.minPhysicalLimit = v.optional(v.number())
+  if (flags.maxPhysicalLimit)
+    schema.maxPhysicalLimit = v.optional(v.number())
+  if (flags.accuracy)
+    schema.accuracy = v.optional(v.number())
+  if (flags.offset)
+    schema.offset = v.optional(v.number())
+  if (flags.gain)
+    schema.gain = v.optional(v.number())
+  if (flags.calibrationDate)
+    schema.calibrationDate = v.optional(v.pipe(v.string(), v.isoDate()))
+  schema.channelName = v.literal(name) // Channel name always present
+
+  return v.object(schema as EnabledChannelIdentificationFields<TConfig, TChannelName>)
 }
 
 /**
@@ -250,7 +351,7 @@ function createChannelIdentificationSchema<TChannelName extends string>(name: TC
  *
  * @param sensorChannelConfig - Configuration object defining which channels are available for this sensor
  * @returns A Valibot object schema combining sensor identification and channel configurations
- * @template TTULIP3SensorChannelConfig - Type-safe sensor channel configuration
+ * @template TTULIP3SensorConfig - Type-safe sensor channel configuration
  * @example
  * ```typescript
  * const config = { channel1: true, channel2: true }
@@ -271,18 +372,19 @@ function createChannelIdentificationSchema<TChannelName extends string>(name: TC
  * })
  * ```
  */
-function createSensorWithChannelsSchema<const TTULIP3SensorChannelConfig extends TULIP3SensorChannelConfig>(sensorChannelConfig: TTULIP3SensorChannelConfig) {
-  const channels = Object.keys(sensorChannelConfig) as Extract<(keyof TTULIP3SensorChannelConfig), string>[]
+function createSensorWithChannelsSchema<const TTULIP3SensorConfig extends TULIP3SensorConfig>(sensorChannelConfig: TTULIP3SensorConfig) {
+  // skip the keys that don't start with 'channel'
+  const channels = Object.keys(sensorChannelConfig).filter(key => key.startsWith('channel')) as Extract<(keyof TTULIP3SensorConfig), string>[]
 
   const identificationObject = {
     identification: v.optional(createSensorIdentificationSchema(sensorChannelConfig)),
   } as const
 
   type ChannelsObject = {
-    [ChannelKey in keyof TTULIP3SensorChannelConfig]:
-    TTULIP3SensorChannelConfig[ChannelKey] extends { channelName: infer T extends string }
+    [ChannelKey in keyof TTULIP3SensorConfig as ChannelKey extends `channel${number}` ? ChannelKey : never]:
+    TTULIP3SensorConfig[ChannelKey] extends TULIP3ChannelConfig
       ? v.OptionalSchema<
-        ReturnType<typeof createChannelIdentificationSchema<T>>,
+        v.ObjectSchema<EnabledChannelIdentificationFields<TTULIP3SensorConfig[ChannelKey], TTULIP3SensorConfig[ChannelKey]['channelName']>, undefined>,
         undefined
       >
       : never
@@ -290,8 +392,8 @@ function createSensorWithChannelsSchema<const TTULIP3SensorChannelConfig extends
 
   const channelsObj = channels.reduce((acc, channel) => {
     const c = sensorChannelConfig[channel as keyof typeof sensorChannelConfig] as TULIP3ChannelConfig
-    // @ts-expect-error - wont bother to fix
-    acc[channel as keyof TTULIP3SensorChannelConfig] = v.optional(createChannelIdentificationSchema(c.channelName))
+    // @ts-expect-error - wont bother to fix, type is correct
+    acc[channel as keyof typeof acc] = v.optional(createChannelIdentificationSchema(c.channelName, c))
     return acc
   }, {} as ChannelsObject)
 
@@ -305,19 +407,23 @@ function createSensorWithChannelsSchema<const TTULIP3SensorChannelConfig extends
 // UPLINK MESSAGE SCHEMAS
 // =============================================================================
 
-type MappedSensorChannelConfig<TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig> = {
-  [K in keyof TTULIP3DeviceSensorConfig]: TTULIP3DeviceSensorConfig[K] extends TULIP3SensorChannelConfig
-    ? v.OptionalSchema<ReturnType<typeof createSensorWithChannelsSchema<TTULIP3DeviceSensorConfig[K]>>, undefined> : never
+type MappedSensorChannelConfig<TTULIP3DeviceConfig extends TULIP3DeviceConfig> = {
+  [K in keyof TTULIP3DeviceConfig as K extends `sensor${number}` ? K : never]: TTULIP3DeviceConfig[K] extends TULIP3SensorConfig
+    ? v.OptionalSchema<ReturnType<typeof createSensorWithChannelsSchema<TTULIP3DeviceConfig[K]>>, undefined> : never
 }
 
-function createIdentificationReadRegisterDataSchema<const TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig>(config: TTULIP3DeviceSensorConfig) {
+function createIdentificationReadRegisterDataSchema<const TTULIP3DeviceConfig extends TULIP3DeviceConfig>(config: TTULIP3DeviceConfig) {
   const obj = Object.entries(config).reduce((acc, [sensorKey, channelConfig]) => {
+    // skip non-sensor entries
+    if (!sensorKey.startsWith('sensor')) {
+      return acc
+    }
     // @ts-expect-error - wont bother to fix
-    acc[sensorKey as keyof MappedSensorChannelConfig<TTULIP3DeviceSensorConfig>] = v.optional(createSensorWithChannelsSchema(channelConfig))
+    acc[sensorKey as keyof MappedSensorChannelConfig<TTULIP3DeviceConfig>] = v.optional(createSensorWithChannelsSchema(channelConfig))
     return acc
   }, {
     communicationModule: v.optional(createCommunicationModuleIdentificationSchema(config)),
-  } as (MappedSensorChannelConfig<TTULIP3DeviceSensorConfig> & { communicationModule: v.OptionalSchema<ReturnType<typeof createCommunicationModuleIdentificationSchema<TTULIP3DeviceSensorConfig>>, undefined> }))
+  } as (MappedSensorChannelConfig<TTULIP3DeviceConfig> & { communicationModule: v.OptionalSchema<ReturnType<typeof createCommunicationModuleIdentificationSchema<TTULIP3DeviceConfig>>, undefined> }))
 
   return v.object(obj)
 }
@@ -355,7 +461,7 @@ function createIdentificationReadRegisterDataSchema<const TTULIP3DeviceSensorCon
  * })
  * ```
  */
-function createIdentificationReadRegistersResponseUplinkOutputSchema<const TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig>(config: TTULIP3DeviceSensorConfig) {
+function createIdentificationReadRegistersResponseUplinkOutputSchema<const TTULIP3DeviceConfig extends TULIP3DeviceConfig>(config: TTULIP3DeviceConfig) {
   return createGenericUplinkOutputSchema({
     messageType: [0x14], // Identification message type
     messageSubType: [0x01, 0x02, 0x04], // Identification message subtype
@@ -375,8 +481,8 @@ function createIdentificationWriteRegistersResponseUplinkOutputSchema() {
   })
 }
 
-export type IdentificationReadRegisterData<TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig> = v.InferOutput<ReturnType<typeof createIdentificationReadRegisterDataSchema<TTULIP3DeviceSensorConfig>>>
-export type IdentificationReadRegistersResponseUplinkOutput<TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig> = v.InferOutput<ReturnType<typeof createIdentificationReadRegistersResponseUplinkOutputSchema<TTULIP3DeviceSensorConfig>>>
+export type IdentificationReadRegisterData<TTULIP3DeviceConfig extends TULIP3DeviceConfig> = v.InferOutput<ReturnType<typeof createIdentificationReadRegisterDataSchema<TTULIP3DeviceConfig>>>
+export type IdentificationReadRegistersResponseUplinkOutput<TTULIP3DeviceConfig extends TULIP3DeviceConfig> = v.InferOutput<ReturnType<typeof createIdentificationReadRegistersResponseUplinkOutputSchema<TTULIP3DeviceConfig>>>
 export type IdentificationWriteRegistersResponseUplinkOutput = v.InferOutput<ReturnType<typeof createIdentificationWriteRegistersResponseUplinkOutputSchema>>
 
 export {

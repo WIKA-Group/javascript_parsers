@@ -1,59 +1,70 @@
-import type { TULIP3DeviceSensorConfig } from '../../../../src/codecs/tulip3/profile'
+import type { TULIP3DeviceConfig } from '../../../../src/codecs/tulip3/profile'
 import { describe, expect, it } from 'vitest'
-import { decodeConfigurationRegisterRead, decodeConfigurationRegisterWrite, validateAndTransformConfigurationResult } from '../../../../src/codecs/tulip3/messages/configuration'
+import { createDecodeConfigurationRegisterRead, decodeConfigurationRegisterWrite, validateAndTransformConfigurationResult } from '../../../../src/codecs/tulip3/messages/configuration'
 import { hexStringToIntArray } from '../../../../src/utils'
 import { FullConfigurationHexString } from '../constants/configuration'
+import { completeChannelRegisterConfig, completeCommunicationModuleRegisterConfig, completeSensorRegisterConfig } from '../presets'
 
 const sensor1channelConfig = {
-  channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel1' },
-  channel2: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel2' },
-  channel3: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel3' },
-  channel4: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel4' },
-  channel5: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel5' },
-  channel6: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel6' },
-  channel7: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel7' },
-  channel8: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel8' },
-} as const satisfies TULIP3DeviceSensorConfig['sensor1']
+  channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel1', registerConfig: completeChannelRegisterConfig(), alarmFlags: {} },
+  channel2: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel2', registerConfig: completeChannelRegisterConfig(), alarmFlags: {} },
+  channel3: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel3', registerConfig: completeChannelRegisterConfig(), alarmFlags: {} },
+  channel4: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel4', registerConfig: completeChannelRegisterConfig(), alarmFlags: {} },
+  channel5: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel5', registerConfig: completeChannelRegisterConfig(), alarmFlags: {} },
+  channel6: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel6', registerConfig: completeChannelRegisterConfig(), alarmFlags: {} },
+  channel7: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel7', registerConfig: completeChannelRegisterConfig(), alarmFlags: {} },
+  channel8: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel8', registerConfig: completeChannelRegisterConfig(), alarmFlags: {} },
+  alarmFlags: {},
+  registerConfig: completeSensorRegisterConfig(),
+} as const satisfies TULIP3DeviceConfig['sensor1']
 
 const sensor2channelConfig = {
-  channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor2Channel1' },
-  channel2: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor2Channel2' },
-  channel3: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor2Channel3' },
-  channel4: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor2Channel4' },
-  channel5: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor2Channel5' },
-  channel6: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor2Channel6' },
-  channel7: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor2Channel7' },
-  channel8: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor2Channel8' },
-} as const satisfies TULIP3DeviceSensorConfig['sensor1']
+  channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor2Channel1', registerConfig: completeChannelRegisterConfig(), alarmFlags: {} },
+  channel2: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor2Channel2', registerConfig: completeChannelRegisterConfig(), alarmFlags: {} },
+  channel3: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor2Channel3', registerConfig: completeChannelRegisterConfig(), alarmFlags: {} },
+  channel4: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor2Channel4', registerConfig: completeChannelRegisterConfig(), alarmFlags: {} },
+  channel5: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor2Channel5', registerConfig: completeChannelRegisterConfig(), alarmFlags: {} },
+  channel6: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor2Channel6', registerConfig: completeChannelRegisterConfig(), alarmFlags: {} },
+  channel7: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor2Channel7', registerConfig: completeChannelRegisterConfig(), alarmFlags: {} },
+  channel8: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor2Channel8', registerConfig: completeChannelRegisterConfig(), alarmFlags: {} },
+  alarmFlags: {},
+  registerConfig: completeSensorRegisterConfig(),
+} as const satisfies TULIP3DeviceConfig['sensor1']
 
 const sensor3channelConfig = {
-  channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor3Channel1' },
-  channel2: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor3Channel2' },
-  channel3: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor3Channel3' },
-  channel4: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor3Channel4' },
-  channel5: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor3Channel5' },
-  channel6: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor3Channel6' },
-  channel7: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor3Channel7' },
-  channel8: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor3Channel8' },
-} as const satisfies TULIP3DeviceSensorConfig['sensor1']
+  channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor3Channel1', registerConfig: completeChannelRegisterConfig(), alarmFlags: {} },
+  channel2: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor3Channel2', registerConfig: completeChannelRegisterConfig(), alarmFlags: {} },
+  channel3: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor3Channel3', registerConfig: completeChannelRegisterConfig(), alarmFlags: {} },
+  channel4: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor3Channel4', registerConfig: completeChannelRegisterConfig(), alarmFlags: {} },
+  channel5: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor3Channel5', registerConfig: completeChannelRegisterConfig(), alarmFlags: {} },
+  channel6: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor3Channel6', registerConfig: completeChannelRegisterConfig(), alarmFlags: {} },
+  channel7: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor3Channel7', registerConfig: completeChannelRegisterConfig(), alarmFlags: {} },
+  channel8: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor3Channel8', registerConfig: completeChannelRegisterConfig(), alarmFlags: {} },
+  alarmFlags: {},
+  registerConfig: completeSensorRegisterConfig(),
+} as const satisfies TULIP3DeviceConfig['sensor1']
 
 const sensor4channelConfig = {
-  channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor4Channel1' },
-  channel2: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor4Channel2' },
-  channel3: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor4Channel3' },
-  channel4: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor4Channel4' },
-  channel5: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor4Channel5' },
-  channel6: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor4Channel6' },
-  channel7: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor4Channel7' },
-  channel8: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor4Channel8' },
-} as const satisfies TULIP3DeviceSensorConfig['sensor1']
+  channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor4Channel1', registerConfig: completeChannelRegisterConfig(), alarmFlags: {} },
+  channel2: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor4Channel2', registerConfig: completeChannelRegisterConfig(), alarmFlags: {} },
+  channel3: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor4Channel3', registerConfig: completeChannelRegisterConfig(), alarmFlags: {} },
+  channel4: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor4Channel4', registerConfig: completeChannelRegisterConfig(), alarmFlags: {} },
+  channel5: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor4Channel5', registerConfig: completeChannelRegisterConfig(), alarmFlags: {} },
+  channel6: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor4Channel6', registerConfig: completeChannelRegisterConfig(), alarmFlags: {} },
+  channel7: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor4Channel7', registerConfig: completeChannelRegisterConfig(), alarmFlags: {} },
+  channel8: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor4Channel8', registerConfig: completeChannelRegisterConfig(), alarmFlags: {} },
+  alarmFlags: {},
+  registerConfig: completeSensorRegisterConfig(),
+} as const satisfies TULIP3DeviceConfig['sensor1']
 
 const config = {
   sensor1: sensor1channelConfig,
   sensor2: sensor2channelConfig,
   sensor3: sensor3channelConfig,
   sensor4: sensor4channelConfig,
-} as const satisfies TULIP3DeviceSensorConfig
+  alarmFlags: {},
+  registerConfig: completeCommunicationModuleRegisterConfig(),
+} as const satisfies TULIP3DeviceConfig
 
 describe('configuration messages', () => {
   describe('read registers', () => {
@@ -69,7 +80,9 @@ describe('configuration messages', () => {
         const data = hexStringToIntArray(hexString)
         expect(data).toBeDefined()
 
-        const result = decodeConfigurationRegisterRead(data!, config)
+        const decodeConfigurationRegisterRead = createDecodeConfigurationRegisterRead(config)
+
+        const result = decodeConfigurationRegisterRead(data!)
 
         expect(result.data.messageType).toBe(0x15)
         expect(result.data.messageSubType).toBe(0x01)
@@ -82,7 +95,8 @@ describe('configuration messages', () => {
       })
 
       it('should correctly parse the full hexstring with everything', () => {
-        const result = decodeConfigurationRegisterRead(FullConfigurationHexString, config)
+        const decodeConfigurationRegisterRead = createDecodeConfigurationRegisterRead(config)
+        const result = decodeConfigurationRegisterRead(FullConfigurationHexString)
 
         expect(result.data.messageType).toBe(0x15)
 
@@ -862,7 +876,8 @@ describe('configuration messages', () => {
         const data = hexStringToIntArray(hexString)
         expect(data).toBeDefined()
 
-        const result = decodeConfigurationRegisterRead(data!, config)
+        const decodeConfigurationRegisterRead = createDecodeConfigurationRegisterRead(config)
+        const result = decodeConfigurationRegisterRead(data!)
 
         expect(result.data.messageType).toBe(0x15)
         expect(result.data.messageSubType).toBe(0x02)
@@ -891,7 +906,8 @@ describe('configuration messages', () => {
         const data = hexStringToIntArray(hexString)
         expect(data).toBeDefined()
 
-        const result = decodeConfigurationRegisterRead(data!, config)
+        const decodeConfigurationRegisterRead = createDecodeConfigurationRegisterRead(config)
+        const result = decodeConfigurationRegisterRead(data!)
 
         expect(result.data.messageType).toBe(0x15)
         expect(result.data.messageSubType).toBe(0x02)
@@ -913,7 +929,8 @@ describe('configuration messages', () => {
         const data = hexStringToIntArray(hexString)
         expect(data).toBeDefined()
 
-        const result = decodeConfigurationRegisterRead(data!, config)
+        const decodeConfigurationRegisterRead = createDecodeConfigurationRegisterRead(config)
+        const result = decodeConfigurationRegisterRead(data!)
 
         expect(result.data.messageType).toBe(0x15)
         expect(result.data.messageSubType).toBe(0x02)
@@ -937,7 +954,8 @@ describe('configuration messages', () => {
         const data = hexStringToIntArray(hexString)
         expect(data).toBeDefined()
 
-        const result = decodeConfigurationRegisterRead(data!, config)
+        const decodeConfigurationRegisterRead = createDecodeConfigurationRegisterRead(config)
+        const result = decodeConfigurationRegisterRead(data!)
 
         expect(result.data.messageType).toBe(0x15)
         expect(result.data.messageSubType).toBe(0x02)
@@ -1053,7 +1071,8 @@ describe('validation and transformation after decode (tests for code below TODO)
   describe('sensor validation logic', () => {
     it('should pass when all decoded sensors exist in config', () => {
       // Use the full configuration hex string which decodes multiple sensors
-      const result = decodeConfigurationRegisterRead(FullConfigurationHexString, config)
+      const decodeConfigurationRegisterRead = createDecodeConfigurationRegisterRead(config)
+      const result = decodeConfigurationRegisterRead(FullConfigurationHexString)
 
       // Should not throw and should have valid sensors
       expect(result.data.messageType).toBe(0x15)
@@ -1064,17 +1083,20 @@ describe('validation and transformation after decode (tests for code below TODO)
       // Create a very limited config that only has sensor1
       const limitedConfig = {
         sensor1: sensor1channelConfig,
-      } as const satisfies TULIP3DeviceSensorConfig
+        alarmFlags: {},
+        registerConfig: completeCommunicationModuleRegisterConfig(),
+      } as const satisfies TULIP3DeviceConfig
 
+      const decodeConfigurationRegisterRead = createDecodeConfigurationRegisterRead(limitedConfig)
       // Try to use the full configuration hex string which contains sensor2, sensor3, etc.
       expect(() => {
-        decodeConfigurationRegisterRead(FullConfigurationHexString, limitedConfig)
-      }).toThrow(TypeError)
+        decodeConfigurationRegisterRead(FullConfigurationHexString)
+      }).toThrow(RangeError)
 
       // Check that the error message mentions sensors not expected
       expect(() => {
-        decodeConfigurationRegisterRead(FullConfigurationHexString, limitedConfig)
-      }).toThrow('Sensors [sensor2, sensor3, sensor4] are not supported by this device')
+        decodeConfigurationRegisterRead(FullConfigurationHexString)
+      }).toThrow(/Configuration data could not be decoded as register .* for 'samplingChannels' on sensor 2 is not available for this device because sensor 2 is not available on this device/)
     })
 
     it('should correctly filter out communicationModule from sensor validation', () => {
@@ -1082,8 +1104,9 @@ describe('validation and transformation after decode (tests for code below TODO)
       const hexString = '0x15 01 01 04 00 02 00 01'
       const data = hexStringToIntArray(hexString)
 
+      const decodeConfigurationRegisterRead = createDecodeConfigurationRegisterRead(config)
       expect(() => {
-        decodeConfigurationRegisterRead(data!, config)
+        decodeConfigurationRegisterRead(data!)
       }).not.toThrow()
     })
   })
@@ -1094,16 +1117,18 @@ describe('validation and transformation after decode (tests for code below TODO)
       const hexString = '0x15 01 01 04 00 02 00 01'
       const data = hexStringToIntArray(hexString)
 
+      const decodeConfigurationRegisterRead = createDecodeConfigurationRegisterRead(config)
       expect(() => {
-        decodeConfigurationRegisterRead(data!, config)
+        decodeConfigurationRegisterRead(data!)
       }).not.toThrow()
     })
 
     it('should pass when all enabled sampling channels exist in config', () => {
       // This test requires finding a hex string that actually has sampling channels data
       // Let's use the full configuration which might have this
+      const decodeConfigurationRegisterRead = createDecodeConfigurationRegisterRead(config)
       expect(() => {
-        decodeConfigurationRegisterRead(FullConfigurationHexString, config)
+        decodeConfigurationRegisterRead(FullConfigurationHexString)
       }).not.toThrow()
     })
 
@@ -1113,21 +1138,26 @@ describe('validation and transformation after decode (tests for code below TODO)
       // contains sampling channel configuration, so we'll test with limited config
       const limitedConfig = {
         sensor1: {
-          channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel1' },
-          // Only channel1, no channel2
+          channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel1', registerConfig: completeChannelRegisterConfig(), alarmFlags: {} },
+          alarmFlags: {},
+          registerConfig: completeSensorRegisterConfig(),
         },
-        sensor2: {},
-        sensor3: {},
-        sensor4: {},
-      } as const satisfies TULIP3DeviceSensorConfig
+        sensor2: { alarmFlags: {}, registerConfig: completeSensorRegisterConfig() },
+        sensor3: { alarmFlags: {}, registerConfig: completeSensorRegisterConfig() },
+        sensor4: { alarmFlags: {}, registerConfig: completeSensorRegisterConfig() },
+        alarmFlags: {},
+        registerConfig: completeCommunicationModuleRegisterConfig(),
+      } as const satisfies TULIP3DeviceConfig
 
-      expect(() => decodeConfigurationRegisterRead(FullConfigurationHexString, limitedConfig)).toThrow('Sampling channels [channel2, channel3, channel4, channel5, channel6, channel7, channel8] for sensor \'sensor1\' are not expected for this device')
+      const decodeConfigurationRegisterRead = createDecodeConfigurationRegisterRead(limitedConfig)
+      expect(() => decodeConfigurationRegisterRead(FullConfigurationHexString)).toThrow(/Configuration data could not be decoded as register .* for 'protocolDataType' on sensor 1 channel 2 is not available for this device because sensor 1 channel 2 is not available on this device/)
     })
   })
 
   describe('channel name assignment logic', () => {
     it('should assign channel names from config to decoded result channels', () => {
-      const result = decodeConfigurationRegisterRead(FullConfigurationHexString, config)
+      const decodeConfigurationRegisterRead = createDecodeConfigurationRegisterRead(config)
+      const result = decodeConfigurationRegisterRead(FullConfigurationHexString)
 
       // Check that channel names are assigned for any sensors that were decoded
       Object.keys(result.data.configuration).forEach((sensorKey) => {
@@ -1139,11 +1169,11 @@ describe('validation and transformation after decode (tests for code below TODO)
           Object.keys(sensor).forEach((channelKey) => {
             if (channelKey.startsWith('channel')) {
               const channel = sensor[channelKey as keyof typeof sensor]
-              if (channel && typeof channel === 'object' && 'channelName' in channel) {
+              if (channel && typeof channel === 'object') {
                 // Channel should have a channelName assigned
-                // @ts-expect-error - We know channel.channelName exists
+                // @ts-expect-error - we know channelName should exist here
                 expect(channel.channelName).toBeDefined()
-                // @ts-expect-error - We know channel.channelName exists
+                // @ts-expect-error - we know channelName should be a string
                 expect(typeof channel.channelName).toBe('string')
               }
             }
@@ -1156,21 +1186,27 @@ describe('validation and transformation after decode (tests for code below TODO)
       // Create a config with identification
       const configWithIdentification = {
         sensor1: {
-          channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel1' },
+          channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel1', registerConfig: completeChannelRegisterConfig(), alarmFlags: {} },
+          alarmFlags: {},
+          registerConfig: completeSensorRegisterConfig(),
         },
-      } as const satisfies TULIP3DeviceSensorConfig
+        alarmFlags: {},
+        registerConfig: completeCommunicationModuleRegisterConfig(),
+      } as const satisfies TULIP3DeviceConfig
 
       // Use simple data that should work
       const hexString = '0x15 01 01 04 00 02 00 01'
       const data = hexStringToIntArray(hexString)
 
+      const decodeConfigurationRegisterRead = createDecodeConfigurationRegisterRead(configWithIdentification)
       expect(() => {
-        decodeConfigurationRegisterRead(data!, configWithIdentification)
+        decodeConfigurationRegisterRead(data!)
       }).not.toThrow()
     })
 
     it('should only assign channel names to channels that exist in result', () => {
-      const result = decodeConfigurationRegisterRead(FullConfigurationHexString, config)
+      const decodeConfigurationRegisterRead = createDecodeConfigurationRegisterRead(config)
+      const result = decodeConfigurationRegisterRead(FullConfigurationHexString)
 
       // Verify that we don't have properties for channels that don't exist in the result
       // This is validated by the fact that the function doesn't crash when trying to access
@@ -1182,42 +1218,54 @@ describe('validation and transformation after decode (tests for code below TODO)
   describe('specific edge cases for validation logic', () => {
     it('should handle config with empty sensor object', () => {
       const emptyConfig = {
-        sensor1: {},
-      } as const satisfies TULIP3DeviceSensorConfig
+        sensor1: { alarmFlags: {}, registerConfig: completeSensorRegisterConfig() },
+        alarmFlags: {},
+        registerConfig: completeCommunicationModuleRegisterConfig(),
+      } as const satisfies TULIP3DeviceConfig
 
       const hexString = '0x15 01 01 04 00 02 00 01'
       const data = hexStringToIntArray(hexString)
 
+      const decodeConfigurationRegisterRead = createDecodeConfigurationRegisterRead(emptyConfig)
       expect(() => {
-        decodeConfigurationRegisterRead(data!, emptyConfig)
+        decodeConfigurationRegisterRead(data!)
       }).not.toThrow()
     })
 
     it('should handle sparse channel configuration', () => {
       const sparseConfig = {
         sensor1: {
-          channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'First Channel' },
-          channel8: { start: 0, end: 100, measurementTypes: [], channelName: 'Eighth Channel' },
+          channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'First Channel', registerConfig: completeChannelRegisterConfig(), alarmFlags: {} },
+          channel8: { start: 0, end: 100, measurementTypes: [], channelName: 'Eighth Channel', registerConfig: completeChannelRegisterConfig(), alarmFlags: {} },
+          alarmFlags: {},
+          registerConfig: completeSensorRegisterConfig(),
         },
-      } as const satisfies TULIP3DeviceSensorConfig
+        alarmFlags: {},
+        registerConfig: completeCommunicationModuleRegisterConfig(),
+      } as const satisfies TULIP3DeviceConfig
 
       const hexString = '0x15 01 01 04 00 02 00 01'
       const data = hexStringToIntArray(hexString)
 
+      const decodeConfigurationRegisterRead = createDecodeConfigurationRegisterRead(sparseConfig)
       expect(() => {
-        decodeConfigurationRegisterRead(data!, sparseConfig)
+        decodeConfigurationRegisterRead(data!)
       }).not.toThrow()
     })
 
     it('should validate that communicationModule is always filtered out from sensor validation', () => {
       // Create a config without any sensors, only works if communicationModule is filtered
-      const onlyCommunicationConfig = {} as const satisfies TULIP3DeviceSensorConfig
+      const onlyCommunicationConfig = {
+        alarmFlags: {},
+        registerConfig: completeCommunicationModuleRegisterConfig(),
+      } as const satisfies TULIP3DeviceConfig
 
-      const hexString = '0x15 01 01 04 00 02 00 01' // Should only decode communicationModule
+      const hexString = '0x15 01 01 04 00 02 00 01'
       const data = hexStringToIntArray(hexString)
 
+      const decodeConfigurationRegisterRead = createDecodeConfigurationRegisterRead(onlyCommunicationConfig)
       expect(() => {
-        decodeConfigurationRegisterRead(data!, onlyCommunicationConfig)
+        decodeConfigurationRegisterRead(data!)
       }).not.toThrow()
     })
   })
@@ -1230,7 +1278,8 @@ describe('validation and transformation after decode (tests for code below TODO)
       // 3. Sampling channels validation - after TODO
       // 4. Channel name assignment - after TODO
 
-      const result = decodeConfigurationRegisterRead(FullConfigurationHexString, config)
+      const decodeConfigurationRegisterRead = createDecodeConfigurationRegisterRead(config)
+      const result = decodeConfigurationRegisterRead(FullConfigurationHexString)
 
       // If we get here, all validations passed
       expect(result.data.messageType).toBe(0x15)
@@ -1240,10 +1289,13 @@ describe('validation and transformation after decode (tests for code below TODO)
     it('should fail early on sensor validation before sampling validation', () => {
       const configWithOnlyOneSensor = {
         sensor1: sensor1channelConfig,
-      } as const satisfies TULIP3DeviceSensorConfig
+        alarmFlags: {},
+        registerConfig: completeCommunicationModuleRegisterConfig(),
+      } as const satisfies TULIP3DeviceConfig
 
+      const decodeConfigurationRegisterRead = createDecodeConfigurationRegisterRead(configWithOnlyOneSensor)
       try {
-        decodeConfigurationRegisterRead(FullConfigurationHexString, configWithOnlyOneSensor)
+        decodeConfigurationRegisterRead(FullConfigurationHexString)
       }
       catch (error) {
         if (error instanceof TypeError) {
@@ -1259,33 +1311,36 @@ describe('validation and transformation after decode (tests for code below TODO)
     it('should throw RangeError for too short data', () => {
       const data = [0x15, 0x01] // Only 2 bytes, minimum is 4
 
+      const decodeConfigurationRegisterRead = createDecodeConfigurationRegisterRead(config)
       expect(() => {
-        decodeConfigurationRegisterRead(data, config)
+        decodeConfigurationRegisterRead(data)
       }).toThrow(RangeError)
       expect(() => {
-        decodeConfigurationRegisterRead(data, config)
+        decodeConfigurationRegisterRead(data)
       }).toThrow('Configuration message too short. Expected at least 4 bytes but got 2')
     })
 
     it('should throw TypeError for invalid message type', () => {
       const data = [0x14, 0x01, 0x01, 0x04] // Wrong message type (0x14 instead of 0x15)
 
+      const decodeConfigurationRegisterRead = createDecodeConfigurationRegisterRead(config)
       expect(() => {
-        decodeConfigurationRegisterRead(data, config)
+        decodeConfigurationRegisterRead(data)
       }).toThrow(TypeError)
       expect(() => {
-        decodeConfigurationRegisterRead(data, config)
+        decodeConfigurationRegisterRead(data)
       }).toThrow('Invalid configuration message type: expected 0x15 but got 0x14')
     })
 
     it('should throw TypeError for unsupported subtype', () => {
       const data = [0x15, 0x03, 0x01, 0x04] // Wrong subtype (0x03 instead of 0x01 or 0x02)
 
+      const decodeConfigurationRegisterRead = createDecodeConfigurationRegisterRead(config)
       expect(() => {
-        decodeConfigurationRegisterRead(data, config)
+        decodeConfigurationRegisterRead(data)
       }).toThrow(TypeError)
       expect(() => {
-        decodeConfigurationRegisterRead(data, config)
+        decodeConfigurationRegisterRead(data)
       }).toThrow('Unsupported configuration message subtype: 0x03')
     })
   })
@@ -1301,47 +1356,13 @@ describe('validation and transformation after decode (tests for code below TODO)
           sensor1: sensor1channelConfig,
           sensor2: sensor2channelConfig,
           sensor3: sensor3channelConfig,
+          alarmFlags: {},
+          registerConfig: completeCommunicationModuleRegisterConfig(),
         }
 
         expect(() => {
           validateAndTransformConfigurationResult(result as any, deviceConfig)
         }).not.toThrow()
-      })
-
-      it('should throw TypeError when result contains sensor not in device configuration', () => {
-        const result = {
-          sensor1: { channel1: { value: 25.5 } },
-          unknownSensor: { channel1: { value: 30.0 } },
-        }
-        const deviceConfig = {
-          sensor1: sensor1channelConfig,
-          sensor2: sensor2channelConfig,
-        }
-
-        expect(() => {
-          validateAndTransformConfigurationResult(result as any, deviceConfig)
-        }).toThrow(TypeError)
-        expect(() => {
-          validateAndTransformConfigurationResult(result as any, deviceConfig)
-        }).toThrow('Sensor [unknownSensor] is not supported by this device')
-      })
-
-      it('should throw TypeError when multiple sensors are not in device configuration', () => {
-        const result = {
-          sensor1: { channel1: { value: 25.5 } },
-          unknownSensor1: { channel1: { value: 30.0 } },
-          unknownSensor2: { channel1: { value: 35.0 } },
-        }
-        const deviceConfig = {
-          sensor1: sensor1channelConfig,
-        }
-
-        expect(() => {
-          validateAndTransformConfigurationResult(result as any, deviceConfig)
-        }).toThrow(TypeError)
-        expect(() => {
-          validateAndTransformConfigurationResult(result as any, deviceConfig)
-        }).toThrow('Sensors [unknownSensor1, unknownSensor2] are not supported by this device')
       })
 
       it('should ignore communicationModule when validating sensors', () => {
@@ -1351,6 +1372,8 @@ describe('validation and transformation after decode (tests for code below TODO)
         }
         const deviceConfig = {
           sensor1: sensor1channelConfig,
+          alarmFlags: {},
+          registerConfig: completeCommunicationModuleRegisterConfig(),
         }
 
         expect(() => {
@@ -1362,6 +1385,8 @@ describe('validation and transformation after decode (tests for code below TODO)
         const result = {}
         const deviceConfig = {
           sensor1: sensor1channelConfig,
+          alarmFlags: {},
+          registerConfig: completeCommunicationModuleRegisterConfig(),
         }
 
         expect(() => {
@@ -1373,7 +1398,10 @@ describe('validation and transformation after decode (tests for code below TODO)
         const result = {
           communicationModule: { transmissionRateAlarmOff: 1 },
         }
-        const deviceConfig = {}
+        const deviceConfig = {
+          alarmFlags: {},
+          registerConfig: completeCommunicationModuleRegisterConfig(),
+        }
 
         expect(() => {
           validateAndTransformConfigurationResult(result as any, deviceConfig)
@@ -1386,6 +1414,8 @@ describe('validation and transformation after decode (tests for code below TODO)
         }
         const deviceConfig = {
           sensor1: sensor1channelConfig,
+          alarmFlags: {},
+          registerConfig: completeCommunicationModuleRegisterConfig(),
         }
 
         expect(() => {
@@ -1408,6 +1438,8 @@ describe('validation and transformation after decode (tests for code below TODO)
         }
         const deviceConfig = {
           sensor1: sensor1channelConfig,
+          alarmFlags: {},
+          registerConfig: completeCommunicationModuleRegisterConfig(),
         }
 
         expect(() => {
@@ -1430,6 +1462,8 @@ describe('validation and transformation after decode (tests for code below TODO)
         }
         const deviceConfig = {
           sensor1: sensor1channelConfig,
+          alarmFlags: {},
+          registerConfig: completeCommunicationModuleRegisterConfig(),
         }
 
         expect(() => {
@@ -1450,6 +1484,8 @@ describe('validation and transformation after decode (tests for code below TODO)
         }
         const deviceConfig = {
           sensor1: sensor1channelConfig,
+          alarmFlags: {},
+          registerConfig: completeCommunicationModuleRegisterConfig(),
         }
 
         expect(() => {
@@ -1474,6 +1510,8 @@ describe('validation and transformation after decode (tests for code below TODO)
         }
         const deviceConfig = {
           sensor1: sensor1channelConfig,
+          alarmFlags: {},
+          registerConfig: completeCommunicationModuleRegisterConfig(),
         }
 
         expect(() => {
@@ -1492,6 +1530,8 @@ describe('validation and transformation after decode (tests for code below TODO)
         }
         const deviceConfig = {
           sensor1: sensor1channelConfig,
+          alarmFlags: {},
+          registerConfig: completeCommunicationModuleRegisterConfig(),
         }
 
         expect(() => {
@@ -1509,6 +1549,8 @@ describe('validation and transformation after decode (tests for code below TODO)
         }
         const deviceConfig = {
           sensor1: sensor1channelConfig,
+          alarmFlags: {},
+          registerConfig: completeCommunicationModuleRegisterConfig(),
         }
 
         expect(() => {
@@ -1526,6 +1568,8 @@ describe('validation and transformation after decode (tests for code below TODO)
         }
         const deviceConfig = {
           sensor1: sensor1channelConfig,
+          alarmFlags: {},
+          registerConfig: completeCommunicationModuleRegisterConfig(),
         }
 
         expect(() => {
@@ -1554,6 +1598,8 @@ describe('validation and transformation after decode (tests for code below TODO)
         const deviceConfig = {
           sensor1: sensor1channelConfig,
           sensor2: sensor2channelConfig,
+          alarmFlags: {},
+          registerConfig: completeCommunicationModuleRegisterConfig(),
         }
 
         expect(() => {
@@ -1579,6 +1625,8 @@ describe('validation and transformation after decode (tests for code below TODO)
         const deviceConfig = {
           sensor1: sensor1channelConfig,
           sensor2: sensor2channelConfig,
+          alarmFlags: {},
+          registerConfig: completeCommunicationModuleRegisterConfig(),
         }
 
         validateAndTransformConfigurationResult(result as any, deviceConfig)
@@ -1600,6 +1648,8 @@ describe('validation and transformation after decode (tests for code below TODO)
         }
         const deviceConfig = {
           sensor1: sensor1channelConfig,
+          alarmFlags: {},
+          registerConfig: completeCommunicationModuleRegisterConfig(),
         }
 
         validateAndTransformConfigurationResult(result as any, deviceConfig)
@@ -1616,6 +1666,8 @@ describe('validation and transformation after decode (tests for code below TODO)
         }
         const deviceConfig = {
           sensor1: sensor1channelConfig,
+          alarmFlags: {},
+          registerConfig: completeCommunicationModuleRegisterConfig(),
         }
 
         expect(() => {
@@ -1631,8 +1683,12 @@ describe('validation and transformation after decode (tests for code below TODO)
         }
         const deviceConfig = {
           sensor1: {
-            channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel1' },
+            channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel1', registerConfig: completeChannelRegisterConfig(), alarmFlags: {} },
+            alarmFlags: {},
+            registerConfig: completeSensorRegisterConfig(),
           },
+          alarmFlags: {},
+          registerConfig: completeCommunicationModuleRegisterConfig(),
         }
 
         expect(() => {
@@ -1651,6 +1707,8 @@ describe('validation and transformation after decode (tests for code below TODO)
             ...sensor1channelConfig,
             identification: 'should be ignored',
           },
+          alarmFlags: {},
+          registerConfig: completeCommunicationModuleRegisterConfig(),
         }
 
         expect(() => {
@@ -1676,6 +1734,8 @@ describe('validation and transformation after decode (tests for code below TODO)
         }
         const deviceConfig = {
           sensor1: sensor1channelConfig,
+          alarmFlags: {},
+          registerConfig: completeCommunicationModuleRegisterConfig(),
         }
 
         validateAndTransformConfigurationResult(result as any, deviceConfig)
@@ -1704,6 +1764,8 @@ describe('validation and transformation after decode (tests for code below TODO)
         }
         const deviceConfig = {
           sensor1: sensor1channelConfig,
+          alarmFlags: {},
+          registerConfig: completeCommunicationModuleRegisterConfig(),
         }
 
         expect(() => {
@@ -1743,6 +1805,8 @@ describe('validation and transformation after decode (tests for code below TODO)
         const deviceConfig = {
           sensor1: sensor1channelConfig,
           sensor2: sensor2channelConfig,
+          alarmFlags: {},
+          registerConfig: completeCommunicationModuleRegisterConfig(),
         }
 
         expect(() => {
@@ -1770,6 +1834,8 @@ describe('validation and transformation after decode (tests for code below TODO)
         }
         const deviceConfig = {
           sensor1: sensor1channelConfig,
+          alarmFlags: {},
+          registerConfig: completeCommunicationModuleRegisterConfig(),
         }
 
         validateAndTransformConfigurationResult(result as any, deviceConfig)
@@ -1792,7 +1858,9 @@ describe('validation and transformation after decode (tests for code below TODO)
           },
         }
         const deviceConfig = {
-          sensor1: {},
+          sensor1: { alarmFlags: {}, registerConfig: completeSensorRegisterConfig() },
+          alarmFlags: {},
+          registerConfig: completeCommunicationModuleRegisterConfig(),
         }
 
         expect(() => {
@@ -1818,6 +1886,8 @@ describe('validation and transformation after decode (tests for code below TODO)
         const deviceConfig = {
           sensor1: sensor1channelConfig,
           validSensor: sensor2channelConfig,
+          alarmFlags: {},
+          registerConfig: completeCommunicationModuleRegisterConfig(),
         }
 
         expect(() => {

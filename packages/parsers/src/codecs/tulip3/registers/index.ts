@@ -1,3 +1,4 @@
+import type * as v from 'valibot'
 import { set } from 'es-toolkit/compat'
 
 // Re-export all parsing functions from parsing.ts
@@ -9,7 +10,18 @@ export interface RegisterEntry<TData extends number[], TResult = any, TPath exte
   parsing: (data: TData) => TResult
 }
 
-export type AnyRegisterLookup = Record<number, RegisterEntry<any, any, any>>
+export interface CustomRegisterEntry<TData extends number[], TSchema extends v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>, TPath extends string = string> extends RegisterEntry<TData, v.InferOutput<TSchema>, TPath> {
+  schema: TSchema
+}
+
+export interface RegisterGuard {
+  type: 'guard'
+  message: string
+}
+
+export type AnyRegisterLookup = Record<number, RegisterEntry<any, any, any> | RegisterGuard>
+
+export type AnyCustomRegisterLookup = Record<number, CustomRegisterEntry<any, any>>
 
 export function createRegisterEntry<TData extends number[], TResult, TPath extends string>(path: TPath, size: number, parsing: (data: TData) => TResult): RegisterEntry<TData, TResult, TPath> {
   return {
@@ -166,32 +178,42 @@ export function evaluateRegisterBlocks<TRes extends Record<string, any> = Record
         )
       }
 
+      // Check if this is a register guard
+      if ('type' in registerEntry && registerEntry.type === 'guard') {
+        throw new RangeError(
+          registerEntry.message,
+        )
+      }
+
+      // Type narrow to RegisterEntry (guard check above ensures it's not a RegisterGuard)
+      const entry = registerEntry as RegisterEntry<any, any, any>
+
       // now we take the amount of bytes that the register entry wants
-      if (value.length < registerEntry.size) {
+      if (value.length < entry.size) {
         // if the value is not enough then we throw an error
         throw new RangeError(
-          `Insufficient data for register 0x${address.toString(16)} (${registerEntry.path}): `
-          + `Expected ${registerEntry.size} bytes but only ${value.length} bytes remaining in block. `
+          `Insufficient data for register 0x${address.toString(16)} (${entry.path}): `
+          + `Expected ${entry.size} bytes but only ${value.length} bytes remaining in block. `
           + `Block started at address 0x${startRegisterAddress.toString(16)} with ${block.value.length} total bytes. `
           + `Current parsing position within block: ${block.value.length - value.length} bytes processed. `
           + `This suggests a mismatch between register definitions and actual data structure.`,
         )
       }
-      // if the value is enough then we take the first registerEntry.size bytes and remove them from the value
-      const registerValue = value.slice(0, registerEntry.size)
-      value.splice(0, registerEntry.size)
+      // if the value is enough then we take the first entry.size bytes and remove them from the value
+      const registerValue = value.slice(0, entry.size)
+      value.splice(0, entry.size)
       // now we can set the address to the next register address
-      address += registerEntry.size
+      address += entry.size
       // and we can set the value to the registerValue, catching any parsing errors
       try {
-        set(result, registerEntry.path, registerEntry.parsing(registerValue))
+        set(result, entry.path, entry.parsing(registerValue))
       }
       catch (error) {
         const originalError = error instanceof Error ? error.message : String(error)
         throw new Error(
-          `Failed to parse register 0x${(address - registerEntry.size).toString(16)} (${registerEntry.path}): ${originalError}. `
+          `Failed to parse register 0x${(address - entry.size).toString(16)} (${entry.path}): ${originalError}. `
           + `Register data: [${registerValue.map(b => `0x${b.toString(16).padStart(2, '0')}`).join(', ')}] `
-          + `(${registerValue.length} bytes, expected ${registerEntry.size} bytes). `
+          + `(${registerValue.length} bytes, expected ${entry.size} bytes). `
           + `Block started at address 0x${startRegisterAddress.toString(16)}. `
           + `This may indicate invalid data values or a parsing function error.`,
           { cause: error },

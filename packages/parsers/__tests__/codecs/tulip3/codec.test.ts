@@ -1,18 +1,25 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import { defineTULIP3Codec } from '../../../src/codecs/tulip3/codec'
 import { defineTULIP3DeviceProfile } from '../../../src/codecs/tulip3/profile'
+import { emptyChannelRegisterConfig, emptyCommunicationModuleRegisterConfig, emptySensorRegisterConfig } from './presets'
 
 const deviceProfile = defineTULIP3DeviceProfile({
   deviceName: 'TestDevice',
   roundingDecimals: 2,
   sensorChannelConfig: {
     sensor1: {
-      channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'ch1' },
-      channel2: { start: 10, end: 200, measurementTypes: [], channelName: 'ch2' },
+      alarmFlags: {},
+      channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'ch1', alarmFlags: {}, registerConfig: emptyChannelRegisterConfig() },
+      channel2: { start: 10, end: 200, measurementTypes: [], channelName: 'ch2', alarmFlags: {}, registerConfig: emptyChannelRegisterConfig() },
+      registerConfig: emptySensorRegisterConfig(),
     },
     sensor2: {
-      channel1: { start: -50, end: 50, measurementTypes: [], channelName: 'ch3' },
+      alarmFlags: {},
+      registerConfig: emptySensorRegisterConfig(),
+      channel1: { start: -50, end: 50, measurementTypes: [], channelName: 'ch3', alarmFlags: {}, registerConfig: emptyChannelRegisterConfig() },
     },
+    alarmFlags: {},
+    registerConfig: emptyCommunicationModuleRegisterConfig(),
   },
   deviceAlarmConfig: {
     communicationModuleAlarms: { comms: 1 },
@@ -71,8 +78,12 @@ describe('defineTULIP3Codec (validations)', () => {
       deviceName: 'BadDevice',
       roundingDecimals: 2,
       sensorChannelConfig: {
+        alarmFlags: {},
+        registerConfig: emptyCommunicationModuleRegisterConfig(),
         sensor1: {
-          channel1: { start: 10, end: 10, measurementTypes: [], channelName: 'bch1' },
+          alarmFlags: {},
+          registerConfig: emptySensorRegisterConfig(),
+          channel1: { start: 10, end: 10, measurementTypes: [], channelName: 'bch1', alarmFlags: {}, registerConfig: emptyChannelRegisterConfig() },
         },
       },
       deviceAlarmConfig: {
@@ -90,11 +101,17 @@ describe('defineTULIP3Codec (validations)', () => {
       deviceName: 'BadDevice2',
       roundingDecimals: 2,
       sensorChannelConfig: {
+        alarmFlags: {},
+        registerConfig: emptyCommunicationModuleRegisterConfig(),
         sensor1: {
-          channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'dup' },
+          alarmFlags: {},
+          registerConfig: emptySensorRegisterConfig(),
+          channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'dup', alarmFlags: {}, registerConfig: emptyChannelRegisterConfig() },
         },
         sensor2: {
-          channel1: { start: 0, end: 50, measurementTypes: [], channelName: 'dup' },
+          alarmFlags: {},
+          registerConfig: emptySensorRegisterConfig(),
+          channel1: { start: 0, end: 50, measurementTypes: [], channelName: 'dup', alarmFlags: {}, registerConfig: emptyChannelRegisterConfig() },
         },
       },
       deviceAlarmConfig: {
@@ -112,7 +129,13 @@ describe('defineTULIP3Codec (validations)', () => {
       deviceName: 'GoodDevice',
       roundingDecimals: 2,
       sensorChannelConfig: {
-        sensor1: { channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'chA' } },
+        alarmFlags: {},
+        registerConfig: emptyCommunicationModuleRegisterConfig(),
+        sensor1: {
+          alarmFlags: {},
+          registerConfig: emptySensorRegisterConfig(),
+          channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'chA', alarmFlags: {}, registerConfig: emptyChannelRegisterConfig() },
+        },
       },
       deviceAlarmConfig: {
         communicationModuleAlarms: { comms: 1 },

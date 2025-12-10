@@ -1,23 +1,38 @@
-import type { TULIP3DeviceSensorConfig } from '../../../../src/codecs/tulip3/profile'
+import type { TULIP3DeviceConfig } from '../../../../src/codecs/tulip3/profile'
 import { describe, expect, it } from 'vitest'
 import { decodeProcessAlarmMessage } from '../../../../src/codecs/tulip3/messages/processAlarm'
+import { completeCommunicationModuleRegisterConfig, emptyChannelRegisterConfig, emptySensorRegisterConfig } from '../presets'
 
 describe('tulip3 process alarm message decoding (0x12/0x01)', () => {
   // Minimal device profile: sensor2/channel1 exists
   const deviceSensorConfig = {
-    sensor1: { channel1: {
-      start: 4,
-      end: 20,
-      channelName: 'current',
-      measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
-    } },
-    sensor2: { channel1: {
-      start: 0,
-      end: 10,
-      channelName: 'voltage',
-      measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
-    } },
-  } as const satisfies TULIP3DeviceSensorConfig
+    alarmFlags: {},
+    registerConfig: completeCommunicationModuleRegisterConfig(),
+    sensor1: {
+      alarmFlags: {},
+      registerConfig: emptySensorRegisterConfig(),
+      channel1: {
+        alarmFlags: {},
+        registerConfig: emptyChannelRegisterConfig(),
+        start: 4,
+        end: 20,
+        channelName: 'current',
+        measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
+      },
+    },
+    sensor2: {
+      alarmFlags: {},
+      registerConfig: emptySensorRegisterConfig(),
+      channel1: {
+        alarmFlags: {},
+        registerConfig: emptyChannelRegisterConfig(),
+        start: 0,
+        end: 10,
+        channelName: 'voltage',
+        measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
+      },
+    },
+  } as const satisfies TULIP3DeviceConfig
 
   it('low threshold alarm of the second sensor first channel is triggered (0x12 01 40 80)', () => {
     const bytes = [0x12, 0x01, 0x40, 0x80]
@@ -214,15 +229,21 @@ describe('tulip3 process alarm message decoding (0x12/0x01)', () => {
   it('supports maximum sensor and channel IDs (sensor4/channel8)', () => {
     // Custom config that supports sensor4/channel8
     const maxConfig = {
+      alarmFlags: {},
+      registerConfig: completeCommunicationModuleRegisterConfig(),
       sensor4: {
+        alarmFlags: {},
+        registerConfig: emptySensorRegisterConfig(),
         channel8: {
+          alarmFlags: {},
+          registerConfig: emptyChannelRegisterConfig(),
           start: 0,
           end: 1,
           measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
           channelName: 'sensor4Channel8',
         },
       },
-    } as const satisfies TULIP3DeviceSensorConfig
+    } as const satisfies TULIP3DeviceConfig
 
     // idByte: sensorId=3 (bits 7-6), channelId=7 (bits 5-3) => (3<<6)|(7<<3) = 0xF8
     const bytes = [0x12, 0x01, 0xF8, 0x80]
@@ -249,19 +270,27 @@ describe('tulip3 process alarm message decoding (0x12/0x01)', () => {
 
   it('parses a message with at least 6 sensor/channel pairs across sensors', () => {
     const richConfig = {
+      alarmFlags: {},
+      registerConfig: completeCommunicationModuleRegisterConfig(),
       sensor1: {
-        channel1: { start: 0, end: 1, measurementTypes: ['uint16 - TULIP scale 2500 - 12500'], channelName: 'sensor1Channel1' },
-        channel2: { start: 0, end: 1, measurementTypes: ['uint16 - TULIP scale 2500 - 12500'], channelName: 'sensor1Channel2' },
-        channel3: { start: 0, end: 1, measurementTypes: ['uint16 - TULIP scale 2500 - 12500'], channelName: 'sensor1Channel3' },
+        alarmFlags: {},
+        registerConfig: emptySensorRegisterConfig(),
+        channel1: { alarmFlags: {}, registerConfig: emptyChannelRegisterConfig(), start: 0, end: 1, measurementTypes: ['uint16 - TULIP scale 2500 - 12500'], channelName: 'sensor1Channel1' },
+        channel2: { alarmFlags: {}, registerConfig: emptyChannelRegisterConfig(), start: 0, end: 1, measurementTypes: ['uint16 - TULIP scale 2500 - 12500'], channelName: 'sensor1Channel2' },
+        channel3: { alarmFlags: {}, registerConfig: emptyChannelRegisterConfig(), start: 0, end: 1, measurementTypes: ['uint16 - TULIP scale 2500 - 12500'], channelName: 'sensor1Channel3' },
       },
       sensor2: {
-        channel1: { start: 0, end: 1, measurementTypes: ['uint16 - TULIP scale 2500 - 12500'], channelName: 'sensor2Channel1' },
-        channel2: { start: 0, end: 1, measurementTypes: ['uint16 - TULIP scale 2500 - 12500'], channelName: 'sensor2Channel2' },
+        alarmFlags: {},
+        registerConfig: emptySensorRegisterConfig(),
+        channel1: { alarmFlags: {}, registerConfig: emptyChannelRegisterConfig(), start: 0, end: 1, measurementTypes: ['uint16 - TULIP scale 2500 - 12500'], channelName: 'sensor2Channel1' },
+        channel2: { alarmFlags: {}, registerConfig: emptyChannelRegisterConfig(), start: 0, end: 1, measurementTypes: ['uint16 - TULIP scale 2500 - 12500'], channelName: 'sensor2Channel2' },
       },
       sensor3: {
-        channel4: { start: 0, end: 1, measurementTypes: ['uint16 - TULIP scale 2500 - 12500'], channelName: 'sensor3Channel4' },
+        alarmFlags: {},
+        registerConfig: emptySensorRegisterConfig(),
+        channel4: { alarmFlags: {}, registerConfig: emptyChannelRegisterConfig(), start: 0, end: 1, measurementTypes: ['uint16 - TULIP scale 2500 - 12500'], channelName: 'sensor3Channel4' },
       },
-    } as const satisfies TULIP3DeviceSensorConfig
+    } as const satisfies TULIP3DeviceConfig
 
     // Build a payload with 6 entries
     // 1) s1/c1 low

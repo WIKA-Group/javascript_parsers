@@ -1,9 +1,9 @@
 import type { ConfigurationReadRegisterData, ConfigurationReadRegistersResponseUplinkOutput, ConfigurationWriteRegistersResponseUplinkOutput } from '../../../schemas/tulip3/configuration'
-import type { FullTULIP3DeviceSensorConfig, TULIP3DeviceSensorConfig } from '../profile'
+import type { TULIP3DeviceConfig } from '../profile'
 import type { ParseRegisterBlocksOptions } from '../registers'
 import { decodeRegisterRead, parseFrameData, validateMessageHeader } from '.'
 import { createConfigurationRegisterLookup } from '../registers/configuration'
-import { assignChannelNames, validateResultSensors, validateSensorChannels } from './shared-validation'
+import { assignChannelNames } from './shared-validation'
 
 /**
  * Validates and transforms configuration result against device sensor configuration.
@@ -18,19 +18,20 @@ import { assignChannelNames, validateResultSensors, validateSensorChannels } fro
  * @throws {TypeError} If sensors are not expected by the device profile
  * @throws {TypeError} If sampling channels are enabled for sensors not in device configuration
  */
-export function validateAndTransformConfigurationResult<TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig>(
-  result: ConfigurationReadRegisterData<TTULIP3DeviceSensorConfig>,
-  deviceConfig: TTULIP3DeviceSensorConfig,
+export function validateAndTransformConfigurationResult<TTULIP3DeviceConfig extends TULIP3DeviceConfig>(
+  result: ConfigurationReadRegisterData<TTULIP3DeviceConfig>,
+  deviceConfig: TTULIP3DeviceConfig,
 ): void {
-  // Step 1: Validate result sensors are expected for device (shared logic)
-  const validSensors = Object.keys(deviceConfig)
-  const resultSensors = Object.keys(result).filter(key => key !== 'communicationModule')
-  validateResultSensors(resultSensors, validSensors)
+  const validSensors = Object.keys(deviceConfig).filter(k => k.startsWith('sensor'))
 
-  // Step 2: Validate sampling channels configuration (configuration-specific)
+  // Step 1: Validate sampling channels configuration (configuration-specific)
+  const resultSensors = Object.keys(result).filter(key => key !== 'communicationModule')
   resultSensors.forEach((sensor) => {
     const configChannelsForSensor = Object.keys(deviceConfig[sensor as keyof typeof deviceConfig] || {})
-    const sensorSampling = result[sensor as keyof typeof result]?.configuration?.samplingChannels as {
+    const sensorResult = result[sensor as keyof typeof result] as any
+
+    // samplingChannels might not exist if disabled by flags
+    const sensorSampling = sensorResult?.configuration?.samplingChannels as {
       [key: string]: boolean
     } | undefined
 
@@ -40,7 +41,7 @@ export function validateAndTransformConfigurationResult<TTULIP3DeviceSensorConfi
 
     // Check that every channel that is NOT in the config needs to have sampling turned off
     // If not, throw an error
-    const sensorsNotInConfig = Object.keys(sensorSampling || {}).filter(c => !configChannelsForSensor.includes(c))
+    const sensorsNotInConfig = Object.keys(sensorSampling).filter(c => !configChannelsForSensor.includes(c))
     // Get the sensors that are not in config BUT have true value
     const sensorsWithWrongValues = sensorsNotInConfig.filter(c => sensorSampling[c as keyof typeof sensorSampling] === true)
     // If any sensor is not in config but has true value, throw an error
@@ -49,56 +50,54 @@ export function validateAndTransformConfigurationResult<TTULIP3DeviceSensorConfi
     }
   })
 
-  // Step 3: Validate channel configurations for each sensor (shared logic)
-  validateSensorChannels(resultSensors, result, deviceConfig, 'configuration')
-
-  // Step 4: Assign channel names from device configuration (shared logic)
+  // Step 2: Assign channel names from device configuration (shared logic)
   assignChannelNames(validSensors, result, deviceConfig, 'identification')
 }
 
 /**
- * Decodes configuration fields from a data array according to TULIP3 protocol.
- * This function performs the same validation and parsing as decodeRegisterRead
- * but throws errors instead of returning error objects for higher-level error handling.
+ * Factory function that creates a decoder for configuration register read messages.
+ * The register lookup is created once when the factory is called and reused for all subsequent decodes.
  *
- * @param data - Raw byte array containing the configuration message data
  * @param config - Configuration object for the device sensor
- * @param options - Optional parsing options, such as start position and maximum register size
- * @returns Decoded configuration fields object
- * @throws {Error} If message length is invalid, subtype is unsupported, or parsing fails
- * @throws {TypeError} If register blocks or evaluation fails
- * @throws {RangeError} If message format is invalid
+ * @returns A decoder function that processes configuration messages
+ *
+ * @example
+ * ```typescript
+ * const decoder = createDecodeConfigurationRegisterRead(deviceConfig);
+ * const result = decoder(data, { maxRegisterSize: 32 });
+ * ```
  */
-export function decodeConfigurationRegisterRead<TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig = FullTULIP3DeviceSensorConfig>(
-  data: number[],
-  config: TTULIP3DeviceSensorConfig,
-  options: ParseRegisterBlocksOptions = {},
-): ConfigurationReadRegistersResponseUplinkOutput<TTULIP3DeviceSensorConfig> {
-  // Validate message header
-  const { messageType, messageSubType } = validateMessageHeader(data, {
-    expectedMessageType: 0x15,
-    allowedSubTypes: [0x01, 0x02],
-    minLength: 4,
-    messageTypeName: 'Configuration',
-  })
+export function createDecodeConfigurationRegisterRead<TTULIP3DeviceConfig extends TULIP3DeviceConfig>(config: TTULIP3DeviceConfig) {
+  // Create register lookup once when factory is called
+  const registersLookup = createConfigurationRegisterLookup(config)
 
-  // Evaluate register blocks
-  const res = decodeRegisterRead<ConfigurationReadRegisterData<TTULIP3DeviceSensorConfig>>(
-    data,
-    createConfigurationRegisterLookup(),
-    options,
-  )
+  return (data: number[], options: ParseRegisterBlocksOptions = {}): ConfigurationReadRegistersResponseUplinkOutput<TTULIP3DeviceConfig> => {
+    // Validate message header
+    const { messageType, messageSubType } = validateMessageHeader(data, {
+      expectedMessageType: 0x15,
+      allowedSubTypes: [0x01, 0x02],
+      minLength: 4,
+      messageTypeName: 'Configuration',
+    })
 
-  // Validate and transform the result
-  validateAndTransformConfigurationResult(res, config)
+    // Evaluate register blocks
+    const res = decodeRegisterRead<ConfigurationReadRegisterData<TTULIP3DeviceConfig>>(
+      data,
+      registersLookup,
+      options,
+    )
 
-  // Return successfully parsed message with correct subtype
-  return {
-    data: {
-      messageType,
-      messageSubType,
-      configuration: res,
-    },
+    // Validate and transform the result
+    validateAndTransformConfigurationResult(res, config)
+
+    // Return successfully parsed message with correct subtype
+    return {
+      data: {
+        messageType,
+        messageSubType,
+        configuration: res,
+      },
+    }
   }
 }
 

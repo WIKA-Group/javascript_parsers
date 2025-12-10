@@ -1,6 +1,5 @@
-import type { DeviceAlarmFlags, TULIP3ChannelConfig, TULIP3DeviceProfile, TULIP3DeviceSensorConfig } from '../../codecs/tulip3/profile'
-import type { MinusOne } from '../../types'
 /* eslint-disable ts/explicit-function-return-type */
+import type { TULIP3ChannelConfig, TULIP3DeviceConfig, TULIP3DeviceProfile } from '../../codecs/tulip3/profile'
 import type { ConfigurationReadRegistersResponseUplinkOutput, ConfigurationWriteRegistersResponseUplinkOutput } from './configuration'
 import type { DataMessageUplinkOutput } from './data'
 import type { ChannelAlarmMessageUplinkOutput, CommunicationModuleAlarmMessageUplinkOutput, SensorAlarmMessageUplinkOutput } from './deviceAlarm'
@@ -28,7 +27,7 @@ type ExtractMeasurementTypes<T> = T extends { measurementTypes: infer U }
 
 // Helper type to get the channel config ensuring it exists
 type GetChannelConfig<
-  TConfig extends TULIP3DeviceSensorConfig,
+  TConfig extends TULIP3DeviceConfig,
   TSensor extends keyof TConfig,
   TChannel extends keyof NonNullable<TConfig[TSensor]>,
 > = NonNullable<TConfig[TSensor]>[TChannel] extends TULIP3ChannelConfig
@@ -36,30 +35,42 @@ type GetChannelConfig<
   : never
 
 type FullMappedMeasurementSchemas<
-  TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig,
+  TTULIP3DeviceConfig extends TULIP3DeviceConfig,
   TExtension extends v.ObjectEntries,
 > = {
-  [TSensor in keyof TTULIP3DeviceSensorConfig]: {
-    [TChannel in keyof NonNullable<TTULIP3DeviceSensorConfig[TSensor]>]:
-    NonNullable<TTULIP3DeviceSensorConfig[TSensor]>[TChannel] extends TULIP3ChannelConfig
+  [TSensor in keyof TTULIP3DeviceConfig]: {
+    [TChannel in keyof NonNullable<TTULIP3DeviceConfig[TSensor]>]:
+    NonNullable<TTULIP3DeviceConfig[TSensor]>[TChannel] extends TULIP3ChannelConfig
       ? v.ObjectSchema<{
         sensor: v.LiteralSchema<TSensor, undefined>
-        sensorId: TSensor extends `sensor${infer Id extends number}`
-          ? v.LiteralSchema<MinusOne<Id>, undefined>
-          : v.NumberSchema<undefined>
+        // Force to v.NumberSchema to avoid maximum call stack exceeded.
+        // These conditional types were disabled due to TypeScript's limitations with deeply nested
+        // generic type inference causing stack overflow during declaration emit.
+        // TODO: Can be re-enabled when TypeScript 7 with tsgo (Go rewrite) is available,
+        // which should handle complex type instantiation more efficiently.
+        // TSensor extends `sensor${infer Id extends number}`
+        //   ? v.LiteralSchema<MinusOne<Id>, undefined>
+        //   : v.NumberSchema<undefined>
+        sensorId: v.NumberSchema<undefined>
         channel: v.LiteralSchema<TChannel, undefined>
-        channelId: TChannel extends `channel${infer Id extends number}`
-          ? v.LiteralSchema<MinusOne<Id>, undefined>
-          : v.NumberSchema<undefined>
-        channelName: v.LiteralSchema<NonNullable<TTULIP3DeviceSensorConfig[TSensor]>[TChannel]['channelName'], undefined>
+        // Force to v.NumberSchema to avoid maximum call stack exceeded.
+        // These conditional types were disabled due to TypeScript's limitations with deeply nested
+        // generic type inference causing stack overflow during declaration emit.
+        // TODO: Can be re-enabled when TypeScript 7 with tsgo (Go rewrite) is available,
+        // which should handle complex type instantiation more efficiently.
+        // TSensor extends `sensor${infer Id extends number}`
+        //   ? v.LiteralSchema<MinusOne<Id>, undefined>
+        //   : v.NumberSchema<undefined>
+        channelId: v.NumberSchema<undefined>
+        channelName: v.LiteralSchema<NonNullable<TTULIP3DeviceConfig[TSensor]>[TChannel]['channelName'], undefined>
         sourceDataType: v.PicklistSchema<
-          ExtractMeasurementTypes<GetChannelConfig<TTULIP3DeviceSensorConfig, TSensor, TChannel>>,
+          ExtractMeasurementTypes<GetChannelConfig<TTULIP3DeviceConfig, TSensor, TChannel>>,
           undefined
         >
       } & TExtension, undefined>
       : never
-  }[keyof NonNullable<TTULIP3DeviceSensorConfig[TSensor]>]
-}[keyof TTULIP3DeviceSensorConfig][]
+  }[keyof NonNullable<TTULIP3DeviceConfig[TSensor]>]
+}[keyof TTULIP3DeviceConfig][]
 
 /**
  * Builds schemas for all sensor/channel combinations WITH the `sourceDataType` field.
@@ -90,13 +101,22 @@ type FullMappedMeasurementSchemas<
  * })
  * ```
  */
-export function createFullSensorChannelSchemaWithExtension<const TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig, const TEntries extends v.ObjectEntries>(config: TTULIP3DeviceSensorConfig, extension: TEntries) {
+export function createFullSensorChannelSchemaWithExtension<const TTULIP3DeviceConfig extends TULIP3DeviceConfig, const TEntries extends v.ObjectEntries>(config: TTULIP3DeviceConfig, extension: TEntries) {
   // iterate over the config and create a schema for each sensor/channel combination with the extension
 
-  const schemas: FullMappedMeasurementSchemas<TTULIP3DeviceSensorConfig, TEntries> = []
+  const schemas: FullMappedMeasurementSchemas<TTULIP3DeviceConfig, TEntries> = []
 
-  for (const sensorKey of Object.keys(config) as (keyof TTULIP3DeviceSensorConfig)[]) {
-    for (const channelKey of Object.keys(config[sensorKey] as any) as (keyof TTULIP3DeviceSensorConfig[typeof sensorKey])[]) {
+  for (const sensorKey of Object.keys(config) as (keyof TTULIP3DeviceConfig)[]) {
+    // skip if key does not start with 'sensor'
+    if (!sensorKey.toString().startsWith('sensor')) {
+      continue
+    }
+    for (const channelKey of Object.keys(config[sensorKey] as any) as (keyof TTULIP3DeviceConfig[typeof sensorKey])[]) {
+      // skip if key does not start with 'channel'
+      if (!channelKey.toString().startsWith('channel')) {
+        continue
+      }
+
       const sensorId = Number.parseInt((sensorKey as string).replace('sensor', '')) - 1
       const channelId = Number.parseInt((channelKey as string).replace('channel', '')) - 1
       const channelName = (config[sensorKey][channelKey] as TULIP3ChannelConfig).channelName
@@ -112,7 +132,7 @@ export function createFullSensorChannelSchemaWithExtension<const TTULIP3DeviceSe
             undefined,
           ),
           ...extension,
-        }) as FullMappedMeasurementSchemas<TTULIP3DeviceSensorConfig, TEntries>[number],
+        }) as unknown as FullMappedMeasurementSchemas<TTULIP3DeviceConfig, TEntries>[number],
       )
     }
   }
@@ -121,26 +141,38 @@ export function createFullSensorChannelSchemaWithExtension<const TTULIP3DeviceSe
 }
 
 type MappedMeasurementSchemas<
-  TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig,
+  TTULIP3DeviceConfig extends TULIP3DeviceConfig,
   TExtension extends v.ObjectEntries,
 > = {
-  [TSensor in keyof TTULIP3DeviceSensorConfig]: {
-    [TChannel in keyof NonNullable<TTULIP3DeviceSensorConfig[TSensor]>]:
-    NonNullable<TTULIP3DeviceSensorConfig[TSensor]>[TChannel] extends TULIP3ChannelConfig
+  [TSensor in keyof TTULIP3DeviceConfig]: {
+    [TChannel in keyof NonNullable<TTULIP3DeviceConfig[TSensor]>]:
+    NonNullable<TTULIP3DeviceConfig[TSensor]>[TChannel] extends TULIP3ChannelConfig
       ? v.ObjectSchema<{
         sensor: v.LiteralSchema<TSensor, undefined>
-        sensorId: TSensor extends `sensor${infer Id extends number}`
-          ? v.LiteralSchema<MinusOne<Id>, undefined>
-          : v.NumberSchema<undefined>
+        // Force to v.NumberSchema to avoid maximum call stack exceeded.
+        // These conditional types were disabled due to TypeScript's limitations with deeply nested
+        // generic type inference causing stack overflow during declaration emit.
+        // TODO: Can be re-enabled when TypeScript 7 with tsgo (Go rewrite) is available,
+        // which should handle complex type instantiation more efficiently.
+        // TSensor extends `sensor${infer Id extends number}`
+        //   ? v.LiteralSchema<MinusOne<Id>, undefined>
+        //   : v.NumberSchema<undefined>
+        sensorId: v.NumberSchema<undefined>
         channel: v.LiteralSchema<TChannel, undefined>
-        channelId: TChannel extends `channel${infer Id extends number}`
-          ? v.LiteralSchema<MinusOne<Id>, undefined>
-          : v.NumberSchema<undefined>
-        channelName: v.LiteralSchema<NonNullable<TTULIP3DeviceSensorConfig[TSensor]>[TChannel]['channelName'], undefined>
+        // Force to v.NumberSchema to avoid maximum call stack exceeded.
+        // These conditional types were disabled due to TypeScript's limitations with deeply nested
+        // generic type inference causing stack overflow during declaration emit.
+        // TODO: Can be re-enabled when TypeScript 7 with tsgo (Go rewrite) is available,
+        // which should handle complex type instantiation more efficiently.
+        // TChannel extends `channel${infer Id extends number}`
+        //   ? v.LiteralSchema<MinusOne<Id>, undefined>
+        //   : v.NumberSchema<undefined>
+        channelId: v.NumberSchema<undefined>
+        channelName: v.LiteralSchema<NonNullable<TTULIP3DeviceConfig[TSensor]>[TChannel]['channelName'], undefined>
       } & TExtension, undefined>
       : never
-  }[keyof NonNullable<TTULIP3DeviceSensorConfig[TSensor]>]
-}[keyof TTULIP3DeviceSensorConfig][]
+  }[keyof NonNullable<TTULIP3DeviceConfig[TSensor]>]
+}[keyof TTULIP3DeviceConfig][]
 
 /**
  * Builds schemas for all sensor/channel combinations WITHOUT the `sourceDataType` field.
@@ -168,13 +200,13 @@ type MappedMeasurementSchemas<
  * })
  * ```
  */
-export function createSensorChannelSchemaWithExtension<const TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig, const TEntries extends v.ObjectEntries>(config: TTULIP3DeviceSensorConfig, extension: TEntries) {
+export function createSensorChannelSchemaWithExtension<const TTULIP3DeviceConfig extends TULIP3DeviceConfig, const TEntries extends v.ObjectEntries>(config: TTULIP3DeviceConfig, extension: TEntries) {
   // iterate over the config and create a schema for each sensor/channel combination with the extension
 
-  const schemas: MappedMeasurementSchemas<TTULIP3DeviceSensorConfig, TEntries> = []
+  const schemas: MappedMeasurementSchemas<TTULIP3DeviceConfig, TEntries> = []
 
-  for (const sensorKey of Object.keys(config) as (keyof TTULIP3DeviceSensorConfig)[]) {
-    for (const channelKey of Object.keys(config[sensorKey] as any) as (keyof TTULIP3DeviceSensorConfig[typeof sensorKey])[]) {
+  for (const sensorKey of Object.keys(config) as (keyof TTULIP3DeviceConfig)[]) {
+    for (const channelKey of Object.keys(config[sensorKey] as any) as (keyof TTULIP3DeviceConfig[typeof sensorKey])[]) {
       const sensorId = Number.parseInt((sensorKey as string).replace('sensor', '')) - 1
       const channelId = Number.parseInt((channelKey as string).replace('channel', '')) - 1
       const channelName = (config[sensorKey][channelKey] as TULIP3ChannelConfig).channelName
@@ -186,7 +218,7 @@ export function createSensorChannelSchemaWithExtension<const TTULIP3DeviceSensor
           channelId: v.literal(channelId),
           channelName: v.literal(channelName),
           ...extension,
-        }) as MappedMeasurementSchemas<TTULIP3DeviceSensorConfig, TEntries>[number],
+        }) as unknown as MappedMeasurementSchemas<TTULIP3DeviceConfig, TEntries>[number],
       )
     }
   }
@@ -195,17 +227,23 @@ export function createSensorChannelSchemaWithExtension<const TTULIP3DeviceSensor
 }
 
 type MappedSensorMeasurementSchemas<
-  TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig,
+  TTULIP3DeviceConfig extends TULIP3DeviceConfig,
   TExtension extends v.ObjectEntries,
 > = {
-  [TSensor in keyof TTULIP3DeviceSensorConfig]:
+  [TSensor in keyof TTULIP3DeviceConfig]:
   v.ObjectSchema<{
     sensor: v.LiteralSchema<TSensor, undefined>
-    sensorId: TSensor extends `sensor${infer Id extends number}`
-      ? v.LiteralSchema<MinusOne<Id>, undefined>
-      : v.NumberSchema<undefined>
+    // Force to v.NumberSchema to avoid maximum call stack exceeded.
+    // These conditional types were disabled due to TypeScript's limitations with deeply nested
+    // generic type inference causing stack overflow during declaration emit.
+    // TODO: Can be re-enabled when TypeScript 7 with tsgo (Go rewrite) is available,
+    // which should handle complex type instantiation more efficiently.
+    // TSensor extends `sensor${infer Id extends number}`
+    //   ? v.LiteralSchema<MinusOne<Id>, undefined>
+    //   : v.NumberSchema<undefined>
+    sensorId: v.NumberSchema<undefined>
   } & TExtension, undefined>
-}[keyof TTULIP3DeviceSensorConfig][]
+}[keyof TTULIP3DeviceConfig][]
 
 /**
  * Builds schemas for all sensors WITH the `sensorId` field.
@@ -232,47 +270,40 @@ type MappedSensorMeasurementSchemas<
  * })
  * ```
  */
-export function createSensorMeasurementSchemaWithExtension<const TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig, const TEntries extends v.ObjectEntries>(config: TTULIP3DeviceSensorConfig, extension: TEntries) {
+export function createSensorMeasurementSchemaWithExtension<const TTULIP3DeviceConfig extends TULIP3DeviceConfig, const TEntries extends v.ObjectEntries>(config: TTULIP3DeviceConfig, extension: TEntries) {
   // iterate over the config and create a schema for each sensor/channel combination with the extension
 
-  const schemas: MappedSensorMeasurementSchemas<TTULIP3DeviceSensorConfig, TEntries> = []
+  const schemas: MappedSensorMeasurementSchemas<TTULIP3DeviceConfig, TEntries> = []
 
-  for (const sensorKey of Object.keys(config) as (keyof TTULIP3DeviceSensorConfig)[]) {
+  for (const sensorKey of Object.keys(config) as (keyof TTULIP3DeviceConfig)[]) {
     const sensorId = Number.parseInt((sensorKey as string).replace('sensor', '')) - 1
     schemas.push(
       v.object({
         sensor: v.literal(sensorKey),
         sensorId: v.literal(sensorId),
         ...extension,
-      }) as MappedSensorMeasurementSchemas<TTULIP3DeviceSensorConfig, TEntries>[number],
+      }) as any as MappedSensorMeasurementSchemas<TTULIP3DeviceConfig, TEntries>[number],
     )
   }
 
   return schemas
 }
 
-export type TULIP3UplinkOutput<TDeviceProfile extends TULIP3DeviceProfile>
-  = | DataMessageUplinkOutput<TDeviceProfile['sensorChannelConfig']>
-    | ProcessAlarmMessageUplinkOutput<TDeviceProfile['sensorChannelConfig']>
-    | CommunicationModuleAlarmMessageUplinkOutput<TDeviceProfile['deviceAlarmConfig']['communicationModuleAlarms']>
-    | SensorAlarmMessageUplinkOutput<TDeviceProfile['sensorChannelConfig'], TDeviceProfile['deviceAlarmConfig']['sensorAlarms']>
-    | ChannelAlarmMessageUplinkOutput<TDeviceProfile['sensorChannelConfig'], TDeviceProfile['deviceAlarmConfig']['sensorChannelAlarms']>
-    | IdentificationReadRegistersResponseUplinkOutput<TDeviceProfile['sensorChannelConfig']>
-    | IdentificationWriteRegistersResponseUplinkOutput
-    | ConfigurationReadRegistersResponseUplinkOutput<TDeviceProfile['sensorChannelConfig']>
-    | ConfigurationWriteRegistersResponseUplinkOutput
-    | SpontaneousDownlinkAnswerUplinkOutput
-    | SpontaneousFetchAdditionalDownlinkMessageUplinkOutput
-    | KeepAliveMessageUplinkOutput
-
-export function createTULIP3UplinkOutputSchema<const TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig, const TCMFlags extends DeviceAlarmFlags, TSensorFlags extends DeviceAlarmFlags, TChannelFlags extends DeviceAlarmFlags>(sensorChannelConfig: TTULIP3DeviceSensorConfig, communicationModuleAlarms: TCMFlags, sensorAlarms: TSensorFlags, sensorChannelAlarms: TChannelFlags) {
+/**
+ * INTERNAL USE ONLY\
+ * Has to be cast to any as this ONLY creates the schemas for use in the uplink.schema.json file
+ * If not cast, typescript will throw "RangeError: Maximum call stack size exceeded" due to the complexity of the types involved.
+ * The type below should be used and kept in sync with the schema generated here.
+ * @internal
+ */
+export function createTULIP3UplinkOutputSchema<const TTULIP3DeviceConfig extends TULIP3DeviceConfig>(sensorChannelConfig: TTULIP3DeviceConfig): any {
   return v.union([
     createDataMessageUplinkOutputSchema(sensorChannelConfig),
     createConfigurationReadRegistersResponseUplinkOutputSchema(sensorChannelConfig),
     createConfigurationWriteRegistersResponseUplinkOutputSchema(),
-    createChannelAlarmUplinkOutputSchema(sensorChannelConfig, sensorChannelAlarms),
-    createCommunicationModuleAlarmUplinkOutputSchema(communicationModuleAlarms),
-    createSensorAlarmUplinkOutputSchema(sensorChannelConfig, sensorAlarms),
+    createChannelAlarmUplinkOutputSchema(sensorChannelConfig),
+    createCommunicationModuleAlarmUplinkOutputSchema(sensorChannelConfig),
+    createSensorAlarmUplinkOutputSchema(sensorChannelConfig),
     createKeepAliveUplinkOutputSchema(),
     createProcessAlarmUplinkOutputSchema(sensorChannelConfig),
     createSpontaneousDownlinkAnswerUplinkOutputSchema(),
@@ -281,3 +312,17 @@ export function createTULIP3UplinkOutputSchema<const TTULIP3DeviceSensorConfig e
     createIdentificationWriteRegistersResponseUplinkOutputSchema(),
   ])
 }
+
+export type TULIP3UplinkOutput<TDeviceProfile extends TULIP3DeviceProfile>
+  = | DataMessageUplinkOutput<TDeviceProfile['sensorChannelConfig']>
+    | ProcessAlarmMessageUplinkOutput<TDeviceProfile['sensorChannelConfig']>
+    | CommunicationModuleAlarmMessageUplinkOutput<TDeviceProfile['sensorChannelConfig']>
+    | SensorAlarmMessageUplinkOutput<TDeviceProfile['sensorChannelConfig']>
+    | ChannelAlarmMessageUplinkOutput<TDeviceProfile['sensorChannelConfig']>
+    | IdentificationReadRegistersResponseUplinkOutput<TDeviceProfile['sensorChannelConfig']>
+    | IdentificationWriteRegistersResponseUplinkOutput
+    | ConfigurationReadRegistersResponseUplinkOutput<TDeviceProfile['sensorChannelConfig']>
+    | ConfigurationWriteRegistersResponseUplinkOutput
+    | SpontaneousDownlinkAnswerUplinkOutput
+    | SpontaneousFetchAdditionalDownlinkMessageUplinkOutput
+    | KeepAliveMessageUplinkOutput

@@ -1,9 +1,10 @@
-import type { IdentificationReadRegisterData, IdentificationReadRegistersResponseUplinkOutput, IdentificationWriteRegistersResponseUplinkOutput } from '../../../schemas/tulip3/identification'
-import type { FullTULIP3DeviceSensorConfig, TULIP3DeviceSensorConfig } from '../profile'
+import type { IdentificationReadRegisterData, IdentificationWriteRegistersResponseUplinkOutput } from '../../../schemas/tulip3/identification'
+import type { TULIP3DeviceConfig } from '../profile'
 import type { ParseRegisterBlocksOptions } from '../registers'
+import type { IdentificationRegisterLookup } from '../registers/identification'
 import { decodeRegisterRead, parseFrameData, validateMessageHeader } from '.'
 import { createIdentificationRegisterLookup } from '../registers/identification'
-import { assignChannelNames, validateResultSensors, validateSensorChannels } from './shared-validation'
+import { assignChannelNames } from './shared-validation'
 
 /**
  * Validates and transforms the decoded identification result against the provided configuration.
@@ -17,15 +18,15 @@ import { assignChannelNames, validateResultSensors, validateSensorChannels } fro
  * @param config - Device sensor configuration for validation
  * @throws {TypeError} If validation fails (invalid sensors, channels, or connections)
  */
-export function validateAndTransformIdentificationResult<const TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig>(
-  result: IdentificationReadRegisterData<TTULIP3DeviceSensorConfig>,
-  config: TTULIP3DeviceSensorConfig,
+export function validateAndTransformIdentificationResult<const TTULIP3DeviceConfig extends TULIP3DeviceConfig>(
+  result: IdentificationReadRegisterData<TTULIP3DeviceConfig>,
+  config: TTULIP3DeviceConfig,
 ): void {
-  const validSensors = Object.keys(config)
+  const validSensors = Object.keys(config).filter(k => k.startsWith('sensor'))
 
   // Step 1: Validate connected sensors match configuration (identification-specific)
-  if (result?.communicationModule?.connectedSensors) {
-    Object.entries(result.communicationModule.connectedSensors).forEach(([sensor, isConnectedInResult]) => {
+  if (result && result?.communicationModule && 'connectedSensors' in result.communicationModule) {
+    Object.entries(result!.communicationModule!.connectedSensors as object).forEach(([sensor, isConnectedInResult]) => {
       const shouldBeConnected = validSensors.includes(sensor)
 
       if (isConnectedInResult !== shouldBeConnected) {
@@ -37,60 +38,58 @@ export function validateAndTransformIdentificationResult<const TTULIP3DeviceSens
     })
   }
 
-  // Step 2: Validate result sensors are expected for device (shared logic)
-  const resultSensors = Object.keys(result).filter(key => key !== 'communicationModule')
-  validateResultSensors(resultSensors, validSensors)
-
-  // Step 3: Validate channel configurations for each sensor (shared logic)
-  validateSensorChannels(resultSensors, result, config, 'identification')
-
   // Step 4: Assign channel names from configuration (shared logic)
   assignChannelNames(validSensors, result, config, 'identification')
 }
 
 /**
- * Decodes identification fields from a data array according to TULIP3 protocol.
- * This function performs the same validation and parsing as decodeReadIdentificationRegisterMessage
- * but throws errors instead of returning error objects for higher-level error handling.
+ * Factory function that creates a decoder for identification register read messages.
+ * The register lookup is created once when the factory is called and reused for all subsequent decodes.
  *
- * @param data - Raw byte array containing the identification message data
  * @param config - Device sensor configuration for parsing
- * @param options - Optional parsing options, such as start position and maximum register size
- * @returns Decoded identification fields object
- * @throws {Error} If message length is invalid, subtype is unsupported, or parsing fails
- * @throws {TypeError} If register blocks or evaluation fails
- * @throws {RangeError} If message format is invalid
+ * @returns A decoder function that processes identification messages
+ *
+ * @example
+ * ```typescript
+ * const decoder = createDecodeIdentificationRegisterRead(deviceConfig);
+ * const result = decoder(data, { maxRegisterSize: 64 });
+ * ```
  */
-export function decodeIdentificationRegisterRead<const TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig = FullTULIP3DeviceSensorConfig>(
-  data: number[],
-  config: TTULIP3DeviceSensorConfig,
-  options: ParseRegisterBlocksOptions = {},
-): IdentificationReadRegistersResponseUplinkOutput<TTULIP3DeviceSensorConfig> {
-  // Validate message header
-  const { messageType, messageSubType } = validateMessageHeader(data, {
-    expectedMessageType: 0x14,
-    allowedSubTypes: [0x01, 0x02, 0x04],
-    minLength: 4,
-    messageTypeName: 'Identification',
-  })
+export function createDecodeIdentificationRegisterRead<const TTULIP3DeviceConfig extends TULIP3DeviceConfig>(config: TTULIP3DeviceConfig) {
+  let registersLookup: IdentificationRegisterLookup | null = null
 
-  // Evaluate register blocks
-  const res = decodeRegisterRead<IdentificationReadRegisterData<TTULIP3DeviceSensorConfig>>(
-    data,
-    createIdentificationRegisterLookup(),
-    options,
-  )
+  return (data: number[], options: ParseRegisterBlocksOptions = {}) => {
+    // Lazy initialization of register lookup
+    if (!registersLookup) {
+      registersLookup = createIdentificationRegisterLookup(config)
+    }
 
-  // Validate and transform the decoded result
-  validateAndTransformIdentificationResult(res, config)
+    // Validate message header
+    const { messageType, messageSubType } = validateMessageHeader(data, {
+      expectedMessageType: 0x14,
+      allowedSubTypes: [0x01, 0x02, 0x04],
+      minLength: 4,
+      messageTypeName: 'Identification',
+    })
 
-  // Return successfully parsed message
-  return {
-    data: {
-      messageType,
-      messageSubType,
-      identification: res,
-    },
+    // Evaluate register blocks
+    const res = decodeRegisterRead<IdentificationReadRegisterData<TTULIP3DeviceConfig>>(
+      data,
+      registersLookup,
+      options,
+    )
+
+    // Validate and transform the decoded result
+    validateAndTransformIdentificationResult(res, config)
+
+    // Return successfully parsed message
+    return {
+      data: {
+        messageType,
+        messageSubType,
+        identification: res,
+      },
+    }
   }
 }
 

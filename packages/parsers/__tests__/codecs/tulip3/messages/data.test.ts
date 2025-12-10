@@ -1,6 +1,8 @@
-import type { TULIP3DeviceSensorConfig } from '../../../../src/codecs/tulip3/profile'
+import type { TULIP3DeviceConfig } from '../../../../src/codecs/tulip3/profile'
 import { describe, expect, it } from 'vitest'
 import { decodeDataMessage } from '../../../../src/codecs/tulip3/messages/data'
+import { createDefaultCommunicationModuleAlarmFlags, createDefaultSensorAlarmFlags } from '../../../../src/codecs/tulip3/messages/deviceAlarm'
+import { completeCommunicationModuleRegisterConfig, emptyChannelRegisterConfig, emptySensorRegisterConfig } from '../presets'
 
 // Test device sensor configuration
 const testDeviceConfig = {
@@ -10,19 +12,27 @@ const testDeviceConfig = {
       start: 0,
       end: 100,
       measurementTypes: ['uint16 - TULIP scale 2500 - 12500', 'float - IEEE754'] as const,
+      alarmFlags: {},
+      registerConfig: emptyChannelRegisterConfig(),
     },
     channel2: {
       channelName: 'sensor1Channel2',
       start: 0,
       end: 100,
       measurementTypes: ['uint16 - TULIP scale 2500 - 12500', 'float - IEEE754'] as const,
+      alarmFlags: {},
+      registerConfig: emptyChannelRegisterConfig(),
     },
     channel3: {
       channelName: 'sensor1Channel3',
       start: -40,
       end: 125,
       measurementTypes: ['float - IEEE754'] as const,
+      alarmFlags: {},
+      registerConfig: emptyChannelRegisterConfig(),
     },
+    alarmFlags: createDefaultSensorAlarmFlags(),
+    registerConfig: emptySensorRegisterConfig(),
   },
   sensor2: {
     channel1: {
@@ -30,9 +40,15 @@ const testDeviceConfig = {
       start: 0,
       end: 50,
       measurementTypes: ['float - IEEE754'] as const,
+      alarmFlags: {},
+      registerConfig: emptyChannelRegisterConfig(),
     },
+    alarmFlags: createDefaultSensorAlarmFlags(),
+    registerConfig: emptySensorRegisterConfig(),
   },
-} as const satisfies TULIP3DeviceSensorConfig
+  alarmFlags: createDefaultCommunicationModuleAlarmFlags(),
+  registerConfig: completeCommunicationModuleRegisterConfig(),
+} as const satisfies TULIP3DeviceConfig
 
 describe('decodeDataMessage', () => {
   describe('valid data messages', () => {
@@ -45,14 +61,22 @@ describe('decodeDataMessage', () => {
             measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
             start: 0,
             end: 10,
+            alarmFlags: {},
+            registerConfig: emptyChannelRegisterConfig(),
           },
           channel2: {
             channelName: 'sensor1Channel2',
             start: -40,
             end: 125,
             measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
+            alarmFlags: {},
+            registerConfig: emptyChannelRegisterConfig(),
           },
+          alarmFlags: createDefaultSensorAlarmFlags(),
+          registerConfig: emptySensorRegisterConfig(),
         },
+        alarmFlags: createDefaultCommunicationModuleAlarmFlags(),
+        registerConfig: completeCommunicationModuleRegisterConfig(),
       })
       expect(result.data).toEqual({
         messageType: 0x10,
@@ -235,9 +259,15 @@ describe('decodeDataMessage', () => {
             start: 0,
             end: 100,
             measurementTypes: ['uint16 - TULIP scale 2500 - 12500'] as const,
+            alarmFlags: {},
+            registerConfig: emptyChannelRegisterConfig(),
           },
+          alarmFlags: createDefaultSensorAlarmFlags(),
+          registerConfig: emptySensorRegisterConfig(),
         },
-      } as const satisfies TULIP3DeviceSensorConfig
+        alarmFlags: createDefaultCommunicationModuleAlarmFlags(),
+        registerConfig: completeCommunicationModuleRegisterConfig(),
+      } as const satisfies TULIP3DeviceConfig
 
       // Create data that would result in >100% (impossible in real scenario, but for testing)
       const data = [0x10, 0x01, 0x06, 0xFF, 0xFF] // This should be treated as error, not >100%
@@ -265,15 +295,23 @@ describe('decodeDataMessage', () => {
             start: 4,
             end: 20,
             measurementTypes: ['float - IEEE754'] as const,
+            alarmFlags: {},
+            registerConfig: emptyChannelRegisterConfig(),
           },
           channel2: {
             channelName: 'sensor1Channel2',
             start: -45,
             end: 110,
             measurementTypes: ['float - IEEE754'] as const,
+            alarmFlags: {},
+            registerConfig: emptyChannelRegisterConfig(),
           },
+          alarmFlags: createDefaultSensorAlarmFlags(),
+          registerConfig: emptySensorRegisterConfig(),
         },
-      } as const satisfies TULIP3DeviceSensorConfig
+        alarmFlags: createDefaultCommunicationModuleAlarmFlags(),
+        registerConfig: completeCommunicationModuleRegisterConfig(),
+      } as const satisfies TULIP3DeviceConfig
 
       // Test value below minimum for 4-20 range
       const dataBelowMin = [0x10, 0x01, 0x00, 0x40, 0x40, 0x00, 0x00] // 3.0, below min 4
@@ -422,9 +460,13 @@ describe('decodeDataMessage', () => {
             start: 0,
             end: 100,
             measurementTypes: ['float - IEEE754'] as const,
+            alarmFlags: {},
+            registerConfig: emptyChannelRegisterConfig(),
           },
+          alarmFlags: createDefaultSensorAlarmFlags(),
+          registerConfig: emptySensorRegisterConfig(),
         },
-      } as const satisfies TULIP3DeviceSensorConfig
+      } as const satisfies TULIP3DeviceConfig
       // sensor4=3 (11), channel8=7 (111), float=0 (00), reserved=0 (0)
       // Binary: 11 111 00 0 = 0xF8
       const data = [0x10, 0x01, 0xF8, 0x40, 0x20, 0x00, 0x00]
@@ -537,15 +579,23 @@ describe('decodeDataMessage', () => {
             start: 4,
             end: 20,
             measurementTypes: ['uint16 - TULIP scale 2500 - 12500', 'float - IEEE754'] as const,
+            alarmFlags: {},
+            registerConfig: emptyChannelRegisterConfig(),
           },
           channel2: {
             channelName: 'sensor1Channel2',
             start: -45,
             end: 110,
             measurementTypes: ['uint16 - TULIP scale 2500 - 12500', 'float - IEEE754'] as const,
+            alarmFlags: {},
+            registerConfig: emptyChannelRegisterConfig(),
           },
+          alarmFlags: createDefaultSensorAlarmFlags(),
+          registerConfig: emptySensorRegisterConfig(),
         },
-      } as const satisfies TULIP3DeviceSensorConfig
+        alarmFlags: createDefaultCommunicationModuleAlarmFlags(),
+        registerConfig: completeCommunicationModuleRegisterConfig(),
+      } as const satisfies TULIP3DeviceConfig
       const data = [0x10, 0x01, 0x06, 0x1D, 0x4C, 0x0E, 0x27, 0x10]
       const result = decodeDataMessage(data, customConfig)
       expect(result.data).toEqual({
@@ -584,15 +634,23 @@ describe('decodeDataMessage', () => {
             end: 20,
             measurementTypes: ['uint16 - TULIP scale 2500 - 12500', 'float - IEEE754'] as const,
             channelName: 'sensor1Channel1',
+            alarmFlags: {},
+            registerConfig: emptyChannelRegisterConfig(),
           },
           channel2: {
             start: -45,
             end: 110,
             measurementTypes: ['uint16 - TULIP scale 2500 - 12500', 'float - IEEE754'] as const,
             channelName: 'sensor1Channel2',
+            alarmFlags: {},
+            registerConfig: emptyChannelRegisterConfig(),
           },
+          alarmFlags: createDefaultSensorAlarmFlags(),
+          registerConfig: emptySensorRegisterConfig(),
         },
-      } as const satisfies TULIP3DeviceSensorConfig
+        alarmFlags: createDefaultCommunicationModuleAlarmFlags(),
+        registerConfig: completeCommunicationModuleRegisterConfig(),
+      } as const satisfies TULIP3DeviceConfig
       const data = [
         0x10,
         0x01, // Header
@@ -675,8 +733,14 @@ describe('decodeDataMessage', () => {
       const tulipData = [0x10, 0x01, 0x06, 0x09, 0xC5]
 
       const resDefault = decodeDataMessage(tulipData, {
+        alarmFlags: createDefaultCommunicationModuleAlarmFlags(),
+        registerConfig: completeCommunicationModuleRegisterConfig(),
         sensor1: {
+          alarmFlags: createDefaultSensorAlarmFlags(),
+          registerConfig: emptySensorRegisterConfig(),
           channel1: {
+            alarmFlags: {},
+            registerConfig: emptyChannelRegisterConfig(),
             channelName: 'sensor1Channel1',
             measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
             start: 0,
@@ -685,8 +749,14 @@ describe('decodeDataMessage', () => {
         },
       })
       const resZero = decodeDataMessage(tulipData, {
+        alarmFlags: createDefaultCommunicationModuleAlarmFlags(),
+        registerConfig: completeCommunicationModuleRegisterConfig(),
         sensor1: {
+          alarmFlags: createDefaultSensorAlarmFlags(),
+          registerConfig: emptySensorRegisterConfig(),
           channel1: {
+            alarmFlags: {},
+            registerConfig: emptyChannelRegisterConfig(),
             channelName: 'sensor1Channel1',
             measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
             start: 0,
@@ -695,8 +765,14 @@ describe('decodeDataMessage', () => {
         },
       }, 0)
       const resTwo = decodeDataMessage(tulipData, {
+        alarmFlags: createDefaultCommunicationModuleAlarmFlags(),
+        registerConfig: completeCommunicationModuleRegisterConfig(),
         sensor1: {
+          alarmFlags: createDefaultSensorAlarmFlags(),
+          registerConfig: emptySensorRegisterConfig(),
           channel1: {
+            alarmFlags: {},
+            registerConfig: emptyChannelRegisterConfig(),
             channelName: 'sensor1Channel1',
             measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
             start: 0,

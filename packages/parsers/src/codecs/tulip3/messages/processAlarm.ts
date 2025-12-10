@@ -1,8 +1,8 @@
 import type { ProcessAlarmData, ProcessAlarmMessageUplinkOutput } from '../../../schemas/tulip3/processAlarm'
-import type { TULIP3DeviceSensorConfig, TULIP3SensorChannelConfig } from '../profile'
+import type { TULIP3ChannelConfig, TULIP3DeviceConfig, TULIP3SensorConfig } from '../profile'
 import { validateMessageHeader } from '.'
 
-export function decodeProcessAlarmMessage<TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig>(data: number[], deviceSensorConfig: TTULIP3DeviceSensorConfig): ProcessAlarmMessageUplinkOutput<TTULIP3DeviceSensorConfig> {
+export function decodeProcessAlarmMessage<TTULIP3DeviceConfig extends TULIP3DeviceConfig>(data: number[], deviceSensorConfig: TTULIP3DeviceConfig): ProcessAlarmMessageUplinkOutput<TTULIP3DeviceConfig> {
   // Validate message header
   const { messageType, messageSubType } = validateMessageHeader(data, {
     expectedMessageType: 0x12,
@@ -13,7 +13,7 @@ export function decodeProcessAlarmMessage<TTULIP3DeviceSensorConfig extends TULI
 
   // Parse entries directly from payload starting at index 2
   let currentIndex = 2
-  const alarmsParsed: Array<ProcessAlarmData<TTULIP3DeviceSensorConfig>[number]> = []
+  const alarmsParsed: Array<ProcessAlarmData<TTULIP3DeviceConfig>[number]> = []
 
   while (currentIndex < data.length) {
     // Need at least 2 bytes for a full entry (sensor/channel + alarm byte)
@@ -29,11 +29,11 @@ export function decodeProcessAlarmMessage<TTULIP3DeviceSensorConfig extends TULI
     // channel id at bit 5, 4 and 3
     const channelId = (idByte & 0b0011_1000) >> 3
 
-    const sensor = `sensor${sensorId + 1}` as keyof TULIP3DeviceSensorConfig
-    const channel = `channel${channelId + 1}` as keyof TULIP3SensorChannelConfig
+    const sensor = `sensor${sensorId + 1}` as keyof TULIP3DeviceConfig
+    const channel = `channel${channelId + 1}` as keyof TULIP3SensorConfig
 
     // Validate sensor/channel exist in config
-    const cfg = deviceSensorConfig[sensor]?.[channel]
+    const cfg = (deviceSensorConfig[sensor] as TULIP3SensorConfig)?.[channel] as TULIP3ChannelConfig | undefined
     if (!cfg) {
       throw new TypeError(`Process alarm for sensor ${sensor} channel ${channel} is not supported by the device profile.`)
     }
@@ -52,7 +52,7 @@ export function decodeProcessAlarmMessage<TTULIP3DeviceSensorConfig extends TULI
         lowThresholdWithDelay: Boolean(alarmByte & 0b0000_1000), // bit 3
         highThresholdWithDelay: Boolean(alarmByte & 0b0000_0100), // bit 2
       },
-    } as ProcessAlarmData<TTULIP3DeviceSensorConfig>[number])
+    } as ProcessAlarmData<TTULIP3DeviceConfig>[number])
     currentIndex += 2
   }
 
@@ -60,7 +60,7 @@ export function decodeProcessAlarmMessage<TTULIP3DeviceSensorConfig extends TULI
     data: {
       messageType,
       messageSubType,
-      processAlarms: alarmsParsed as ProcessAlarmData<TTULIP3DeviceSensorConfig>,
+      processAlarms: alarmsParsed as ProcessAlarmData<TTULIP3DeviceConfig>,
     },
   }
 }

@@ -7,8 +7,5 @@ export function createNETRIS1TULIP3UplinkOutputSchema() {
   const NETRIS1_TULIP3_PROFILE = createdTULIP3NETRIS1DeviceProfile()
   return createTULIP3UplinkOutputSchema(
     NETRIS1_TULIP3_PROFILE.sensorChannelConfig,
-    NETRIS1_TULIP3_PROFILE.deviceAlarmConfig.communicationModuleAlarms,
-    NETRIS1_TULIP3_PROFILE.deviceAlarmConfig.sensorAlarms,
-    NETRIS1_TULIP3_PROFILE.deviceAlarmConfig.sensorChannelAlarms,
   )
 }

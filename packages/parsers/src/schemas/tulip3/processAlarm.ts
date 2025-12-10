@@ -1,5 +1,5 @@
 /* eslint-disable ts/explicit-function-return-type */
-import type { TULIP3DeviceSensorConfig } from '../../codecs/tulip3/profile'
+import type { TULIP3DeviceConfig } from '../../codecs/tulip3/profile'
 import * as v from 'valibot'
 import { createGenericUplinkOutputSchema } from './_shared'
 import { createSensorChannelSchemaWithExtension } from './index'
@@ -49,10 +49,10 @@ function createProcessAlarmTypeSchema() {
  *
  * @param config - Device sensor configuration mapping sensors to channels
  * @returns Array of Valibot object schemas, one per sensor/channel
- * @template TTULIP3DeviceSensorConfig - Type-safe sensor configuration
+ * @template TTULIP3DeviceConfig - Type-safe sensor configuration
  * @see {@link createFullSensorChannelSchemaWithExtension} for the variant WITH `sourceDataType`.
  */
-function createProcessAlarmEntrySchemas<const TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig>(config: TTULIP3DeviceSensorConfig) {
+function createProcessAlarmEntrySchemas<const TTULIP3DeviceConfig extends TULIP3DeviceConfig>(config: TTULIP3DeviceConfig) {
   return createSensorChannelSchemaWithExtension(config, {
     alarmFlags: createProcessAlarmTypeSchema(),
   })
@@ -78,7 +78,7 @@ function createProcessAlarmEntrySchemas<const TTULIP3DeviceSensorConfig extends 
  *
  * @param config - Device sensor configuration mapping sensors to channels
  * @returns A Valibot object schema for process alarm uplink output
- * @template TTULIP3DeviceSensorConfig - Type-safe sensor configuration
+ * @template TTULIP3DeviceConfig - Type-safe sensor configuration
  * @example
  * ```ts
  * const config = { sensor1: { channel1: {} } } as const
@@ -105,7 +105,7 @@ function createProcessAlarmEntrySchemas<const TTULIP3DeviceSensorConfig extends 
  * })
  * ```
  */
-function createProcessAlarmUplinkOutputSchema<const TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig>(config: TTULIP3DeviceSensorConfig) {
+function createProcessAlarmUplinkOutputSchema<const TTULIP3DeviceConfig extends TULIP3DeviceConfig>(config: TTULIP3DeviceConfig) {
   return createGenericUplinkOutputSchema({
     messageType: [0x12],
     messageSubType: [0x01],
@@ -119,9 +119,9 @@ function createProcessAlarmUplinkOutputSchema<const TTULIP3DeviceSensorConfig ex
 // TYPE EXPORTS
 // =============================================================================
 
-export type ProcessAlarmEntry<TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig> = v.InferOutput<ReturnType<typeof createProcessAlarmEntrySchemas<TTULIP3DeviceSensorConfig>>[number]>
-export type ProcessAlarmMessageUplinkOutput<TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig> = v.InferOutput<ReturnType<typeof createProcessAlarmUplinkOutputSchema<TTULIP3DeviceSensorConfig>>>
-export type ProcessAlarmData<TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig> = ProcessAlarmMessageUplinkOutput<TTULIP3DeviceSensorConfig>['data']['processAlarms']
+export type ProcessAlarmEntry<TTULIP3DeviceConfig extends TULIP3DeviceConfig> = v.InferOutput<ReturnType<typeof createProcessAlarmEntrySchemas<TTULIP3DeviceConfig>>[number]>
+export type ProcessAlarmMessageUplinkOutput<TTULIP3DeviceConfig extends TULIP3DeviceConfig> = v.InferOutput<ReturnType<typeof createProcessAlarmUplinkOutputSchema<TTULIP3DeviceConfig>>>
+export type ProcessAlarmData<TTULIP3DeviceConfig extends TULIP3DeviceConfig> = ProcessAlarmMessageUplinkOutput<TTULIP3DeviceConfig>['data']['processAlarms']
 
 export {
   createProcessAlarmUplinkOutputSchema,

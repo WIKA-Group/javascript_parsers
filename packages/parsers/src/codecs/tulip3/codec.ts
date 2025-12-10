@@ -2,23 +2,23 @@ import type { UplinkInput } from '../../schemas'
 import type { TULIP3UplinkOutput } from '../../schemas/tulip3'
 import type { Channel } from '../../types'
 import type { Codec } from '../codec'
-import type { TULIP3ChannelConfig, TULIP3DeviceProfile, TULIP3DeviceSensorConfig, TULIP3SensorChannelConfig } from './profile'
+import type { TULIP3ChannelConfig, TULIP3DeviceConfig, TULIP3DeviceProfile, TULIP3SensorConfig } from './profile'
 import { getRoundingDecimals } from '../../utils'
 import { checkChannelsValidity } from '../utils'
 import { readMessageSubtype } from './messages'
-import { decodeConfigurationRegisterRead, decodeConfigurationRegisterWrite } from './messages/configuration'
+import { createDecodeConfigurationRegisterRead, decodeConfigurationRegisterWrite } from './messages/configuration'
 import { decodeDataMessage } from './messages/data'
 import { decodeChannelAlarmMessage, decodeCommunicationModuleAlarmMessage, decodeSensorAlarmMessage } from './messages/deviceAlarm'
-import { decodeIdentificationRegisterRead, decodeIdentificationRegisterWrite } from './messages/identification'
+import { createDecodeIdentificationRegisterRead, decodeIdentificationRegisterWrite } from './messages/identification'
 import { decodeKeepAliveMessage } from './messages/keepAlive'
 import { decodeProcessAlarmMessage } from './messages/processAlarm'
 import { decodeSpontaneousFetchAdditionalDownlinkMessageMessage, decodeSpontaneousGenericDownlinkAnswerMessage } from './messages/spontaneous'
 
-type ChannelNames<TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig> = {
-  [S in keyof TTULIP3DeviceSensorConfig]: TTULIP3DeviceSensorConfig[S] extends TULIP3SensorChannelConfig ? {
-    [C in keyof TTULIP3DeviceSensorConfig[S]]: TTULIP3DeviceSensorConfig[S][C] extends TULIP3ChannelConfig ? TTULIP3DeviceSensorConfig[S][C]['adjustMeasurementRangeDisallowed'] extends true ? never : TTULIP3DeviceSensorConfig[S][C]['channelName'] : never
-  }[keyof TTULIP3DeviceSensorConfig[S]] : never
-}[keyof TTULIP3DeviceSensorConfig]
+type ChannelNames<TTULIP3DeviceConfig extends TULIP3DeviceConfig> = {
+  [S in keyof TTULIP3DeviceConfig]: TTULIP3DeviceConfig[S] extends TULIP3SensorConfig ? {
+    [C in keyof TTULIP3DeviceConfig[S]]: TTULIP3DeviceConfig[S][C] extends TULIP3ChannelConfig ? TTULIP3DeviceConfig[S][C]['adjustMeasurementRangeDisallowed'] extends true ? never : TTULIP3DeviceConfig[S][C]['channelName'] : never
+  }[keyof TTULIP3DeviceConfig[S]] : never
+}[keyof TTULIP3DeviceConfig]
 
 /**
  * Creates a TULIP3 protocol codec for decoding advanced IoT device messages with comprehensive sensor support.
@@ -109,10 +109,22 @@ export function defineTULIP3Codec<const TDeviceProfile extends TULIP3DeviceProfi
   const name = `${deviceProfile.deviceName}TULIP3Codec` as `${TDeviceProfile['deviceName']}TULIP3Codec`
   let roundingDecimals = getRoundingDecimals(deviceProfile.roundingDecimals)
 
+  // Create decoders once with register lookups
+  const decodeIdentification = createDecodeIdentificationRegisterRead(deviceProfile.sensorChannelConfig)
+  const decodeConfiguration = createDecodeConfigurationRegisterRead(deviceProfile.sensorChannelConfig)
+
   function getChannels(): Channel[] {
     const c: Channel[] = []
-    Object.values(deviceProfile.sensorChannelConfig).forEach((sensorConfig: TULIP3SensorChannelConfig) => {
-      Object.values(sensorConfig).forEach((channelConfig: TULIP3ChannelConfig) => {
+    Object.keys(deviceProfile.sensorChannelConfig).forEach((sensorKey) => {
+      // skip if it does not start with 'sensor'
+      if (!sensorKey.startsWith('sensor'))
+        return
+      const sensorConfig = (deviceProfile.sensorChannelConfig as any)[sensorKey] as TULIP3SensorConfig
+      Object.keys(sensorConfig).forEach((channelKey) => {
+        // skip if it does not start with 'channel'
+        if (!channelKey.startsWith('channel'))
+          return
+        const channelConfig = sensorConfig[channelKey as keyof typeof sensorConfig] as TULIP3ChannelConfig
         c.push({
           name: channelConfig.channelName,
           start: channelConfig.start,
@@ -121,6 +133,7 @@ export function defineTULIP3Codec<const TDeviceProfile extends TULIP3DeviceProfi
         })
       })
     })
+
     return c
   }
 
@@ -146,22 +159,21 @@ export function defineTULIP3Codec<const TDeviceProfile extends TULIP3DeviceProfi
     switch (firstByte) {
       case 0x10:
       case 0x11:
-        // @ts-expect-error - type is not correctly inferred due to default generic type in deviceProfile
+        // @ts-expect-error - ts cannot infer the correct return type here
         return decodeDataMessage(input.bytes, deviceProfile.sensorChannelConfig, roundingDecimals)
       case 0x12:
-        // @ts-expect-error - type is not correctly inferred due to default generic type in deviceProfile
+        // @ts-expect-error - ts cannot infer the correct return type here
+
         return decodeProcessAlarmMessage(input.bytes, deviceProfile.sensorChannelConfig)
       case 0x13:
         switch (subType) {
           case 0x01:
-            // @ts-expect-error - type is not correctly inferred due to default generic type in deviceProfile
-            return decodeCommunicationModuleAlarmMessage(input.bytes, deviceProfile.deviceAlarmConfig.communicationModuleAlarms)
+            return decodeCommunicationModuleAlarmMessage(input.bytes, deviceProfile.sensorChannelConfig)
           case 0x02:
-            // @ts-expect-error - type is not correctly inferred due to default generic type in deviceProfile
-            return decodeSensorAlarmMessage(input.bytes, deviceProfile.sensorChannelConfig, deviceProfile.deviceAlarmConfig.sensorAlarms)
+            // @ts-expect-error - ts cannot infer the correct return type here
+            return decodeSensorAlarmMessage(input.bytes, deviceProfile.sensorChannelConfig)
           case 0x03:
-            // @ts-expect-error - type is not correctly inferred due to default generic type in deviceProfile
-            return decodeChannelAlarmMessage(input.bytes, deviceProfile.sensorChannelConfig, deviceProfile.deviceAlarmConfig.sensorChannelAlarms)
+            return decodeChannelAlarmMessage(input.bytes, deviceProfile.sensorChannelConfig)
           default:
             throw new Error(`Unsupported sub message type 0x${subType?.toString(16)} for message type 0x13`)
         }
@@ -170,8 +182,8 @@ export function defineTULIP3Codec<const TDeviceProfile extends TULIP3DeviceProfi
           case 0x01:
           case 0x02:
           case 0x04:
-            // @ts-expect-error - type is not correctly inferred due to default generic type in deviceProfile
-            return decodeIdentificationRegisterRead(input.bytes, deviceProfile.sensorChannelConfig, { maxRegisterSize: deviceProfile.identificationMessageMaxRegisterSize })
+            // @ts-expect-error - ts cannot infer the correct return type here
+            return decodeIdentification(input.bytes)
           case 0x03:
             return decodeIdentificationRegisterWrite(input.bytes)
           default:
@@ -181,8 +193,8 @@ export function defineTULIP3Codec<const TDeviceProfile extends TULIP3DeviceProfi
         switch (subType) {
           case 0x01:
           case 0x02:
-            // @ts-expect-error - type is not correctly inferred due to default generic type in deviceProfile
-            return decodeConfigurationRegisterRead(input.bytes, deviceProfile.sensorChannelConfig, { maxRegisterSize: deviceProfile.configurationMessageMaxRegisterSize })
+            // @ts-expect-error - ts cannot infer the correct return type here
+            return decodeConfiguration(input.bytes)
           case 0x03:
             return decodeConfigurationRegisterWrite(input.bytes)
           default:
@@ -207,7 +219,7 @@ export function defineTULIP3Codec<const TDeviceProfile extends TULIP3DeviceProfi
   return {
     name,
     adjustMeasuringRange: (name, range) => {
-      const sensorConfigs = Object.values(deviceProfile.sensorChannelConfig) as TULIP3SensorChannelConfig[]
+      const sensorConfigs = Object.values(deviceProfile.sensorChannelConfig) as TULIP3SensorConfig[]
       for (const sensorConfig of sensorConfigs) {
         const channel = Object.values(sensorConfig).find((channel: TULIP3ChannelConfig) => channel?.channelName === name) as TULIP3ChannelConfig
         if (channel) {

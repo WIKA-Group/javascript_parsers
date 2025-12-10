@@ -1,4 +1,54 @@
 import type { protocolDataTypeLookup } from './lookups'
+import type { AnyCustomRegisterLookup } from './registers'
+
+type _Channels = `channel${1 | 2 | 3 | 4 | 5 | 6 | 7 | 8}`
+type _Sensors = `sensor${1 | 2 | 3 | 4}`
+
+export type DeviceSpecificRegisters = Record<string, any> // TODO:
+
+export interface ChannelIdentificationRegisterFlags {
+  measurand?: true
+  unit?: true
+  minMeasureRange?: true
+  maxMeasureRange?: true
+  minPhysicalLimit?: true
+  maxPhysicalLimit?: true
+  accuracy?: true
+  offset?: true
+  gain?: true
+  calibrationDate?: true
+  // channel name is always present
+}
+
+export function defineChannelIdentificationRegisters<const TChannelIdentificationRegisterFlags extends ChannelIdentificationRegisterFlags>(flags: TChannelIdentificationRegisterFlags): TChannelIdentificationRegisterFlags {
+  return flags
+}
+
+export interface ChannelConfigurationRegisterFlags {
+  protocolDataType?: true
+  processAlarmEnabled?: true
+  processAlarmDeadBand?: true
+  lowThresholdAlarmValue?: true
+  highThresholdAlarmValue?: true
+  fallingSlopeAlarmValue?: true
+  risingSlopeAlarmValue?: true
+  lowThresholdWithDelayAlarmValue?: true
+  lowThresholdWithDelayAlarmDelay?: true
+  highThresholdWithDelayAlarmValue?: true
+  highThresholdWithDelayAlarmDelay?: true
+  // channel name is always present
+}
+
+export function defineChannelConfigurationRegisters<const TChannelConfigurationRegisterFlags extends ChannelConfigurationRegisterFlags>(flags: TChannelConfigurationRegisterFlags): TChannelConfigurationRegisterFlags {
+  return flags
+}
+
+export interface ChannelRegisterConfig {
+  tulip3IdentificationRegisters: ChannelIdentificationRegisterFlags
+  tulip3ConfigurationRegisters: ChannelConfigurationRegisterFlags
+  channelSpecificIdentificationRegisters: AnyCustomRegisterLookup
+  channelSpecificConfigurationRegisters: AnyCustomRegisterLookup
+}
 
 export interface TULIP3ChannelConfig {
   /**
@@ -12,9 +62,43 @@ export interface TULIP3ChannelConfig {
   measurementTypes: typeof protocolDataTypeLookup[keyof typeof protocolDataTypeLookup][]
   channelName: string
   adjustMeasurementRangeDisallowed?: boolean
+  alarmFlags: AlarmFlags
+  registerConfig: ChannelRegisterConfig
 }
 
-export interface TULIP3SensorChannelConfig {
+export interface SensorIdentificationRegisterFlags {
+  sensorType?: true
+  existingChannels?: true
+  firmwareVersion?: true
+  hardwareVersion?: true
+  productionDate?: true
+  serialNumberPart1?: true
+  serialNumberPart2?: true
+}
+
+export function defineSensorIdentificationRegisters<const TSensorIdentificationRegisterFlags extends SensorIdentificationRegisterFlags>(flags: TSensorIdentificationRegisterFlags): TSensorIdentificationRegisterFlags {
+  return flags
+}
+
+export interface SensorConfigurationRegisterFlags {
+  samplingChannels?: true
+  bootTime?: true
+  communicationTimeout?: true
+  communicationRetryCount?: true
+}
+
+export function defineSensorConfigurationRegisters<const TSensorConfigurationRegisterFlags extends SensorConfigurationRegisterFlags>(flags: TSensorConfigurationRegisterFlags): TSensorConfigurationRegisterFlags {
+  return flags
+}
+
+export interface SensorRegisterConfig {
+  tulip3IdentificationRegisters: SensorIdentificationRegisterFlags
+  tulip3ConfigurationRegisters: SensorConfigurationRegisterFlags
+  sensorSpecificIdentificationRegisters: AnyCustomRegisterLookup
+  sensorSpecificConfigurationRegisters: AnyCustomRegisterLookup
+}
+
+export interface TULIP3SensorConfig {
   channel1?: TULIP3ChannelConfig
   channel2?: TULIP3ChannelConfig
   channel3?: TULIP3ChannelConfig
@@ -23,20 +107,56 @@ export interface TULIP3SensorChannelConfig {
   channel6?: TULIP3ChannelConfig
   channel7?: TULIP3ChannelConfig
   channel8?: TULIP3ChannelConfig
+  alarmFlags: AlarmFlags
+  registerConfig: SensorRegisterConfig
 }
 
-export interface TULIP3DeviceSensorConfig {
-  sensor1?: TULIP3SensorChannelConfig
-  sensor2?: TULIP3SensorChannelConfig
-  sensor3?: TULIP3SensorChannelConfig
-  sensor4?: TULIP3SensorChannelConfig
+export interface CommunicationModuleIdentificationRegisterFlags {
+  productId?: true
+  productSubId?: true
+  channelPlan?: true
+  connectedSensors?: true
+  firmwareVersion?: true
+  hardwareVersion?: true
+  productionDate?: true
+  serialNumberPart1?: true
+  serialNumberPart2?: true
 }
 
-export interface FullTULIP3DeviceSensorConfig {
-  sensor1: NonNullable<TULIP3SensorChannelConfig>
-  sensor2: NonNullable<TULIP3SensorChannelConfig>
-  sensor3: NonNullable<TULIP3SensorChannelConfig>
-  sensor4: NonNullable<TULIP3SensorChannelConfig>
+export function defineCommunicationModuleIdentificationRegisters<const TCommunicationModuleIdentificationRegisterFlags extends CommunicationModuleIdentificationRegisterFlags>(flags: TCommunicationModuleIdentificationRegisterFlags): TCommunicationModuleIdentificationRegisterFlags {
+  return flags
+}
+
+export interface CommunicationModuleConfigurationRegisterFlags {
+  measuringPeriodAlarmOff?: true
+  measuringPeriodAlarmOn?: true
+  transmissionRateAlarmOff?: true
+  transmissionRateAlarmOn?: true
+  overVoltageThreshold?: true
+  underVoltageThreshold?: true
+  overTemperatureCmChip?: true
+  underTemperatureCmChip?: true
+  downlinkAnswerTimeout?: true
+  fetchAdditionalDownlinkTimeInterval?: true
+  enableBleAdvertising?: true
+}
+
+export function defineCommunicationModuleConfigurationRegisters<const TCommunicationModuleConfigurationRegisterFlags extends CommunicationModuleConfigurationRegisterFlags>(flags: TCommunicationModuleConfigurationRegisterFlags): TCommunicationModuleConfigurationRegisterFlags {
+  return flags
+}
+
+export interface CommunicationModuleRegisterConfig {
+  tulip3IdentificationRegisters: CommunicationModuleIdentificationRegisterFlags
+  tulip3ConfigurationRegisters: CommunicationModuleConfigurationRegisterFlags
+}
+
+export interface TULIP3DeviceConfig {
+  sensor1?: TULIP3SensorConfig
+  sensor2?: TULIP3SensorConfig
+  sensor3?: TULIP3SensorConfig
+  sensor4?: TULIP3SensorConfig
+  alarmFlags: AlarmFlags
+  registerConfig: CommunicationModuleRegisterConfig
 }
 
 /**
@@ -53,9 +173,9 @@ export interface FullTULIP3DeviceSensorConfig {
  * }
  */
 
-export type DeviceAlarmFlags = Record<string, number>
+export type AlarmFlags = Record<string, number>
 
-export interface TULIP3DeviceProfile<TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig = TULIP3DeviceSensorConfig> {
+export interface TULIP3DeviceProfile<TTULIP3DeviceConfig extends TULIP3DeviceConfig = TULIP3DeviceConfig> {
 
   deviceName: string
 
@@ -67,26 +187,7 @@ export interface TULIP3DeviceProfile<TTULIP3DeviceSensorConfig extends TULIP3Dev
    */
   roundingDecimals?: number
 
-  sensorChannelConfig: TTULIP3DeviceSensorConfig
-
-  /**
-   * Flags for device alarms.
-   * These flags indicate the status of various alarms in the device.
-   */
-  deviceAlarmConfig: {
-    /**
-     * Flags for communication module alarms.
-     */
-    communicationModuleAlarms: DeviceAlarmFlags
-    /**
-     * Flags for sensor alarms.
-     */
-    sensorAlarms: DeviceAlarmFlags
-    /**
-     * Flags for sensor channel alarms.
-     */
-    sensorChannelAlarms: DeviceAlarmFlags
-  }
+  sensorChannelConfig: TTULIP3DeviceConfig
 }
 
 export function defineTULIP3DeviceProfile<const TTULIP3DeviceProfile extends TULIP3DeviceProfile>(profile: TTULIP3DeviceProfile): TTULIP3DeviceProfile {

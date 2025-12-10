@@ -1,4 +1,4 @@
-import type { TULIP3DeviceSensorConfig } from '../../codecs/tulip3/profile'
+import type { TULIP3DeviceConfig } from '../../codecs/tulip3/profile'
 /* eslint-disable ts/explicit-function-return-type */
 import * as v from 'valibot'
 import { createGenericUplinkOutputSchema } from './_shared'
@@ -21,7 +21,7 @@ import { createFullSensorChannelSchemaWithExtension } from './index'
  *
  * @param config - Configuration object defining sensor-to-channel mappings
  * @returns A Valibot union schema for general measurements with custom validation
- * @template TTULIP3DeviceSensorConfig - Type-safe sensor configuration
+ * @template TTULIP3DeviceConfig - Type-safe sensor configuration
  * @example
  * ```typescript
  * const config = {
@@ -48,7 +48,7 @@ import { createFullSensorChannelSchemaWithExtension } from './index'
  * })
  * ```
  */
-function createGeneralMeasurementSchema<const TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig>(config: TTULIP3DeviceSensorConfig) {
+function createGeneralMeasurementSchema<const TTULIP3DeviceConfig extends TULIP3DeviceConfig>(config: TTULIP3DeviceConfig) {
   return v.pipe(
     v.union([
       // error measurement schema
@@ -74,7 +74,7 @@ function createGeneralMeasurementSchema<const TTULIP3DeviceSensorConfig extends 
  *
  * @param config - Configuration object defining sensor-to-channel mappings
  * @returns A Valibot object schema for data message uplink output
- * @template TTULIP3DeviceSensorConfig - Type-safe sensor configuration
+ * @template TTULIP3DeviceConfig - Type-safe sensor configuration
  * @example
  * ```typescript
  * const config = {
@@ -108,7 +108,7 @@ function createGeneralMeasurementSchema<const TTULIP3DeviceSensorConfig extends 
  * })
  * ```
  */
-function createDataMessageUplinkOutputSchema<const TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig>(config: TTULIP3DeviceSensorConfig) {
+function createDataMessageUplinkOutputSchema<const TTULIP3DeviceConfig extends TULIP3DeviceConfig>(config: TTULIP3DeviceConfig) {
   return createGenericUplinkOutputSchema({
     messageType: [0x10, 0x11], // Data message types
     messageSubType: [0x01], // Data message subtype
@@ -122,9 +122,9 @@ function createDataMessageUplinkOutputSchema<const TTULIP3DeviceSensorConfig ext
 // TYPE EXPORTS
 // =============================================================================
 
-export type GeneralMeasurement<TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig> = v.InferOutput<ReturnType<typeof createGeneralMeasurementSchema<TTULIP3DeviceSensorConfig>>>
-export type DataMessageData<TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig> = DataMessageUplinkOutput<TTULIP3DeviceSensorConfig>['data']['measurements']
-export type DataMessageUplinkOutput<TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig> = v.InferOutput<ReturnType<typeof createDataMessageUplinkOutputSchema<TTULIP3DeviceSensorConfig>>>
+export type GeneralMeasurement<TTULIP3DeviceConfig extends TULIP3DeviceConfig> = v.InferOutput<ReturnType<typeof createGeneralMeasurementSchema<TTULIP3DeviceConfig>>>
+export type DataMessageData<TTULIP3DeviceConfig extends TULIP3DeviceConfig> = DataMessageUplinkOutput<TTULIP3DeviceConfig>['data']['measurements']
+export type DataMessageUplinkOutput<TTULIP3DeviceConfig extends TULIP3DeviceConfig> = v.InferOutput<ReturnType<typeof createDataMessageUplinkOutputSchema<TTULIP3DeviceConfig>>>
 
 export {
   createDataMessageUplinkOutputSchema,

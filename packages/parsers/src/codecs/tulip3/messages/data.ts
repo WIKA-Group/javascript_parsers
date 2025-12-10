@@ -1,5 +1,5 @@
 import type { DataMessageData, DataMessageUplinkOutput } from '../../../schemas/tulip3/data'
-import type { TULIP3DeviceSensorConfig, TULIP3SensorChannelConfig } from '../profile'
+import type { TULIP3ChannelConfig, TULIP3DeviceConfig, TULIP3SensorConfig } from '../profile'
 import { validateMessageHeader } from '.'
 import { DEFAULT_ROUNDING_DECIMALS, roundValue, TULIPValueToValue } from '../../../utils'
 import { protocolDataTypeLengthLookup, protocolDataTypeLookup } from '../lookups'
@@ -116,7 +116,7 @@ function parseDataMessage(data: number[], currentIndex = 2): [GeneralMeasurement
   return m as [GeneralMeasurement, ...GeneralMeasurement[]]
 }
 
-export function decodeDataMessage<TTULIP3DeviceSensorConfig extends TULIP3DeviceSensorConfig>(data: number[], deviceSensorConfig: TTULIP3DeviceSensorConfig, roundingDecimals = DEFAULT_ROUNDING_DECIMALS): DataMessageUplinkOutput<TTULIP3DeviceSensorConfig> {
+export function decodeDataMessage<TTULIP3DeviceConfig extends TULIP3DeviceConfig>(data: number[], deviceSensorConfig: TTULIP3DeviceConfig, roundingDecimals = DEFAULT_ROUNDING_DECIMALS): DataMessageUplinkOutput<TTULIP3DeviceConfig> {
   // Validate subtype for the specific message type
   const {
     messageType,
@@ -131,9 +131,9 @@ export function decodeDataMessage<TTULIP3DeviceSensorConfig extends TULIP3Device
   // go through the measurements and check if it tries to target a sensor/channel/dataType that is not supported
   // if the measurement is tulip, it also needs to be converted to the actual value from the range
 
-  const blocks: DataMessageData<TTULIP3DeviceSensorConfig> = parseDataMessage(data).map((b) => {
+  const blocks: DataMessageData<TTULIP3DeviceConfig> = parseDataMessage(data).map((b) => {
     // check if it was from a sensor/channel/dataType that is supported
-    const config = deviceSensorConfig[b.sensor as keyof TULIP3DeviceSensorConfig]?.[b.channel as keyof TULIP3SensorChannelConfig]
+    const config = (deviceSensorConfig[b.sensor as keyof TULIP3DeviceConfig] as TULIP3SensorConfig)?.[b.channel as keyof TULIP3SensorConfig] as TULIP3ChannelConfig | undefined
 
     if (!config) {
       throw new TypeError(`Measurement from sensor ${b.sensor} channel ${b.channel} is not supported by the device profile.`)
@@ -164,8 +164,8 @@ export function decodeDataMessage<TTULIP3DeviceSensorConfig extends TULIP3Device
     return {
       ...b,
       channelName: config.channelName,
-    } as DataMessageData<TTULIP3DeviceSensorConfig>[number]
-  }) as [DataMessageData<TTULIP3DeviceSensorConfig>[number], ...DataMessageData<TTULIP3DeviceSensorConfig>]
+    } as DataMessageData<TTULIP3DeviceConfig>[number]
+  }) as [DataMessageData<TTULIP3DeviceConfig>[number], ...DataMessageData<TTULIP3DeviceConfig>]
 
   return {
     data: {

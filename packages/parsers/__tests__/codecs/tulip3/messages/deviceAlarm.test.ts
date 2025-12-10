@@ -1,10 +1,13 @@
-import type { TULIP3DeviceSensorConfig } from '../../../../src/codecs/tulip3/profile'
+import type { TULIP3DeviceConfig } from '../../../../src/codecs/tulip3/profile'
 import { describe, expect, it } from 'vitest'
 import {
   decodeChannelAlarmMessage,
   decodeCommunicationModuleAlarmMessage,
   decodeSensorAlarmMessage,
 } from '../../../../src/codecs/tulip3/messages/deviceAlarm'
+import { completeCommunicationModuleRegisterConfig, completeTULIP3DeviceConfig, createDefaultCommunicationModuleAlarmFlags, emptyChannelRegisterConfig, emptySensorRegisterConfig } from '../presets'
+
+const completeConfig = completeTULIP3DeviceConfig()
 
 /**
  * Standard communication module alarm flags configuration based on TULIP3 specification.
@@ -15,19 +18,22 @@ import {
  * - 5: Low voltage
  * - 4: Memory error
  * - 3: Air time limitation
- * - 2: CM chip high temperature
- * - 1: CM chip low temperature
+ * - 2: CM cmChip high temperature
+ * - 1: CM cmChip low temperature
  * - 0: Local user access denied
  */
 const STANDARD_COMMUNICATION_MODULE_ALARMS = {
-  highVoltage: 1 << 6,
-  lowVoltage: 1 << 5,
-  memoryError: 1 << 4,
-  airTimeLimitation: 1 << 3,
-  chipHighTemperature: 1 << 2,
-  chipLowTemperature: 1 << 1,
-  localUserAccessDenied: 1 << 0,
-} as const
+  alarmFlags: {
+    highVoltage: 1 << 6,
+    lowVoltage: 1 << 5,
+    memoryError: 1 << 4,
+    airTimeLimitation: 1 << 3,
+    cmChipHighTemperature: 1 << 2,
+    cmChipLowTemperature: 1 << 1,
+    localUserAccessDenied: 1 << 0,
+  },
+  registerConfig: completeCommunicationModuleRegisterConfig(),
+} as const satisfies TULIP3DeviceConfig
 
 /**
  * Standard sensor alarm flags configuration based on TULIP3 specification.
@@ -75,113 +81,113 @@ describe('tulip3 communication module device alarm message decoding (0x13/0x01)'
       lowVoltage: false,
       memoryError: false,
       airTimeLimitation: false,
-      chipHighTemperature: false,
-      chipLowTemperature: false,
+      cmChipHighTemperature: false,
+      cmChipLowTemperature: false,
       localUserAccessDenied: true,
     })
   })
 
   it('parses all alarms inactive (0x13 01 00 00)', () => {
     const bytes = [0x13, 0x01, 0x00, 0x00]
-    const out = decodeCommunicationModuleAlarmMessage(bytes, STANDARD_COMMUNICATION_MODULE_ALARMS)
+    const out = decodeCommunicationModuleAlarmMessage(bytes, completeConfig)
 
     expect(out.data.communicationModuleAlarms.alarmFlags).toEqual({
       highVoltage: false,
       lowVoltage: false,
       memoryError: false,
       airTimeLimitation: false,
-      chipHighTemperature: false,
-      chipLowTemperature: false,
+      cmChipHighTemperature: false,
+      cmChipLowTemperature: false,
       localUserAccessDenied: false,
     })
   })
 
   it('parses high voltage alarm active (bit 6)', () => {
     const bytes = [0x13, 0x01, 0x00, 0x40] // bit 6 set
-    const out = decodeCommunicationModuleAlarmMessage(bytes, STANDARD_COMMUNICATION_MODULE_ALARMS)
+    const out = decodeCommunicationModuleAlarmMessage(bytes, completeConfig)
 
     expect(out.data.communicationModuleAlarms.alarmFlags).toEqual({
       highVoltage: true,
       lowVoltage: false,
       memoryError: false,
       airTimeLimitation: false,
-      chipHighTemperature: false,
-      chipLowTemperature: false,
+      cmChipHighTemperature: false,
+      cmChipLowTemperature: false,
       localUserAccessDenied: false,
     })
   })
 
   it('parses low voltage alarm active (bit 5)', () => {
     const bytes = [0x13, 0x01, 0x00, 0x20] // bit 5 set
-    const out = decodeCommunicationModuleAlarmMessage(bytes, STANDARD_COMMUNICATION_MODULE_ALARMS)
+    const out = decodeCommunicationModuleAlarmMessage(bytes, completeConfig)
 
     expect(out.data.communicationModuleAlarms.alarmFlags).toEqual({
       highVoltage: false,
       lowVoltage: true,
       memoryError: false,
       airTimeLimitation: false,
-      chipHighTemperature: false,
-      chipLowTemperature: false,
+      cmChipHighTemperature: false,
+      cmChipLowTemperature: false,
       localUserAccessDenied: false,
     })
   })
 
   it('parses memory error alarm active (bit 4)', () => {
     const bytes = [0x13, 0x01, 0x00, 0x10] // bit 4 set
-    const out = decodeCommunicationModuleAlarmMessage(bytes, STANDARD_COMMUNICATION_MODULE_ALARMS)
+    const out = decodeCommunicationModuleAlarmMessage(bytes, completeConfig)
 
     expect(out.data.communicationModuleAlarms.alarmFlags).toEqual({
       highVoltage: false,
       lowVoltage: false,
       memoryError: true,
       airTimeLimitation: false,
-      chipHighTemperature: false,
-      chipLowTemperature: false,
+      cmChipHighTemperature: false,
+      cmChipLowTemperature: false,
       localUserAccessDenied: false,
     })
   })
 
   it('parses air time limitation alarm active (bit 3)', () => {
     const bytes = [0x13, 0x01, 0x00, 0x08] // bit 3 set
-    const out = decodeCommunicationModuleAlarmMessage(bytes, STANDARD_COMMUNICATION_MODULE_ALARMS)
+    const out = decodeCommunicationModuleAlarmMessage(bytes, completeConfig)
 
     expect(out.data.communicationModuleAlarms.alarmFlags).toEqual({
       highVoltage: false,
       lowVoltage: false,
       memoryError: false,
       airTimeLimitation: true,
-      chipHighTemperature: false,
-      chipLowTemperature: false,
+      cmChipHighTemperature: false,
+      cmChipLowTemperature: false,
       localUserAccessDenied: false,
     })
   })
 
-  it('parses CM chip high temperature alarm active (bit 2)', () => {
+  it('parses CM cmChip high temperature alarm active (bit 2)', () => {
     const bytes = [0x13, 0x01, 0x00, 0x04] // bit 2 set
-    const out = decodeCommunicationModuleAlarmMessage(bytes, STANDARD_COMMUNICATION_MODULE_ALARMS)
+    const out = decodeCommunicationModuleAlarmMessage(bytes, completeConfig)
 
     expect(out.data.communicationModuleAlarms.alarmFlags).toEqual({
       highVoltage: false,
       lowVoltage: false,
       memoryError: false,
       airTimeLimitation: false,
-      chipHighTemperature: true,
-      chipLowTemperature: false,
+      cmChipHighTemperature: true,
+      cmChipLowTemperature: false,
       localUserAccessDenied: false,
     })
   })
 
-  it('parses CM chip low temperature alarm active (bit 1)', () => {
+  it('parses CM cmChip low temperature alarm active (bit 1)', () => {
     const bytes = [0x13, 0x01, 0x00, 0x02] // bit 1 set
-    const out = decodeCommunicationModuleAlarmMessage(bytes, STANDARD_COMMUNICATION_MODULE_ALARMS)
+    const out = decodeCommunicationModuleAlarmMessage(bytes, completeConfig)
 
     expect(out.data.communicationModuleAlarms.alarmFlags).toEqual({
       highVoltage: false,
       lowVoltage: false,
       memoryError: false,
       airTimeLimitation: false,
-      chipHighTemperature: false,
-      chipLowTemperature: true,
+      cmChipHighTemperature: false,
+      cmChipLowTemperature: true,
       localUserAccessDenied: false,
     })
   })
@@ -189,30 +195,30 @@ describe('tulip3 communication module device alarm message decoding (0x13/0x01)'
   it('parses multiple alarms active simultaneously', () => {
     // High voltage + low voltage + memory error + local user access denied
     const bytes = [0x13, 0x01, 0x00, 0x71] // bits 6,5,4,0 set
-    const out = decodeCommunicationModuleAlarmMessage(bytes, STANDARD_COMMUNICATION_MODULE_ALARMS)
+    const out = decodeCommunicationModuleAlarmMessage(bytes, completeConfig)
 
     expect(out.data.communicationModuleAlarms.alarmFlags).toEqual({
       highVoltage: true,
       lowVoltage: true,
       memoryError: true,
       airTimeLimitation: false,
-      chipHighTemperature: false,
-      chipLowTemperature: false,
+      cmChipHighTemperature: false,
+      cmChipLowTemperature: false,
       localUserAccessDenied: true,
     })
   })
 
   it('parses all possible alarms active (bits 6-0 set)', () => {
     const bytes = [0x13, 0x01, 0x00, 0x7F] // bits 6-0 all set
-    const out = decodeCommunicationModuleAlarmMessage(bytes, STANDARD_COMMUNICATION_MODULE_ALARMS)
+    const out = decodeCommunicationModuleAlarmMessage(bytes, completeConfig)
 
     expect(out.data.communicationModuleAlarms.alarmFlags).toEqual({
       highVoltage: true,
       lowVoltage: true,
       memoryError: true,
       airTimeLimitation: true,
-      chipHighTemperature: true,
-      chipLowTemperature: true,
+      cmChipHighTemperature: true,
+      cmChipLowTemperature: true,
       localUserAccessDenied: true,
     })
   })
@@ -220,7 +226,7 @@ describe('tulip3 communication module device alarm message decoding (0x13/0x01)'
   it('ignores RFU bits (15-7) when parsing alarms', () => {
     // Set all 16 bits including RFU bits 15-7
     const bytes = [0x13, 0x01, 0xFF, 0xFF]
-    const out = decodeCommunicationModuleAlarmMessage(bytes, STANDARD_COMMUNICATION_MODULE_ALARMS)
+    const out = decodeCommunicationModuleAlarmMessage(bytes, completeConfig)
 
     // Should only consider bits 6-0, ignoring RFU bits
     expect(out.data.communicationModuleAlarms.alarmFlags).toEqual({
@@ -228,8 +234,8 @@ describe('tulip3 communication module device alarm message decoding (0x13/0x01)'
       lowVoltage: true,
       memoryError: true,
       airTimeLimitation: true,
-      chipHighTemperature: true,
-      chipLowTemperature: true,
+      cmChipHighTemperature: true,
+      cmChipLowTemperature: true,
       localUserAccessDenied: true,
     })
   })
@@ -237,7 +243,7 @@ describe('tulip3 communication module device alarm message decoding (0x13/0x01)'
   it('handles upper byte having values (testing 16-bit field parsing)', () => {
     // Upper byte has some bits set, but only lower byte bits 6-0 matter for alarms
     const bytes = [0x13, 0x01, 0xAB, 0x15] // upper byte = 0xAB, lower byte = 0x15
-    const out = decodeCommunicationModuleAlarmMessage(bytes, STANDARD_COMMUNICATION_MODULE_ALARMS)
+    const out = decodeCommunicationModuleAlarmMessage(bytes, completeConfig)
 
     // Lower byte 0x15 = 0001 0101 = bits 4,2,0 set
     expect(out.data.communicationModuleAlarms.alarmFlags).toEqual({
@@ -245,15 +251,15 @@ describe('tulip3 communication module device alarm message decoding (0x13/0x01)'
       lowVoltage: false,
       memoryError: true, // bit 4
       airTimeLimitation: false,
-      chipHighTemperature: true, // bit 2
-      chipLowTemperature: false,
+      cmChipHighTemperature: true, // bit 2
+      cmChipLowTemperature: false,
       localUserAccessDenied: true, // bit 0
     })
   })
 
   it('handles edge case with maximum 16-bit values', () => {
     const bytes = [0x13, 0x01, 0xFF, 0x00] // upper byte all set, lower byte clear
-    const out = decodeCommunicationModuleAlarmMessage(bytes, STANDARD_COMMUNICATION_MODULE_ALARMS)
+    const out = decodeCommunicationModuleAlarmMessage(bytes, completeConfig)
 
     // All alarms should be inactive since only bits 6-0 of the 16-bit value matter
     expect(out.data.communicationModuleAlarms.alarmFlags).toEqual({
@@ -261,15 +267,15 @@ describe('tulip3 communication module device alarm message decoding (0x13/0x01)'
       lowVoltage: false,
       memoryError: false,
       airTimeLimitation: false,
-      chipHighTemperature: false,
-      chipLowTemperature: false,
+      cmChipHighTemperature: false,
+      cmChipLowTemperature: false,
       localUserAccessDenied: false,
     })
   })
 
   it('validates message structure and returns correct message types', () => {
     const bytes = [0x13, 0x01, 0x00, 0x01]
-    const out = decodeCommunicationModuleAlarmMessage(bytes, STANDARD_COMMUNICATION_MODULE_ALARMS)
+    const out = decodeCommunicationModuleAlarmMessage(bytes, completeConfig)
 
     expect(out).toEqual({
       data: {
@@ -281,8 +287,8 @@ describe('tulip3 communication module device alarm message decoding (0x13/0x01)'
             lowVoltage: false,
             memoryError: false,
             airTimeLimitation: false,
-            chipHighTemperature: false,
-            chipLowTemperature: false,
+            cmChipHighTemperature: false,
+            cmChipLowTemperature: false,
             localUserAccessDenied: true,
           },
         },
@@ -293,79 +299,79 @@ describe('tulip3 communication module device alarm message decoding (0x13/0x01)'
   // Error handling tests
   it('throws TypeError for invalid message type', () => {
     const bytes = [0x12, 0x01, 0x00, 0x01] // wrong message type
-    expect(() => decodeCommunicationModuleAlarmMessage(bytes, STANDARD_COMMUNICATION_MODULE_ALARMS)).toThrow(TypeError)
-    expect(() => decodeCommunicationModuleAlarmMessage(bytes, STANDARD_COMMUNICATION_MODULE_ALARMS)).toThrow('Invalid communication module alarm message type: expected 0x13 but got 0x12')
+    expect(() => decodeCommunicationModuleAlarmMessage(bytes, completeConfig)).toThrow(TypeError)
+    expect(() => decodeCommunicationModuleAlarmMessage(bytes, completeConfig)).toThrow('Invalid communication module alarm message type: expected 0x13 but got 0x12')
   })
 
   it('throws TypeError for invalid sub message type', () => {
     const bytes = [0x13, 0x02, 0x00, 0x01] // wrong sub message type
-    expect(() => decodeCommunicationModuleAlarmMessage(bytes, STANDARD_COMMUNICATION_MODULE_ALARMS)).toThrow(TypeError)
-    expect(() => decodeCommunicationModuleAlarmMessage(bytes, STANDARD_COMMUNICATION_MODULE_ALARMS)).toThrow('Unsupported communication module alarm message subtype: 0x02. Allowed subtypes: 0x01')
+    expect(() => decodeCommunicationModuleAlarmMessage(bytes, completeConfig)).toThrow(TypeError)
+    expect(() => decodeCommunicationModuleAlarmMessage(bytes, completeConfig)).toThrow('Unsupported communication module alarm message subtype: 0x02. Allowed subtypes: 0x01')
   })
 
   it('throws RangeError for data too long (more than 4 bytes)', () => {
     const bytes = [0x13, 0x01, 0x00, 0x01, 0xFF] // 5 bytes
-    expect(() => decodeCommunicationModuleAlarmMessage(bytes, STANDARD_COMMUNICATION_MODULE_ALARMS)).toThrow(RangeError)
-    expect(() => decodeCommunicationModuleAlarmMessage(bytes, STANDARD_COMMUNICATION_MODULE_ALARMS)).toThrow('Invalid data length for device alarm message: expected 4 but got 5')
+    expect(() => decodeCommunicationModuleAlarmMessage(bytes, completeConfig)).toThrow(RangeError)
+    expect(() => decodeCommunicationModuleAlarmMessage(bytes, completeConfig)).toThrow('Invalid data length for device alarm message: expected 4 but got 5')
   })
 
   it('throws TypeError for empty data', () => {
     const bytes: number[] = []
-    expect(() => decodeCommunicationModuleAlarmMessage(bytes, STANDARD_COMMUNICATION_MODULE_ALARMS)).toThrow(RangeError)
-    expect(() => decodeCommunicationModuleAlarmMessage(bytes, STANDARD_COMMUNICATION_MODULE_ALARMS)).toThrow('Communication module alarm message too short. Expected at least 4 bytes but got 0')
+    expect(() => decodeCommunicationModuleAlarmMessage(bytes, completeConfig)).toThrow(RangeError)
+    expect(() => decodeCommunicationModuleAlarmMessage(bytes, completeConfig)).toThrow('Communication module alarm message too short. Expected at least 4 bytes but got 0')
   })
 
   it('throws RangeError for header only (2 bytes)', () => {
     const bytes = [0x13, 0x01]
-    expect(() => decodeCommunicationModuleAlarmMessage(bytes, STANDARD_COMMUNICATION_MODULE_ALARMS)).toThrow(RangeError)
-    expect(() => decodeCommunicationModuleAlarmMessage(bytes, STANDARD_COMMUNICATION_MODULE_ALARMS)).toThrow('Communication module alarm message too short. Expected at least 4 bytes but got 2')
+    expect(() => decodeCommunicationModuleAlarmMessage(bytes, completeConfig)).toThrow(RangeError)
+    expect(() => decodeCommunicationModuleAlarmMessage(bytes, completeConfig)).toThrow('Communication module alarm message too short. Expected at least 4 bytes but got 2')
   })
 
   it('throws TypeError for completely wrong message type (not even close)', () => {
     const bytes = [0xFF, 0x01, 0x00, 0x01]
-    expect(() => decodeCommunicationModuleAlarmMessage(bytes, STANDARD_COMMUNICATION_MODULE_ALARMS)).toThrow(TypeError)
-    expect(() => decodeCommunicationModuleAlarmMessage(bytes, STANDARD_COMMUNICATION_MODULE_ALARMS)).toThrow('Invalid communication module alarm message type: expected 0x13 but got 0xFF')
+    expect(() => decodeCommunicationModuleAlarmMessage(bytes, completeConfig)).toThrow(TypeError)
+    expect(() => decodeCommunicationModuleAlarmMessage(bytes, completeConfig)).toThrow('Invalid communication module alarm message type: expected 0x13 but got 0xFF')
   })
 
   it('throws TypeError for wrong sub message type (0x13/0x00)', () => {
     const bytes = [0x13, 0x00, 0x00, 0x01] // sub type 0x00 instead of 0x01
-    expect(() => decodeCommunicationModuleAlarmMessage(bytes, STANDARD_COMMUNICATION_MODULE_ALARMS)).toThrow(TypeError)
-    expect(() => decodeCommunicationModuleAlarmMessage(bytes, STANDARD_COMMUNICATION_MODULE_ALARMS)).toThrow('Unsupported communication module alarm message subtype: 0x00. Allowed subtypes: 0x01')
+    expect(() => decodeCommunicationModuleAlarmMessage(bytes, completeConfig)).toThrow(TypeError)
+    expect(() => decodeCommunicationModuleAlarmMessage(bytes, completeConfig)).toThrow('Unsupported communication module alarm message subtype: 0x00. Allowed subtypes: 0x01')
   })
 
   it('throws TypeError for wrong sub message type (0x13/0xFF)', () => {
     const bytes = [0x13, 0xFF, 0x00, 0x01] // sub type 0xFF instead of 0x01
-    expect(() => decodeCommunicationModuleAlarmMessage(bytes, STANDARD_COMMUNICATION_MODULE_ALARMS)).toThrow(TypeError)
-    expect(() => decodeCommunicationModuleAlarmMessage(bytes, STANDARD_COMMUNICATION_MODULE_ALARMS)).toThrow('Unsupported communication module alarm message subtype: 0x3F. Allowed subtypes: 0x01')
+    expect(() => decodeCommunicationModuleAlarmMessage(bytes, completeConfig)).toThrow(TypeError)
+    expect(() => decodeCommunicationModuleAlarmMessage(bytes, completeConfig)).toThrow('Unsupported communication module alarm message subtype: 0x3F. Allowed subtypes: 0x01')
   })
 
   // Edge cases for bit field interpretation
   it('correctly interprets bit positions with alternating pattern', () => {
     const bytes = [0x13, 0x01, 0x00, 0x55] // 0101 0101 = bits 6,4,2,0
-    const out = decodeCommunicationModuleAlarmMessage(bytes, STANDARD_COMMUNICATION_MODULE_ALARMS)
+    const out = decodeCommunicationModuleAlarmMessage(bytes, completeConfig)
 
     expect(out.data.communicationModuleAlarms.alarmFlags).toEqual({
       highVoltage: true, // bit 6
       lowVoltage: false,
       memoryError: true, // bit 4
       airTimeLimitation: false,
-      chipHighTemperature: true, // bit 2
-      chipLowTemperature: false,
+      cmChipHighTemperature: true, // bit 2
+      cmChipLowTemperature: false,
       localUserAccessDenied: true, // bit 0
     })
   })
 
   it('correctly interprets bit positions with inverse alternating pattern', () => {
     const bytes = [0x13, 0x01, 0x00, 0x2A] // 0010 1010 = bits 5,3,1
-    const out = decodeCommunicationModuleAlarmMessage(bytes, STANDARD_COMMUNICATION_MODULE_ALARMS)
+    const out = decodeCommunicationModuleAlarmMessage(bytes, completeConfig)
 
     expect(out.data.communicationModuleAlarms.alarmFlags).toEqual({
       highVoltage: false,
       lowVoltage: true, // bit 5
       memoryError: false,
       airTimeLimitation: true, // bit 3
-      chipHighTemperature: false,
-      chipLowTemperature: true, // bit 1
+      cmChipHighTemperature: false,
+      cmChipLowTemperature: true, // bit 1
       localUserAccessDenied: false,
     })
   })
@@ -373,7 +379,7 @@ describe('tulip3 communication module device alarm message decoding (0x13/0x01)'
   // Boundary value tests
   it('handles minimum valid alarm value (only bit 0 set)', () => {
     const bytes = [0x13, 0x01, 0x00, 0x01]
-    const out = decodeCommunicationModuleAlarmMessage(bytes, STANDARD_COMMUNICATION_MODULE_ALARMS)
+    const out = decodeCommunicationModuleAlarmMessage(bytes, completeConfig)
 
     expect(out.data.communicationModuleAlarms.alarmFlags.localUserAccessDenied).toBe(true)
     expect(Object.values(out.data.communicationModuleAlarms.alarmFlags).filter(Boolean)).toHaveLength(1)
@@ -381,7 +387,7 @@ describe('tulip3 communication module device alarm message decoding (0x13/0x01)'
 
   it('handles maximum valid alarm value (bits 6-0 all set)', () => {
     const bytes = [0x13, 0x01, 0x00, 0x7F] // 0111 1111
-    const out = decodeCommunicationModuleAlarmMessage(bytes, STANDARD_COMMUNICATION_MODULE_ALARMS)
+    const out = decodeCommunicationModuleAlarmMessage(bytes, completeConfig)
 
     const flags = out.data.communicationModuleAlarms.alarmFlags
     expect(Object.values(flags).every(Boolean)).toBe(true)
@@ -391,7 +397,7 @@ describe('tulip3 communication module device alarm message decoding (0x13/0x01)'
   // Prepare for future message types (keeping structure consistent)
   it('has consistent output structure for future 0x13/0x02 and 0x13/0x03 compatibility', () => {
     const bytes = [0x13, 0x01, 0x00, 0x01]
-    const out = decodeCommunicationModuleAlarmMessage(bytes, STANDARD_COMMUNICATION_MODULE_ALARMS)
+    const out = decodeCommunicationModuleAlarmMessage(bytes, completeConfig)
 
     // Ensure the structure is extensible for future device alarm subtypes
     expect(out.data).toHaveProperty('messageType', 0x13)
@@ -404,45 +410,79 @@ describe('tulip3 communication module device alarm message decoding (0x13/0x01)'
 describe('tulip3 sensor alarm message decoding (0x13/0x02)', () => {
   // Test configuration with multiple sensors
   const testConfig = {
-    sensor1: { channel1: {
-      channelName: 'sensor1Channel1',
-      start: 4,
-      end: 20,
-      measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
-    } },
-    sensor2: { channel1: {
-      channelName: 'sensor2Channel1',
-      start: 0,
-      end: 10,
-      measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
-    } },
-    sensor3: { channel1: {
-      channelName: 'sensor3Channel1',
-      start: 0,
-      end: 100,
-      measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
-    } },
-    sensor4: { channel1: {
-      channelName: 'sensor4Channel1',
-      start: 0,
-      end: 1000,
-      measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
-    } },
-  } as const satisfies TULIP3DeviceSensorConfig
+    sensor1: {
+      channel1: {
+        channelName: 'sensor1Channel1',
+        start: 4,
+        end: 20,
+        measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
+        alarmFlags: STANDARD_CHANNEL_ALARMS,
+        registerConfig: emptyChannelRegisterConfig(),
+      },
+      alarmFlags: STANDARD_SENSOR_ALARMS,
+      registerConfig: emptySensorRegisterConfig(),
+    },
+    sensor2: {
+      channel1: {
+        channelName: 'sensor2Channel1',
+        start: 0,
+        end: 10,
+        measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
+        alarmFlags: STANDARD_CHANNEL_ALARMS,
+        registerConfig: emptyChannelRegisterConfig(),
+      },
+      alarmFlags: STANDARD_SENSOR_ALARMS,
+      registerConfig: emptySensorRegisterConfig(),
+    },
+    sensor3: {
+      channel1: {
+        channelName: 'sensor3Channel1',
+        start: 0,
+        end: 100,
+        measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
+        alarmFlags: STANDARD_CHANNEL_ALARMS,
+        registerConfig: emptyChannelRegisterConfig(),
+      },
+      alarmFlags: STANDARD_SENSOR_ALARMS,
+      registerConfig: emptySensorRegisterConfig(),
+    },
+    sensor4: {
+      channel1: {
+        channelName: 'sensor4Channel1',
+        start: 0,
+        end: 1000,
+        measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
+        alarmFlags: STANDARD_CHANNEL_ALARMS,
+        registerConfig: emptyChannelRegisterConfig(),
+      },
+      alarmFlags: STANDARD_SENSOR_ALARMS,
+      registerConfig: emptySensorRegisterConfig(),
+    },
+    alarmFlags: createDefaultCommunicationModuleAlarmFlags(),
+    registerConfig: completeCommunicationModuleRegisterConfig(),
+  } as const satisfies TULIP3DeviceConfig
 
   // Minimal configuration with only sensor2
   const minimalConfig = {
-    sensor2: { channel1: {
-      channelName: 'sensor2Channel1',
-      start: 0,
-      end: 10,
-      measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
-    } },
-  } as const satisfies TULIP3DeviceSensorConfig
+    sensor2: {
+      channel1: {
+        channelName: 'sensor2Channel1',
+        start: 0,
+        end: 10,
+        measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
+        alarmFlags: STANDARD_CHANNEL_ALARMS,
+        registerConfig: emptyChannelRegisterConfig(),
+      },
+      alarmFlags: STANDARD_SENSOR_ALARMS,
+      registerConfig: emptySensorRegisterConfig(),
+    },
+    alarmFlags: createDefaultCommunicationModuleAlarmFlags(),
+    registerConfig: completeCommunicationModuleRegisterConfig(),
+  } as const satisfies TULIP3DeviceConfig
 
   it('parses the example from spec: sensor 2 communication error (0x13 02 40 00 01)', () => {
     const bytes = [0x13, 0x02, 0x40, 0x00, 0x01]
-    const out = decodeSensorAlarmMessage(bytes, testConfig, STANDARD_SENSOR_ALARMS)
+    const out = decodeSensorAlarmMessage(bytes, testConfig)
 
     expect(out.data.messageType).toBe(0x13)
     expect(out.data.messageSubType).toBe(0x02)
@@ -459,7 +499,7 @@ describe('tulip3 sensor alarm message decoding (0x13/0x02)', () => {
 
   it('parses sensor 1 communication error (sensor ID 0)', () => {
     const bytes = [0x13, 0x02, 0x00, 0x00, 0x01] // sensor ID 0 = sensor1
-    const out = decodeSensorAlarmMessage(bytes, testConfig, STANDARD_SENSOR_ALARMS)
+    const out = decodeSensorAlarmMessage(bytes, testConfig)
 
     expect(out.data.sensorAlarms[0]).toEqual({
       sensor: 'sensor1',
@@ -473,7 +513,7 @@ describe('tulip3 sensor alarm message decoding (0x13/0x02)', () => {
 
   it('parses sensor 3 communication error (sensor ID 2)', () => {
     const bytes = [0x13, 0x02, 0x80, 0x00, 0x01] // sensor ID 2 = sensor3
-    const out = decodeSensorAlarmMessage(bytes, testConfig, STANDARD_SENSOR_ALARMS)
+    const out = decodeSensorAlarmMessage(bytes, testConfig)
 
     expect(out.data.sensorAlarms[0]).toEqual({
       sensor: 'sensor3',
@@ -487,7 +527,7 @@ describe('tulip3 sensor alarm message decoding (0x13/0x02)', () => {
 
   it('parses sensor 4 communication error (sensor ID 3)', () => {
     const bytes = [0x13, 0x02, 0xC0, 0x00, 0x01] // sensor ID 3 = sensor4
-    const out = decodeSensorAlarmMessage(bytes, testConfig, STANDARD_SENSOR_ALARMS)
+    const out = decodeSensorAlarmMessage(bytes, testConfig)
 
     expect(out.data.sensorAlarms[0]).toEqual({
       sensor: 'sensor4',
@@ -501,7 +541,7 @@ describe('tulip3 sensor alarm message decoding (0x13/0x02)', () => {
 
   it('parses sensor not supported alarm (bit 1)', () => {
     const bytes = [0x13, 0x02, 0x40, 0x00, 0x02] // sensor2, bit 1 set
-    const out = decodeSensorAlarmMessage(bytes, testConfig, STANDARD_SENSOR_ALARMS)
+    const out = decodeSensorAlarmMessage(bytes, testConfig)
 
     expect(out.data.sensorAlarms[0]).toEqual({
       sensor: 'sensor2',
@@ -515,7 +555,7 @@ describe('tulip3 sensor alarm message decoding (0x13/0x02)', () => {
 
   it('parses both alarms active simultaneously', () => {
     const bytes = [0x13, 0x02, 0x40, 0x00, 0x03] // sensor2, bits 1 and 0 set
-    const out = decodeSensorAlarmMessage(bytes, testConfig, STANDARD_SENSOR_ALARMS)
+    const out = decodeSensorAlarmMessage(bytes, testConfig)
 
     expect(out).toEqual({
       data: {
@@ -537,7 +577,7 @@ describe('tulip3 sensor alarm message decoding (0x13/0x02)', () => {
 
   it('parses no alarms active', () => {
     const bytes = [0x13, 0x02, 0x40, 0x00, 0x00] // sensor2, no alarms
-    const out = decodeSensorAlarmMessage(bytes, testConfig, STANDARD_SENSOR_ALARMS)
+    const out = decodeSensorAlarmMessage(bytes, testConfig)
 
     expect(out.data.sensorAlarms[0]).toEqual({
       sensor: 'sensor2',
@@ -551,7 +591,7 @@ describe('tulip3 sensor alarm message decoding (0x13/0x02)', () => {
 
   it('ignores RFU bits in sensor ID byte (bits 5-0)', () => {
     const bytes = [0x13, 0x02, 0x7F, 0x00, 0x01] // sensor ID 1 with RFU bits set
-    const out = decodeSensorAlarmMessage(bytes, testConfig, STANDARD_SENSOR_ALARMS)
+    const out = decodeSensorAlarmMessage(bytes, testConfig)
 
     expect(out.data.sensorAlarms[0]).toEqual({
       sensor: 'sensor2',
@@ -565,7 +605,7 @@ describe('tulip3 sensor alarm message decoding (0x13/0x02)', () => {
 
   it('ignores RFU bits in alarm type (bits 15-2)', () => {
     const bytes = [0x13, 0x02, 0x40, 0xFF, 0xFD] // high byte all set, low byte = 0xFD (bits 15-2 set, bit 0 set)
-    const out = decodeSensorAlarmMessage(bytes, testConfig, STANDARD_SENSOR_ALARMS)
+    const out = decodeSensorAlarmMessage(bytes, testConfig)
 
     expect(out.data.sensorAlarms[0]).toEqual({
       sensor: 'sensor2',
@@ -591,7 +631,7 @@ describe('tulip3 sensor alarm message decoding (0x13/0x02)', () => {
       0x00,
       0x03, // sensor3, both alarms
     ]
-    const out = decodeSensorAlarmMessage(bytes, testConfig, STANDARD_SENSOR_ALARMS)
+    const out = decodeSensorAlarmMessage(bytes, testConfig)
 
     expect(out.data.sensorAlarms).toHaveLength(3)
     expect(out.data.sensorAlarms[0]).toEqual({
@@ -637,7 +677,7 @@ describe('tulip3 sensor alarm message decoding (0x13/0x02)', () => {
       0x00,
       0x03, // sensor4, both alarms
     ]
-    const out = decodeSensorAlarmMessage(bytes, testConfig, STANDARD_SENSOR_ALARMS)
+    const out = decodeSensorAlarmMessage(bytes, testConfig)
 
     expect(out.data.sensorAlarms).toHaveLength(4)
     expect(out.data.sensorAlarms[0]!.alarmFlags).toEqual({
@@ -660,7 +700,7 @@ describe('tulip3 sensor alarm message decoding (0x13/0x02)', () => {
 
   it('handles high byte values in alarm type correctly', () => {
     const bytes = [0x13, 0x02, 0x40, 0xAB, 0x02] // high byte 0xAB, low byte 0x02 (bit 1 set)
-    const out = decodeSensorAlarmMessage(bytes, testConfig, STANDARD_SENSOR_ALARMS)
+    const out = decodeSensorAlarmMessage(bytes, testConfig)
 
     expect(out.data.sensorAlarms[0]).toEqual({
       sensor: 'sensor2',
@@ -674,7 +714,7 @@ describe('tulip3 sensor alarm message decoding (0x13/0x02)', () => {
 
   it('handles maximum 16-bit alarm values correctly', () => {
     const bytes = [0x13, 0x02, 0x40, 0xFF, 0xFF] // all bits set
-    const out = decodeSensorAlarmMessage(bytes, testConfig, STANDARD_SENSOR_ALARMS)
+    const out = decodeSensorAlarmMessage(bytes, testConfig)
 
     expect(out.data.sensorAlarms[0]).toEqual({
       sensor: 'sensor2',
@@ -688,7 +728,7 @@ describe('tulip3 sensor alarm message decoding (0x13/0x02)', () => {
 
   it('works with minimal sensor configuration', () => {
     const bytes = [0x13, 0x02, 0x40, 0x00, 0x01] // sensor2 communication error
-    const out = decodeSensorAlarmMessage(bytes, minimalConfig, STANDARD_SENSOR_ALARMS)
+    const out = decodeSensorAlarmMessage(bytes, minimalConfig)
 
     expect(out.data.sensorAlarms[0]).toEqual({
       sensor: 'sensor2',
@@ -703,74 +743,74 @@ describe('tulip3 sensor alarm message decoding (0x13/0x02)', () => {
   // Error handling tests
   it('throws TypeError for invalid message type', () => {
     const bytes = [0x12, 0x02, 0x40, 0x00, 0x01]
-    expect(() => decodeSensorAlarmMessage(bytes, testConfig, STANDARD_SENSOR_ALARMS)).toThrow(TypeError)
-    expect(() => decodeSensorAlarmMessage(bytes, testConfig, STANDARD_SENSOR_ALARMS)).toThrow('Invalid sensor alarm message type: expected 0x13 but got 0x12')
+    expect(() => decodeSensorAlarmMessage(bytes, testConfig)).toThrow(TypeError)
+    expect(() => decodeSensorAlarmMessage(bytes, testConfig)).toThrow('Invalid sensor alarm message type: expected 0x13 but got 0x12')
   })
 
   it('throws TypeError for invalid sub message type', () => {
     const bytes = [0x13, 0x01, 0x40, 0x00, 0x01] // should be 0x02
-    expect(() => decodeSensorAlarmMessage(bytes, testConfig, STANDARD_SENSOR_ALARMS)).toThrow(TypeError)
-    expect(() => decodeSensorAlarmMessage(bytes, testConfig, STANDARD_SENSOR_ALARMS)).toThrow('Unsupported sensor alarm message subtype: 0x01. Allowed subtypes: 0x02')
+    expect(() => decodeSensorAlarmMessage(bytes, testConfig)).toThrow(TypeError)
+    expect(() => decodeSensorAlarmMessage(bytes, testConfig)).toThrow('Unsupported sensor alarm message subtype: 0x01. Allowed subtypes: 0x02')
   })
 
   it('throws TypeError for wrong sub message type (0x03)', () => {
     const bytes = [0x13, 0x03, 0x40, 0x00, 0x01]
-    expect(() => decodeSensorAlarmMessage(bytes, testConfig, STANDARD_SENSOR_ALARMS)).toThrow(TypeError)
-    expect(() => decodeSensorAlarmMessage(bytes, testConfig, STANDARD_SENSOR_ALARMS)).toThrow('Unsupported sensor alarm message subtype: 0x03. Allowed subtypes: 0x02')
+    expect(() => decodeSensorAlarmMessage(bytes, testConfig)).toThrow(TypeError)
+    expect(() => decodeSensorAlarmMessage(bytes, testConfig)).toThrow('Unsupported sensor alarm message subtype: 0x03. Allowed subtypes: 0x02')
   })
 
   it('throws RangeError for incomplete sensor entry (header only)', () => {
     const bytes = [0x13, 0x02] // no sensor data
-    expect(() => decodeSensorAlarmMessage(bytes, testConfig, STANDARD_SENSOR_ALARMS)).toThrow(RangeError)
-    expect(() => decodeSensorAlarmMessage(bytes, testConfig, STANDARD_SENSOR_ALARMS)).toThrow('Sensor alarm message too short. Expected at least 5 bytes but got 2')
+    expect(() => decodeSensorAlarmMessage(bytes, testConfig)).toThrow(RangeError)
+    expect(() => decodeSensorAlarmMessage(bytes, testConfig)).toThrow('Sensor alarm message too short. Expected at least 5 bytes but got 2')
   })
 
   it('throws RangeError for incomplete sensor entry (partial data)', () => {
     const bytes = [0x13, 0x02, 0x40] // only sensor ID, missing alarm type
-    expect(() => decodeSensorAlarmMessage(bytes, testConfig, STANDARD_SENSOR_ALARMS)).toThrow(RangeError)
-    expect(() => decodeSensorAlarmMessage(bytes, testConfig, STANDARD_SENSOR_ALARMS)).toThrow('Sensor alarm message too short. Expected at least 5 bytes but got 3')
+    expect(() => decodeSensorAlarmMessage(bytes, testConfig)).toThrow(RangeError)
+    expect(() => decodeSensorAlarmMessage(bytes, testConfig)).toThrow('Sensor alarm message too short. Expected at least 5 bytes but got 3')
   })
 
   it('throws RangeError for incomplete sensor entry (missing high byte)', () => {
     const bytes = [0x13, 0x02, 0x40, 0x00] // sensor ID + low byte, missing high byte
-    expect(() => decodeSensorAlarmMessage(bytes, testConfig, STANDARD_SENSOR_ALARMS)).toThrow(RangeError)
-    expect(() => decodeSensorAlarmMessage(bytes, testConfig, STANDARD_SENSOR_ALARMS)).toThrow('Sensor alarm message too short. Expected at least 5 bytes but got 4')
+    expect(() => decodeSensorAlarmMessage(bytes, testConfig)).toThrow(RangeError)
+    expect(() => decodeSensorAlarmMessage(bytes, testConfig)).toThrow('Sensor alarm message too short. Expected at least 5 bytes but got 4')
   })
 
   it('throws RangeError for incomplete second sensor entry', () => {
     const bytes = [0x13, 0x02, 0x40, 0x00, 0x01, 0x80] // complete first entry, incomplete second
-    expect(() => decodeSensorAlarmMessage(bytes, testConfig, STANDARD_SENSOR_ALARMS)).toThrow(RangeError)
-    expect(() => decodeSensorAlarmMessage(bytes, testConfig, STANDARD_SENSOR_ALARMS)).toThrow('Not enough data left to finish reading sensor alarm entry. Expected 3 bytes but got 1. currentIndex 5')
+    expect(() => decodeSensorAlarmMessage(bytes, testConfig)).toThrow(RangeError)
+    expect(() => decodeSensorAlarmMessage(bytes, testConfig)).toThrow('Not enough data left to finish reading sensor alarm entry. Expected 3 bytes but got 1. currentIndex 5')
   })
 
   it('throws TypeError for unconfigured sensor (sensor1 not in minimal config)', () => {
     const bytes = [0x13, 0x02, 0x00, 0x00, 0x01] // sensor1 alarm
-    expect(() => decodeSensorAlarmMessage(bytes, minimalConfig, STANDARD_SENSOR_ALARMS)).toThrow(TypeError)
-    expect(() => decodeSensorAlarmMessage(bytes, minimalConfig, STANDARD_SENSOR_ALARMS)).toThrow('Sensor alarm for sensor1 is not supported by the device profile.')
+    expect(() => decodeSensorAlarmMessage(bytes, minimalConfig)).toThrow(TypeError)
+    expect(() => decodeSensorAlarmMessage(bytes, minimalConfig)).toThrow('Sensor alarm for sensor1 is not supported by the device profile.')
   })
 
   it('throws TypeError for unconfigured sensor (sensor3 not in minimal config)', () => {
     const bytes = [0x13, 0x02, 0x80, 0x00, 0x01] // sensor3 alarm
-    expect(() => decodeSensorAlarmMessage(bytes, minimalConfig, STANDARD_SENSOR_ALARMS)).toThrow(TypeError)
-    expect(() => decodeSensorAlarmMessage(bytes, minimalConfig, STANDARD_SENSOR_ALARMS)).toThrow('Sensor alarm for sensor3 is not supported by the device profile.')
+    expect(() => decodeSensorAlarmMessage(bytes, minimalConfig)).toThrow(TypeError)
+    expect(() => decodeSensorAlarmMessage(bytes, minimalConfig)).toThrow('Sensor alarm for sensor3 is not supported by the device profile.')
   })
 
   it('throws TypeError for unconfigured sensor (sensor4 not in minimal config)', () => {
     const bytes = [0x13, 0x02, 0xC0, 0x00, 0x01] // sensor4 alarm
-    expect(() => decodeSensorAlarmMessage(bytes, minimalConfig, STANDARD_SENSOR_ALARMS)).toThrow(TypeError)
-    expect(() => decodeSensorAlarmMessage(bytes, minimalConfig, STANDARD_SENSOR_ALARMS)).toThrow('Sensor alarm for sensor4 is not supported by the device profile.')
+    expect(() => decodeSensorAlarmMessage(bytes, minimalConfig)).toThrow(TypeError)
+    expect(() => decodeSensorAlarmMessage(bytes, minimalConfig)).toThrow('Sensor alarm for sensor4 is not supported by the device profile.')
   })
 
   it('throws TypeError for empty data', () => {
     const bytes: number[] = []
-    expect(() => decodeSensorAlarmMessage(bytes, testConfig, STANDARD_SENSOR_ALARMS)).toThrow(RangeError)
-    expect(() => decodeSensorAlarmMessage(bytes, testConfig, STANDARD_SENSOR_ALARMS)).toThrow('Sensor alarm message too short. Expected at least 5 bytes but got 0')
+    expect(() => decodeSensorAlarmMessage(bytes, testConfig)).toThrow(RangeError)
+    expect(() => decodeSensorAlarmMessage(bytes, testConfig)).toThrow('Sensor alarm message too short. Expected at least 5 bytes but got 0')
   })
 
   it('throws TypeError for header only', () => {
     const bytes = [0x13]
-    expect(() => decodeSensorAlarmMessage(bytes, testConfig, STANDARD_SENSOR_ALARMS)).toThrow(RangeError)
-    expect(() => decodeSensorAlarmMessage(bytes, testConfig, STANDARD_SENSOR_ALARMS)).toThrow('Sensor alarm message too short. Expected at least 5 bytes but got 1')
+    expect(() => decodeSensorAlarmMessage(bytes, testConfig)).toThrow(RangeError)
+    expect(() => decodeSensorAlarmMessage(bytes, testConfig)).toThrow('Sensor alarm message too short. Expected at least 5 bytes but got 1')
   })
 
   // Edge cases for bit manipulation
@@ -784,7 +824,7 @@ describe('tulip3 sensor alarm message decoding (0x13/0x02)', () => {
 
     testCases.forEach(({ sensorIdByte, expectedSensorId, expectedSensor }) => {
       const bytes = [0x13, 0x02, sensorIdByte, 0x00, 0x01]
-      const out = decodeSensorAlarmMessage(bytes, testConfig, STANDARD_SENSOR_ALARMS)
+      const out = decodeSensorAlarmMessage(bytes, testConfig)
 
       expect(out.data.sensorAlarms[0]!.sensorId).toBe(expectedSensorId)
       expect(out.data.sensorAlarms[0]!.sensor).toBe(expectedSensor)
@@ -794,7 +834,7 @@ describe('tulip3 sensor alarm message decoding (0x13/0x02)', () => {
   // Boundary value tests
   it('handles minimum valid message (one sensor, no alarms)', () => {
     const bytes = [0x13, 0x02, 0x40, 0x00, 0x00]
-    const out = decodeSensorAlarmMessage(bytes, testConfig, STANDARD_SENSOR_ALARMS)
+    const out = decodeSensorAlarmMessage(bytes, testConfig)
 
     expect(out.data.sensorAlarms).toHaveLength(1)
     expect(out.data.sensorAlarms[0]!.alarmFlags).toEqual({
@@ -820,7 +860,7 @@ describe('tulip3 sensor alarm message decoding (0x13/0x02)', () => {
       0x00,
       0x03, // sensor4, both alarms
     ]
-    const out = decodeSensorAlarmMessage(bytes, testConfig, STANDARD_SENSOR_ALARMS)
+    const out = decodeSensorAlarmMessage(bytes, testConfig)
 
     expect(out.data.sensorAlarms).toHaveLength(4)
     out.data.sensorAlarms.forEach((alarm) => {
@@ -834,7 +874,7 @@ describe('tulip3 sensor alarm message decoding (0x13/0x02)', () => {
   // Output structure validation
   it('has consistent output structure', () => {
     const bytes = [0x13, 0x02, 0x40, 0x00, 0x01]
-    const out = decodeSensorAlarmMessage(bytes, testConfig, STANDARD_SENSOR_ALARMS)
+    const out = decodeSensorAlarmMessage(bytes, testConfig)
 
     expect(out).toEqual({
       data: {
@@ -856,15 +896,23 @@ describe('tulip3 sensor alarm message decoding (0x13/0x02)', () => {
 
   it('maintains type safety across different configurations', () => {
     const singleSensorConfig = {
-      sensor1: { channel1: {
-        start: 4,
-        end: 20,
-        measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
-        channelName: 's1c1',
-      } },
-    } as const satisfies TULIP3DeviceSensorConfig
+      sensor1: {
+        channel1: {
+          start: 4,
+          end: 20,
+          measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
+          channelName: 's1c1',
+          alarmFlags: STANDARD_CHANNEL_ALARMS,
+          registerConfig: emptyChannelRegisterConfig(),
+        },
+        alarmFlags: STANDARD_SENSOR_ALARMS,
+        registerConfig: emptySensorRegisterConfig(),
+      },
+      alarmFlags: createDefaultCommunicationModuleAlarmFlags(),
+      registerConfig: completeCommunicationModuleRegisterConfig(),
+    } as const satisfies TULIP3DeviceConfig
     const bytes = [0x13, 0x02, 0x00, 0x00, 0x01]
-    const out = decodeSensorAlarmMessage(bytes, singleSensorConfig, STANDARD_SENSOR_ALARMS)
+    const out = decodeSensorAlarmMessage(bytes, singleSensorConfig)
 
     expect(out.data.sensorAlarms[0].sensor).toBe('sensor1')
     expect(out.data.sensorAlarms[0].sensorId).toBe(0)
@@ -880,13 +928,19 @@ describe('tulip3 channel alarm message decoding (0x13/0x03)', () => {
         end: 20,
         measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
         channelName: 'sensor1Channel1',
+        alarmFlags: STANDARD_CHANNEL_ALARMS,
+        registerConfig: emptyChannelRegisterConfig(),
       },
       channel2: {
         start: 0,
         end: 5,
         measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
         channelName: 'sensor1Channel2',
+        alarmFlags: STANDARD_CHANNEL_ALARMS,
+        registerConfig: emptyChannelRegisterConfig(),
       },
+      alarmFlags: STANDARD_SENSOR_ALARMS,
+      registerConfig: emptySensorRegisterConfig(),
     },
     sensor2: {
       channel1: {
@@ -894,19 +948,27 @@ describe('tulip3 channel alarm message decoding (0x13/0x03)', () => {
         end: 10,
         measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
         channelName: 'sensor2Channel1',
+        alarmFlags: STANDARD_CHANNEL_ALARMS,
+        registerConfig: emptyChannelRegisterConfig(),
       },
       channel2: {
         start: -10,
         end: 10,
         measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
         channelName: 'sensor2Channel2',
+        alarmFlags: STANDARD_CHANNEL_ALARMS,
+        registerConfig: emptyChannelRegisterConfig(),
       },
       channel3: {
         start: 0,
         end: 100,
         measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
         channelName: 'sensor2Channel3',
+        alarmFlags: STANDARD_CHANNEL_ALARMS,
+        registerConfig: emptyChannelRegisterConfig(),
       },
+      alarmFlags: STANDARD_SENSOR_ALARMS,
+      registerConfig: emptySensorRegisterConfig(),
     },
     sensor3: {
       channel1: {
@@ -914,7 +976,11 @@ describe('tulip3 channel alarm message decoding (0x13/0x03)', () => {
         end: 100,
         measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
         channelName: 'sensor3Channel1',
+        alarmFlags: STANDARD_CHANNEL_ALARMS,
+        registerConfig: emptyChannelRegisterConfig(),
       },
+      alarmFlags: STANDARD_SENSOR_ALARMS,
+      registerConfig: emptySensorRegisterConfig(),
     },
     sensor4: {
       channel1: {
@@ -922,9 +988,15 @@ describe('tulip3 channel alarm message decoding (0x13/0x03)', () => {
         end: 1000,
         measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
         channelName: 'sensor4Channel1',
+        alarmFlags: STANDARD_CHANNEL_ALARMS,
+        registerConfig: emptyChannelRegisterConfig(),
       },
+      alarmFlags: STANDARD_SENSOR_ALARMS,
+      registerConfig: emptySensorRegisterConfig(),
     },
-  } as const satisfies TULIP3DeviceSensorConfig
+    alarmFlags: createDefaultCommunicationModuleAlarmFlags(),
+    registerConfig: completeCommunicationModuleRegisterConfig(),
+  } as const satisfies TULIP3DeviceConfig
 
   // Minimal configuration with only sensor2/channel1
   const minimalConfig = {
@@ -934,13 +1006,19 @@ describe('tulip3 channel alarm message decoding (0x13/0x03)', () => {
         end: 10,
         measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
         channelName: 'sensor1Channel1',
+        alarmFlags: STANDARD_CHANNEL_ALARMS,
+        registerConfig: emptyChannelRegisterConfig(),
       },
+      alarmFlags: STANDARD_SENSOR_ALARMS,
+      registerConfig: emptySensorRegisterConfig(),
     },
-  } as const satisfies TULIP3DeviceSensorConfig
+    alarmFlags: createDefaultCommunicationModuleAlarmFlags(),
+    registerConfig: completeCommunicationModuleRegisterConfig(),
+  } as const satisfies TULIP3DeviceConfig
 
   it('parses the example from spec: sensor 2 channel 1 out of max physical sensor limit (0x13 03 40 00 20)', () => {
     const bytes = [0x13, 0x03, 0x40, 0x00, 0x20]
-    const out = decodeChannelAlarmMessage(bytes, testConfig, STANDARD_CHANNEL_ALARMS)
+    const out = decodeChannelAlarmMessage(bytes, testConfig)
     expect(out.data).toEqual({
       messageType: 0x13,
       messageSubType: 0x03,
@@ -966,7 +1044,7 @@ describe('tulip3 channel alarm message decoding (0x13/0x03)', () => {
 
   it('parses sensor 1 channel 1 short condition alarm (sensor ID 0, channel ID 0)', () => {
     const bytes = [0x13, 0x03, 0x00, 0x00, 0x01]
-    const out = decodeChannelAlarmMessage(bytes, testConfig, STANDARD_CHANNEL_ALARMS)
+    const out = decodeChannelAlarmMessage(bytes, testConfig)
     expect(out.data).toEqual({
       messageType: 0x13,
       messageSubType: 0x03,
@@ -992,7 +1070,7 @@ describe('tulip3 channel alarm message decoding (0x13/0x03)', () => {
 
   it('parses sensor 1 channel 2 open condition alarm (sensor ID 0, channel ID 1)', () => {
     const bytes = [0x13, 0x03, 0x08, 0x00, 0x02]
-    const out = decodeChannelAlarmMessage(bytes, testConfig, STANDARD_CHANNEL_ALARMS)
+    const out = decodeChannelAlarmMessage(bytes, testConfig)
     expect(out.data).toEqual({
       messageType: 0x13,
       messageSubType: 0x03,
@@ -1018,7 +1096,7 @@ describe('tulip3 channel alarm message decoding (0x13/0x03)', () => {
 
   it('parses sensor 2 channel 3 measurement range alarms (sensor ID 1, channel ID 2)', () => {
     const bytes = [0x13, 0x03, 0x50, 0x00, 0x0C]
-    const out = decodeChannelAlarmMessage(bytes, testConfig, STANDARD_CHANNEL_ALARMS)
+    const out = decodeChannelAlarmMessage(bytes, testConfig)
     expect(out.data).toEqual({
       messageType: 0x13,
       messageSubType: 0x03,
@@ -1044,7 +1122,7 @@ describe('tulip3 channel alarm message decoding (0x13/0x03)', () => {
 
   it('parses sensor 3 channel 1 physical sensor limit alarms (sensor ID 2, channel ID 0)', () => {
     const bytes = [0x13, 0x03, 0x80, 0x00, 0x30]
-    const out = decodeChannelAlarmMessage(bytes, testConfig, STANDARD_CHANNEL_ALARMS)
+    const out = decodeChannelAlarmMessage(bytes, testConfig)
     expect(out.data).toEqual({
       messageType: 0x13,
       messageSubType: 0x03,
@@ -1070,7 +1148,7 @@ describe('tulip3 channel alarm message decoding (0x13/0x03)', () => {
 
   it('parses sensor 4 channel 1 all alarms active (sensor ID 3, channel ID 0)', () => {
     const bytes = [0x13, 0x03, 0xC0, 0x00, 0x3F]
-    const out = decodeChannelAlarmMessage(bytes, testConfig, STANDARD_CHANNEL_ALARMS)
+    const out = decodeChannelAlarmMessage(bytes, testConfig)
     expect(out.data).toEqual({
       messageType: 0x13,
       messageSubType: 0x03,
@@ -1096,7 +1174,7 @@ describe('tulip3 channel alarm message decoding (0x13/0x03)', () => {
 
   it('parses all alarms inactive', () => {
     const bytes = [0x13, 0x03, 0x40, 0x00, 0x00]
-    const out = decodeChannelAlarmMessage(bytes, testConfig, STANDARD_CHANNEL_ALARMS)
+    const out = decodeChannelAlarmMessage(bytes, testConfig)
     expect(out.data).toEqual({
       messageType: 0x13,
       messageSubType: 0x03,
@@ -1123,7 +1201,7 @@ describe('tulip3 channel alarm message decoding (0x13/0x03)', () => {
   it('ignores RFU bits in sensor/channel ID byte (bits 2-0)', () => {
     // sensor 2, channel 1 with RFU bits set, only short condition alarm active
     const bytes = [0x13, 0x03, 0x47, 0x00, 0x01]
-    const out = decodeChannelAlarmMessage(bytes, testConfig, STANDARD_CHANNEL_ALARMS)
+    const out = decodeChannelAlarmMessage(bytes, testConfig)
     expect(out.data).toEqual({
       messageType: 0x13,
       messageSubType: 0x03,
@@ -1150,7 +1228,7 @@ describe('tulip3 channel alarm message decoding (0x13/0x03)', () => {
   it('ignores RFU bits in alarm type (bits 15-6)', () => {
     // Set all 16 bits including RFU bits 15-6, but only bits 5-0 should matter
     const bytes = [0x13, 0x03, 0x40, 0xFF, 0xFF]
-    const out = decodeChannelAlarmMessage(bytes, testConfig, STANDARD_CHANNEL_ALARMS)
+    const out = decodeChannelAlarmMessage(bytes, testConfig)
 
     // Should only consider bits 5-0, ignoring RFU bits
     expect(out.data.channelAlarms[0].alarmFlags).toEqual({
@@ -1177,7 +1255,7 @@ describe('tulip3 channel alarm message decoding (0x13/0x03)', () => {
       0x00,
       0x20, // sensor 2, channel 1, out of max physical sensor limit
     ]
-    const out = decodeChannelAlarmMessage(bytes, testConfig, STANDARD_CHANNEL_ALARMS)
+    const out = decodeChannelAlarmMessage(bytes, testConfig)
     expect(out.data).toEqual({
       messageType: 0x13,
       messageSubType: 0x03,
@@ -1233,7 +1311,7 @@ describe('tulip3 channel alarm message decoding (0x13/0x03)', () => {
 
   it('handles alternating alarm patterns', () => {
     const bytes = [0x13, 0x03, 0x40, 0x00, 0x15] // sensor 2, channel 1, bits 4,2,0 set
-    const out = decodeChannelAlarmMessage(bytes, testConfig, STANDARD_CHANNEL_ALARMS)
+    const out = decodeChannelAlarmMessage(bytes, testConfig)
 
     expect(out.data.channelAlarms[0].alarmFlags).toEqual({
       outOfMaxPhysicalSensorLimit: false,
@@ -1247,7 +1325,7 @@ describe('tulip3 channel alarm message decoding (0x13/0x03)', () => {
 
   it('handles inverse alternating alarm patterns', () => {
     const bytes = [0x13, 0x03, 0x40, 0x00, 0x2A] // sensor 2, channel 1, bits 5,3,1 set
-    const out = decodeChannelAlarmMessage(bytes, testConfig, STANDARD_CHANNEL_ALARMS)
+    const out = decodeChannelAlarmMessage(bytes, testConfig)
 
     expect(out.data.channelAlarms[0].alarmFlags).toEqual({
       outOfMaxPhysicalSensorLimit: true,
@@ -1262,7 +1340,7 @@ describe('tulip3 channel alarm message decoding (0x13/0x03)', () => {
   it('handles high byte values in alarm type correctly', () => {
     // Upper byte has some bits set, but only lower byte bits 5-0 matter for alarms
     const bytes = [0x13, 0x03, 0x40, 0xAB, 0x0C] // bits 3+2 set in lower byte
-    const out = decodeChannelAlarmMessage(bytes, testConfig, STANDARD_CHANNEL_ALARMS)
+    const out = decodeChannelAlarmMessage(bytes, testConfig)
 
     expect(out.data.channelAlarms[0].alarmFlags).toEqual({
       outOfMaxPhysicalSensorLimit: false,
@@ -1276,7 +1354,7 @@ describe('tulip3 channel alarm message decoding (0x13/0x03)', () => {
 
   it('handles maximum 16-bit alarm values correctly', () => {
     const bytes = [0x13, 0x03, 0x40, 0xFF, 0x00] // upper byte set, lower byte clear
-    const out = decodeChannelAlarmMessage(bytes, testConfig, STANDARD_CHANNEL_ALARMS)
+    const out = decodeChannelAlarmMessage(bytes, testConfig)
 
     // All alarms should be inactive since only bits 5-0 of the 16-bit value matter
     expect(out.data.channelAlarms[0].alarmFlags).toEqual({
@@ -1291,7 +1369,7 @@ describe('tulip3 channel alarm message decoding (0x13/0x03)', () => {
 
   it('works with minimal sensor configuration', () => {
     const bytes = [0x13, 0x03, 0x40, 0x00, 0x20] // sensor 2, channel 1
-    const out = decodeChannelAlarmMessage(bytes, minimalConfig, STANDARD_CHANNEL_ALARMS)
+    const out = decodeChannelAlarmMessage(bytes, minimalConfig)
 
     expect(out.data.channelAlarms).toHaveLength(1)
     expect(out.data.channelAlarms[0].sensor).toBe('sensor2')
@@ -1301,86 +1379,86 @@ describe('tulip3 channel alarm message decoding (0x13/0x03)', () => {
   // Error handling tests
   it('throws TypeError for invalid message type', () => {
     const bytes = [0x12, 0x03, 0x40, 0x00, 0x20]
-    expect(() => decodeChannelAlarmMessage(bytes, testConfig, STANDARD_CHANNEL_ALARMS)).toThrow(TypeError)
-    expect(() => decodeChannelAlarmMessage(bytes, testConfig, STANDARD_CHANNEL_ALARMS)).toThrow('Invalid channel alarm message type: expected 0x13 but got 0x12')
+    expect(() => decodeChannelAlarmMessage(bytes, testConfig)).toThrow(TypeError)
+    expect(() => decodeChannelAlarmMessage(bytes, testConfig)).toThrow('Invalid channel alarm message type: expected 0x13 but got 0x12')
   })
 
   it('throws TypeError for invalid sub message type', () => {
     const bytes = [0x13, 0x01, 0x40, 0x00, 0x20]
-    expect(() => decodeChannelAlarmMessage(bytes, testConfig, STANDARD_CHANNEL_ALARMS)).toThrow(TypeError)
-    expect(() => decodeChannelAlarmMessage(bytes, testConfig, STANDARD_CHANNEL_ALARMS)).toThrow('Unsupported channel alarm message subtype: 0x01. Allowed subtypes: 0x03')
+    expect(() => decodeChannelAlarmMessage(bytes, testConfig)).toThrow(TypeError)
+    expect(() => decodeChannelAlarmMessage(bytes, testConfig)).toThrow('Unsupported channel alarm message subtype: 0x01. Allowed subtypes: 0x03')
   })
 
   it('throws TypeError for wrong sub message type (0x02)', () => {
     const bytes = [0x13, 0x02, 0x40, 0x00, 0x20]
-    expect(() => decodeChannelAlarmMessage(bytes, testConfig, STANDARD_CHANNEL_ALARMS)).toThrow(TypeError)
-    expect(() => decodeChannelAlarmMessage(bytes, testConfig, STANDARD_CHANNEL_ALARMS)).toThrow('Unsupported channel alarm message subtype: 0x02. Allowed subtypes: 0x03')
+    expect(() => decodeChannelAlarmMessage(bytes, testConfig)).toThrow(TypeError)
+    expect(() => decodeChannelAlarmMessage(bytes, testConfig)).toThrow('Unsupported channel alarm message subtype: 0x02. Allowed subtypes: 0x03')
   })
 
   it('throws RangeError for incomplete channel entry (header only)', () => {
     const bytes = [0x13, 0x03]
-    expect(() => decodeChannelAlarmMessage(bytes, testConfig, STANDARD_CHANNEL_ALARMS)).toThrow(RangeError)
-    expect(() => decodeChannelAlarmMessage(bytes, testConfig, STANDARD_CHANNEL_ALARMS)).toThrow('Channel alarm message too short. Expected at least 5 bytes but got 2')
+    expect(() => decodeChannelAlarmMessage(bytes, testConfig)).toThrow(RangeError)
+    expect(() => decodeChannelAlarmMessage(bytes, testConfig)).toThrow('Channel alarm message too short. Expected at least 5 bytes but got 2')
   })
 
   it('throws RangeError for incomplete channel entry (partial data)', () => {
     const bytes = [0x13, 0x03, 0x40, 0x00] // missing last byte
-    expect(() => decodeChannelAlarmMessage(bytes, testConfig, STANDARD_CHANNEL_ALARMS)).toThrow(RangeError)
-    expect(() => decodeChannelAlarmMessage(bytes, testConfig, STANDARD_CHANNEL_ALARMS)).toThrow('Channel alarm message too short. Expected at least 5 bytes but got 4')
+    expect(() => decodeChannelAlarmMessage(bytes, testConfig)).toThrow(RangeError)
+    expect(() => decodeChannelAlarmMessage(bytes, testConfig)).toThrow('Channel alarm message too short. Expected at least 5 bytes but got 4')
   })
 
   it('throws RangeError for incomplete channel entry (missing high byte)', () => {
     const bytes = [0x13, 0x03, 0x40, 0x00] // only header + sensor/channel + 1 alarm byte
-    expect(() => decodeChannelAlarmMessage(bytes, testConfig, STANDARD_CHANNEL_ALARMS)).toThrow(RangeError)
-    expect(() => decodeChannelAlarmMessage(bytes, testConfig, STANDARD_CHANNEL_ALARMS)).toThrow('Channel alarm message too short. Expected at least 5 bytes but got 4')
+    expect(() => decodeChannelAlarmMessage(bytes, testConfig)).toThrow(RangeError)
+    expect(() => decodeChannelAlarmMessage(bytes, testConfig)).toThrow('Channel alarm message too short. Expected at least 5 bytes but got 4')
   })
 
   it('throws RangeError for incomplete second channel entry', () => {
     const bytes = [0x13, 0x03, 0x40, 0x00, 0x20, 0x08] // complete first entry, incomplete second
-    expect(() => decodeChannelAlarmMessage(bytes, testConfig, STANDARD_CHANNEL_ALARMS)).toThrow(RangeError)
-    expect(() => decodeChannelAlarmMessage(bytes, testConfig, STANDARD_CHANNEL_ALARMS)).toThrow('Not enough data left to finish reading channel alarm entry. Expected 3 bytes but got 1. currentIndex 5')
+    expect(() => decodeChannelAlarmMessage(bytes, testConfig)).toThrow(RangeError)
+    expect(() => decodeChannelAlarmMessage(bytes, testConfig)).toThrow('Not enough data left to finish reading channel alarm entry. Expected 3 bytes but got 1. currentIndex 5')
   })
 
   it('throws TypeError for unconfigured sensor (sensor1 not in minimal config)', () => {
     const bytes = [0x13, 0x03, 0x00, 0x00, 0x01] // sensor 1, channel 1
-    expect(() => decodeChannelAlarmMessage(bytes, minimalConfig, STANDARD_CHANNEL_ALARMS)).toThrow(TypeError)
-    expect(() => decodeChannelAlarmMessage(bytes, minimalConfig, STANDARD_CHANNEL_ALARMS)).toThrow('Channel alarm for sensor1 is not supported by the device profile.')
+    expect(() => decodeChannelAlarmMessage(bytes, minimalConfig)).toThrow(TypeError)
+    expect(() => decodeChannelAlarmMessage(bytes, minimalConfig)).toThrow('Channel alarm for sensor1 is not supported by the device profile.')
   })
 
   it('throws TypeError for unconfigured sensor (sensor3 not in minimal config)', () => {
     const bytes = [0x13, 0x03, 0x80, 0x00, 0x01] // sensor 3, channel 1
-    expect(() => decodeChannelAlarmMessage(bytes, minimalConfig, STANDARD_CHANNEL_ALARMS)).toThrow(TypeError)
-    expect(() => decodeChannelAlarmMessage(bytes, minimalConfig, STANDARD_CHANNEL_ALARMS)).toThrow('Channel alarm for sensor3 is not supported by the device profile.')
+    expect(() => decodeChannelAlarmMessage(bytes, minimalConfig)).toThrow(TypeError)
+    expect(() => decodeChannelAlarmMessage(bytes, minimalConfig)).toThrow('Channel alarm for sensor3 is not supported by the device profile.')
   })
 
   it('throws TypeError for unconfigured sensor (sensor4 not in minimal config)', () => {
     const bytes = [0x13, 0x03, 0xC0, 0x00, 0x01] // sensor 4, channel 1
-    expect(() => decodeChannelAlarmMessage(bytes, minimalConfig, STANDARD_CHANNEL_ALARMS)).toThrow(TypeError)
-    expect(() => decodeChannelAlarmMessage(bytes, minimalConfig, STANDARD_CHANNEL_ALARMS)).toThrow('Channel alarm for sensor4 is not supported by the device profile.')
+    expect(() => decodeChannelAlarmMessage(bytes, minimalConfig)).toThrow(TypeError)
+    expect(() => decodeChannelAlarmMessage(bytes, minimalConfig)).toThrow('Channel alarm for sensor4 is not supported by the device profile.')
   })
 
   it('throws TypeError for unconfigured channel (sensor2/channel2 not in minimal config)', () => {
     const bytes = [0x13, 0x03, 0x48, 0x00, 0x01] // sensor 2, channel 2
-    expect(() => decodeChannelAlarmMessage(bytes, minimalConfig, STANDARD_CHANNEL_ALARMS)).toThrow(TypeError)
-    expect(() => decodeChannelAlarmMessage(bytes, minimalConfig, STANDARD_CHANNEL_ALARMS)).toThrow('Channel alarm for sensor2/channel2 is not supported by the device profile.')
+    expect(() => decodeChannelAlarmMessage(bytes, minimalConfig)).toThrow(TypeError)
+    expect(() => decodeChannelAlarmMessage(bytes, minimalConfig)).toThrow('Channel alarm for sensor2/channel2 is not supported by the device profile.')
   })
 
   it('throws TypeError for unconfigured channel (sensor2/channel3 not in minimal config)', () => {
     const bytes = [0x13, 0x03, 0x50, 0x00, 0x01] // sensor 2, channel 3
-    expect(() => decodeChannelAlarmMessage(bytes, minimalConfig, STANDARD_CHANNEL_ALARMS)).toThrow(TypeError)
-    expect(() => decodeChannelAlarmMessage(bytes, minimalConfig, STANDARD_CHANNEL_ALARMS)).toThrow('Channel alarm for sensor2/channel3 is not supported by the device profile.')
+    expect(() => decodeChannelAlarmMessage(bytes, minimalConfig)).toThrow(TypeError)
+    expect(() => decodeChannelAlarmMessage(bytes, minimalConfig)).toThrow('Channel alarm for sensor2/channel3 is not supported by the device profile.')
   })
 
   it('throws TypeError for empty data', () => {
     const bytes: number[] = []
-    expect(() => decodeChannelAlarmMessage(bytes, testConfig, STANDARD_CHANNEL_ALARMS)).toThrow(RangeError)
-    expect(() => decodeChannelAlarmMessage(bytes, testConfig, STANDARD_CHANNEL_ALARMS)).toThrow('Channel alarm message too short. Expected at least 5 bytes but got 0')
+    expect(() => decodeChannelAlarmMessage(bytes, testConfig)).toThrow(RangeError)
+    expect(() => decodeChannelAlarmMessage(bytes, testConfig)).toThrow('Channel alarm message too short. Expected at least 5 bytes but got 0')
   })
 
   it('throws TypeError for header only', () => {
     const bytes = [0x13]
-    expect(() => decodeChannelAlarmMessage(bytes, testConfig, STANDARD_CHANNEL_ALARMS)).toThrow(RangeError)
-    expect(() => decodeChannelAlarmMessage(bytes, testConfig, STANDARD_CHANNEL_ALARMS)).toThrow('Channel alarm message too short. Expected at least 5 bytes but got 1')
+    expect(() => decodeChannelAlarmMessage(bytes, testConfig)).toThrow(RangeError)
+    expect(() => decodeChannelAlarmMessage(bytes, testConfig)).toThrow('Channel alarm message too short. Expected at least 5 bytes but got 1')
   })
 
   // Edge cases for bit manipulation
@@ -1397,7 +1475,7 @@ describe('tulip3 channel alarm message decoding (0x13/0x03)', () => {
 
     testCases.forEach(({ byte, expectedSensor, expectedChannel, expectedSensorId, expectedChannelId, expectedChannelName }) => {
       const bytes = [0x13, 0x03, byte, 0x00, 0x01]
-      const out = decodeChannelAlarmMessage(bytes, testConfig, STANDARD_CHANNEL_ALARMS)
+      const out = decodeChannelAlarmMessage(bytes, testConfig)
 
       expect(out.data.channelAlarms[0].sensor).toBe(expectedSensor)
       expect(out.data.channelAlarms[0].channel).toBe(expectedChannel)
@@ -1410,7 +1488,7 @@ describe('tulip3 channel alarm message decoding (0x13/0x03)', () => {
   // Boundary value tests
   it('handles minimum valid message (one channel, no alarms)', () => {
     const bytes = [0x13, 0x03, 0x40, 0x00, 0x00] // sensor 2, channel 1, no alarms
-    const out = decodeChannelAlarmMessage(bytes, testConfig, STANDARD_CHANNEL_ALARMS)
+    const out = decodeChannelAlarmMessage(bytes, testConfig)
 
     expect(out.data.channelAlarms).toHaveLength(1)
     expect(out.data.channelAlarms[0].sensor).toBe('sensor2')
@@ -1444,7 +1522,7 @@ describe('tulip3 channel alarm message decoding (0x13/0x03)', () => {
       0x00,
       0x3F, // sensor 4, channel 1, all alarms
     ]
-    const out = decodeChannelAlarmMessage(bytes, testConfig, STANDARD_CHANNEL_ALARMS)
+    const out = decodeChannelAlarmMessage(bytes, testConfig)
 
     expect(out.data.channelAlarms).toHaveLength(7)
     // Verify all alarms are active for each channel
@@ -1456,7 +1534,7 @@ describe('tulip3 channel alarm message decoding (0x13/0x03)', () => {
   // Output structure validation
   it('has consistent output structure', () => {
     const bytes = [0x13, 0x03, 0x40, 0x00, 0x20]
-    const out = decodeChannelAlarmMessage(bytes, testConfig, STANDARD_CHANNEL_ALARMS)
+    const out = decodeChannelAlarmMessage(bytes, testConfig)
 
     expect(out).toEqual({
       data: {
@@ -1491,11 +1569,17 @@ describe('tulip3 channel alarm message decoding (0x13/0x03)', () => {
           end: 20,
           measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
           channelName: 'sensor1Channel1',
+          alarmFlags: STANDARD_CHANNEL_ALARMS,
+          registerConfig: emptyChannelRegisterConfig(),
         },
+        alarmFlags: STANDARD_SENSOR_ALARMS,
+        registerConfig: emptySensorRegisterConfig(),
       },
-    } as const satisfies TULIP3DeviceSensorConfig
+      alarmFlags: createDefaultCommunicationModuleAlarmFlags(),
+      registerConfig: completeCommunicationModuleRegisterConfig(),
+    } as const satisfies TULIP3DeviceConfig
     const bytes = [0x13, 0x03, 0x00, 0x00, 0x01]
-    const out = decodeChannelAlarmMessage(bytes, singleChannelConfig, STANDARD_CHANNEL_ALARMS)
+    const out = decodeChannelAlarmMessage(bytes, singleChannelConfig)
 
     expect(out.data.channelAlarms[0].sensor).toBe('sensor1')
     expect(out.data.channelAlarms[0].sensorId).toBe(0)
@@ -1517,7 +1601,7 @@ describe('generic alarm flags system - custom flag configurations', () => {
 
       // Test with batteryLow active (bit 15 = 0x8000)
       const bytes1 = [0x13, 0x01, 0x80, 0x00]
-      const out1 = decodeCommunicationModuleAlarmMessage(bytes1, customCommFlags)
+      const out1 = decodeCommunicationModuleAlarmMessage(bytes1, { alarmFlags: customCommFlags, registerConfig: completeCommunicationModuleRegisterConfig() })
 
       expect(out1.data.communicationModuleAlarms.alarmFlags).toEqual({
         batteryLow: true,
@@ -1528,7 +1612,7 @@ describe('generic alarm flags system - custom flag configurations', () => {
 
       // Test with overheating active (bit 10 = 0x0400)
       const bytes2 = [0x13, 0x01, 0x04, 0x00]
-      const out2 = decodeCommunicationModuleAlarmMessage(bytes2, customCommFlags)
+      const out2 = decodeCommunicationModuleAlarmMessage(bytes2, { alarmFlags: customCommFlags, registerConfig: completeCommunicationModuleRegisterConfig() })
 
       expect(out2.data.communicationModuleAlarms.alarmFlags).toEqual({
         batteryLow: false,
@@ -1539,7 +1623,7 @@ describe('generic alarm flags system - custom flag configurations', () => {
 
       // Test with multiple flags active (bits 15, 5, 0 = 0x8021)
       const bytes3 = [0x13, 0x01, 0x80, 0x21]
-      const out3 = decodeCommunicationModuleAlarmMessage(bytes3, customCommFlags)
+      const out3 = decodeCommunicationModuleAlarmMessage(bytes3, { alarmFlags: customCommFlags, registerConfig: completeCommunicationModuleRegisterConfig() })
 
       expect(out3.data.communicationModuleAlarms.alarmFlags).toEqual({
         batteryLow: true,
@@ -1556,7 +1640,7 @@ describe('generic alarm flags system - custom flag configurations', () => {
 
       // Test with criticalError active (bit 7 = 0x0080)
       const bytes = [0x13, 0x01, 0x00, 0x80]
-      const out = decodeCommunicationModuleAlarmMessage(bytes, minimalFlags)
+      const out = decodeCommunicationModuleAlarmMessage(bytes, { alarmFlags: minimalFlags, registerConfig: completeCommunicationModuleRegisterConfig() })
 
       expect(out.data.communicationModuleAlarms.alarmFlags).toEqual({
         criticalError: true,
@@ -1564,7 +1648,7 @@ describe('generic alarm flags system - custom flag configurations', () => {
 
       // Test with no flags active
       const bytes2 = [0x13, 0x01, 0x00, 0x00]
-      const out2 = decodeCommunicationModuleAlarmMessage(bytes2, minimalFlags)
+      const out2 = decodeCommunicationModuleAlarmMessage(bytes2, { alarmFlags: minimalFlags, registerConfig: completeCommunicationModuleRegisterConfig() })
 
       expect(out2.data.communicationModuleAlarms.alarmFlags).toEqual({
         criticalError: false,
@@ -1593,7 +1677,7 @@ describe('generic alarm flags system - custom flag configurations', () => {
 
       // Test with all flags active (0xFFFF)
       const bytes = [0x13, 0x01, 0xFF, 0xFF]
-      const out = decodeCommunicationModuleAlarmMessage(bytes, manyFlags)
+      const out = decodeCommunicationModuleAlarmMessage(bytes, { alarmFlags: manyFlags, registerConfig: completeCommunicationModuleRegisterConfig() })
 
       expect(out.data.communicationModuleAlarms.alarmFlags).toEqual({
         flag0: true,
@@ -1631,7 +1715,11 @@ describe('generic alarm flags system - custom flag configurations', () => {
             end: 20,
             measurementTypes: ['uint16 - TULIP scale 2500 - 12500' as const],
             channelName: 'sensor1Channel1',
+            alarmFlags: STANDARD_CHANNEL_ALARMS,
+            registerConfig: emptyChannelRegisterConfig(),
           },
+          alarmFlags: customSensorFlags,
+          registerConfig: emptySensorRegisterConfig(),
         },
         sensor2: {
           channel1: {
@@ -1639,13 +1727,19 @@ describe('generic alarm flags system - custom flag configurations', () => {
             end: 10,
             measurementTypes: ['uint16 - TULIP scale 2500 - 12500' as const],
             channelName: 'sensor2Channel1',
+            alarmFlags: STANDARD_CHANNEL_ALARMS,
+            registerConfig: emptyChannelRegisterConfig(),
           },
+          alarmFlags: customSensorFlags,
+          registerConfig: emptySensorRegisterConfig(),
         },
-      }
+        alarmFlags: createDefaultCommunicationModuleAlarmFlags(),
+        registerConfig: completeCommunicationModuleRegisterConfig(),
+      } as const satisfies TULIP3DeviceConfig
 
       // Test with temperatureOutOfRange active for sensor1 (bit 3 = 0x0008)
       const bytes1 = [0x13, 0x02, 0x00, 0x00, 0x08]
-      const out1 = decodeSensorAlarmMessage(bytes1, sensorConfig, customSensorFlags)
+      const out1 = decodeSensorAlarmMessage(bytes1, sensorConfig)
 
       expect(out1.data.sensorAlarms).toHaveLength(1)
       expect((out1.data.sensorAlarms as any)[0].sensor).toBe('sensor1')
@@ -1657,7 +1751,7 @@ describe('generic alarm flags system - custom flag configurations', () => {
 
       // Test with multiple flags active for sensor2 (bits 7, 12 = 0x1080)
       const bytes2 = [0x13, 0x02, 0x40, 0x10, 0x80] // sensor2 = bits 7-6 = 01 = 0x40
-      const out2 = decodeSensorAlarmMessage(bytes2, sensorConfig, customSensorFlags)
+      const out2 = decodeSensorAlarmMessage(bytes2, sensorConfig)
 
       expect(out2.data.sensorAlarms).toHaveLength(1)
       expect((out2.data.sensorAlarms as any)[0].sensor).toBe('sensor2')
@@ -1679,7 +1773,7 @@ describe('generic alarm flags system - custom flag configurations', () => {
         const lowByte = bitValue & 0xFF
 
         const bytes = [0x13, 0x01, highByte, lowByte]
-        const out = decodeCommunicationModuleAlarmMessage(bytes, customFlag)
+        const out = decodeCommunicationModuleAlarmMessage(bytes, { alarmFlags: customFlag, registerConfig: completeCommunicationModuleRegisterConfig() })
 
         expect(out.data.communicationModuleAlarms.alarmFlags[`bit${bit}`]).toBe(true)
       }
@@ -1701,7 +1795,7 @@ describe('generic alarm flags system - custom flag configurations', () => {
       ]
 
       testCases.forEach(({ bytes, expected }) => {
-        const out = decodeCommunicationModuleAlarmMessage(bytes, mixedFlags)
+        const out = decodeCommunicationModuleAlarmMessage(bytes, { alarmFlags: mixedFlags, registerConfig: completeCommunicationModuleRegisterConfig() })
         expect(out.data.communicationModuleAlarms.alarmFlags).toEqual(expected)
       })
     })
@@ -1715,7 +1809,7 @@ describe('generic alarm flags system - custom flag configurations', () => {
       } as const
 
       const bytes = [0x13, 0x01, 0x11, 0x11] // bits 0, 4, 8, 12 set
-      const out = decodeCommunicationModuleAlarmMessage(bytes, typedFlags)
+      const out = decodeCommunicationModuleAlarmMessage(bytes, { alarmFlags: typedFlags, registerConfig: completeCommunicationModuleRegisterConfig() })
 
       // TypeScript should enforce these exact property names
       expect(out.data.communicationModuleAlarms.alarmFlags.networkConnectivity).toBe(true)
