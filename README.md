@@ -58,6 +58,15 @@ Review the contributor section of the docs for setup. Need help or spotted an is
 Distributed under the [MIT License](./LICENSE).
 
 ## Release Notes
+4.3.0
+ - Migrated remaining devices (NETRIS2, NETRIS3 family, GD20W, A2G, PGW, F98W6) to the new codec structure
+ - NETRIS3 family: added TULIP3 codec support
+ - TULIP3: implemented granular register and alarm configuration
+ - Fix: slope value calculation
+ - GD20W!: adjusted channel names
+ - Schemas are now more accurate to the device
+ - Channel range adjustment restrictions for specific channels
+
 4.2.1
  - Added project documentation site
 
