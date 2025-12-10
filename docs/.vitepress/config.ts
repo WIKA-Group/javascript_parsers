@@ -100,10 +100,6 @@ export default defineConfig({
               { text: 'TULIP2', link: '/contributors/codecs/TULIP2' },
             ],
           },
-          {
-            text: 'Legacy TULIP2',
-            link: '/contributors/legacy-tulip2',
-          },
         ],
       },
     ],
