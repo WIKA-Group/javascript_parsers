@@ -45,7 +45,7 @@ interface Codec {
 ```
 
 - **TULIP2 codecs** (`src/codecs/tulip2/index.ts`) dispatch on the first byte (`0x00–0x09`) to message handlers that receive validated channel metadata and rounding options.
-- **TULIP3 codecs** (`src/codecs/tulip3/*`) consume richer device profiles: sensor/channel maps, measurement types, and alarm flag definitions.
+- **TULIP3 codecs** (`src/codecs/tulip3/*`) consume richer device profiles: sensor/channel maps, measurement types, and granular register/alarm flag definitions per component.
 - The utilities in `src/codecs/utils.ts` enforce channel uniqueness and range validity with helpful error messages.
 
 Because the interface is generic, adding specialized codecs is straightforward. Future generations such as “WIKA TULIP4/5/6” only need to implement the same surface, `defineParser` will accept them alongside existing codecs.

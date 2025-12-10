@@ -110,6 +110,7 @@ const codec2 = defineTULIP2Codec({
 TULIP3 codecs depend on device profiles for their generics:
 
 - `const TDeviceProfile extends TULIP3DeviceProfile`: Keep the profile factory (`defineTULIP3DeviceProfile`) typed `as const`; this preserves literal channel names, alarm flags, and message size limits.
+  - **Granular Configuration**: The profile now requires explicit `registerConfig` and `alarmFlags` definitions for the communication module, and for every sensor and channel. This allows for precise modeling of devices where capabilities vary per-component (e.g., one sensor supports alarms while another does not).
 - `ChannelNames<TDeviceProfile['sensorChannelConfig']>`: A helper mapped type that extracts channel names from the profile so `adjustMeasuringRange` and `defineParser` stay type-safe even when sensors are nested.
 - `TULIP3UplinkOutput<TDeviceProfile>`: Ties every decoded message back to the originating profile, ensuring the output `data` object has precise key types.
 

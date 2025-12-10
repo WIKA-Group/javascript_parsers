@@ -14,7 +14,6 @@ Welcome to the contributor hub for the WIKA parser monorepo. This page orients y
 - **Schemas** → [Schemas](/contributors/schemas) details the JSON schema artifacts and generation tooling.
 - **Testing** → [Testing](/contributors/testing) covers unit tests, fixtures, and benchmarks for validating changes.
 - **Contributing** → [Contributing](/contributors/contributing) clarifies how to interact with the GitHub mirror, including expectations for issues and pull requests.
-- **Legacy TULIP** → [Legacy TULIP](/contributors/legacy-tulip2) documents the historical parser generation, its constraints, and migration paths.
 
 ## First steps for new contributors
 

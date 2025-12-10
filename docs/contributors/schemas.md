@@ -39,6 +39,7 @@ We rely on Valibot for runtime validation and `@valibot/to-json-schema` to conve
 
 - Import `InferOutput` from Valibot (for example `type PEWTULIP2DataMessageUplinkOutput = v.InferOutput<...>`). These aliases are the types that codec handlers and parser generics consume.
 - Expect some friction: when schemas involve large unions, TypeScript can struggle with inference. It is acceptable to cast at the point of use, but keep casts narrow (for example `as PEWTULIP2ProcessAlarmsData[number]`) so you do not erase safety for the rest of the pipeline.
+- **Complex Schemas & Inference Limits**: For highly complex schemas (like TULIP3's full uplink union), TypeScript may hit call stack limits when inferring the output type directly from the schema object. In these cases, it is necessary to construct the output type manually from the constituent child schemas (e.g., `type Output = v.InferOutput<typeof Child1> | v.InferOutput<typeof Child2>`) and cast the schema factory return type to `any` or a simplified type to bypass the compiler limitation while maintaining type safety for consumers via the explicit type definition.
 - When codecs share schema-derived types with the parser (`defineParser`), the generics guarantee that the public package exposes the correct input/output shapes to end users. See [Type Generics and Inference Guarantees](./codec-development.md#type-generics-and-inference-guarantees) for the bigger picture.
 
 ## Workflow for Schema Updates
