@@ -1,5 +1,3 @@
-![WIKA](./docs/public//logo_wika.png "WIKA")
-
 # WIKA LPWAN Parser Monorepo
 
 [![npm version][npm-version-src]][npm-version-href]
@@ -8,6 +6,12 @@
 [![License][license-src]][license-href]
 
 _TypeScript/JavaScript payload codecs for WIKA IIoT devices._
+
+> **⚠️ DO NOT DOWNLOAD THE SOURCE CODE**
+>
+> If you need the prebuilt JavaScript parsers for your gateway or network server, **DO NOT** download the source code from this repository.
+>
+> Instead, get the prebuilt parsers from the [Downloads section](https://wika-group.github.io/javascript_parsers/users/downloads).
 
 ## Overview
 
@@ -58,6 +62,9 @@ Review the contributor section of the docs for setup. Need help or spotted an is
 Distributed under the [MIT License](./LICENSE).
 
 ## Release Notes
+4.3.1
+ - Clarified download instructions and added a prominent warning about using the prebuilt ZIP (docs).
+
 4.3.0
  - Migrated remaining devices (NETRIS2, NETRIS3 family, GD20W, A2G, PGW, F98W6) to the new codec structure
  - NETRIS3 family: added TULIP3 codec support

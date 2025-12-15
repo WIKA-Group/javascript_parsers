@@ -12,7 +12,7 @@
 
 1. **Download the parser bundle.**
 
-   Download the latest parser bundle from the [GitHub releases page](https://github.com/WIKA-Group/javascript_parsers/releases) or generate a tailored build from the [WIKA IIoT Toolbox](https://wika-group.github.io/iiot_toolbox). If you plan to run the parser inside Node-RED, see the [Node-RED Integration](/users/node-red) page. For network/gateway deployments, see [Integration Guide](/users/integration).
+   Go to the [Downloads](/users/downloads) page and choose either the WIKA IIoT Toolbox (recommended) or GitHub Releases. If you plan to run the parser inside Node-RED, see the [Node-RED Integration](/users/node-red) page. For network/gateway deployments, see [Integration Guide](/users/integration).
 
 2. **Register the device on your network server.**
 

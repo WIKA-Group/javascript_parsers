@@ -19,6 +19,9 @@ hero:
     - theme: alt
       text: View on GitHub
       link: https://github.com/WIKA-Group/javascript_parsers
+    - theme: alt
+      text: Download Parsers
+      link: /users/downloads
 
 features:
   - icon: 🚀

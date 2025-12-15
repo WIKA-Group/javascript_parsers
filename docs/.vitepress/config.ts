@@ -22,6 +22,7 @@ export default defineConfig({
       { text: 'Users', link: '/users/how-it-works' },
       { text: 'Devices', link: '/devices/' },
       { text: 'Contributors', link: '/contributors/' },
+      { text: 'Downloads', link: '/users/downloads' },
     ],
 
     sidebar: [
@@ -38,6 +39,7 @@ export default defineConfig({
         collapsed: false,
         items: [
           { text: 'How It Works', link: '/users/how-it-works' },
+          { text: 'Downloads', link: '/users/downloads' },
           { text: 'LoRaWAN Compatibility', link: '/users/lorawan-compatibility' },
           { text: 'Quick Start', link: '/users/quick-start' },
           { text: 'Integration', link: '/users/integration' },

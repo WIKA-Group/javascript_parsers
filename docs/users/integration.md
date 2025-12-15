@@ -16,7 +16,7 @@ To integrate the WIKA parsers into your LoRaWAN network server, follow these gen
 
 If you are using a LoRaWAN gateway that supports custom payload parsers, follow these generic steps:
 
-1. **Download the Parser**:<br>Obtain the latest prebuilt parser from the [releases](https://github.com/WIKA-Group/javascript_parsers/releases) section of the repository or configure it on the [WIKA IIoT Toolbox](https://wika-group.github.io/iiot_toolbox) (recommended).
+1. **Download the Parser**:<br>Go to the [Downloads](/users/downloads) page. Use the WIKA IIoT Toolbox (recommended) or download from GitHub Releases.
 2. **Configure the Parser**:<br>Set up the parser according to your specifications. Set the rounding decimals and measurement ranges as needed. The [WIKA IIoT Toolbox](https://wika-group.github.io/iiot_toolbox) provides an easy way to configure these settings before downloading the parser.
 3. **Upload the Parser**:<br>Go to the documentation of your gateway to learn where and how to upload or configure the parser.
 4. **Test the Parser**:<br>Send test payloads to ensure that the parser is functioning correctly. This can also be done on the [WIKA IIoT Toolbox](https://wika-group.github.io/iiot_toolbox) if you have used it to configure the parser in the first step.

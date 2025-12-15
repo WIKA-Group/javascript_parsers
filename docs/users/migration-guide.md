@@ -6,7 +6,7 @@ This guide walks you through upgrading the prebuilt JavaScript parsers that are 
 
 ## Before you start
 
-- Download the latest parser bundle from the [releases](https://github.com/WIKA-Group/javascript_parsers/releases) page or regenerate it via the [WIKA IIoT Toolbox](https://wika-group.github.io/iiot_toolbox).
+- Download the latest parser bundle from the [Downloads](/users/downloads) page. Use either the WIKA IIoT Toolbox or GitHub Releases.
 - Keep the previous parser file handy so you can copy measuring ranges and verify behavior during testing.
 - Review the device-specific documentation to confirm the channel names and default measuring ranges that the `adjustMeasuringRange` helper expects.
 

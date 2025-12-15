@@ -12,7 +12,7 @@ They parsers are written on a per-device basis, allowing for easy customization 
 
 The parsers are also designed to be used in LoRaWAN gateways and network servers. They follow the [LoRaWAN® Payload Codec API Specification TS013-1.0.0](https://resources.lora-alliance.org/technical-specifications/ts013-1-0-0-payload-codec-api) and provide the necessary functions to decode uplink messages and encode downlink messages.
 
-You can download the latest prebuilt parser as a zip file from the [releases](https://github.com/WIKA-Group/javascript_parsers/releases) section of the repository. However these need to be adapted to your specific device(s) before they can be used in your gateway or network server. You can also configure the parser on the [IIot Toolbox](https://wika-group.github.io/iiot_toolbox/) and try it out before downloading it from there. This way no manual configuration is needed. After you have downloaded your parser, go to the documentation of your gateway or network server to learn where and how to integrate the parser.
+You can download prebuilt parsers from the [Downloads](/users/downloads) page. The [WIKA IIoT Toolbox](https://wika-group.github.io/iiot_toolbox/) allows you to configure and download parsers tailored to your specific devices. After you have downloaded your parser, go to the documentation of your gateway or network server to learn where and how to integrate the parser.
 
 For most common network servers, such as The Things Network (TTN), ChirpStack or Loriot, you can find specific examples in the [Networkserver Integration](/users/integration) guide.
 
