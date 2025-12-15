@@ -1,6 +1,6 @@
 {
   "name": "wika-netris2-decoder",
-  "version": "4.3.0",
+  "version": "4.3.1",
   "main": "index.js",
   "description": "WIKA NETRIS2 LoRaWAN decoder",
   "codecId": "0001",
