@@ -2,6 +2,41 @@
 
 This guide provides instructions on how to integrate the WIKA JavaScript parsers into your LoRaWAN network server or gateway.
 
+## Exposed Functions
+
+The WIKA parsers follow the [LoRaWAN® Payload Codec API Specification TS013-1.0.0](https://resources.lora-alliance.org/technical-specifications/ts013-1-0-0-payload-codec-api) and expose the following primary function:
+
+- **`decodeUplink(input)`** - Decodes uplink messages from your devices
+
+For additional functions and version-specific details, see the [API Description](/users/api-description) page.
+
+### Spec-Compliant Systems
+
+For **most** LoRaWAN gateways and network servers that comply with the specification, the parser works out of the box. Simply:
+
+1. Download and configure your parser (set measuring ranges)
+2. Upload it to your gateway/network server
+3. Done! The parser will automatically use `decodeUplink()`
+
+::: warning Important
+Always adjust the measuring ranges to match your specific sensor before deployment.
+:::
+
+### Non-Compliant Systems
+
+Some gateways or network servers use **custom function names** instead of the standard `decodeUplink`. If your system expects a different function name (e.g., `decode`, `Decode`, `decodePayload`, `Decoder`), add a wrapper function at the **bottom** of your downloaded parser:
+
+```javascript
+// Add this at the bottom of your parser file
+function decode(input) {
+    return decodeUplink(input)
+}
+```
+
+Replace `decode` with whatever function name your system expects. This simple wrapper is sufficient for most cases.
+
+**How to check:** Consult your gateway or network server documentation. Look for sections about "payload formatters", "codec", or "decoder" to find the expected function name.
+
 ## Network Server Integration
 
 To integrate the WIKA parsers into your LoRaWAN network server, follow these general steps. Specific instructions may vary depending on the network server you are using.

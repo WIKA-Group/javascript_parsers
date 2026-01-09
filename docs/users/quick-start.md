@@ -22,7 +22,24 @@
 
    The parser can run wherever it makes most sense in your architecture: a network server (preferred for centralized management), a gateway that supports payload codecs, a Function inside Node-RED, or a custom application. See [Integration Guide](/users/integration) for server/gateway deployment and [Node-RED Integration](/users/node-red) for a Node-RED specific example.
 
-4. **Configure measuring ranges.**
+4. **Verify API compatibility.**
+
+   The WIKA parsers expose `decodeUplink(input)` by default, following the [LoRaWAN® Payload Codec API Specification](https://resources.lora-alliance.org/technical-specifications/ts013-1-0-0-payload-codec-api).
+
+   **Most** network servers and gateways are spec-compliant and work immediately. Just upload the parser and you're done.
+
+   **However**, some systems expect different function names (e.g., `decode`, `Decode`, `decodePayload`). If your system is non-compliant, add this wrapper at the **bottom** of your downloaded parser:
+
+   ```javascript
+   // Add at the bottom of the parser file
+   function decode(input) {
+       return decodeUplink(input)
+   }
+   ```
+
+   Replace `decode` with whatever function name your gateway/network server expects. Check your system's documentation under "payload formatters" or "codec" sections.
+
+5. **Configure measuring ranges.**
 
    Adjust measuring ranges per channel name (see the [device](/devices/) documentation for supported channel identifiers). Call this once before decoding.
 
@@ -33,7 +50,7 @@
 
    Optional: refine numeric precision with `adjustRoundingDecimals(2)`.
 
-5. **Provide the parser with the incoming payload.**
+6. **Provide the parser with the incoming payload.**
 
    Your runtime will supply data in one of these common forms: a raw byte array, a hex string, or a Base64 string. Use the appropriate decoding method:
 
@@ -73,11 +90,11 @@
    return msg
    ```
 
-6. **Deploy and activate.**
+7. **Deploy and activate.**
 
    Deploy your integration changes in your chosen runtime (restart or redeploy an integration on your network server, push the updated script to your gateway, or deploy the Node-RED flow). Then activate or rejoin the device to trigger uplinks.
 
-7. **Validate the outputs.**
+8. **Validate the outputs.**
 
    Compare the decoded values with reference payloads or known sensor readings. Adjust measuring ranges or rounding until the numbers match expectations.
 

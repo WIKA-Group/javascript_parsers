@@ -10,11 +10,40 @@ They parsers are written on a per-device basis, allowing for easy customization 
 
 ## LoRaWAN Gateways and Network Servers
 
-The parsers are also designed to be used in LoRaWAN gateways and network servers. They follow the [LoRaWAN® Payload Codec API Specification TS013-1.0.0](https://resources.lora-alliance.org/technical-specifications/ts013-1-0-0-payload-codec-api) and provide the necessary functions to decode uplink messages and encode downlink messages.
+The parsers are designed to be used in LoRaWAN gateways and network servers. They follow the [LoRaWAN® Payload Codec API Specification TS013-1.0.0](https://resources.lora-alliance.org/technical-specifications/ts013-1-0-0-payload-codec-api) and expose standard API functions.
 
-You can download prebuilt parsers from the [Downloads](/users/downloads) page. The [WIKA IIoT Toolbox](https://wika-group.github.io/iiot_toolbox/) allows you to configure and download parsers tailored to your specific devices. After you have downloaded your parser, go to the documentation of your gateway or network server to learn where and how to integrate the parser.
+### Default API
 
-For most common network servers, such as The Things Network (TTN), ChirpStack or Loriot, you can find specific examples in the [Networkserver Integration](/users/integration) guide.
+The parsers expose the following primary function by default:
+
+- **`decodeUplink(input)`** - Decodes uplink messages from your devices
+
+For spec-compliant gateways and network servers, you can use the parsers as-is without any modifications. Simply upload the parser and it will work immediately.
+
+::: tip Adjusting Measuring Ranges
+Always adjust the measuring ranges to match your specific sensor's data sheet. This can be done via the [WIKA IIoT Toolbox](https://wika-group.github.io/iiot_toolbox/) before downloading, or programmatically using `adjustMeasuringRange()`.
+:::
+
+### Non-Compliant Gateways/Network Servers
+
+Some gateways or network servers may not fully comply with the LoRaWAN® Payload Codec API specification and expect different function names (e.g., `decode`, `Decode`, `decodePayload`). In these cases, you need to add a simple wrapper function at the bottom of your downloaded parser:
+
+```javascript
+// Example wrapper for non-compliant systems
+function decode(input) {
+    return decodeUplink(input)
+}
+```
+
+Check your gateway or network server documentation to see which function name it expects.
+
+### More Information
+
+- See the [API Description](/users/api-description) for version-specific function details
+- See the [Supported Devices](/devices/) section for device-specific information
+- See the [Integration Guide](/users/integration) for detailed integration steps
+
+You can download prebuilt parsers from the [Downloads](/users/downloads) page. The [WIKA IIoT Toolbox](https://wika-group.github.io/iiot_toolbox/) allows you to configure and download parsers tailored to your specific devices.
 
 ## Web and Server Applications
 
