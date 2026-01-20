@@ -1,6 +1,6 @@
 {
   "name": "wika-tru-netris3-decoder",
-  "version": "4.3.1",
+  "version": "4.3.2",
   "main": "index.js",
   "description": "WIKA TRU+NETRIS3 LoRaWAN decoder",
   "codecId": "0001",
