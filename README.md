@@ -62,6 +62,9 @@ Review the contributor section of the docs for setup. Need help or spotted an is
 Distributed under the [MIT License](./LICENSE).
 
 ## Release Notes
+4.3.2
+ - Fix: built parser interface according to LoRaWAN® Payload Codec API Specification TS013-1.0.0
+
 4.3.1
  - Clarified download instructions and added a prominent warning about using the prebuilt ZIP (docs).
 

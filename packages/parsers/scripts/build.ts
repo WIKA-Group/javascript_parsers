@@ -20,7 +20,11 @@ const baseConfig: UserConfig = {
     js: '.js',
   }),
   target: 'es2015',
-  minify: true,
+  minify: {
+    mangle: {
+      toplevel: false,
+    },
+  },
 
   format: ['esm'],
   dts: false,
