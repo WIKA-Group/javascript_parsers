@@ -1,4 +1,4 @@
-import type { protocolDataTypeLookup } from './lookups'
+import type { measurandLookup, protocolDataTypeLookup, unitsLookup } from './lookups'
 import type { AnyCustomRegisterLookup } from './registers'
 
 type _Channels = `channel${1 | 2 | 3 | 4 | 5 | 6 | 7 | 8}`
@@ -60,6 +60,20 @@ export interface TULIP3ChannelConfig {
    */
   end: number
   measurementTypes: typeof protocolDataTypeLookup[keyof typeof protocolDataTypeLookup][]
+  /**
+   * Available measurands for this channel (at least one required).
+   * Array of measurand strings from measurandLookup that this channel supports.
+   * Used to validate measurand selection in uplink output and downlink input schemas.
+   * @example ['Temperature', 'Pressure (gauge)']
+   */
+  availableMeasurands: [(typeof measurandLookup)[keyof typeof measurandLookup], ...((typeof measurandLookup)[keyof typeof measurandLookup])[]]
+  /**
+   * Available units for this channel (at least one required).
+   * Array of unit strings from unitsLookup that this channel supports.
+   * Used to validate unit selection in uplink output and downlink input schemas.
+   * @example ['bar', 'mbar', 'Pa', 'kPa']
+   */
+  availableUnits: [(typeof unitsLookup)[keyof typeof unitsLookup], ...((typeof unitsLookup)[keyof typeof unitsLookup])[]]
   channelName: string
   adjustMeasurementRangeDisallowed?: boolean
   alarmFlags: AlarmFlags

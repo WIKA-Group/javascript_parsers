@@ -105,10 +105,13 @@ export function createTULIP3TRWDeviceProfile() {
           sensorSpecificIdentificationRegisters: {},
         },
         channel1: {
+          // TODO: rename to "channel1" as this can be temperature, current, voltage or relative
           channelName: 'temperature',
           start: 0, // placeholder; actual range comes from device config at runtime
           end: 10, // placeholder; actual range comes from device config at runtime
           measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
+          availableMeasurands: ['Temperature', 'Current', 'Voltage', 'Resistance'],
+          availableUnits: ['°C', '°F', 'V', 'mA', '%'],
           alarmFlags: trwChannelAlarmFlags,
           registerConfig: trwChannelRegisterConfig,
         },

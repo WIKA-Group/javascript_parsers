@@ -109,6 +109,8 @@ export function createTULIP3TRUDeviceProfile() {
           start: 0,
           end: 600,
           measurementTypes: ['uint16 - TULIP scale 2500 - 12500', 'float - IEEE754'],
+          availableMeasurands: ['Temperature'],
+          availableUnits: ['°C', '°F', 'K'],
           alarmFlags: truChannelAlarmFlags,
           registerConfig: truChannelRegisterConfig,
         },

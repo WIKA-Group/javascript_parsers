@@ -109,3 +109,48 @@ export type MinusOne<T extends number> = T extends 0
     : ParseInt<
       RemoveLeadingZeros<ReverseString<InternalMinusOne<ReverseString<`${T}`>>>>
     >
+
+/**
+ * Deep exclusion utility that recursively removes keys from nested objects
+ * and marks them as 'never' to create mutually exclusive types.
+ * Handles optional fields (T | undefined) by preserving the undefined union.
+ */
+type DeepExclude<T, K extends string> = T extends object
+  ? {
+      [P in keyof T]: P extends K
+        ? never
+        : T[P] extends infer U | undefined
+          ? U extends object
+            ? DeepExclude<U, K> | Extract<T[P], undefined>
+            : T[P]
+          : T[P] extends object
+            ? DeepExclude<T[P], K>
+            : T[P]
+    }
+  : T
+
+/**
+ * Type-level transformation utilities for single encode().
+ * Strips either all identification OR all configuration fields recursively.
+ */
+export type StripConfiguration<T> = DeepExclude<T, 'configuration'>
+export type StripIdentification<T> = DeepExclude<T, 'identification'>
+
+type CommonKeys<T extends object> = keyof T
+type AllKeys<T> = T extends any ? keyof T : never
+
+type Subtract<A, C> = A extends C ? never : A
+type NonCommonKeys<T extends object> = Subtract<AllKeys<T>, CommonKeys<T>>
+type PickType<T, K extends AllKeys<T>> = T extends { [k in K]?: any }
+  ? T[K]
+  : undefined
+type PickTypeOf<T, K extends string | number | symbol> = K extends AllKeys<T>
+  ? PickType<T, K>
+  : never
+
+export type Merge<T extends object> = {
+  [k in CommonKeys<T>]: PickTypeOf<T, k>;
+}
+& {
+  [k in NonCommonKeys<T>]?: PickTypeOf<T, k>;
+}

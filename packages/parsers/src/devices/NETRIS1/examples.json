@@ -636,7 +636,7 @@
   },
   {
     "type": "uplink",
-    "description": "GoodCase TULIP3 device alarm message: Channel alarms - minimum physical limit for channel 1 sensor 1 (pressure) and maximum physical limit for channel 2 sensor 1 (device temperature)",
+    "description": "GoodCase TULIP3 device alarm message: Channel alarms - minimum physical limit for channel 1 sensor 1 and maximum physical limit for channel 2 sensor 1 (device temperature)",
     "input": {
       "bytes": [
         19,
@@ -690,8 +690,8 @@
         1,
         15,
         2,
-        3,
-        7
+        1,
+        1
       ],
       "fPort": 1,
       "recvTime": "1992-12-22T17:00:00+01:00"
@@ -715,8 +715,8 @@
           "sensor1": {
             "channel1": {
               "channelName": "measurement",
-              "measurand": "Pressure (gauge)",
-              "unit": "bar"
+              "measurand": "Temperature",
+              "unit": "°C"
             },
             "identification": {
               "existingChannels": {

@@ -4,6 +4,7 @@ import { defineParser } from '../src/parser'
 // MockCodec for parser tests
 class MockCodec {
   name: string
+  protocol: string
   private _channels: any[]
   private _decodeResult: any
   private _encodeResult: any
@@ -12,18 +13,21 @@ class MockCodec {
   public adjustRoundingDecimals = vi.fn()
   constructor({
     name,
+    protocol,
     channels,
     decodeResult,
     encodeResult,
     canTryDecode = true,
   }: {
     name: string
+    protocol?: string
     channels: any[]
     decodeResult?: any
     encodeResult?: any
     canTryDecode?: ((input: any) => boolean) | boolean
   }) {
     this.name = name
+    this.protocol = protocol ?? name
     this._channels = channels
     this._decodeResult = decodeResult ?? { data: name }
     this._encodeResult = encodeResult ?? [1, 2, 3]
@@ -109,18 +113,18 @@ describe('defineParser', () => {
   })
 
   it('should encodeDownlink with correct codec', () => {
-    const codec = new MockCodec({ name: 'codec1', channels: validChannels, encodeResult: [9, 8, 7] })
+    const codec = new MockCodec({ name: 'codec1', protocol: 'protocol1', channels: validChannels, encodeResult: [9, 8, 7] })
     const parser = defineParser({ parserName: 'TestParser', codecs: [codec] })
-    const result = parser.encodeDownlink({ codec: 'codec1', input: { foo: 1 } })
+    const result = parser.encodeDownlink({ protocol: 'protocol1', input: { foo: 1 } })
     expect(result).toEqual([9, 8, 7])
   })
 
   it('should throw error if encodeDownlink codec not found', () => {
-    const codec = new MockCodec({ name: 'codec1', channels: validChannels })
+    const codec = new MockCodec({ name: 'codec1', protocol: 'protocol1', channels: validChannels })
     const parser = defineParser({ parserName: 'TestParser', codecs: [codec] })
-    const res = parser.encodeDownlink({ codec: 'notfound', input: {} })
+    const res = parser.encodeDownlink({ protocol: 'notfound', input: {} })
     // here the res.errors should have one entry about codec not found
-    expect(res.errors![0]).toMatch(/Codec notfound not found in parser./)
+    expect(res.errors![0]).toMatch(/Codec with protocol notfound not found in parser/)
   })
 
   it('should call adjustMeasuringRange on all codecs', () => {

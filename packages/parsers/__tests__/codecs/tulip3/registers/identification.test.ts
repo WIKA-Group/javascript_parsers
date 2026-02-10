@@ -1,10 +1,10 @@
 import type { TULIP3DeviceConfig } from '../../../../src/codecs/tulip3/profile'
 import { describe, expect, it } from 'vitest'
 import {
-  createIdentificationRegisterLookup,
-  getChannelBaseAddress,
-  getSensorBaseAddress,
-} from '../../../../src/codecs/tulip3/registers/identification'
+  getChannelIdAddress,
+  getSensorIdAddress,
+} from '../../../../src/codecs/addresses'
+import { createIdentificationRegisterLookup } from '../../../../src/codecs/tulip3/registers/identification'
 import {
   completeChannelRegisterConfig,
   completeSensorRegisterConfig,
@@ -16,22 +16,6 @@ import {
 
 describe('tULIP3 identification register generation', () => {
   describe('pEW device configuration Register generation', () => {
-    it('should generate correct base addresses for sensor 1', () => {
-      const sensor1BaseAddress = getSensorBaseAddress(1)
-      expect(sensor1BaseAddress).toBe(0x03C) // 0x03C + (1-1) * 460 = 0x03C
-    })
-
-    it('should generate correct base addresses for channels', () => {
-      const channel1BaseAddress = getChannelBaseAddress(1, 1)
-      const channel2BaseAddress = getChannelBaseAddress(1, 2)
-
-      // Channel 1 of sensor 1: 0x03C + (1-1) * 400 + 1 * 60 + (1-1) * 50 = 0x03C + 0 + 60 + 0 = 0x78
-      expect(channel1BaseAddress).toBe(0x78)
-
-      // Channel 2 of sensor 1: 0x03C + (1-1) * 400 + 1 * 60 + (2-1) * 50 = 0x03C + 0 + 60 + 50 = 0xAA
-      expect(channel2BaseAddress).toBe(0xAA)
-    })
-
     it('should create register lookup with correct addresses for PEW configuration', () => {
       const lookup = createIdentificationRegisterLookup(completeTULIP3DeviceConfig())
 
@@ -87,10 +71,10 @@ describe('tULIP3 identification register generation', () => {
       const lookup = createIdentificationRegisterLookup(completeTULIP3DeviceConfig())
 
       // Check that all sensor registers are present
-      const sensor1BaseAddr = getSensorBaseAddress(1) // 0x03C
-      const sensor2BaseAddr = getSensorBaseAddress(2) // 0x03C + (2-1) * 460 = 0x200
-      const sensor3BaseAddr = getSensorBaseAddress(3) // 0x03C + (3-1) * 460 = 0x3C4
-      const sensor4BaseAddr = getSensorBaseAddress(4) // 0x03C + (4-1) * 460 = 0x588
+      const sensor1BaseAddr = getSensorIdAddress(1, 0) // 0x03C
+      const sensor2BaseAddr = getSensorIdAddress(2, 0) // 0x03C + (2-1) * 460 = 0x200
+      const sensor3BaseAddr = getSensorIdAddress(3, 0) // 0x03C + (3-1) * 460 = 0x3C4
+      const sensor4BaseAddr = getSensorIdAddress(4, 0) // 0x03C + (4-1) * 460 = 0x588
 
       expect(lookup[sensor1BaseAddr]).toBeDefined()
       expect(lookup[sensor2BaseAddr]).toBeDefined()
@@ -104,7 +88,7 @@ describe('tULIP3 identification register generation', () => {
       // Check that all channels 1-8 of all sensors 1-4 are present
       for (let sensorNum = 1; sensorNum <= 4; sensorNum++) {
         for (let channelNum = 1; channelNum <= 8; channelNum++) {
-          const channelBaseAddr = getChannelBaseAddress(sensorNum, channelNum)
+          const channelBaseAddr = getChannelIdAddress(sensorNum, channelNum, 0)
           expect(lookup[channelBaseAddr]).toBeDefined()
           // @ts-expect-error - we assume its a registerEntry not a guard
           expect(lookup[channelBaseAddr]!.path).toBe(`sensor${sensorNum}.channel${channelNum}.measurand`)
@@ -173,10 +157,10 @@ describe('tULIP3 identification register generation', () => {
       })
 
       // All sensors should now be present with registers
-      const sensor1Range = { start: getSensorBaseAddress(1), end: getSensorBaseAddress(1) + 460 - 1 }
-      const sensor2Range = { start: getSensorBaseAddress(2), end: getSensorBaseAddress(2) + 460 - 1 }
-      const sensor3Range = { start: getSensorBaseAddress(3), end: getSensorBaseAddress(3) + 460 - 1 }
-      const sensor4Range = { start: getSensorBaseAddress(4), end: getSensorBaseAddress(4) + 460 - 1 }
+      const sensor1Range = { start: getSensorIdAddress(1, 0), end: getSensorIdAddress(1, 0) + 460 - 1 }
+      const sensor2Range = { start: getSensorIdAddress(2, 0), end: getSensorIdAddress(2, 0) + 460 - 1 }
+      const sensor3Range = { start: getSensorIdAddress(3, 0), end: getSensorIdAddress(3, 0) + 460 - 1 }
+      const sensor4Range = { start: getSensorIdAddress(4, 0), end: getSensorIdAddress(4, 0) + 460 - 1 }
 
       // Check that each sensor has at least some registers defined
       ;[sensor1Range, sensor2Range, sensor3Range, sensor4Range].forEach(({ start }, index) => {
@@ -185,34 +169,6 @@ describe('tULIP3 identification register generation', () => {
         // @ts-expect-error - we assume its a registerEntry not a guard
         expect(lookup[start]!.path).toBe(`sensor${sensorNum}.identification.sensorType`)
       })
-    })
-
-    it('should verify address calculations are correct', () => {
-      // Test sensor address formula: 0x03C + (n-1) * 460
-      const sensor1Base = getSensorBaseAddress(1)
-      const sensor2Base = getSensorBaseAddress(2)
-      const sensor3Base = getSensorBaseAddress(3)
-
-      expect(sensor1Base).toBe(0x03C + 0 * 460) // 0x03C
-      expect(sensor2Base).toBe(0x03C + 1 * 460) // 0x200
-      expect(sensor3Base).toBe(0x03C + 2 * 460) // 0x3C4
-
-      // Verify spacing between sensors is 460 bytes
-      expect(sensor2Base - sensor1Base).toBe(460)
-      expect(sensor3Base - sensor2Base).toBe(460)
-
-      // Test channel address formula: 0x03C + (n-1) * 400 + n * 60 + (m-1) * 50
-      const sensor1Channel1 = getChannelBaseAddress(1, 1)
-      const sensor1Channel2 = getChannelBaseAddress(1, 2)
-      const sensor1Channel3 = getChannelBaseAddress(1, 3)
-
-      expect(sensor1Channel1).toBe(0x03C + 0 * 400 + 1 * 60 + 0 * 50) // 0x78
-      expect(sensor1Channel2).toBe(0x03C + 0 * 400 + 1 * 60 + 1 * 50) // 0xAA
-      expect(sensor1Channel3).toBe(0x03C + 0 * 400 + 1 * 60 + 2 * 50) // 0xDC
-
-      // Verify spacing between channels is 50 bytes
-      expect(sensor1Channel2 - sensor1Channel1).toBe(50)
-      expect(sensor1Channel3 - sensor1Channel2).toBe(50)
     })
 
     it('should generate lookup with all required CM registers', () => {
@@ -281,7 +237,7 @@ describe('tULIP3 identification register generation', () => {
 
       // Test both channel 1 and channel 2
       ;[1, 2].forEach((channelNum) => {
-        const channelBaseAddr = getChannelBaseAddress(1, channelNum)
+        const channelBaseAddr = getChannelIdAddress(1, channelNum, 0)
 
         channelOffsets.forEach(({ offset, suffix, size }) => {
           const addr = channelBaseAddr + offset
@@ -317,7 +273,7 @@ describe('tULIP3 identification register generation', () => {
       // Channel blocks should be continuous (except RFU)
       const channelOffsets = [0x00, 0x01, 0x02, 0x06, 0x0A, 0x0E, 0x12, 0x14, 0x18, 0x1C];
       [1, 2].forEach((channelNum) => {
-        const channelBaseAddr = getChannelBaseAddress(1, channelNum)
+        const channelBaseAddr = getChannelIdAddress(1, channelNum, 0)
         channelOffsets.forEach((offset) => {
           expect(lookup[channelBaseAddr + offset]).toBeDefined()
         })
@@ -408,7 +364,7 @@ describe('tULIP3 identification register generation', () => {
       }
 
       const lookup = createIdentificationRegisterLookup(configWithDisabledChannelFlags)
-      const channel1BaseAddr = getChannelBaseAddress(1, 1)
+      const channel1BaseAddr = getChannelIdAddress(1, 1, 0)
 
       // Verify register guards exist at channel register addresses
       expect(lookup[channel1BaseAddr + 0x00]).toBeDefined()
@@ -428,7 +384,7 @@ describe('tULIP3 identification register generation', () => {
       // Test with some flags enabled and some disabled
       const mixedConfig: TULIP3DeviceConfig = {
         sensor1: {
-          channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel1', registerConfig: completeChannelRegisterConfig(), alarmFlags: createDefaultChannelAlarmFlags() },
+          channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel1', registerConfig: completeChannelRegisterConfig(), alarmFlags: createDefaultChannelAlarmFlags(), availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
           alarmFlags: createDefaultSensorAlarmFlags(),
           registerConfig: completeSensorRegisterConfig(),
         },

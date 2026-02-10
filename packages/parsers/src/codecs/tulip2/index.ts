@@ -2,6 +2,7 @@ import type { UplinkInput } from '../../schemas'
 import type { Channel, DownlinkOutput, GenericUplinkOutput, MultipleDownlinkOutput } from '../../types'
 import type { Codec } from '../codec'
 import { getRoundingDecimals } from '../../utils'
+import { TULIP2_PROTOCOL } from '../protocols'
 import { checkChannelsValidity } from '../utils'
 
 export interface TULIP2Channel extends Channel {
@@ -72,7 +73,11 @@ type TULIP2AdjustableChannelNames<TChannels extends TULIP2Channel[]> = {
   [K in keyof TChannels]: TChannels[K] extends TULIP2Channel ? (TChannels[K]['adjustMeasurementRangeDisallowed'] extends true ? never : TChannels[K]['name']) : never
 }[number]
 
-export type TULIP2Codec<TChannels extends TULIP2Channel[], TName extends string, THandlers extends MessageHandlers<TChannels>, TEncoderFactory extends EncoderFactory<any> | undefined = undefined, TMultipleEncoderFactory extends MultipleEncoderFactory<any> | undefined = undefined> = Codec<`${TName}TULIP2`, ReturnTypeOfHandlers<TChannels, THandlers>, TULIP2AdjustableChannelNames<TChannels>, ReturnOfFactory<TEncoderFactory>, ReturnOfFactory<TMultipleEncoderFactory>>
+/**
+ * Type alias for a TULIP2 codec with protocol identification.
+ * Wrapper around base Codec type that fixes the protocol to TULIP2 and passes through all other type parameters.
+ */
+export type TULIP2Codec<TChannels extends TULIP2Channel[], TName extends string, THandlers extends MessageHandlers<TChannels>, TEncoderFactory extends EncoderFactory<any> | undefined = undefined, TMultipleEncoderFactory extends MultipleEncoderFactory<any> | undefined = undefined> = Codec<typeof TULIP2_PROTOCOL, `${TName}TULIP2`, ReturnTypeOfHandlers<TChannels, THandlers>, TULIP2AdjustableChannelNames<TChannels>, ReturnOfFactory<TEncoderFactory>, ReturnOfFactory<TMultipleEncoderFactory>>
 
 /**
  * Creates a TULIP2 protocol codec for decoding and encoding IoT device messages.
@@ -186,10 +191,11 @@ export function defineTULIP2Codec<const TChannels extends TULIP2Channel[], TName
 
   const codec = {
     name: codecName,
+    protocol: TULIP2_PROTOCOL,
     getChannels,
     canTryDecode,
     decode,
-    adjustMeasuringRange: (name, range) => {
+    adjustMeasuringRange: (name: TULIP2AdjustableChannelNames<TChannels>, range: { start: number, end: number }) => {
       const channel = options.channels.find(channel => channel.name === name)
       if (!channel) {
         throw new Error(`Channel ${name} not found in ${options.deviceName}TULIP2 Codec`)
@@ -200,16 +206,14 @@ export function defineTULIP2Codec<const TChannels extends TULIP2Channel[], TName
     adjustRoundingDecimals: (decimals: number) => {
       roundingDecimals = getRoundingDecimals(decimals, roundingDecimals)
     },
-  } as TULIP2Codec<TChannels, TName, THandlers, TEncoderFactory, TMultipleEncoderFactory>
+  } as any
 
   if (options.encoderFactory) {
-    // @ts-expect-error - TS cannot infer correctly here
     codec.encode = options.encoderFactory({ getChannels: () => options.channels }) as ReturnOfFactory<TEncoderFactory>
   }
   if (options.multipleEncodeFactory) {
-    // @ts-expect-error - TS cannot infer correctly here
     codec.encodeMultiple = options.multipleEncodeFactory({ getChannels: () => options.channels }) as ReturnOfFactory<TMultipleEncoderFactory>
   }
 
-  return codec
+  return codec as TULIP2Codec<TChannels, TName, THandlers, TEncoderFactory, TMultipleEncoderFactory>
 }

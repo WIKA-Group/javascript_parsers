@@ -1,85 +1,8 @@
 /* eslint-disable ts/explicit-function-return-type */
 import type { TULIP3ChannelConfig, TULIP3DeviceConfig, TULIP3SensorConfig } from '../../codecs/tulip3/profile'
 import * as v from 'valibot'
-import { protocolDataTypeLookup } from '../../codecs/tulip3/lookups'
 import { createGenericUplinkOutputSchema, createWriteResponseDataSchema } from './_shared'
-
-// =============================================================================
-// BASE TYPE SCHEMAS
-// =============================================================================
-
-/**
- * Creates a validation schema for protocol data types.
- *
- * @returns A Valibot picklist schema that validates against supported protocol data types
- * @example
- * ```typescript
- * const schema = createProtocolDataTypeSchema()
- * const result = v.parse(schema, "float - IEEE754")
- * ```
- */
-function createProtocolDataTypeSchema() {
-  return v.picklist(Object.values(protocolDataTypeLookup) as (typeof protocolDataTypeLookup[keyof typeof protocolDataTypeLookup])[])
-}
-
-// =============================================================================
-// SENSOR AND CHANNEL SCHEMAS
-// =============================================================================
-
-/**
- * Creates a validation schema for sampling channels configuration.
- * Generates channel properties in the format "channelN" where N is the channel number.
- *
- * @param config - Configuration object for the sensor channels
- * @returns A Valibot object schema with optional boolean flags for each channel
- * @template TChannels - Type-safe array of channel numbers
- * @example
- * ```typescript
- * const schema = createSamplingChannelsSchema([1, 2, 3])
- * const result = v.parse(schema, { channel1: true, channel2: true, channel3: false })
- * ```
- */
-function createSamplingChannelsSchema<const TConfig extends TULIP3SensorConfig>(config: TConfig) {
-  type SampledChannels = {
-    [K in keyof TConfig as K extends `channel${number}` ? K : never]: v.BooleanSchema<undefined>
-    // [K in (typeof allChannels)[number]]: keyof TConfig extends K ? v.BooleanSchema<undefined> : v.LiteralSchema<false, undefined>
-  }
-
-  const configuredChannels = Object.keys(config).filter(key => key.startsWith('channel'))
-
-  const samplingChannels = configuredChannels.reduce((acc, channel) => {
-    acc[channel as keyof typeof acc] = v.boolean()
-    return acc
-  }, {} as SampledChannels)
-
-  return v.object(samplingChannels)
-}
-
-/**
- * Creates a validation schema for process alarm enabled flags.
- *
- * @returns A Valibot object schema with boolean flags for each alarm type
- * @example
- * ```typescript
- * const schema = createProcessAlarmEnabledSchema()
- * const result = v.parse(schema, {
- *   lowThreshold: true,
- *   highThreshold: false,
- *   fallingSlope: true
- * })
- * ```
- */
-function createProcessAlarmEnabledSchema() {
-  return v.object({
-    lowThreshold: v.optional(v.boolean()), // Bit 7
-    highThreshold: v.optional(v.boolean()), // Bit 6
-    fallingSlope: v.optional(v.boolean()), // Bit 5
-    risingSlope: v.optional(v.boolean()), // Bit 4
-    lowThresholdWithDelay: v.optional(v.boolean()), // Bit 3
-    highThresholdWithDelay: v.optional(v.boolean()), // Bit 2
-    // Bit 1 and 0 are RFU (Reserved for Future Use)
-  })
-}
+import { createProcessAlarmEnabledSchema, createProtocolDataTypeSchema, createSamplingChannelsSchema } from './schemaUtils'
 
 // =============================================================================
 // CONFIGURATION SCHEMAS
@@ -207,8 +130,8 @@ function createSensorConfigurationSchema<const TConfig extends TULIP3SensorConfi
 }
 
 // Lookup type for channel configuration fields - avoids deep conditional chains
-interface ChannelConfigurationFieldSchemas<TChannelName extends string> {
-  protocolDataType: v.OptionalSchema<ReturnType<typeof createProtocolDataTypeSchema>, undefined>
+interface ChannelConfigurationFieldSchemas<TChannelName extends string, TConfig extends TULIP3ChannelConfig> {
+  protocolDataType: v.OptionalSchema<ReturnType<typeof createProtocolDataTypeSchema<TConfig>>, undefined>
   processAlarmEnabled: v.OptionalSchema<ReturnType<typeof createProcessAlarmEnabledSchema>, undefined>
   processAlarmDeadBand: v.OptionalSchema<v.NumberSchema<undefined>, undefined>
   lowThresholdAlarmValue: v.OptionalSchema<v.NumberSchema<undefined>, undefined>
@@ -223,7 +146,7 @@ interface ChannelConfigurationFieldSchemas<TChannelName extends string> {
 }
 
 type EnabledChannelConfigurationFields<TConfig extends TULIP3ChannelConfig, TChannelName extends string> = {
-  [K in keyof TConfig['registerConfig']['tulip3ConfigurationRegisters'] as TConfig['registerConfig']['tulip3ConfigurationRegisters'][K] extends true ? K : never]: K extends keyof ChannelConfigurationFieldSchemas<TChannelName> ? ChannelConfigurationFieldSchemas<TChannelName>[K] : never
+  [K in keyof TConfig['registerConfig']['tulip3ConfigurationRegisters'] as TConfig['registerConfig']['tulip3ConfigurationRegisters'][K] extends true ? K : never]: K extends keyof ChannelConfigurationFieldSchemas<TChannelName, TConfig> ? ChannelConfigurationFieldSchemas<TChannelName, TConfig>[K] : never
 } & { channelName: v.LiteralSchema<TChannelName, undefined> }
 
 /**
@@ -255,7 +178,7 @@ function createChannelConfigurationSchema<TChannelName extends string, const TCo
   const schema: Record<string, any> = {}
 
   if (flags.protocolDataType)
-    schema.protocolDataType = v.optional(createProtocolDataTypeSchema())
+    schema.protocolDataType = v.optional(createProtocolDataTypeSchema(config))
   if (flags.processAlarmEnabled)
     schema.processAlarmEnabled = v.optional(createProcessAlarmEnabledSchema())
   if (flags.processAlarmDeadBand)

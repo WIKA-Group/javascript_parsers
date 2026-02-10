@@ -109,6 +109,8 @@ export function createTULIP3FLRUDeviceProfile() {
           start: 0,
           end: 1000,
           measurementTypes: ['uint16 - TULIP scale 2500 - 12500', 'float - IEEE754'],
+          availableMeasurands: ['Level'],
+          availableUnits: ['mm', 'in'],
           alarmFlags: flruChannelAlarmFlags,
           registerConfig: flruChannelRegisterConfig,
         },

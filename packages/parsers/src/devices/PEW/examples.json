@@ -832,7 +832,7 @@
         4,
         15,
         33,
-        2
+        7
       ],
       "fPort": 1,
       "recvTime": "1992-12-22T17:00:00+01:00"
@@ -845,7 +845,7 @@
           "sensor1": {
             "channel1": {
               "channelName": "pressure",
-              "unit": "°F"
+              "unit": "bar"
             }
           }
         }

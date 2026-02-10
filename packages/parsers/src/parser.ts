@@ -8,25 +8,25 @@ import { createHexUplinkInputSchema, createUplinkInputSchema } from './schemas'
 import { getRoundingDecimals, hexStringToIntArray } from './utils'
 
 type ChannelNamesFromCodec<TCodecs extends AnyCodec> = {
-  [C in TCodecs as C['name']]: C extends Codec<any, any, infer N, any> ? N : never
+  [C in TCodecs as C['name']]: C extends Codec<any, any, any, infer N, any> ? N : never
 }[TCodecs['name']]
 
 type EncodeInput<TCodecs extends AnyCodec> = TCodecs extends { encode: infer THandler extends (input: any) => any }
   ? THandler extends (input: infer TInput) => any ? {
-    codec: TCodecs['name']
+    protocol: TCodecs['protocol']
     input: TInput
   }
     : never : never
 
 type EncodeMultipleInput<TCodecs extends AnyCodec> = TCodecs extends { encodeMultiple: infer THandler extends (input: any) => any }
   ? THandler extends (input: infer TInput) => any ? {
-    codec: TCodecs['name']
+    protocol: TCodecs['protocol']
     input: TInput
   }
     : never : never
 
-type HasEncoder<TParserOptions extends ParserOptions<AnyCodec>> = TParserOptions['codecs'][number] extends { encode: (input: any) => any } ? true : false
-type HasMultipleEncoder<TParserOptions extends ParserOptions<AnyCodec>> = TParserOptions['codecs'][number] extends { encodeMultiple: (input: any) => any } ? true : false
+type HasEncoder<TParserOptions extends ParserOptions<AnyCodec>> = [Extract<TParserOptions['codecs'][number], { encode: (input: any) => any }>] extends [never] ? false : true
+type HasMultipleEncoder<TParserOptions extends ParserOptions<AnyCodec>> = [Extract<TParserOptions['codecs'][number], { encodeMultiple: (input: any) => any }>] extends [never] ? false : true
 
 interface ParserOptions<TCodec extends AnyCodec = AnyCodec> {
   parserName: string
@@ -161,12 +161,12 @@ export function defineParser<const TParserOptions extends ParserOptions>(options
 
   function encodeDownlink(input: EncodeInput<TParserOptions['codecs'][number]>): DownlinkOutput {
     try {
-      const codec = codecs.find(c => c.name === input.codec)
+      const codec = codecs.find(c => c.protocol === input.protocol)
       if (!codec) {
-        throw new Error(`Codec ${input.codec} not found in parser. Available codecs: ${codecs.map(c => c.name).join(', ')}`)
+        throw new Error(`Codec with protocol ${input.protocol} not found in parser. Available protocols: ${codecs.map(c => c.protocol).join(', ')}`)
       }
       if (!('encode' in codec)) {
-        throw new Error(`Codec ${input.codec} does not support encoding. Input could not be encoded.`)
+        throw new Error(`Codec with protocol ${input.protocol} does not support encoding. Input could not be encoded.`)
       }
       return codec.encode!(input.input)
     }
@@ -180,12 +180,12 @@ export function defineParser<const TParserOptions extends ParserOptions>(options
 
   function encodeMultipleDownlinks(input: EncodeMultipleInput<TParserOptions['codecs'][number]>): MultipleDownlinkOutput {
     try {
-      const codec = codecs.find(c => c.name === input.codec)
+      const codec = codecs.find(c => c.protocol === input.protocol)
       if (!codec) {
-        throw new Error(`Codec ${input.codec} not found in parser. Available codecs: ${codecs.map(c => c.name).join(', ')}`)
+        throw new Error(`Codec with protocol ${input.protocol} not found in parser. Available protocols: ${codecs.map(c => c.protocol).join(', ')}`)
       }
       if (!('encodeMultiple' in codec)) {
-        throw new Error(`Codec ${input.codec} does not support multiple encoding. Input could not be encoded.`)
+        throw new Error(`Codec with protocol ${input.protocol} does not support multiple encoding. Input could not be encoded.`)
       }
       return codec.encodeMultiple!(input.input)
     }
@@ -215,7 +215,7 @@ export function defineParser<const TParserOptions extends ParserOptions>(options
 
       // Adjust range for all codecs
       codecs.forEach((codec) => {
-        // @ts-expect-error - string not assignable to never (when there are no channels that allow)
+        // @ts-expect-error - name is string but AnyCodec has "never" as channel names so there is concrete type support if no channel supports changing
         codec.adjustMeasuringRange(name, range)
       })
     },

@@ -48,36 +48,41 @@ Place the decode step after you receive the raw frame but before persistence or 
 
 ## Encoding downlinks
 
-Unlike the prebuilt scripts, the library parsers are not constrained by the LoRaWAN codec requirement of returning a single byte array. Each wrapper provides its own downlink encoder shape. For `NETRIS2` (the only device offering encoding today) the wrapper accepts two input styles:
+Downlink encoding uses a **protocol-based selection mechanism**.
 
-- **Simple actions** (`resetToFactory`, `resetBatteryIndicator`): pass the original parser input and receive `{ success: true, data: { frames: number[][] } }` or `{ success: false, errors: string[] }`.
-- **Configuration batches** (`deviceAction: 'downlinkConfiguration'`): pass a composite payload describing main configuration, process alarms, start-up times, etc. The wrapper splits or merges frames automatically and respects spreading-factor limits.
+- Call `parser.encodeDownlink({ protocol, input })` to build a single LoRaWAN frame (`bytes`).
+- Call `parser.encodeMultipleDownlinks({ protocol, input })` when the requested action may produce multiple frames (`frames`).
+
+You specify the `protocol` field (e.g., `'TULIP2'`, `'TULIP3'`) to indicate which codec should handle the encoding, rather than using a codec's internal name. This allows devices with multiple protocol versions to route encoding requests correctly.
 
 Structure your integration to:
 
-1. Call `parser.encodeDownlink(...)` with either a simple action or a configuration batch.
-2. Check the `success` flag. On success, iterate over `data.frames` (each entry is an array of bytes already ordered for transmission). On failure, surface `errors` to operators.
-3. Enqueue frames on your network server sequentially when only one frame per session is allowed.
+1. Call the encoder with `{ protocol, input }`.
+2. Check for errors via `'errors' in result`.
+3. Enqueue `bytes` or iterate `frames` depending on which function you used.
 
 ```typescript
-const result = parser.encodeDownlink({
-  deviceAction: 'downlinkConfiguration',
-  spreadingFactor: 'SF10',
-  configuration: {
-    mainConfiguration: {
-      measuringRateWhenAlarm: 300,
-      measuringRateWhenNoAlarm: 3600,
-      publicationFactorWhenAlarm: 1,
-      publicationFactorWhenNoAlarm: 1,
+const result = parser.encodeMultipleDownlinks({
+  protocol: 'TULIP2',
+  input: {
+    deviceAction: 'downlinkConfiguration',
+    spreadingFactor: 'SF10',
+    configuration: {
+      mainConfiguration: {
+        measuringRateWhenAlarm: 300,
+        measuringRateWhenNoAlarm: 3600,
+        publicationFactorWhenAlarm: 1,
+        publicationFactorWhenNoAlarm: 1,
+      },
     },
   },
 })
 
-if (result.success) {
-  result.data.frames.forEach(frame => enqueue(frame))
+if ('errors' in result) {
+  log.warn('Encoding failed', result.errors)
 }
 else {
-  log.warn('Encoding failed', result.errors)
+  result.frames.forEach(frame => enqueue(frame))
 }
 ```
 
@@ -85,7 +90,7 @@ When targeting a LoRaWAN network server that only accepts one frame at a time, s
 
 The [server example](https://github.com/WIKA-Group/javascript_parsers/tree/main/examples/server) mirrors this flow by exposing a REST endpoint that returns frames when encoding succeeds and responds with a 400 status when validation fails.
 
-> **Heads-up:** Downlink encoding is currently available only for the `NETRIS2` wrapper inherited from the 3.x.x generation. As additional devices move to the modular architecture, and to support protocols beyond LoRaWAN, the encoding API may evolve. Review the release notes before upgrading.
+> **Heads-up:** Downlink encoding is currently available only for `NETRIS2`. As additional devices move to the modular architecture, the available actions and input schemas may evolve. Review the release notes before upgrading.
 
 ## Adjusting measuring ranges and formatting
 

@@ -4,22 +4,26 @@ import {
 
 export default defineEventHandler(async () => {
   const parser = NETRIS2Parser()
-  const result = parser.encodeDownlink({
-    deviceAction: 'downlinkConfiguration',
-    spreadingFactor: 'SF10',
-    configuration: {
-      mainConfiguration: {
-        measuringRateWhenAlarm: 300,
-        measuringRateWhenNoAlarm: 3600,
-        publicationFactorWhenAlarm: 1,
-        publicationFactorWhenNoAlarm: 1,
+  const result = parser.encodeMultipleDownlinks({
+    protocol: 'TULIP2',
+    input: {
+      deviceAction: 'downlinkConfiguration',
+      spreadingFactor: 'SF10',
+      configuration: {
+        mainConfiguration: {
+          measuringRateWhenAlarm: 300,
+          measuringRateWhenNoAlarm: 3600,
+          publicationFactorWhenAlarm: 1,
+          publicationFactorWhenNoAlarm: 1,
+        },
       },
     },
   })
 
-  if (result.success) {
+  if (!('errors' in result)) {
     return {
-      frames: result.data.frames,
+      frames: result.frames,
+      fPort: result.fPort,
     }
   }
   else {

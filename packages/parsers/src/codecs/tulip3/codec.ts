@@ -1,10 +1,14 @@
 import type { UplinkInput } from '../../schemas'
 import type { TULIP3UplinkOutput } from '../../schemas/tulip3'
-import type { Channel } from '../../types'
+import type { TULIP3DownlinkActionMultiple, TULIP3DownlinkActionSingle } from '../../schemas/tulip3/downlink'
+import type { Channel, DownlinkOutput, GenericUplinkOutput, MultipleDownlinkOutput } from '../../types'
 import type { Codec } from '../codec'
 import type { TULIP3ChannelConfig, TULIP3DeviceConfig, TULIP3DeviceProfile, TULIP3SensorConfig } from './profile'
+
 import { getRoundingDecimals } from '../../utils'
+import { TULIP3_PROTOCOL } from '../protocols'
 import { checkChannelsValidity } from '../utils'
+import { createMultipleEncoderFactory } from './encoder/encode'
 import { readMessageSubtype } from './messages'
 import { createDecodeConfigurationRegisterRead, decodeConfigurationRegisterWrite } from './messages/configuration'
 import { decodeDataMessage } from './messages/data'
@@ -19,6 +23,18 @@ type ChannelNames<TTULIP3DeviceConfig extends TULIP3DeviceConfig> = {
     [C in keyof TTULIP3DeviceConfig[S]]: TTULIP3DeviceConfig[S][C] extends TULIP3ChannelConfig ? TTULIP3DeviceConfig[S][C]['adjustMeasurementRangeDisallowed'] extends true ? never : TTULIP3DeviceConfig[S][C]['channelName'] : never
   }[keyof TTULIP3DeviceConfig[S]] : never
 }[keyof TTULIP3DeviceConfig]
+
+/**
+ * Type alias for a TULIP3 codec with protocol identification.
+ * Wrapper around base Codec type that fixes the protocol to TULIP3 and passes through all other type parameters.
+ */
+export type TULIP3Codec<
+  TCodecName extends string,
+  TData extends GenericUplinkOutput,
+  TChannelName extends string | never,
+  TEncoder extends (((input: any) => DownlinkOutput) | undefined) = undefined,
+  TMultipleEncoder extends (((input: any) => MultipleDownlinkOutput) | undefined) = undefined,
+> = Codec<typeof TULIP3_PROTOCOL, TCodecName, TData, TChannelName, TEncoder, TMultipleEncoder>
 
 /**
  * Creates a TULIP3 protocol codec for decoding advanced IoT device messages with comprehensive sensor support.
@@ -105,7 +121,13 @@ type ChannelNames<TTULIP3DeviceConfig extends TULIP3DeviceConfig> = {
  * @see {@link TULIP3UplinkOutput} for output type definitions
  * @see {@link TULIP3ChannelConfig} for channel configuration interface
  */
-export function defineTULIP3Codec<const TDeviceProfile extends TULIP3DeviceProfile>(deviceProfile: TDeviceProfile): Codec<`${TDeviceProfile['deviceName']}TULIP3Codec`, TULIP3UplinkOutput<TDeviceProfile>, ChannelNames<TDeviceProfile['sensorChannelConfig']>> {
+export function defineTULIP3Codec<const TDeviceProfile extends TULIP3DeviceProfile>(deviceProfile: TDeviceProfile): TULIP3Codec<
+  `${TDeviceProfile['deviceName']}TULIP3Codec`,
+  TULIP3UplinkOutput<TDeviceProfile>,
+  ChannelNames<TDeviceProfile['sensorChannelConfig']>,
+  (input: TULIP3DownlinkActionSingle<TDeviceProfile['sensorChannelConfig']>) => DownlinkOutput,
+  (input: TULIP3DownlinkActionMultiple<TDeviceProfile['sensorChannelConfig']>) => MultipleDownlinkOutput
+> {
   const name = `${deviceProfile.deviceName}TULIP3Codec` as `${TDeviceProfile['deviceName']}TULIP3Codec`
   let roundingDecimals = getRoundingDecimals(deviceProfile.roundingDecimals)
 
@@ -216,8 +238,12 @@ export function defineTULIP3Codec<const TDeviceProfile extends TULIP3DeviceProfi
     }
   }
 
+  // Create encodeMultiple once and reuse it
+  const encodeMultiple = createMultipleEncoderFactory(deviceProfile)
+
   return {
     name,
+    protocol: TULIP3_PROTOCOL,
     adjustMeasuringRange: (name, range) => {
       const sensorConfigs = Object.values(deviceProfile.sensorChannelConfig) as TULIP3SensorConfig[]
       for (const sensorConfig of sensorConfigs) {
@@ -235,5 +261,33 @@ export function defineTULIP3Codec<const TDeviceProfile extends TULIP3DeviceProfi
       roundingDecimals = getRoundingDecimals(decimals, roundingDecimals)
     },
     decode,
+    encode: ((input: TULIP3DownlinkActionMultiple<TDeviceProfile['sensorChannelConfig']>): DownlinkOutput => {
+      // Delegate to multiple encoder
+      const multiResult = encodeMultiple(input as any)
+
+      // If error, return as-is
+      if ('errors' in multiResult) {
+        return multiResult as any
+      }
+
+      // Validate single frame
+      if (multiResult.frames.length > 1) {
+        return {
+          errors: [
+            `Encoding produced ${multiResult.frames.length} frames but single encoder can only return one frame. `
+            + 'Use encodeMultiple() or call encode() separately for identification and configuration, '
+            + 'or increase byteLimit.',
+          ],
+        }
+      }
+
+      // Convert to single output format
+      return {
+        fPort: multiResult.fPort,
+        bytes: multiResult.frames[0]!,
+      }
+    }) as (input: TULIP3DownlinkActionSingle<TDeviceProfile['sensorChannelConfig']>) => DownlinkOutput,
+
+    encodeMultiple: encodeMultiple as (input: TULIP3DownlinkActionMultiple<TDeviceProfile['sensorChannelConfig']>) => MultipleDownlinkOutput,
   }
 }

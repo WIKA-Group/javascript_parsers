@@ -62,6 +62,10 @@ Review the contributor section of the docs for setup. Need help or spotted an is
 Distributed under the [MIT License](./LICENSE).
 
 ## Release Notes
+4.x.x
+  - BREAKING: encoding now has to be called with `protocol` instead of `codec`
+  - feat: added TULIP3 downlink implementation
+
 4.3.2
  - Fix: built parser interface according to LoRaWAN® Payload Codec API Specification TS013-1.0.0
 

@@ -686,8 +686,8 @@
         1,
         15,
         2,
-        3,
-        7
+        1,
+        1
       ],
       "fPort": 1,
       "recvTime": "1992-12-22T17:00:00+01:00"
@@ -711,8 +711,8 @@
           "sensor1": {
             "channel1": {
               "channelName": "temperature",
-              "measurand": "Pressure (gauge)",
-              "unit": "bar"
+              "measurand": "Temperature",
+              "unit": "°C"
             },
             "identification": {
               "existingChannels": {

@@ -91,7 +91,7 @@ Every device parser exposes a consistent surface:
 
 - `adjustMeasuringRange(channelName, { start, end })`: Use immediately after instantiation to align ranges with the deployed probe. All codecs receive the update. **Note:** This function validates that the channel exists and allows adjustment before propagating the change. It throws specific errors for non-existent channels versus channels that are restricted from adjustment.
 - `adjustRoundingDecimals(decimals)`: Normalises the precision through `getRoundingDecimals` and applies it to each codec.
-- `encodeDownlink({ codec, input })`: Only available when the codec implements an encoder (for example TULIP2 maintenance actions). Guarded by runtime checks for missing support.
+- `encodeDownlink({ protocol, input })`: Only available when a codec implementing the requested `protocol` provides an encoder. Guarded by runtime checks for missing support.
 
 ### Channel Adjustment Validation
 

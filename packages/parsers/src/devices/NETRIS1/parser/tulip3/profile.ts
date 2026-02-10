@@ -109,6 +109,8 @@ export function createdTULIP3NETRIS1DeviceProfile() {
           start: 0, // placeholder; actual range comes from device config at runtime
           end: 10, // placeholder; actual range comes from device config at runtime
           measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
+          availableMeasurands: ['Temperature', 'Current', 'Voltage', 'Resistance'],
+          availableUnits: ['°C', '°F', 'V', 'mA', '%'],
           alarmFlags: netris1ChannelAlarmFlags,
           registerConfig: netris1ChannelRegisterConfig,
         },

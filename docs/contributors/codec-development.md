@@ -41,9 +41,14 @@ The public NPM packages rely heavily on TypeScript generics to surface accurate 
 
 ### The `Codec` type
 
-`packages/parsers/src/codecs/codec.ts` defines the shared `Codec<TCodecName, TData, TChannelName, TEncoder>` type. Each type parameter has a specific purpose:
+`packages/parsers/src/codecs/codec.ts` defines the shared `Codec<TCodecName, TProtocol, TData, TChannelName, TEncoder>` type. Each type parameter has a specific purpose:
 
-- `TCodecName extends string`: Literal identifier exposed to consumers. Downstream code uses this in discriminated unions (for example, when selecting a codec for `encodeDownlink`). Always build the name with template literals (``${deviceName}TULIP3Codec``) so it stays literal.
+- `TCodecName extends string`: Literal identifier exposed to consumers (e.g., `PEWTULIP3Codec`). Always build the name with template literals (``${deviceName}TULIP3Codec``) so it stays literal.
+- `TProtocol extends string`: The protocol identifier used for encoding selection (e.g., `'TULIP2'`, `'TULIP3'`). Define this as a string literal type to enable type safety. Export it as a constant so consumers can reference it without typos:
+  ```typescript
+  export const TULIP3_PROTOCOL = 'TULIP3' as const
+  ```
+- Note: The `protocol` field on the codec is used for encoding. When calling `encodeDownlink`, you specify `protocol` to select which codec to use, not the codec's name.
 - `TData extends GenericUplinkOutput`: Exact result type of `decode`. In TULIP2 this becomes the union of all handler return types; in TULIP3 it is `TULIP3UplinkOutput<TDeviceProfile>` so channel metadata matches the profile.
 - `TChannelName extends string`: Compile-time list of valid channel names. `defineParser` uses this to gate `adjustMeasuringRange`, preventing typos at call sites.
 - `TEncoder`: Optional encoder signature. When provided, the resulting codec surface includes a strongly typed `encode` function; otherwise the property is omitted entirely. If your codec cannot encode, leave this parameter as `undefined`.
@@ -160,7 +165,7 @@ Unlike the base `Channel` type which only allows `adjustMeasurementRangeDisallow
 - `ParserOptions<TCodec extends AnyCodec>`: Passing your codec array lets the parser infer:
    - `decodeUplink` / `decodeHexUplink` return type: union of all codec `decode` outputs.
    - `adjustMeasuringRange(channelName)` signature: union of `TChannelName` values from every codec.
-   - `encodeDownlink` input: discriminated union keyed by `codec` name, where the `input` shape matches the encoder’s first argument.
+   - `encodeDownlink` input: discriminated union keyed by `protocol` field, where the `input` shape matches the encoder's first argument.
 
 To keep inference intact, always instantiate codecs within the same module where you call `defineParser`, and avoid post-instantiation mutation of the codec array.
 
@@ -194,6 +199,19 @@ The generics are intentionally strict today to guarantee type safety in the publ
 
 4. **Add downlink encoders when needed**
    - Extend the codec return type with an `encode` function.
+   - Define the codec's `protocol` field as a string literal type (e.g., `protocol: 'TULIP3' as const`) to ensure type safety.
+   - **Best Practice**: Export the protocol value as a constant from the codec module so consumers can reference it without typos:
+     ```typescript
+     export const TULIP3_PROTOCOL = 'TULIP3' as const
+     export type TULIP3Protocol = typeof TULIP3_PROTOCOL
+
+     // In codec definition
+     protocol: TULIP3_PROTOCOL
+
+     // Consumers can then use
+     parser.encodeDownlink({ protocol: TULIP3_PROTOCOL, input: { /* ... */ } })
+     ```
+   - Parser callers will use this `protocol` value in `encodeDownlink({ protocol: TULIP3_PROTOCOL, input: {...} })` to select the correct codec with full type safety and autocomplete.
    - Protect the encoder with validation so parser callers receive actionable errors.
 
 5. **Write fixtures and tests**

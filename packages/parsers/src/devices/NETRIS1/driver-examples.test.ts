@@ -21,6 +21,10 @@ describe('netris1 parser', () => {
 
     expect(output).toEqual(example.output)
 
-    expect(() => v.parse(outputSchema, output)).not.toThrow()
+    const res = v.safeParse(outputSchema, output)
+    if (!res.success) {
+      // If the schema validation fails, we want to see the output (summary not helpful)
+      expect(output).toBeUndefined()
+    }
   })
 })

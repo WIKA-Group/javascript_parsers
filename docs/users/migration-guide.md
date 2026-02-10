@@ -4,6 +4,26 @@
 
 This guide walks you through upgrading the prebuilt JavaScript parsers that are typically embedded in LoRaWAN network servers. The focus is on the practical steps required when moving from the legacy `2.x.x` bundles to the modular `4.x.x` architecture, plus the smaller hop from `3.x.x` to `4.x.x`.
 
+## Breaking Changes in 4.4.0
+
+::: warning BREAKING CHANGE - Version 4.4.0
+If you use downlink encoding (`encodeDownlink` or `encodeMultipleDownlinks`), the function signature has changed:
+
+**Before (4.3.x and earlier):**
+```javascript
+encodeDownlink({ codec: 'NETRIS2TULIP2', input: {...} })
+```
+
+**After (4.4.0+):**
+```javascript
+encodeDownlink({ protocol: 'TULIP2', input: {...} })
+```
+
+The `codec` parameter has been replaced with `protocol` to better reflect the protocol-based encoding selection. Use protocol identifiers like `'TULIP2'` or `'TULIP3'` instead of codec names.
+
+**This change only affects encoding.** Decoding functions (`decodeUplink`, `decodeHexUplink`) remain unchanged.
+:::
+
 ## Before you start
 
 - Download the latest parser bundle from the [Downloads](/users/downloads) page. Use either the WIKA IIoT Toolbox or GitHub Releases.

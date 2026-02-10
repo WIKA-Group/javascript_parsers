@@ -18,6 +18,8 @@ describe('tulip3 process alarm message decoding (0x12/0x01)', () => {
         end: 20,
         channelName: 'current',
         measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
+        availableUnits: ['°C'],
+        availableMeasurands: ['Temperature'],
       },
     },
     sensor2: {
@@ -30,6 +32,8 @@ describe('tulip3 process alarm message decoding (0x12/0x01)', () => {
         end: 10,
         channelName: 'voltage',
         measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
+        availableUnits: ['°C'],
+        availableMeasurands: ['Temperature'],
       },
     },
   } as const satisfies TULIP3DeviceConfig
@@ -237,6 +241,8 @@ describe('tulip3 process alarm message decoding (0x12/0x01)', () => {
         channel8: {
           alarmFlags: {},
           registerConfig: emptyChannelRegisterConfig(),
+          availableUnits: ['°C'],
+          availableMeasurands: ['Temperature'],
           start: 0,
           end: 1,
           measurementTypes: ['uint16 - TULIP scale 2500 - 12500'],
@@ -275,20 +281,20 @@ describe('tulip3 process alarm message decoding (0x12/0x01)', () => {
       sensor1: {
         alarmFlags: {},
         registerConfig: emptySensorRegisterConfig(),
-        channel1: { alarmFlags: {}, registerConfig: emptyChannelRegisterConfig(), start: 0, end: 1, measurementTypes: ['uint16 - TULIP scale 2500 - 12500'], channelName: 'sensor1Channel1' },
-        channel2: { alarmFlags: {}, registerConfig: emptyChannelRegisterConfig(), start: 0, end: 1, measurementTypes: ['uint16 - TULIP scale 2500 - 12500'], channelName: 'sensor1Channel2' },
-        channel3: { alarmFlags: {}, registerConfig: emptyChannelRegisterConfig(), start: 0, end: 1, measurementTypes: ['uint16 - TULIP scale 2500 - 12500'], channelName: 'sensor1Channel3' },
+        channel1: { alarmFlags: {}, registerConfig: emptyChannelRegisterConfig(), start: 0, end: 1, measurementTypes: ['uint16 - TULIP scale 2500 - 12500'], channelName: 'sensor1Channel1', availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
+        channel2: { alarmFlags: {}, registerConfig: emptyChannelRegisterConfig(), start: 0, end: 1, measurementTypes: ['uint16 - TULIP scale 2500 - 12500'], channelName: 'sensor1Channel2', availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
+        channel3: { alarmFlags: {}, registerConfig: emptyChannelRegisterConfig(), start: 0, end: 1, measurementTypes: ['uint16 - TULIP scale 2500 - 12500'], channelName: 'sensor1Channel3', availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
       },
       sensor2: {
         alarmFlags: {},
         registerConfig: emptySensorRegisterConfig(),
-        channel1: { alarmFlags: {}, registerConfig: emptyChannelRegisterConfig(), start: 0, end: 1, measurementTypes: ['uint16 - TULIP scale 2500 - 12500'], channelName: 'sensor2Channel1' },
-        channel2: { alarmFlags: {}, registerConfig: emptyChannelRegisterConfig(), start: 0, end: 1, measurementTypes: ['uint16 - TULIP scale 2500 - 12500'], channelName: 'sensor2Channel2' },
+        channel1: { alarmFlags: {}, registerConfig: emptyChannelRegisterConfig(), start: 0, end: 1, measurementTypes: ['uint16 - TULIP scale 2500 - 12500'], channelName: 'sensor2Channel1', availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
+        channel2: { alarmFlags: {}, registerConfig: emptyChannelRegisterConfig(), start: 0, end: 1, measurementTypes: ['uint16 - TULIP scale 2500 - 12500'], channelName: 'sensor2Channel2', availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
       },
       sensor3: {
         alarmFlags: {},
         registerConfig: emptySensorRegisterConfig(),
-        channel4: { alarmFlags: {}, registerConfig: emptyChannelRegisterConfig(), start: 0, end: 1, measurementTypes: ['uint16 - TULIP scale 2500 - 12500'], channelName: 'sensor3Channel4' },
+        channel4: { alarmFlags: {}, registerConfig: emptyChannelRegisterConfig(), start: 0, end: 1, measurementTypes: ['uint16 - TULIP scale 2500 - 12500'], channelName: 'sensor3Channel4', availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
       },
     } as const satisfies TULIP3DeviceConfig
 

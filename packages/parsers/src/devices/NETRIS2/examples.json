@@ -464,7 +464,7 @@
     "type": "downlink",
     "description": "GoodCase downlink message: Reset to factory",
     "input": {
-      "codec": "NETRIS2TULIP2",
+      "protocol": "TULIP2",
       "input": {
         "deviceAction": "resetToFactory"
       }
@@ -478,7 +478,7 @@
     "type": "downlink",
     "description": "GoodCase downlink message: Reset battery indicator",
     "input": {
-      "codec": "NETRIS2TULIP2",
+      "protocol": "TULIP2",
       "input": {
         "deviceAction": "resetBatteryIndicator",
         "configurationId": 25
@@ -493,7 +493,7 @@
     "type": "downlink",
     "description": "GoodCase downlink message: Setting simple main configuration",
     "input": {
-      "codec": "NETRIS2TULIP2",
+      "protocol": "TULIP2",
       "input": {
         "deviceAction": "configuration",
         "configurationId": 18,
@@ -529,7 +529,7 @@
     "type": "downlink",
     "description": "GoodCase downlink message: Disable channel 1",
     "input": {
-      "codec": "NETRIS2TULIP2",
+      "protocol": "TULIP2",
       "input": {
         "deviceAction": "configuration",
         "configurationId": 11,
@@ -549,7 +549,7 @@
     "type": "downlink",
     "description": "Goodcase downlink message: Disable channel 0 and set deadband of channel 1 to 0.08mA (0.5%)",
     "input": {
-      "codec": "NETRIS2TULIP2",
+      "protocol": "TULIP2",
       "input": {
         "deviceAction": "configuration",
         "configurationId": 6,
@@ -580,7 +580,7 @@
     "type": "downlink",
     "description": "GoodCase downlink message: set process alarms for channel 0 (low threshold at 7.7728mA, 23.58%)  and deadband of 0.08mA (0.5%)",
     "input": {
-      "codec": "NETRIS2TULIP2",
+      "protocol": "TULIP2",
       "input": {
         "deviceAction": "configuration",
         "configurationId": 24,
@@ -611,7 +611,7 @@
     "type": "downlink",
     "description": "GoodCase downlink message: set process alarms for channel 0 and channel 1",
     "input": {
-      "codec": "NETRIS2TULIP2",
+      "protocol": "TULIP2",
       "input": {
         "deviceAction": "configuration",
         "configurationId": 15,
@@ -667,7 +667,7 @@
     "type": "downlink",
     "description": "GoodCase downlink message: set channel offset for channel 0 to -0.0368mA (-0.23%) and channel 1 to 0mA (0%)",
     "input": {
-      "codec": "NETRIS2TULIP2",
+      "protocol": "TULIP2",
       "input": {
         "deviceAction": "configuration",
         "configurationId": 4,
@@ -696,7 +696,7 @@
     "type": "downlink",
     "description": "GoodCase downlink message: set channel 0 start up to 4 seconds and channel 1 to 100ms",
     "input": {
-      "codec": "NETRIS2TULIP2",
+      "protocol": "TULIP2",
       "input": {
         "deviceAction": "configuration",
         "configurationId": 1,
@@ -725,7 +725,7 @@
     "type": "downlinkMultiple",
     "description": "GoodCase downlink multiple message: via multiple downlinks, set process alarms for channel 0 and channel 1",
     "input": {
-      "codec": "NETRIS2TULIP2",
+      "protocol": "TULIP2",
       "input": {
         "deviceAction": "configuration",
         "configurationId": 15,
@@ -787,7 +787,7 @@
     "type": "downlinkMultiple",
     "description": "GoodCase downlink multiple message: via multiple downlinks, set process alarms for channel 0 and channel 1 and main configuration",
     "input": {
-      "codec": "NETRIS2TULIP2",
+      "protocol": "TULIP2",
       "input": {
         "deviceAction": "configuration",
         "configurationId": 14,
@@ -871,7 +871,7 @@
     "type": "downlink",
     "description": "Badcase downlink message: byte limit too small to fit full configuration data",
     "input": {
-      "codec": "NETRIS2TULIP2",
+      "protocol": "TULIP2",
       "input": {
         "deviceAction": "configuration",
         "configurationId": 14,

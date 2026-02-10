@@ -2,11 +2,10 @@ import type { TULIP3ChannelConfig, TULIP3DeviceConfig, TULIP3SensorConfig } from
 /* eslint-disable ts/explicit-function-return-type */
 import * as v from 'valibot'
 import {
-  measurandLookup,
   productSubIdLookup,
-  unitsLookup,
 } from '../../codecs/tulip3/lookups'
 import { createGenericUplinkOutputSchema, createWriteResponseDataSchema } from './_shared'
+import { createChannelMeasurandNameSchema, createChannelUnitNameSchema } from './schemaUtils'
 
 // =============================================================================
 // BASE TYPE SCHEMAS
@@ -60,34 +59,6 @@ function createChannelPlanSchema() {
     v.minValue(0),
     v.integer(),
   )
-}
-
-/**
- * Creates a validation schema for measurands (physical quantities being measured).
- *
- * @returns A Valibot picklist schema that validates against supported measurands
- * @example
- * ```typescript
- * const schema = createMeasurandSchema()
- * const result = v.parse(schema, "temperature")
- * ```
- */
-function createMeasurandSchema() {
-  return v.picklist(Object.values(measurandLookup) as (typeof measurandLookup[keyof typeof measurandLookup])[])
-}
-
-/**
- * Creates a validation schema for measurement units.
- *
- * @returns A Valibot picklist schema that validates against supported measurement units
- * @example
- * ```typescript
- * const schema = createUnitSchema()
- * const result = v.parse(schema, "°C")
- * ```
- */
-function createUnitSchema() {
-  return v.picklist(Object.values(unitsLookup) as (typeof unitsLookup[keyof typeof unitsLookup])[])
 }
 
 // =============================================================================
@@ -276,9 +247,9 @@ function createSensorIdentificationSchema<const TConfig extends TULIP3SensorConf
 }
 
 // Lookup type for channel identification fields - avoids deep conditional chains
-export interface ChannelIdentificationFieldSchemas<TChannelName extends string> {
-  measurand: v.OptionalSchema<ReturnType<typeof createMeasurandSchema>, undefined>
-  unit: v.OptionalSchema<ReturnType<typeof createUnitSchema>, undefined>
+export interface ChannelIdentificationFieldSchemas<TChannelName extends string, TConfig extends TULIP3ChannelConfig> {
+  measurand: v.OptionalSchema<ReturnType<typeof createChannelMeasurandNameSchema<TConfig>>, undefined>
+  unit: v.OptionalSchema<ReturnType<typeof createChannelUnitNameSchema<TConfig>>, undefined>
   minMeasureRange: v.OptionalSchema<v.NumberSchema<undefined>, undefined>
   maxMeasureRange: v.OptionalSchema<v.NumberSchema<undefined>, undefined>
   minPhysicalLimit: v.OptionalSchema<v.NumberSchema<undefined>, undefined>
@@ -291,7 +262,7 @@ export interface ChannelIdentificationFieldSchemas<TChannelName extends string> 
 }
 
 type EnabledChannelIdentificationFields<TConfig extends TULIP3ChannelConfig, TChannelName extends string> = {
-  [K in keyof TConfig['registerConfig']['tulip3IdentificationRegisters'] as TConfig['registerConfig']['tulip3IdentificationRegisters'][K] extends true ? K : never]: K extends keyof ChannelIdentificationFieldSchemas<TChannelName> ? ChannelIdentificationFieldSchemas<TChannelName>[K] : never
+  [K in keyof TConfig['registerConfig']['tulip3IdentificationRegisters'] as TConfig['registerConfig']['tulip3IdentificationRegisters'][K] extends true ? K : never]: K extends keyof ChannelIdentificationFieldSchemas<TChannelName, TConfig> ? ChannelIdentificationFieldSchemas<TChannelName, TConfig>[K] : never
 } & { channelName: v.LiteralSchema<TChannelName, undefined> }
 
 /**
@@ -321,9 +292,9 @@ function createChannelIdentificationSchema<TChannelName extends string, const TC
   const schema: Record<string, any> = {}
 
   if (flags.measurand)
-    schema.measurand = v.optional(createMeasurandSchema())
+    schema.measurand = v.optional(createChannelMeasurandNameSchema(config))
   if (flags.unit)
-    schema.unit = v.optional(createUnitSchema())
+    schema.unit = v.optional(createChannelUnitNameSchema(config))
   if (flags.minMeasureRange)
     schema.minMeasureRange = v.optional(v.number())
   if (flags.maxMeasureRange)

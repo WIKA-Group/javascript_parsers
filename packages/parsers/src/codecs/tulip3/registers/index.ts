@@ -1,5 +1,6 @@
 import type * as v from 'valibot'
 import { set } from 'es-toolkit/compat'
+import { decodeAddressingField } from '../addressingField'
 
 // Re-export all parsing functions from parsing.ts
 export * from './parsing'
@@ -90,15 +91,7 @@ export function parseRegisterBlocks(data: number[], options: ParseRegisterBlocks
     }
 
     // Each block's header is 2 bytes long, containing address (upper 11 bits) and length (lower 5 bits)
-    const addressingFieldHigh = data[position]!
-    const addressingFieldLow = data[position + 1]!
-
-    // Combine the two bytes to form the 16-bit addressing field
-    const addressingField = (addressingFieldHigh << 8) | addressingFieldLow
-
-    // Extract start address (upper 11 bits) and total length (lower 5 bits)
-    const startAddress = addressingField >> 5
-    const totalLength = addressingFieldLow & 0b00011111
+    const { address: startAddress, size: totalLength } = decodeAddressingField(data[position]!, data[position + 1]!)
 
     // Check if there are enough bytes left for the register value
     if (position + 2 + totalLength > data.length) {
