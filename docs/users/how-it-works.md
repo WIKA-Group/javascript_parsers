@@ -9,6 +9,32 @@ Going forward a LoRaWAN like data flow is assumed, but the same principles apply
 
 The device compresses its data into a binary encoded message to save bandwidth and battery life. The parsers are designed to decode this binary data into a human-readable format and encode it back into binary format for downlink messages.
 
+## Understanding Measurement Data
+
+When the parser decodes measurement data, it performs automatic conversion from raw encoded values to real-world measurements. **The `value` field in the output contains the already-converted measurement** in the appropriate units (e.g., bar, psi, °C).
+
+For TULIP3 devices, you may notice a `sourceDataType` field in data messages (e.g., `"uint16 - TULIP scale 2500 - 12500"` or `"float - IEEE754"`). This field is **informational only** and indicates how the value was originally encoded in the binary payload. You do not need to perform any additional conversion—the parser has already applied the device's measurement range configuration to produce the final `value`.
+
+**Example:**
+```json
+{
+  "data": {
+    "measurements": [
+      {
+        "channelName": "pressure",
+        "sourceDataType": "uint16 - TULIP scale 2500 - 12500",
+        "value": 45.2, // ← Already converted to real pressure value
+        "valueAcquisitionError": false
+      }
+    ]
+  }
+}
+```
+
+The accuracy of these converted values depends on correctly configuring the parser with your device's actual measurement ranges. Always verify the ranges from your device specifications or identification frames before processing data messages. See the [Quick Start Guide](/users/quick-start) for details on range configuration.
+
+## Integration Points
+
 The parsers can be integrated into
 - the Gateway
 - the Network Server

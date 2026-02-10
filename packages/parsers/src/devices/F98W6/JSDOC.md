@@ -43,6 +43,14 @@ Channels that support adjusting the measurement range:
 type AdjustableChannelName = 'strain'
 ```
 
+**Channel Configuration:**
+
+| Channel Name | Default Min | Default Max | Unit | Configurable |
+|--------------|-------------|-------------|------|-------------|
+| `strain` | -312.5 | 312.5 | µε | Yes |
+| `device temperature` | -45 | 110 | °C | No |
+| `battery voltage` | 0 | 5 | V | No |
+
 ### `decodeUplink(input)`
 ```ts
 function decodeUplink(input: UplinkInput): Result
@@ -76,16 +84,54 @@ function adjustRoundingDecimals(decimals: number): void
 ```
 Applies to future decodes only.
 
+## Verifying Measurement Ranges
+
+**Strain channel:** The default range (-312.5 to 312.5 µε) may not match your device. Check your device specifications or purchase documentation for the actual configured strain range.
+
+**Device temperature and battery voltage:** These channels have fixed ranges that cannot be adjusted (-45 to 110°C and 0-5V respectively).
+
+### TULIP2 Identification Frames
+
+Identification messages (message type `6`/`0x06`) confirm the configured ranges:
+
+**Example TULIP2 identification frame:**
+```json
+{
+  "data": {
+    "messageType": 6,
+    "configurationId": 1,
+    "productIdName": "F98W6",
+    "channels": [
+      {
+        "channelId": 0,
+        "channelName": "strain",
+        "measurementRangeStart": -312.5,
+        "measurementRangeEnd": 312.5
+      },
+      {
+        "channelId": 1,
+        "channelName": "device temperature"
+      },
+      {
+        "channelId": 2,
+        "channelName": "battery voltage"
+      }
+    ]
+  }
+}
+```
+
+---
+
 ## Quick Start
 
-Some network servers may not conform to the LoRaWAN codec specification. In this case, you need to create a small wrapper function.
+1. Check your device's actual strain range from device specifications or identification frames (see above)
+2. Add configuration code below at the bottom of your parser file
+3. Add wrapper function if your network server is non-compliant: `function decode(input) { return decodeUplink(input) }`
 
-Your device ranges might not be the default. Insert your desired ranges before decoding like this:
+**Configuration code** (add at bottom of parser file):
 
 ```ts
-// Parser code...
-
-// Quick start guide...
-
+// Replace values with your device's actual strain range from specifications or identification frames
 adjustMeasuringRange('strain', { start: -312.5, end: 312.5 })
 ```

@@ -50,6 +50,13 @@
 
    Optional: refine numeric precision with `adjustRoundingDecimals(2)`.
 
+   > **Important:** After device activation, check the identification frames in the first uplinks to verify the actual channel ranges configured in your device. These frames report the measurement ranges for each channel. Configure the parser to match these values before processing data messages. **Mismatched ranges will produce incorrect measurement values.**
+   >
+   > - **TULIP3 devices:** Message type `20`/`0x14`, subtype `1`/`0x01` - reports `minMeasureRange` and `maxMeasureRange`
+   > - **TULIP2 devices:** Message type `6`/`0x06` - reports `measurementRangeStart` and `measurementRangeEnd`
+   >
+   > Alternatively, check your device specifications or purchase documentation for the configured ranges.
+
 6. **Provide the parser with the incoming payload.**
 
    Your runtime will supply data in one of these common forms: a raw byte array, a hex string, or a Base64 string. Use the appropriate decoding method:

@@ -43,6 +43,15 @@ Channels that support adjusting the measurement range:
 type AdjustableChannelName = never // No adjustable channels in NETRIS2
 ```
 
+**Channel Configuration:**
+
+| Channel Name | Default Min | Default Max | Unit | Configurable |
+|--------------|-------------|-------------|------|-------------|
+| `Electrical current1` | 4 | 20 | mA | No |
+| `Electrical current2` | 4 | 20 | mA | No |
+
+*Both channels have fixed 4-20 mA ranges that cannot be adjusted.
+
 ### `decodeUplink(input)`
 ```ts
 function decodeUplink(input: UplinkInput): Result
@@ -114,16 +123,41 @@ function encodeMultipleDownlinks(
 
 To understand the input structure, refer to the [downlink schema definition](https://github.com/WIKA-Group/javascript_parsers/blob/main/packages/parsers/src/devices/NETRIS2/downlink.schema.json) and [downlink examples](https://github.com/WIKA-Group/javascript_parsers/blob/main/packages/parsers/src/devices/NETRIS2/examples.json).
 
+## About NETRIS2 Channels
+
+**Note:** NETRIS2 has fixed 4-20 mA measurement ranges for both channels that cannot be adjusted. The device always reads electrical current in the 4-20 mA range. No configuration is required for measurement ranges.
+
+If you need to verify the device configuration, check the identification frames after device activation.
+
+### TULIP2 Identification Frames
+
+Identification messages (message type `6`/`0x06`) confirm the configured channels:
+
+**Example TULIP2 identification frame:**
+```json
+{
+  "data": {
+    "messageType": 6,
+    "configurationId": 1,
+    "productIdName": "NETRIS2",
+    "channels": [
+      {
+        "channelId": 0,
+        "channelName": "Electrical current1"
+      },
+      {
+        "channelId": 1,
+        "channelName": "Electrical current2"
+      }
+    ]
+  }
+}
+```
+
+---
+
 ## Quick Start
 
-Some network servers may not conform to the LoRaWAN codec specification. In this case, you need to create a small wrapper function.
-
-Your device ranges might not be the default. Insert your desired ranges before decoding like this:
-
-```ts
-// Parser code...
-
-// Quick start guide...
-
-setMeasurementRanges('pressure', { start: 0, end: 100 })
-```
+1. No measurement range configuration needed (fixed 4-20 mA)
+2. Add wrapper function if your network server is non-compliant: `function decode(input) { return decodeUplink(input) }`
+3. For downlink configuration, refer to the downlink schema documentation above

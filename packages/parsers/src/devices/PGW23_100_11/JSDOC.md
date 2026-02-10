@@ -43,6 +43,14 @@ Channels that support adjusting the measurement range:
 type AdjustableChannelName = 'pressure' | 'device temperature'
 ```
 
+#### Channel Configuration
+
+| Channel Name | Min Value | Max Value | Unit | Configurable |
+|-------------|-----------|-----------|------|--------------|
+| pressure | 0 | 10 | bar / psi / MPa | ✓ |
+| device temperature | -40 | 85 | °C / °F | ✓ |
+| battery voltage | 0 | 5 | V | - |
+
 ### `decodeUplink(input)`
 ```ts
 function decodeUplink(input: UplinkInput): Result
@@ -76,16 +84,37 @@ function adjustRoundingDecimals(decimals: number): void
 ```
 Applies to future decodes only.
 
+## Verifying Ranges
+
+The pressure and device temperature channels on the PGW23 are **configurable**. You must verify the actual measurement ranges from your device specifications or identification frames. The battery voltage channel is fixed at 0-5 V. The parser defaults shown in the table above may not match your device configuration.
+
+### Using Identification Frames (TULIP2)
+
+This device uses the TULIP2 protocol and sends identification frames (message type 6) containing channel configuration:
+
+```json
+{
+  "data": {
+    "messageType": 6,
+    "channelId": 0,
+    "channelName": "pressure",
+    "measurementRangeStart": 0,
+    "measurementRangeEnd": 10
+  }
+}
+```
+
+Use `measurementRangeStart` and `measurementRangeEnd` to configure the parser before decoding data messages.
+
 ## Quick Start
 
-Some network servers may not conform to the LoRaWAN codec specification. In this case, you need to create a small wrapper function.
+1. Check your device's actual measurement ranges from purchase configuration, device specifications, or identification frames (see above)
+2. Add configuration code below at the bottom of your parser file
+3. Add wrapper function if your network server is non-compliant: `function decode(input) { return decodeUplink(input) }`
 
-Your device ranges might not be the default. Insert your desired ranges before decoding like this:
+**Configuration code** (add at bottom of parser file):
 
 ```ts
-// Parser code...
-
-// Quick start guide...
-
-setMeasurementRanges('pressure', { start: 0, end: 100 })
+// Replace values with your device's actual measurement ranges from specifications or identification frames
+setMeasurementRanges('pressure', { start: 0, end: 10 })
 ```

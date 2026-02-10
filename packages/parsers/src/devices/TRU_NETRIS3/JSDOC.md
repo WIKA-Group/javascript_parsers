@@ -43,6 +43,12 @@ Channels that support adjusting the measurement range:
 type AdjustableChannelName = 'temperature'
 ```
 
+#### Channel Configuration
+
+| Channel Name | Min Value | Max Value | Unit | Configurable |
+|-------------|-----------|-----------|------|--------------|
+| temperature | 0 | 600 | °C / °F | ✓ |
+
 ### `decodeUplink(input)`
 ```ts
 function decodeUplink(input: UplinkInput): Result
@@ -76,16 +82,51 @@ function adjustRoundingDecimals(decimals: number): void
 ```
 Applies to future decodes only.
 
+## Verifying Ranges
+
+The temperature channel on the TRU is **configurable**. You must verify the actual measurement range from your device specifications or identification frames. The parser default shown in the table above may not match your device configuration.
+
+### Using Identification Frames
+
+This device supports both TULIP2 and TULIP3 protocols. Each sends identification frames containing channel configuration:
+
+**TULIP3 (Message Type 20):**
+```json
+{
+  "data": {
+    "messageType": 20,
+    "channelId": 0,
+    "channelName": "temperature",
+    "measurementRangeStart": 0,
+    "measurementRangeEnd": 600
+  }
+}
+```
+
+**TULIP2 (Message Type 6):**
+```json
+{
+  "data": {
+    "messageType": 6,
+    "channelId": 0,
+    "channelName": "temperature",
+    "measurementRangeStart": 0,
+    "measurementRangeEnd": 600
+  }
+}
+```
+
+Use `measurementRangeStart` and `measurementRangeEnd` to configure the parser before decoding data messages.
+
 ## Quick Start
 
-Some network servers may not conform to the LoRaWAN codec specification. In this case, you need to create a small wrapper function.
+1. Check your device's actual measurement range from purchase configuration, device specifications, or identification frames (see above)
+2. Add configuration code below at the bottom of your parser file
+3. Add wrapper function if your network server is non-compliant: `function decode(input) { return decodeUplink(input) }`
 
-Your device ranges might not be the default. Insert your desired ranges before decoding like this:
+**Configuration code** (add at bottom of parser file):
 
 ```ts
-// Parser code...
-
-// Quick start guide...
-
+// Replace values with your device's actual measurement range from specifications or identification frames
 adjustMeasuringRange('temperature', { start: 0, end: 600 })
 ```

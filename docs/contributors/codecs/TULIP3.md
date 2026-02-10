@@ -26,6 +26,17 @@ Device parsers integrate the codec by returning it from `createTULIP3...Codec()`
    - register utilities for configuration/identification messages.
 4. The codec returns typed output (e.g., `TULIP3UplinkOutput`) which is surfaced to callers through the parser API.
 
+## Data messages and measurement conversion
+
+TULIP3 data messages (message types `0x10` and `0x11`, subtype `0x01`) include a `sourceDataType` field for each measurement that indicates the original encoding format (e.g., `"uint16 - TULIP scale 2500 - 12500"`, `"float - IEEE754"`). This field is informational only—the parser automatically converts the raw value to a real measurement using the device's configured channel ranges.
+
+**Key points:**
+- The `value` field contains the **already converted** measurement in the channel's configured units.
+- The `sourceDataType` field documents the original wire format but does not require manual conversion.
+- Range conversion happens during decoding using the channel's `start` and `end` values from the device profile.
+
+For devices that support `adjustMeasuringRange()`, you can change the target range before decoding, and the parser will scale measurements accordingly. For devices with TULIP3 support, you should verify the channel ranges from **identification frames** (message type `0x14`, subtype `0x01`) during initial setup to ensure the parser configuration matches the physical device. See the device-specific documentation for channels that allow range adjustments.
+
 ## Updating or extending TULIP3
 
 When you need to modify the implementation:

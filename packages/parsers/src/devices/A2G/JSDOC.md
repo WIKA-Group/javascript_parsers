@@ -33,6 +33,27 @@ type Result = {
 
 To understand the `data` field, review the [examples](https://github.com/WIKA-Group/javascript_parsers/blob/main/packages/parsers/src/devices/A2G/examples.json) and the [schema definition](https://github.com/WIKA-Group/javascript_parsers/blob/main/packages/parsers/src/devices/A2G/uplink.schema.json).
 
+Supported `channels` to identify different sensors by:
+```ts
+// Is used in the returned data
+type ChannelName = 'pressure' | 'flow' | 'input_1' | 'input_2' | 'input_3' | 'input_4' | 'relay_status_1' | 'relay_status_2'
+```
+
+**Channel Configuration:**
+
+| Channel Name | Default Min | Default Max | Unit | Configurable |
+|--------------|-------------|-------------|------|-------------|
+| `pressure` | 0 | 100 | % | No |
+| `flow` | 0 | 100 | % | No |
+| `input_1` | 0 | 100 | % | No |
+| `input_2` | 0 | 100 | % | No |
+| `input_3` | 0 | 100 | % | No |
+| `input_4` | 0 | 1 | - | No |
+| `relay_status_1` | 0 | 1 | - | No |
+| `relay_status_2` | 0 | 1 | - | No |
+
+*All channels have fixed ranges that cannot be adjusted.
+
 ### `decodeUplink(input)`
 ```ts
 function decodeUplink(input: UplinkInput): Result
@@ -53,16 +74,13 @@ function adjustRoundingDecimals(decimals: number): void
 ```
 Applies to future decodes only.
 
+## About A2G Channels
+
+**Note:** A2G has fixed measurement ranges for all channels that cannot be adjusted. The device reads 8 different inputs with predefined ranges. No measurement range configuration is required.
+
+---
+
 ## Quick Start
 
-Some network servers may not conform to the LoRaWAN codec specification. In this case, you need to create a small wrapper function.
-
-Your device ranges might not be the default. Insert your desired ranges before decoding like this:
-
-```ts
-// Parser code...
-
-// Quick start guide...
-
-setMeasurementRanges('pressure', { start: 0, end: 100 })
-```
+1. No measurement range configuration needed (all channels have fixed ranges)
+2. Add wrapper function if your network server is non-compliant: `function decode(input) { return decodeUplink(input) }`

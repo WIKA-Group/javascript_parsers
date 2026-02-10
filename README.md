@@ -63,6 +63,7 @@ Distributed under the [MIT License](./LICENSE).
 
 ## Release Notes
 4.x.x
+  - fix: remove not possible units and measurands for TRW
   - fix: map product sub ID 0 to class A in TULIP3 codec (PEW shows 0 but is actually class A)
   - chore: bump dependencies
   - BREAKING: encoding now has to be called with `protocol` instead of `codec`

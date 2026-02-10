@@ -43,6 +43,14 @@ Channels that support adjusting the measurement range:
 type AdjustableChannelName = 'temperature'
 ```
 
+**Channel Configuration:**
+
+| Channel Name | Default Min | Default Max | Unit | Configurable |
+|--------------|-------------|-------------|------|-------------|
+| `temperature` | 0 | 10 | °C/°F | Yes |
+
+*Unit and range depend on device configuration (supports various sensor types). Check device specifications or identification frames for actual unit and range.
+
 ### `decodeUplink(input)`
 ```ts
 function decodeUplink(input: UplinkInput): Result
@@ -76,16 +84,74 @@ function adjustRoundingDecimals(decimals: number): void
 ```
 Applies to future decodes only.
 
+## Verifying Measurement Ranges
+
+**Critical:** The default temperature range (0-10) is a placeholder and likely does not match your device. TRW devices are highly configurable and support various sensor types. Always verify the actual range and unit from one of these sources:
+
+1. **Device specifications** from your purchase order or datasheet
+2. **Identification frames** sent by the device after activation
+
+Using incorrect ranges will result in incorrect measurement values in all data messages.
+
+### TULIP3 Identification Frames
+
+For devices using TULIP3 protocol, identification messages (message type `20`/`0x14`, subtype `1`/`0x01`) report the actual configuration:
+
+**Example TULIP3 identification frame:**
+```json
+{
+  "data": {
+    "messageType": 20,
+    "messageSubType": 1,
+    "identification": {
+      "sensor1": {
+        "channel1": {
+          "measurand": "Temperature",
+          "unit": "°C",
+          "minMeasureRange": -40,
+          "maxMeasureRange": 85,
+          "channelName": "temperature"
+        }
+      }
+    }
+  }
+}
+```
+
+### TULIP2 Identification Frames
+
+For devices using TULIP2 protocol, identification messages (message type `6`/`0x06`) report similar information:
+
+**Example TULIP2 identification frame:**
+```json
+{
+  "data": {
+    "messageType": 6,
+    "configurationId": 1,
+    "productIdName": "TRW",
+    "channels": [
+      {
+        "channelId": 0,
+        "channelName": "temperature",
+        "measurementRangeStart": -40,
+        "measurementRangeEnd": 85
+      }
+    ]
+  }
+}
+```
+
+---
+
 ## Quick Start
 
-Some network servers may not conform to the LoRaWAN codec specification. In this case, you need to create a small wrapper function.
+1. Check your device's actual measurement range and unit from purchase configuration, device specifications, or identification frames (see above)
+2. Add configuration code below at the bottom of your parser file
+3. Add wrapper function if your network server is non-compliant: `function decode(input) { return decodeUplink(input) }`
 
-Your device ranges might not be the default. Insert your desired ranges before decoding like this:
+**Configuration code** (add at bottom of parser file):
 
 ```ts
-// Parser code...
-
-// Quick start guide...
-
-setMeasurementRanges('pressure', { start: 0, end: 100 })
+// Replace values with your device's actual measurement range from specifications or identification frames
+setMeasurementRanges('temperature', { start: -40, end: 85 })
 ```

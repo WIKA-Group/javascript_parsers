@@ -43,6 +43,17 @@ Channels that support adjusting the measurement range:
 type AdjustableChannelName = 'channel0' | 'channel1' | 'channel2' | 'channel3' | 'channel4' | 'channel5'
 ```
 
+#### Channel Configuration
+
+| Channel Name | Min Value | Max Value | Unit | Configurable |
+|-------------|-----------|-----------|------|--------------|
+| channel0 | 4 | 20 | mA | ✓ |
+| channel1 | 4 | 20 | mA | ✓ |
+| channel2 | 4 | 20 | mA | ✓ |
+| channel3 | 4 | 20 | mA | ✓ |
+| channel4 | 4 | 20 | mA | ✓ |
+| channel5 | 4 | 20 | mA | ✓ |
+
 ### `decodeUplink(input)`
 ```ts
 function decodeUplink(input: UplinkInput): Result
@@ -76,16 +87,39 @@ function adjustRoundingDecimals(decimals: number): void
 ```
 Applies to future decodes only.
 
+## Verifying Ranges
+
+All channels on the GD20W are 4-20 mA current loop inputs and are **configurable**. You must verify the actual measurement ranges from your device specifications or identification frames. The parser defaults to placeholder ranges that may not match your device configuration.
+
+### Using Identification Frames (TULIP2)
+
+Both TULIP2 and TULIP3 supported devices send identification frames containing channel configuration. For TULIP2 devices, look for message type 6:
+
+```json
+{
+  "data": {
+    "messageType": 6,
+    "channelId": 0,
+    "channelName": "channel0",
+    "measurementRangeStart": 0,
+    "measurementRangeEnd": 100
+  }
+}
+```
+
+Use `measurementRangeStart` and `measurementRangeEnd` to configure the parser before decoding data messages.
+
 ## Quick Start
 
-Some network servers may not conform to the LoRaWAN codec specification. In this case, you need to create a small wrapper function.
+1. Check your device's actual measurement ranges from purchase configuration, device specifications, or identification frames (see above)
+2. Add configuration code below at the bottom of your parser file
+3. Add wrapper function if your network server is non-compliant: `function decode(input) { return decodeUplink(input) }`
 
-Your device ranges might not be the default. Insert your desired ranges before decoding like this:
+**Configuration code** (add at bottom of parser file):
 
 ```ts
-// Parser code...
-
-// Quick start guide...
-
+// Replace values with your device's actual measurement ranges from specifications or identification frames
 setMeasurementRanges('channel0', { start: 0, end: 100 })
+setMeasurementRanges('channel1', { start: 0, end: 250 })
+// ... configure other channels as needed
 ```

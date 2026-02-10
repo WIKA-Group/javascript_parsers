@@ -46,6 +46,8 @@ else {
 
 Place the decode step after you receive the raw frame but before persistence or further business logic. This keeps your storage schema independent of binary protocol details and makes it trivial to roll out parser updates.
 
+> **Note on decoded measurements:** The parser returns fully converted measurement values. If you see a `sourceDataType` field in the output (common with TULIP3 devices), it is informational only and indicates the original encoding format. The `value` field already contains the real-world measurement scaled to the device's configured range—no additional conversion is needed. See [How It Works](/users/how-it-works#understanding-measurement-data) for details.
+
 ## Encoding downlinks
 
 Downlink encoding uses a **protocol-based selection mechanism**.
