@@ -1,5 +1,4 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
   "anyOf": [
     {
       "anyOf": [
@@ -5182,5 +5181,6 @@
         }
       ]
     }
-  ]
+  ],
+  "$schema": "http://json-schema.org/draft-07/schema#"
 }

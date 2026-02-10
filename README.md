@@ -63,6 +63,7 @@ Distributed under the [MIT License](./LICENSE).
 
 ## Release Notes
 4.x.x
+  - chore: bump dependencies
   - BREAKING: encoding now has to be called with `protocol` instead of `codec`
   - feat: added TULIP3 downlink implementation
 

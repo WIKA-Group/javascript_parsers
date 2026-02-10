@@ -1,6 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "anyOf": [
+  "oneOf": [
     {
       "type": "object",
       "properties": {
@@ -8,7 +7,7 @@
           "const": "TULIP3"
         },
         "input": {
-          "anyOf": [
+          "oneOf": [
             {
               "type": "object",
               "properties": {
@@ -1027,5 +1026,6 @@
         "input"
       ]
     }
-  ]
+  ],
+  "$schema": "http://json-schema.org/draft-07/schema#"
 }

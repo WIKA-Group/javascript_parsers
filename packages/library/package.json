@@ -17,22 +17,23 @@
   ],
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs"
     }
   },
-  "main": "./dist/index.js",
+  "main": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "tsdown --clean --splitting",
+    "build": "tsdown",
     "stub": "tsdown --watch"
   },
   "peerDependencies": {
     "valibot": ">=1.1.0 <2.0.0"
   },
   "devDependencies": {
-    "tsdown": "^0.14.2"
+    "tsdown": "^0.20.3"
   }
 }
