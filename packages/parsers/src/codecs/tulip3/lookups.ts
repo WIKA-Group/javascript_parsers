@@ -9,6 +9,7 @@ export const spontaneousStatusLookup = {
 } as const
 
 export const productSubIdLookup = {
+  0x00: 'LoRaWAN class A', // currently pew TULIP shows 0 but is actually class A
   0x01: 'BLE only',
   0x02: 'LoRaWAN class A',
   0x03: 'LoRaWAN class B',
