@@ -54,16 +54,10 @@ export const MEASUREMENT_ALARM_TYPES = {
 // LPP Measurand lookups (id -> human-readable name)
 export const LPP_MEASURANDS_BY_ID = {
   1: 'Temperature',
-  13: 'Current',
-  14: 'Voltage',
-  18: 'Relative',
 } as const
 
 // LPP Units - reusing from NETRIS1 structure
 export const LPP_UNITS_BY_ID = {
   1: '°C',
   2: '°F',
-  88: 'V',
-  90: 'mA',
-  100: '%',
 } as const

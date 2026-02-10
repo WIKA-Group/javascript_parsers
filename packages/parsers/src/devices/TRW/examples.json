@@ -1310,8 +1310,8 @@
         1,
         15,
         2,
-        14,
-        88
+        1,
+        1
       ],
       "fPort": 1,
       "recvTime": "1992-12-22T17:00:00+01:00"
@@ -1347,8 +1347,8 @@
             },
             "channel1": {
               "channelName": "temperature",
-              "measurand": "Voltage",
-              "unit": "V"
+              "measurand": "Temperature",
+              "unit": "°C"
             }
           }
         }
