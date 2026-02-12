@@ -8,4 +8,5 @@ export default defineConfig({
   format: ['esm'],
   dts: true,
   treeshake: true,
+  inlineOnly: false,
 })

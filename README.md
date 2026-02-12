@@ -62,7 +62,7 @@ Review the contributor section of the docs for setup. Need help or spotted an is
 Distributed under the [MIT License](./LICENSE).
 
 ## Release Notes
-4.x.x
+4.4.0
   - feat: added PEW parser to library
   - feat: added PEW TULIP3 downlink configuration support
   - feat: added PEW TULIP2 downlink configuration support
