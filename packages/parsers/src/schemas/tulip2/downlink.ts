@@ -10,7 +10,14 @@ export interface Tulip2EncodeFeatureFlags {
   mainConfigSingleMeasuringRate?: boolean
 }
 
-function createConfigurationIdSchema(maxConfigId: number) {
+export interface Tulip2DownlinkSpanLimitFactors {
+  deadBandMaxSpanFactor?: number
+  slopeMaxSpanFactor?: number
+  measureOffsetMinSpanFactor?: number
+  measureOffsetMaxSpanFactor?: number
+}
+
+export function createConfigurationIdSchema(maxConfigId: number) {
   return v.optional(
     v.pipe(
       v.number('configurationId needs to be a number'),
@@ -203,8 +210,17 @@ type Tulip2DownlinkChannelSchema<TFeatureFlags extends Tulip2EncodeFeatureFlags>
       ? Tulip2DownlinkChannelSchemaWithOffset
       : Tulip2DownlinkChannelSchemaBase
 
-function createTulip2DownlinkChannelSchema<TFeatureFlags extends Tulip2EncodeFeatureFlags>(channel: TULIP2Channel, featureFlags: TFeatureFlags): Tulip2DownlinkChannelSchema<TFeatureFlags> {
+function createTulip2DownlinkChannelSchema<TFeatureFlags extends Tulip2EncodeFeatureFlags>(
+  channel: TULIP2Channel,
+  featureFlags: TFeatureFlags,
+  spanLimitFactors?: Tulip2DownlinkSpanLimitFactors,
+): Tulip2DownlinkChannelSchema<TFeatureFlags> {
   const span = channel.end - channel.start
+  const deadBandMaxSpanFactor = spanLimitFactors?.deadBandMaxSpanFactor ?? 1
+  const slopeMaxSpanFactor = spanLimitFactors?.slopeMaxSpanFactor ?? 1
+  const measureOffsetMinSpanFactor = spanLimitFactors?.measureOffsetMinSpanFactor ?? 1
+  const measureOffsetMaxSpanFactor = spanLimitFactors?.measureOffsetMaxSpanFactor ?? 1
+
   const baseSchema = {
 
     alarms: v.optional(
@@ -214,7 +230,9 @@ function createTulip2DownlinkChannelSchema<TFeatureFlags extends Tulip2EncodeFea
         deadBand: v.pipe(
           v.number(),
           v.minValue(0),
-          v.maxValue(span * 0.2),
+          v.maxValue(span * deadBandMaxSpanFactor),
+          // now we transfrom the deadBand value from the real value to the percentage of the span, since that's what the encoder expects
+          v.transform(v => Math.round((v / span) * 100 * 100)),
         ),
         // low threshold and high threshold are in percentage 0 - 100% from the actual min max range
         lowThreshold: v.optional(
@@ -222,6 +240,8 @@ function createTulip2DownlinkChannelSchema<TFeatureFlags extends Tulip2EncodeFea
             v.number(),
             v.minValue(channel.start),
             v.maxValue(channel.end),
+            // now we transform the threshold values from the real value to the percentage of the span, since that's what the encoder expects, and we also add 2500 to move the range from -2500-7500 (representing -50%-+100%) to 0-10000 (representing 0%-100%)
+            v.transform(v => Math.round((((v - channel.start) / span) * 100 * 100) + 2500)),
           ),
         ),
         // high threshold and high threshold are in percentage 0 - 100% from the actual min max range
@@ -230,6 +250,8 @@ function createTulip2DownlinkChannelSchema<TFeatureFlags extends Tulip2EncodeFea
             v.number(),
             v.minValue(channel.start),
             v.maxValue(channel.end),
+            // now we transform the threshold values from the real value to the percentage of the span, since that's what the encoder expects, and we also add 2500 to move the range from -2500-7500 (representing -50%-+100%) to 0-10000 (representing 0%-100%)
+            v.transform(v => Math.round((((v - channel.start) / span) * 100 * 100) + 2500)),
           ),
         ),
         // low and high threshold with delay are in percentage 0 - 100% from the actual min max range
@@ -239,6 +261,8 @@ function createTulip2DownlinkChannelSchema<TFeatureFlags extends Tulip2EncodeFea
               v.number(),
               v.minValue(channel.start),
               v.maxValue(channel.end),
+              // now we transform the threshold values from the real value to the percentage of the span, since that's what the encoder expects, and we also add 2500 to move the range from -2500-7500 (representing -50%-+100%) to 0-10000 (representing 0%-100%)
+              v.transform(v => Math.round((((v - channel.start) / span) * 100 * 100) + 2500)),
             ),
             delay: v.pipe(
               v.number(),
@@ -255,6 +279,7 @@ function createTulip2DownlinkChannelSchema<TFeatureFlags extends Tulip2EncodeFea
               v.number(),
               v.minValue(channel.start),
               v.maxValue(channel.end),
+              v.transform(v => Math.round((((v - channel.start) / span) * 100 * 100) + 2500)),
             ),
             delay: v.pipe(
               v.number(),
@@ -269,14 +294,18 @@ function createTulip2DownlinkChannelSchema<TFeatureFlags extends Tulip2EncodeFea
           v.pipe(
             v.number(),
             v.minValue(0),
-            v.maxValue(span * 0.5),
+            v.maxValue(span * slopeMaxSpanFactor),
+            // now we transform the slope values from the real value to the percentage of the span, since that's what the encoder expects
+            v.transform(v => Math.round((v / span) * 100 * 100)),
           ),
         ),
         fallingSlope: v.optional(
           v.pipe(
             v.number(),
             v.minValue(0),
-            v.maxValue(span * 0.5),
+            v.maxValue(span * slopeMaxSpanFactor),
+            // now we transform the slope values from the real value to the percentage of the span, since that's what the encoder expects
+            v.transform(v => Math.round((v / span) * 100 * 100)),
           ),
         ),
       }),
@@ -292,6 +321,7 @@ function createTulip2DownlinkChannelSchema<TFeatureFlags extends Tulip2EncodeFea
           v.number(),
           v.minValue(0.1),
           v.maxValue(15),
+          v.transform(v => Math.round(v * 10)),
         ),
       ),
     })
@@ -299,12 +329,13 @@ function createTulip2DownlinkChannelSchema<TFeatureFlags extends Tulip2EncodeFea
 
   if (featureFlags.channelsMeasureOffset) {
     Object.assign(baseSchema, {
-      // offset is from -5% to +5% of the span
+      // offset is from e.g. -5% to +5% of the span
       measureOffset: v.optional(
         v.pipe(
           v.number(),
-          v.minValue(-0.05 * span),
-          v.maxValue(0.05 * span),
+          v.minValue(-measureOffsetMinSpanFactor * span),
+          v.maxValue(measureOffsetMaxSpanFactor * span),
+          v.transform(v => Math.round((v / span) * 100 * 100)),
         ),
       ),
     })
@@ -317,7 +348,11 @@ type Tulip2ChannelSchemasObject<TChannels extends TULIP2Channel[], TFeatureFlags
   [K in TChannels[number] as `channel${K['channelId']}`]: v.OptionalSchema<v.UnionSchema<[v.LiteralSchema<false, undefined>, v.LiteralSchema<true, undefined>, Tulip2DownlinkChannelSchema<TFeatureFlags>], undefined>, undefined>
 }
 
-function createTulip2DownlinkConfigurationFrameSchema<TChannel extends TULIP2Channel, TFeatureFlags extends Tulip2EncodeFeatureFlags>(channels: TChannel[], featureFlags: TFeatureFlags) {
+function createTulip2DownlinkConfigurationFrameSchema<TChannel extends TULIP2Channel, TFeatureFlags extends Tulip2EncodeFeatureFlags>(
+  channels: TChannel[],
+  featureFlags: TFeatureFlags,
+  spanLimitFactors?: Tulip2DownlinkSpanLimitFactors,
+) {
   const channelSchemas: Tulip2ChannelSchemasObject<TChannel[], TFeatureFlags> = channels.reduce((acc, channel) => {
     const channelKey = `channel${channel.channelId}` as `channel${TChannel['channelId']}`
 
@@ -326,7 +361,7 @@ function createTulip2DownlinkConfigurationFrameSchema<TChannel extends TULIP2Cha
       v.union([
         v.literal(false),
         v.literal(true),
-        createTulip2DownlinkChannelSchema(channel, featureFlags),
+        createTulip2DownlinkChannelSchema(channel, featureFlags, spanLimitFactors),
       ]),
     )
     return acc
@@ -359,12 +394,17 @@ function createDownlinkResetBatteryIndicatorSchema(featureFlags: Tulip2EncodeFea
   })
 }
 
-export function createTULIP2DownlinkSchema<TChannels extends TULIP2Channel, TFeatureFlags extends Tulip2EncodeFeatureFlags>(channels: TChannels[], featureFlags: TFeatureFlags) {
+export function createTULIP2DownlinkSchema<TChannels extends TULIP2Channel, TFeatureFlags extends Tulip2EncodeFeatureFlags>(
+  channels: TChannels[],
+  featureFlags: TFeatureFlags,
+  extraActions?: v.ObjectSchema<any, any>[],
+  spanLimitFactors?: Tulip2DownlinkSpanLimitFactors,
+) {
   return v.variant('deviceAction', [
     createDownlinkResetToFactorySchema(),
     createDownlinkResetBatteryIndicatorSchema(featureFlags),
-    // @ts-expect-error - TS can't infer generics in this context
-    createTulip2DownlinkConfigurationFrameSchema(channels, featureFlags),
+    createTulip2DownlinkConfigurationFrameSchema(channels, featureFlags, spanLimitFactors),
+    ...(extraActions ?? []),
   ])
 }
 
@@ -406,94 +446,14 @@ export function validateTULIP2DownlinkInput<TChannels extends TULIP2Channel, TFe
   input: unknown,
   channels: TChannels[],
   featureFlags: TFeatureFlags,
+  extraActions?: v.ObjectSchema<any, any>[],
+  spanLimitFactors?: Tulip2DownlinkSpanLimitFactors,
 ): TULIP2DownlinkInput<TChannels, TFeatureFlags> {
-  const schema = createTULIP2DownlinkSchema(channels, featureFlags)
+  const schema = createTULIP2DownlinkSchema(channels, featureFlags, extraActions, spanLimitFactors)
   const res = v.safeParse(schema, input)
   if (!res.success) {
-    throw new Error(`Invalid downlink input: ${res.issues.map(i => i.message).join(', ')}`)
+    console.error('Invalid TULIP2 downlink input:', res.issues)
+    throw new Error(v.summarize(res.issues))
   }
   return res.output as TULIP2DownlinkInput<TChannels, TFeatureFlags>
-}
-
-/**
- * Reformat downlink input to convert their real values into expected uint16 values for downlink encoding.
- *
- * The encoding functions expect values in specific formats:
- * - **deadBand**: percentage of span (0-20%), kept as-is since encoder multiplies by 100
- * - **thresholds**: uint16 in 0.01% units (0-10000 representing 0.00%-100.00%)
- * - **slopes**: uint16 in 0.01% units (0-5000 representing 0.00%-50.00% of span)
- * - **measureOffset**: percentage of span (-5% to +5%), kept as-is since encoder multiplies by 100
- * - **startUpTime**: seconds (0.1-15s), kept as-is since encoder multiplies by 10
- *
- * @param input - The validated downlink input with real measurement values
- * @param channels - The channel definitions with start/end ranges
- * @param _featureFlags - Feature flags (unused in reformatting but kept for consistency)
- * @returns Reformatted downlink input with values converted to encoding-ready format
- */
-export function reformatDownlinkInputValues<TChannels extends TULIP2Channel, TFeatureFlags extends Tulip2EncodeFeatureFlags>(input: TULIP2DownlinkInput<TChannels, TFeatureFlags>, channels: TChannels[], _featureFlags: TFeatureFlags): TULIP2DownlinkInput<TChannels, TFeatureFlags> {
-  // Only configuration frames have values to reformat
-  if (input.deviceAction !== 'configuration') {
-    return input
-  }
-
-  // Deep clone to avoid mutating the input
-  const output = input
-
-  // Process each channel that might be configured
-  for (const channel of channels) {
-    const channelKey = `channel${channel.channelId}`
-    const channelConfig = output[channelKey as keyof typeof output] as ChannelConfigOutput<TFeatureFlags>
-
-    // Skip if channel is not configured or is a boolean (false=disabled, true=enabled with defaults)
-    if (!channelConfig || typeof channelConfig === 'boolean') {
-      continue
-    }
-
-    const span = Math.abs(channel.end - channel.start)
-
-    // 1. Convert deadBand from span value to percentage (0-20%)
-    if (typeof channelConfig.alarms?.deadBand === 'number') {
-      channelConfig.alarms.deadBand = (channelConfig.alarms.deadBand / span) * 100
-    }
-
-    // 2. Convert alarm thresholds and slopes
-    if (channelConfig.alarms && typeof channelConfig.alarms === 'object') {
-      const alarms = channelConfig.alarms
-
-      // Convert threshold values from real values to uint16 (2500-12500 in 0.01% units)
-      if (typeof alarms.lowThreshold === 'number') {
-        alarms.lowThreshold = Math.round((((alarms.lowThreshold - channel.start) / span) * 100) * 100 + 2500)
-      }
-
-      if (typeof alarms.highThreshold === 'number') {
-        alarms.highThreshold = Math.round((((alarms.highThreshold - channel.start) / span) * 100) * 100 + 2500)
-      }
-
-      if (alarms.lowThresholdWithDelay && typeof alarms.lowThresholdWithDelay.value === 'number') {
-        alarms.lowThresholdWithDelay.value = Math.round((((alarms.lowThresholdWithDelay.value - channel.start) / span) * 100) * 100 + 2500)
-      }
-
-      if (alarms.highThresholdWithDelay && typeof alarms.highThresholdWithDelay.value === 'number') {
-        alarms.highThresholdWithDelay.value = Math.round((((alarms.highThresholdWithDelay.value - channel.start) / span) * 100) * 100 + 2500)
-      }
-
-      // Convert slopes from span values to uint16 (0-5000 in 0.01% units for 0-50%)
-      if (typeof alarms.risingSlope === 'number') {
-        alarms.risingSlope = Math.round(((alarms.risingSlope / span) * 100) * 100)
-      }
-
-      if (typeof alarms.fallingSlope === 'number') {
-        alarms.fallingSlope = Math.round(((alarms.fallingSlope / span) * 100) * 100)
-      }
-    }
-
-    // 3. Convert measureOffset from span value to percentage (-5% to +5%)
-    if ('measureOffset' in channelConfig && typeof channelConfig.measureOffset === 'number') {
-      channelConfig.measureOffset = (channelConfig.measureOffset / span) * 100
-    }
-
-    // 4. startUpTime is already in seconds (0.1-15s), no conversion needed
-  }
-
-  return output as TULIP2DownlinkInput<TChannels, TFeatureFlags>
 }

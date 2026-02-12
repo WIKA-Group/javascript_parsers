@@ -1,32 +1,17 @@
-import type { Handler, TULIP2Channel } from '../../../../codecs/tulip2'
+import type { EncoderFactory, Handler, MultipleEncoderFactory } from '../../../../codecs/tulip2'
 import type { PEWTULIP2DataMessageUplinkOutput, PEWTULIP2DeviceAlarmsData, PEWTULIP2DeviceAlarmsUplinkOutput, PEWTULIP2DeviceInformationData, PEWTULIP2DeviceInformationUplinkOutput, PEWTULIP2DeviceStatisticsData, PEWTULIP2DeviceStatisticsUplinkOutput, PEWTULIP2ProcessAlarmsData, PEWTULIP2ProcessAlarmsUplinkOutput, PEWTULIP2TechnicalAlarmsData, PEWTULIP2TechnicalAlarmsUplinkOutput } from '../../schema/tulip2'
+import type { PewTulip2Channels, PewTulip2DownlinkInput } from './constants'
 import { PEW_NAME } from '..'
 import { defineTULIP2Codec } from '../../../../codecs/tulip2'
+import { validateTULIP2DownlinkInput } from '../../../../schemas/tulip2/downlink'
 import { DEFAULT_ROUNDING_DECIMALS, intTuple4ToFloat32WithThreshold, roundValue, slopeValueToValue, TULIPValueToValue } from '../../../../utils'
+import { createDropConfigurationSchema, createGetConfigurationSchema, createTULIP2PEWChannels, PEW_DOWNLINK_FEATURE_FLAGS } from './constants'
+import { PEWTULIP2EncodeHandler } from './encode'
 import { ALARM_EVENTS, DEVICE_ALARM_CAUSE_OF_FAILURE, DEVICE_ALARM_TYPES, PRESSURE_TYPES, PRESSURE_UNITS, PROCESS_ALARM_TYPES, TECHNICAL_ALARM_TYPES } from './lookups'
 
 const ERROR_VALUE = 0xFFFF
 
-// eslint-disable-next-line ts/explicit-function-return-type
-function createTULIP2PEWChannels() {
-  return [
-    {
-      channelId: 0,
-      name: 'pressure',
-      start: 0 as number,
-      end: 10 as number,
-    },
-    {
-      channelId: 1,
-      name: 'device temperature',
-      start: -45 as number,
-      end: 110 as number,
-      adjustMeasurementRangeDisallowed: true, // constant
-    },
-  ] as const satisfies TULIP2Channel[]
-}
-
-type TULIP2PEWChannels = ReturnType<typeof createTULIP2PEWChannels>
+type TULIP2PEWChannels = PewTulip2Channels
 
 const handleDataMessage: Handler<TULIP2PEWChannels, PEWTULIP2DataMessageUplinkOutput> = (input, options) => {
   // validate that the message needs to be 7 bytes long
@@ -352,6 +337,24 @@ const handleKeepAliveMessage: Handler<TULIP2PEWChannels, PEWTULIP2DeviceStatisti
   return res
 }
 
+const pewEncoderFactory: EncoderFactory<PewTulip2DownlinkInput> = (options) => {
+  const featureFlags = PEW_DOWNLINK_FEATURE_FLAGS
+  return (input: PewTulip2DownlinkInput) => {
+    const channels = options.getChannels()
+    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, [createDropConfigurationSchema(), createGetConfigurationSchema()])
+    return PEWTULIP2EncodeHandler(validated as PewTulip2DownlinkInput)
+  }
+}
+
+const pewMultipleEncodeFactory: MultipleEncoderFactory<PewTulip2DownlinkInput> = (options) => {
+  const featureFlags = PEW_DOWNLINK_FEATURE_FLAGS
+  return (input: PewTulip2DownlinkInput) => {
+    const channels = options.getChannels()
+    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, [createDropConfigurationSchema(), createGetConfigurationSchema()])
+    return PEWTULIP2EncodeHandler(validated as PewTulip2DownlinkInput, true)
+  }
+}
+
 // eslint-disable-next-line ts/explicit-function-return-type
 export function createTULIP2PEWCodec() {
   return defineTULIP2Codec({
@@ -367,6 +370,7 @@ export function createTULIP2PEWCodec() {
       0x07: handleDeviceIdentificationMessage,
       0x08: handleKeepAliveMessage,
     },
-
+    encoderFactory: pewEncoderFactory,
+    multipleEncodeFactory: pewMultipleEncodeFactory,
   })
 }

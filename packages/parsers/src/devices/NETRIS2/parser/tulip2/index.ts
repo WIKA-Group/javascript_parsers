@@ -13,9 +13,13 @@ import type {
 } from '../../schema/tulip2/uplink'
 import type { Netris2Tulip2DownlinkInput } from './constants'
 import { defineTULIP2Codec } from '../../../../codecs/tulip2'
-import { reformatDownlinkInputValues, validateTULIP2DownlinkInput } from '../../../../schemas/tulip2/downlink'
+import { validateTULIP2DownlinkInput } from '../../../../schemas/tulip2/downlink'
 import { DEFAULT_ROUNDING_DECIMALS, roundValue, slopeValueToValue, TULIPValueToValue } from '../../../../utils'
-import { createTULIP2NETRIS2Channels, NETRIS2_DOWNLINK_FEATURE_FLAGS } from './constants'
+import {
+  createTULIP2NETRIS2Channels,
+  NETRIS2_DOWNLINK_FEATURE_FLAGS,
+  NETRIS2_DOWNLINK_SPAN_LIMIT_FACTORS,
+} from './constants'
 import { NETRIS2TULIP2EncodeHandler } from './encode'
 import {
   ALARM_EVENTS,
@@ -391,9 +395,8 @@ const netris2EncoderFactory: EncoderFactory<Netris2Tulip2DownlinkInput> = (optio
   const featureFlags = NETRIS2_DOWNLINK_FEATURE_FLAGS
   return (input: Netris2Tulip2DownlinkInput) => {
     const channels = options.getChannels()
-    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags)
-    const formatted = reformatDownlinkInputValues(validated, channels, featureFlags)
-    return NETRIS2TULIP2EncodeHandler(formatted)
+    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, undefined, NETRIS2_DOWNLINK_SPAN_LIMIT_FACTORS)
+    return NETRIS2TULIP2EncodeHandler(validated)
   }
 }
 
@@ -401,9 +404,8 @@ const netris2MultipleEncodeFactory: MultipleEncoderFactory<Netris2Tulip2Downlink
   const featureFlags = NETRIS2_DOWNLINK_FEATURE_FLAGS
   return (input: Netris2Tulip2DownlinkInput) => {
     const channels = options.getChannels()
-    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags)
-    const formatted = reformatDownlinkInputValues(validated, channels, featureFlags)
-    return NETRIS2TULIP2EncodeHandler(formatted, true)
+    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, undefined, NETRIS2_DOWNLINK_SPAN_LIMIT_FACTORS)
+    return NETRIS2TULIP2EncodeHandler(validated, true)
   }
 }
 

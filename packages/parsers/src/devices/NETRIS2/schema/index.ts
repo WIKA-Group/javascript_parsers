@@ -2,7 +2,11 @@
 import * as v from 'valibot'
 import { createUplinkOutputFailureSchema } from '../../../schemas'
 import { createTULIP2DownlinkSchema } from '../../../schemas/tulip2/downlink'
-import { createTULIP2NETRIS2Channels, NETRIS2_DOWNLINK_FEATURE_FLAGS } from '../parser/tulip2/constants'
+import {
+  createTULIP2NETRIS2Channels,
+  NETRIS2_DOWNLINK_FEATURE_FLAGS,
+  NETRIS2_DOWNLINK_SPAN_LIMIT_FACTORS,
+} from '../parser/tulip2/constants'
 import { createNETRIS2TULIP2UplinkOutputSchema } from './tulip2/uplink'
 
 export function createNETRIS2UplinkOutputSchema() {
@@ -14,7 +18,14 @@ export function createNETRIS2UplinkOutputSchema() {
 
 const UplinkOutputSchema = createNETRIS2UplinkOutputSchema
 
-const DownlinkInputSchema = () => createTULIP2DownlinkSchema(createTULIP2NETRIS2Channels(), NETRIS2_DOWNLINK_FEATURE_FLAGS)
+function DownlinkInputSchema() {
+  return createTULIP2DownlinkSchema(
+    createTULIP2NETRIS2Channels(),
+    NETRIS2_DOWNLINK_FEATURE_FLAGS,
+    undefined,
+    NETRIS2_DOWNLINK_SPAN_LIMIT_FACTORS,
+  )
+}
 
 export {
   DownlinkInputSchema,

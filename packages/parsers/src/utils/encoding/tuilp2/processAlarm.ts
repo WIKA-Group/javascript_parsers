@@ -82,9 +82,7 @@ function buildProcessAlarmBytes(
     return bytes
   }
 
-  // deadband in 0.01% of span (2 bytes, big-endian)
-  const deadBandValue = Math.round(channelConfig.deadBand * 100)
-  pushUint16(bytes, deadBandValue)
+  pushUint16(bytes, channelConfig.deadBand)
 
   // build alarm mask byte
   // bit 7: Alarm 1 - Low threshold

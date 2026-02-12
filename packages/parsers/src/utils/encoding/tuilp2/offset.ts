@@ -42,12 +42,6 @@ export function buildMeasureOffsetCommands(
 
     const channelConfig = config[key as keyof typeof config]
     if (channelConfig?.offset !== undefined) {
-      // Validate offset is within bounds: -5% to +5%
-      if (channelConfig.offset < -5 || channelConfig.offset > 5) {
-        throw new RangeError(
-          `Offset for ${key} must be between -5% and +5%, got ${channelConfig.offset}%`,
-        )
-      }
       channelMask |= 1 << channelIndex
       offsetsByChannel.set(channelIndex, channelConfig.offset)
     }
@@ -64,7 +58,7 @@ export function buildMeasureOffsetCommands(
   sortedChannels.forEach((channelIndex) => {
     const offset = offsetsByChannel.get(channelIndex)!
     // Convert offset from percent to signed int16 (scaled by 100 as value is in 0.01% steps)
-    pushSignedInt16(bytes, Math.round(offset * 100))
+    pushSignedInt16(bytes, offset)
   })
 
   // * Yes we could technically split this here into possibly multiple commands, though in reality we dont lose much.

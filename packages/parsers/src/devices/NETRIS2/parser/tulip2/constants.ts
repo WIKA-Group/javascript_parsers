@@ -1,5 +1,9 @@
 import type { TULIP2Channel } from '../../../../codecs/tulip2'
-import type { TULIP2DownlinkInput, Tulip2EncodeFeatureFlags } from '../../../../schemas/tulip2/downlink'
+import type {
+  TULIP2DownlinkInput,
+  Tulip2DownlinkSpanLimitFactors,
+  Tulip2EncodeFeatureFlags,
+} from '../../../../schemas/tulip2/downlink'
 
 export const NETRIS2TULIP2_CHANNEL_0 = {
   name: 'Electrical current1' as const,
@@ -44,6 +48,13 @@ export const NETRIS2_DOWNLINK_FEATURE_FLAGS = {
   channelsStartupTime: true,
   channelsMeasureOffset: true,
 } as const satisfies Tulip2EncodeFeatureFlags
+
+export const NETRIS2_DOWNLINK_SPAN_LIMIT_FACTORS = {
+  deadBandMaxSpanFactor: 0.2,
+  slopeMaxSpanFactor: 0.5,
+  measureOffsetMinSpanFactor: 0.05,
+  measureOffsetMaxSpanFactor: 0.05,
+} as const satisfies Tulip2DownlinkSpanLimitFactors
 
 export type Netris2Tulip2FeatureFlags = typeof NETRIS2_DOWNLINK_FEATURE_FLAGS
 export type Netris2Tulip2Channels = ReturnType<typeof createTULIP2NETRIS2Channels>

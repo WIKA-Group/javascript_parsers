@@ -85,6 +85,79 @@ function adjustRoundingDecimals(decimals: number): void
 ```
 Applies to future decodes only.
 
+### `encodeDownlink(input)`
+```ts
+type DownlinkInput = {
+  protocol: 'TULIP2'
+  input: {
+    deviceAction: 'configuration'
+    // Configuration fields...
+  } | {
+    deviceAction: 'resetToFactory'
+  } | {
+    deviceAction: 'resetBatteryIndicator'
+    configurationId?: number
+  } | {
+    deviceAction: 'dropConfiguration'
+    configurationId?: number
+  } | {
+    deviceAction: 'getConfiguration'
+    mainConfiguration?: true
+    channel0?: true | { alarms?: true, measureOffset?: true }
+    channel1?: true | { alarms?: true, measureOffset?: true }
+  }
+} | {
+  protocol: 'TULIP3'
+  input: {
+    action: 'readRegisters'
+    // Read register fields...
+  } | {
+    action: 'writeRegisters'
+    // Write register fields...
+  } | {
+    action: 'forceCloseSession'
+  } | {
+    action: 'restoreDefaultConfiguration'
+  } | {
+    action: 'newBatteryInserted'
+  } | {
+    action: 'getAlarmStatus'
+    // Alarm status fields...
+  }
+}
+
+// encode a single downlink frame
+function encodeDownlink(input: DownlinkInput): {
+  bytes: number[] // Encoded downlink payload as array of unsigned bytes (0-255)
+  fPort: number // LoRaWAN FPort to use
+  warnings?: string[] // Non-fatal anomalies
+} | {
+  errors: string[] // Fatal or structural issues only
+}
+```
+
+Validates the input and encodes it into a single downlink frame. It uses the same range configuration as used for decoding.
+If the documentation refers to percentage values, use the real world values. (e.g. 20% deadband with 0-10 bar range is 2 bar (0.2 * 10)).
+
+To understand the input structure, refer to the [downlink schema definition](https://github.com/WIKA-Group/javascript_parsers/blob/main/packages/parsers/src/devices/PEW/downlink.schema.json) and [downlink examples](https://github.com/WIKA-Group/javascript_parsers/blob/main/packages/parsers/src/devices/PEW/examples.json).
+
+### `encodeMultipleDownlinks(input)`
+```ts
+// Same input type as encodeDownlink()
+// encodes the given configuration in one or more downlink frames depending on byte size
+function encodeMultipleDownlinks(
+  input: DownlinkInput
+): {
+  frames: number[][] // Encoded downlink payloads as arrays of unsigned bytes (0-255)
+  fPort: number // LoRaWAN FPort to use
+  warnings?: string[] // Non-fatal anomalies
+} | {
+  errors: string[] // Fatal or structural issues only
+}
+```
+
+To understand the input structure, refer to the [downlink schema definition](https://github.com/WIKA-Group/javascript_parsers/blob/main/packages/parsers/src/devices/PEW/downlink.schema.json) and [downlink examples](https://github.com/WIKA-Group/javascript_parsers/blob/main/packages/parsers/src/devices/PEW/examples.json).
+
 ## Verifying Measurement Ranges
 
 **Critical:** The default range may not match your device. Always verify the actual range from one of these sources:

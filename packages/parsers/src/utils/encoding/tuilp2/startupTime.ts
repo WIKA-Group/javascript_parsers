@@ -41,12 +41,6 @@ export function buildStartupTimeCommands(
 
     const channelConfig = config[key as keyof typeof config]
     if (channelConfig?.startUpTime !== undefined) {
-      // Validate startup time is within bounds: 0.1s to 15s (100ms to 15000ms)
-      if (channelConfig.startUpTime < 0.1 || channelConfig.startUpTime > 15) {
-        throw new RangeError(
-          `Start-up time for ${key} must be between 0.1s and 15s, got ${channelConfig.startUpTime}s`,
-        )
-      }
       channelMask |= 1 << channelIndex
       startUpTimesByChannel.set(channelIndex, channelConfig.startUpTime)
     }
@@ -62,9 +56,7 @@ export function buildStartupTimeCommands(
   const sortedChannels = Array.from(startUpTimesByChannel.keys()).sort((a, b) => a - b)
   sortedChannels.forEach((channelIndex) => {
     const startUpTime = startUpTimesByChannel.get(channelIndex)!
-    // Convert time from seconds to units of 100ms (0.1s)
-    // 4 seconds -> 40 (0.1s units)
-    pushUint16(bytes, Math.round(startUpTime * 10))
+    pushUint16(bytes, startUpTime)
   })
 
   // Same as in offset.ts
