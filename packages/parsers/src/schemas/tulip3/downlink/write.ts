@@ -210,20 +210,6 @@ function createChannelConfigurationWriteSchema<const TConfig extends TULIP3Chann
 }
 
 /**
- * Creates a validation schema for channel write input (Single variant).
- * Allows EITHER identification OR configuration, but not both.
- *
- * @param config - Channel configuration with register flags and measurement range
- * @returns A Valibot union schema with identification OR configuration
- */
-function createChannelWriteSingleSchema<const TConfig extends TULIP3ChannelConfig>(config: TConfig) {
-  return v.union([
-    v.object({ identification: createChannelIdentificationWriteSchema(config) }),
-    v.object({ configuration: createChannelConfigurationWriteSchema(config) }),
-  ])
-}
-
-/**
  * Creates a validation schema for channel write input (Multiple variant).
  * Allows both identification AND configuration fields.
  *
@@ -324,7 +310,14 @@ function createCommunicationModuleConfigurationWriteSchema<const TConfig extends
 type MappedChannelsForSensorWriteSingle<TSensorConfig extends TULIP3SensorConfig> = {
   [K in keyof TSensorConfig as K extends `channel${number}` ? K : never]:
   TSensorConfig[K] extends TULIP3ChannelConfig
-    ? v.OptionalSchema<ReturnType<typeof createChannelWriteSingleSchema<TSensorConfig[K]>>, undefined>
+    ? v.OptionalSchema<v.ObjectSchema<{ identification: ReturnType<typeof createChannelIdentificationWriteSchema<TSensorConfig[K]>> }, undefined>, undefined>
+    : never
+}
+
+type MappedChannelsForSensorWriteSingleConfiguration<TSensorConfig extends TULIP3SensorConfig> = {
+  [K in keyof TSensorConfig as K extends `channel${number}` ? K : never]:
+  TSensorConfig[K] extends TULIP3ChannelConfig
+    ? v.OptionalSchema<v.ObjectSchema<{ configuration: ReturnType<typeof createChannelConfigurationWriteSchema<TSensorConfig[K]>> }, undefined>, undefined>
     : never
 }
 
@@ -344,20 +337,39 @@ type MappedChannelsForSensorWriteMultiple<TSensorConfig extends TULIP3SensorConf
  * @returns A Valibot object schema with configuration and channels
  */
 function createSensorWriteSingleSchema<const TConfig extends TULIP3SensorConfig>(sensorConfig: TConfig) {
-  const channelsObj = Object.entries(sensorConfig).reduce((acc, [channelKey, channelConfig]) => {
+  // Single mode is intentionally branch-explicit for better type hints:
+  // - identification branch accepts only channel identification writes
+  // - configuration branch accepts sensor/channel configuration writes
+  // This avoids implicit mixed-shape payloads in single-mode inputs.
+  const channelsIdentificationObj = Object.entries(sensorConfig).reduce((acc, [channelKey, channelConfig]) => {
     if (!channelKey.startsWith('channel'))
       return acc
 
     const channel = channelConfig as TULIP3ChannelConfig
-    acc[channelKey as keyof typeof acc] = v.optional(createChannelWriteSingleSchema(channel)) as any
+    acc[channelKey as keyof typeof acc] = v.optional(v.object({ identification: createChannelIdentificationWriteSchema(channel) })) as any
 
     return acc
   }, {} as MappedChannelsForSensorWriteSingle<TConfig>)
 
-  return v.object({
-    configuration: createSensorConfigurationWriteSchema(sensorConfig),
-    ...channelsObj,
-  } as const)
+  const channelsConfigurationObj = Object.entries(sensorConfig).reduce((acc, [channelKey, channelConfig]) => {
+    if (!channelKey.startsWith('channel'))
+      return acc
+
+    const channel = channelConfig as TULIP3ChannelConfig
+    acc[channelKey as keyof typeof acc] = v.optional(v.object({ configuration: createChannelConfigurationWriteSchema(channel) })) as any
+
+    return acc
+  }, {} as MappedChannelsForSensorWriteSingleConfiguration<TConfig>)
+
+  return v.union([
+    v.object({
+      ...channelsIdentificationObj,
+    } as const),
+    v.object({
+      configuration: v.optional(createSensorConfigurationWriteSchema(sensorConfig)),
+      ...channelsConfigurationObj,
+    } as const),
+  ])
 }
 
 /**

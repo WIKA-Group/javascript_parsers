@@ -48,63 +48,58 @@ export function createMultipleEncoderFactory<TDeviceConfig extends TULIP3DeviceC
   let schema: BaseSchema<unknown, TULIP3DownlinkAction<TDeviceConfig>, any> | undefined
 
   return (input: TULIP3DownlinkActionMultiple<TDeviceConfig>): MultipleDownlinkOutput => {
-    try {
-      // Create schema on first call
-      if (!schema) {
-        schema = createTULIP3DownlinkMultipleSchema(profile.sensorChannelConfig)
-      }
-
-      // Validate input
-      const result = v.safeParse(schema, input)
-      if (!result.success) {
-        return formatMultipleError(`Validation failed:\n${v.summarize(result.issues)}`)
-      }
-
-      const validatedInput = result.output
-
-      // Extract metadata with defaults
-      const byteLimit = validatedInput.metadata?.byteLimit ?? DEFAULT_BYTE_LIMIT
-      const startingFrameCounter = validatedInput.metadata?.startingFrameCounter ?? 0
-      const autoApplyConfig = validatedInput.metadata?.autoApplyConfig ?? true
-
-      // Route by action
-      switch (validatedInput.action) {
-        case 'forceCloseSession':
-          return encodeForceCloseSessionComplete({ byteLimit })
-
-        case 'restoreDefaultConfiguration':
-          return encodeRestoreDefaultConfigurationComplete({ byteLimit })
-
-        case 'newBatteryInserted':
-          return encodeNewBatteryInsertedComplete({ byteLimit })
-
-        case 'getAlarmStatus':
-          return encodeGetAlarmStatusComplete(
-            validatedInput.input,
-            profile.sensorChannelConfig,
-            { byteLimit },
-          )
-
-        case 'readRegisters':
-        case 'writeRegisters': {
-          const mode = validatedInput.action === 'readRegisters' ? 'read' : 'write'
-          return encodeReadWritePipeline(
-            mode,
-            validatedInput.input as any,
-            profile,
-            { byteLimit, startingFrameCounter, autoApplyConfig },
-          )
-        }
-
-        default: {
-          // Exhaustive check
-          const _exhaustive: never = validatedInput
-          throw new Error(`Unknown action: ${(_exhaustive as any).action}`)
-        }
-      }
+    // Create schema on first call
+    if (!schema) {
+      schema = createTULIP3DownlinkMultipleSchema(profile.sensorChannelConfig)
     }
-    catch (error) {
-      return formatMultipleError(error instanceof Error ? error.message : String(error))
+
+    // Validate input
+    const result = v.safeParse(schema, input)
+    if (!result.success) {
+      return formatMultipleError(`Validation failed:\n${v.summarize(result.issues)}`)
+    }
+
+    const validatedInput = result.output
+
+    // Extract metadata with defaults
+    const byteLimit = validatedInput.metadata?.byteLimit ?? DEFAULT_BYTE_LIMIT
+    const startingFrameCounter = validatedInput.metadata?.startingFrameCounter ?? 0
+    const autoApplyConfig = validatedInput.metadata?.autoApplyConfig ?? true
+
+    // Route by action
+    switch (validatedInput.action) {
+      case 'forceCloseSession':
+        return encodeForceCloseSessionComplete({ byteLimit })
+
+      case 'restoreDefaultConfiguration':
+        return encodeRestoreDefaultConfigurationComplete({ byteLimit })
+
+      case 'newBatteryInserted':
+        return encodeNewBatteryInsertedComplete({ byteLimit })
+
+      case 'getAlarmStatus':
+        return encodeGetAlarmStatusComplete(
+          validatedInput.input,
+          profile.sensorChannelConfig,
+          { byteLimit },
+        )
+
+      case 'readRegisters':
+      case 'writeRegisters': {
+        const mode = validatedInput.action === 'readRegisters' ? 'read' : 'write'
+        return encodeReadWritePipeline(
+          mode,
+          validatedInput.input as any,
+          profile,
+          { byteLimit, startingFrameCounter, autoApplyConfig },
+        )
+      }
+
+      default: {
+        // Exhaustive check
+        const _exhaustive: never = validatedInput
+        throw new Error(`Unknown action: ${(_exhaustive as any).action}`)
+      }
     }
   }
 }

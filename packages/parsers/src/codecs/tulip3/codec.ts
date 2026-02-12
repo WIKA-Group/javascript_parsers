@@ -238,8 +238,8 @@ export function defineTULIP3Codec<const TDeviceProfile extends TULIP3DeviceProfi
     }
   }
 
-  // Create encodeMultiple once and reuse it
-  const encodeMultiple = createMultipleEncoderFactory(deviceProfile)
+  // Keep encoder mutable so range updates can rebuild validation schema/cache.
+  let encodeMultipleFn: ((input: TULIP3DownlinkActionMultiple<TULIP3DeviceConfig>) => MultipleDownlinkOutput) | null = null
 
   return {
     name,
@@ -251,6 +251,8 @@ export function defineTULIP3Codec<const TDeviceProfile extends TULIP3DeviceProfi
         if (channel) {
           channel.start = range.start
           channel.end = range.end
+          // remove schema cache
+          encodeMultipleFn = null
           return
         }
       }
@@ -262,8 +264,11 @@ export function defineTULIP3Codec<const TDeviceProfile extends TULIP3DeviceProfi
     },
     decode,
     encode: ((input: TULIP3DownlinkActionMultiple<TDeviceProfile['sensorChannelConfig']>): DownlinkOutput => {
+      if (!encodeMultipleFn) {
+        encodeMultipleFn = createMultipleEncoderFactory(deviceProfile)
+      }
       // Delegate to multiple encoder
-      const multiResult = encodeMultiple(input as any)
+      const multiResult = encodeMultipleFn(input as any)
 
       // If error, return as-is
       if ('errors' in multiResult) {
@@ -272,13 +277,11 @@ export function defineTULIP3Codec<const TDeviceProfile extends TULIP3DeviceProfi
 
       // Validate single frame
       if (multiResult.frames.length > 1) {
-        return {
-          errors: [
-            `Encoding produced ${multiResult.frames.length} frames but single encoder can only return one frame. `
-            + 'Use encodeMultiple() or call encode() separately for identification and configuration, '
-            + 'or increase byteLimit.',
-          ],
-        }
+        throw new Error(
+          `Encoding produced ${multiResult.frames.length} frames but single encoder can only return one frame. `
+          + 'Use encodeMultiple() or call encode() separately for identification and configuration, '
+          + 'or increase byteLimit.',
+        )
       }
 
       // Convert to single output format
@@ -288,6 +291,12 @@ export function defineTULIP3Codec<const TDeviceProfile extends TULIP3DeviceProfi
       }
     }) as (input: TULIP3DownlinkActionSingle<TDeviceProfile['sensorChannelConfig']>) => DownlinkOutput,
 
-    encodeMultiple: encodeMultiple as (input: TULIP3DownlinkActionMultiple<TDeviceProfile['sensorChannelConfig']>) => MultipleDownlinkOutput,
+    encodeMultiple: (input: TULIP3DownlinkActionMultiple<TDeviceProfile['sensorChannelConfig']>) => {
+      if (!encodeMultipleFn) {
+        encodeMultipleFn = createMultipleEncoderFactory(deviceProfile)
+      }
+      return encodeMultipleFn(input as any)
+    },
+
   }
 }

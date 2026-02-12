@@ -241,20 +241,6 @@ function createChannelConfigurationReadSchema<const TConfig extends TULIP3Channe
 }
 
 /**
- * Creates a validation schema for channel read input (Single variant).
- * Allows EITHER identification OR configuration, but not both.
- *
- * @param config - Channel configuration with register flags
- * @returns A Valibot union schema with identification OR configuration
- */
-function createChannelReadSingleSchema<const TConfig extends TULIP3ChannelConfig>(config: TConfig) {
-  return v.union([
-    v.object({ identification: createChannelIdentificationReadSchema(config) }),
-    v.object({ configuration: createChannelConfigurationReadSchema(config) }),
-  ])
-}
-
-/**
  * Creates a validation schema for channel read input (Multiple variant).
  * Allows both identification AND configuration fields.
  *
@@ -417,7 +403,14 @@ function createCommunicationModuleConfigurationReadSchema<const TConfig extends 
 type MappedChannelsForSensorReadSingle<TSensorConfig extends TULIP3SensorConfig> = {
   [K in keyof TSensorConfig as K extends `channel${number}` ? K : never]:
   TSensorConfig[K] extends TULIP3ChannelConfig
-    ? v.OptionalSchema<ReturnType<typeof createChannelReadSingleSchema<TSensorConfig[K]>>, undefined>
+    ? v.OptionalSchema<v.ObjectSchema<{ identification: ReturnType<typeof createChannelIdentificationReadSchema<TSensorConfig[K]>> }, undefined>, undefined>
+    : never
+}
+
+type MappedChannelsForSensorReadSingleConfiguration<TSensorConfig extends TULIP3SensorConfig> = {
+  [K in keyof TSensorConfig as K extends `channel${number}` ? K : never]:
+  TSensorConfig[K] extends TULIP3ChannelConfig
+    ? v.OptionalSchema<v.ObjectSchema<{ configuration: ReturnType<typeof createChannelConfigurationReadSchema<TSensorConfig[K]>> }, undefined>, undefined>
     : never
 }
 
@@ -437,19 +430,39 @@ type MappedChannelsForSensorReadMultiple<TSensorConfig extends TULIP3SensorConfi
  * @returns A Valibot union schema with identification OR configuration
  */
 function createSensorReadSingleSchema<const TConfig extends TULIP3SensorConfig>(sensorConfig: TConfig) {
-  const channelsObj = Object.entries(sensorConfig).reduce((acc, [channelKey, channelConfig]) => {
+  // Single mode is intentionally branch-explicit for better type hints:
+  // - identification branch accepts only identification-shaped channels
+  // - configuration branch accepts only configuration-shaped channels
+  // This still allows channel-only payloads without requiring dummy sensor-level objects.
+  const channelsIdentificationObj = Object.entries(sensorConfig).reduce((acc, [channelKey, channelConfig]) => {
     if (!channelKey.startsWith('channel'))
       return acc
 
     const channel = channelConfig as TULIP3ChannelConfig
-    acc[channelKey as keyof typeof acc] = v.optional(createChannelReadSingleSchema(channel)) as any
+    acc[channelKey as keyof typeof acc] = v.optional(v.object({ identification: createChannelIdentificationReadSchema(channel) })) as any
 
     return acc
   }, {} as MappedChannelsForSensorReadSingle<TConfig>)
 
+  const channelsConfigurationObj = Object.entries(sensorConfig).reduce((acc, [channelKey, channelConfig]) => {
+    if (!channelKey.startsWith('channel'))
+      return acc
+
+    const channel = channelConfig as TULIP3ChannelConfig
+    acc[channelKey as keyof typeof acc] = v.optional(v.object({ configuration: createChannelConfigurationReadSchema(channel) })) as any
+
+    return acc
+  }, {} as MappedChannelsForSensorReadSingleConfiguration<TConfig>)
+
   return v.union([
-    v.object({ identification: createSensorIdentificationReadSchema(sensorConfig), ...channelsObj }),
-    v.object({ configuration: createSensorConfigurationReadSchema(sensorConfig), ...channelsObj }),
+    v.object({
+      identification: v.optional(createSensorIdentificationReadSchema(sensorConfig)),
+      ...channelsIdentificationObj,
+    } as const),
+    v.object({
+      configuration: v.optional(createSensorConfigurationReadSchema(sensorConfig)),
+      ...channelsConfigurationObj,
+    } as const),
   ])
 }
 

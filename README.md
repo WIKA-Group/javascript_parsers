@@ -63,6 +63,8 @@ Distributed under the [MIT License](./LICENSE).
 
 ## Release Notes
 4.x.x
+  - feat: added PEW parser to library
+  - feat: added PEW TULIP3 downlink configuration support
   - feat: added PEW TULIP2 downlink configuration support
   - fix: add real channel ranges for GD20W
   - fix: remove not possible units and measurands for TRW

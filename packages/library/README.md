@@ -16,13 +16,28 @@ npm install @w2a-iiot/parsers
 ## Usage
 
 ```typescript
-import { NETRIS2parser } from '@w2a-iiot/parsers'
+import { NETRIS2Parser, PEWParser } from '@w2a-iiot/parsers'
 
 // creates a Netris2 parser instance
-const parser = NETRIS2parser()
+const parser = NETRIS2Parser()
+
+// creates a PEW parser instance (supports uplink + downlink for TULIP2/TULIP3)
+const pewParser = PEWParser()
 
 // decodes the uplink message
 const data = parser.decodeUplink({/** ... */})
+
+// encodes a PEW downlink message
+const downlink = pewParser.encodeDownlink({
+  protocol: 'TULIP3',
+  input: {
+    action: 'getAlarmStatus',
+    input: {
+      processAlarmRequested: true,
+      cmAlarmRequested: true,
+    },
+  },
+})
 ```
 ## Included devices
 
@@ -39,8 +54,8 @@ The following list shows whether a device is included in the package.
 |PEU+NETRIS3   |    ❌    |  ❌  |
 |PGU+NETRIS3   |    ❌    |  ❌  |
 |TGU+NETRIS3   |    ❌    |  ❌  |
-|TRU+NETRIS3   |    ❌    |  ❌  |
-|PEW           |    ❌    |  ❌  |
+|PEW           |    ✔️    |    `PEWParser` |
+|PEW           |    ✔️    |  `PEWParser`  |
 |PGW23         |    ❌    |  ❌  |
 |TRW           |    ❌    |  ❌  |
 <!-- #endregion devices-table -->
