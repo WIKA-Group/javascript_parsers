@@ -2457,6 +2457,7 @@
                         },
                         "productSubId": {
                           "enum": [
+                            "LoRaWAN class A",
                             "BLE only",
                             "LoRaWAN class A",
                             "LoRaWAN class B",
@@ -2584,19 +2585,13 @@
                           "properties": {
                             "measurand": {
                               "enum": [
-                                "Temperature",
-                                "Current",
-                                "Voltage",
-                                "Resistance"
+                                "Temperature"
                               ]
                             },
                             "unit": {
                               "enum": [
                                 "°C",
-                                "°F",
-                                "V",
-                                "mA",
-                                "%"
+                                "°F"
                               ]
                             },
                             "minMeasureRange": {
@@ -3567,36 +3562,24 @@
                     },
                     "measurand": {
                       "enum": [
-                        1,
-                        13,
-                        14,
-                        18
+                        1
                       ]
                     },
                     "measurandName": {
                       "enum": [
-                        "Temperature",
-                        "Current",
-                        "Voltage",
-                        "Relative"
+                        "Temperature"
                       ]
                     },
                     "unit": {
                       "enum": [
                         1,
-                        2,
-                        88,
-                        90,
-                        100
+                        2
                       ]
                     },
                     "unitName": {
                       "enum": [
                         "°C",
-                        "°F",
-                        "V",
-                        "mA",
-                        "%"
+                        "°F"
                       ]
                     }
                   },
