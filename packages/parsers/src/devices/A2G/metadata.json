@@ -1,6 +1,6 @@
 {
   "name": "wika-a2g-decoder",
-  "version": "4.4.1",
+  "version": "4.4.2",
   "main": "index.js",
   "description": "WIKA A2G LoRaWAN decoder",
   "codecId": "0001",
