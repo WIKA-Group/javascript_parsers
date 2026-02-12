@@ -28,17 +28,17 @@
             {
               "channelId": 0,
               "channelName": "channel0",
-              "value": 7.507
+              "value": 2.63
             },
             {
               "channelId": 1,
               "channelName": "channel1",
-              "value": 13.602
+              "value": 6.188
             },
             {
               "channelId": 4,
               "channelName": "channel4",
-              "value": 9.555
+              "value": 5.468
             }
           ]
         }
@@ -72,7 +72,7 @@
             "alarmTypeName": "low threshold",
             "event": 0,
             "eventName": "triggered",
-            "value": 3.992
+            "value": -0.006
           }
         ]
       }
