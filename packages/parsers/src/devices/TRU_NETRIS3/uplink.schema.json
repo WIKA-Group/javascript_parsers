@@ -2987,7 +2987,6 @@
                         },
                         "productSubId": {
                           "enum": [
-                            "LoRaWAN class A",
                             "BLE only",
                             "LoRaWAN class A",
                             "LoRaWAN class B",

@@ -31,6 +31,7 @@ const baseConfig: UserConfig = {
   noExternal: [/(.*)/],
 
   treeshake: true,
+  inlineOnly: false,
 }
 
 // --- Helpers for external orchestration ---
