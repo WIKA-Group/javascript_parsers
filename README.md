@@ -62,6 +62,9 @@ Review the contributor section of the docs for setup. Need help or spotted an is
 Distributed under the [MIT License](./LICENSE).
 
 ## Release Notes
+4.4.2
+  - fix: update schemas
+
 4.4.1
   - build: explicitly allow inlining of dependencies
 
