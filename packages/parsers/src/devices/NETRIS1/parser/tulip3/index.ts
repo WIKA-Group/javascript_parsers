@@ -5,5 +5,3 @@ import { createdTULIP3NETRIS1DeviceProfile } from './profile'
 export function createTULIP3NETRIS1Codec() {
   return defineTULIP3Codec(createdTULIP3NETRIS1DeviceProfile())
 }
-
-export {}
