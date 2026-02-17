@@ -63,6 +63,8 @@ Distributed under the [MIT License](./LICENSE).
 
 ## Release Notes
 4.5.x
+  - feat: add NETRIS1 to library
+  - feat: add NETRIS1 TULIP2 downlink configuration support
   - feat: add NETRIS1 TULIP3 downlink configuration support
 
 4.4.2

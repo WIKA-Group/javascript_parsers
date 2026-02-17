@@ -3,8 +3,8 @@ import * as v from 'valibot'
 import { createUplinkOutputFailureSchema } from '../../../schemas'
 import { createTULIP2DownlinkSchema } from '../../../schemas/tulip2/downlink'
 import { createParserDownlinkInputSchema } from '../../../schemas/utilts'
-import { createDropConfigurationSchema, createGetConfigurationSchema, createTULIP2PEWChannels, PEW_DOWNLINK_FEATURE_FLAGS } from '../parser/tulip2/constants'
-import { createPEWTULIP2UplinkOutputSchema } from './tulip2'
+import { createTULIP2PEWChannels, PEW_DOWNLINK_FEATURE_FLAGS } from '../parser/tulip2/constants'
+import { createPEWTULIP2DropConfigurationSchema, createPEWTULIP2GetConfigurationSchema, createPEWTULIP2UplinkOutputSchema } from './tulip2'
 import { createPEWTULIP3DownlinkInputSchema, createPEWTULIP3UplinkOutputSchema } from './tulip3'
 
 export function createPEWUplinkOutputSchema() {
@@ -24,7 +24,7 @@ function DownlinkInputSchema() {
       schema: createTULIP2DownlinkSchema(
         createTULIP2PEWChannels(),
         PEW_DOWNLINK_FEATURE_FLAGS,
-        [createDropConfigurationSchema(), createGetConfigurationSchema()],
+        [createPEWTULIP2DropConfigurationSchema(), createPEWTULIP2GetConfigurationSchema()],
       ),
     },
     {

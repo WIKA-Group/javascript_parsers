@@ -2,10 +2,10 @@ import type { DownlinkOutput, MultipleDownlinkOutput } from '../../../../../type
 import type { PewTulip2DownlinkInput } from '../constants'
 import type { DownlinkCommand } from './commands'
 import type { DownlinkFrame } from './frames'
+import { formatDisableChannelInput, formatMainConfigurationInput, formatMeasureOffsetInput, formatProcessAlarmInput } from '../../../../../formatters'
 import { formatDownlinkOutput, formatMultipleDownlinkOutput } from '../../../../../utils/encoding/tuilp2/output'
 import { PEW_DEFAULT_BYTE_LIMIT, PEW_DEFAULT_CONFIGURATION_ID, PEW_DOWNLINK_FEATURE_FLAGS } from '../constants'
 import { buildDropOnAirCommand, buildGetAlarmConfigCommand, buildGetMainConfigCommand, buildGetPropertyCommand, buildPEWDisableChannelCommands, buildPEWMainConfigCommand, buildPEWMeasureOffsetCommands, buildPEWProcessAlarmCommands, buildResetBatteryCommand, buildResetFactoryCommand } from './commands'
-import { formatDisableChannelInput, formatMainConfigurationInput, formatMeasureOffsetInput, formatProcessAlarmInput } from './formatters'
 import { buildPEWDownlinkFrame, buildPEWDownlinkFrames } from './frames'
 
 export function PEWTULIP2EncodeHandler(formattedInput: PewTulip2DownlinkInput): DownlinkOutput
@@ -90,7 +90,7 @@ function encodeDownlinkConfiguration(input: DownlinkConfigurationFrame, allowMul
     ...buildPEWMainConfigCommand(formatMainConfigurationInput(input), payloadLimit),
     ...buildPEWDisableChannelCommands(formatDisableChannelInput(input)),
     ...buildPEWProcessAlarmCommands(formatProcessAlarmInput(input)),
-    ...buildPEWMeasureOffsetCommands(formatMeasureOffsetInput(input)),
+    ...buildPEWMeasureOffsetCommands(formatMeasureOffsetInput(input, PEW_DOWNLINK_FEATURE_FLAGS)),
   ]
 
   if (commands.length === 0) {

@@ -1,7 +1,6 @@
 import type { TULIP2Channel } from '../../../../codecs/tulip2'
 import type { TULIP2DownlinkInput, Tulip2EncodeFeatureFlags } from '../../../../schemas/tulip2/downlink'
-import * as v from 'valibot'
-import { createConfigurationIdSchema } from '../../../../schemas/tulip2/downlink'
+import type { PEWTULIP2DownlinkExtraInput } from '../../schema/tulip2'
 
 export const PEWTULIP2_CHANNEL_0 = {
   name: 'pressure' as const,
@@ -51,40 +50,9 @@ export const PEW_DOWNLINK_FEATURE_FLAGS = {
 export type PewTulip2FeatureFlags = typeof PEW_DOWNLINK_FEATURE_FLAGS
 export type PewTulip2Channels = ReturnType<typeof createTULIP2PEWChannels>
 
-// ─── PEW-specific action schemas ────────────────────────────────────────────────
-
-// eslint-disable-next-line ts/explicit-function-return-type
-export function createDropConfigurationSchema() {
-  return v.object({
-    deviceAction: v.literal('dropConfiguration'),
-    configurationId: createConfigurationIdSchema(PEW_DOWNLINK_FEATURE_FLAGS.maxConfigId),
-  })
-}
-
-const getConfigurationChannelSchema = v.optional(
-  v.union([
-    v.literal(true),
-    v.object({
-      alarms: v.optional(v.literal(true)),
-      measureOffset: v.optional(v.literal(true)),
-    }),
-  ]),
-)
-
-// eslint-disable-next-line ts/explicit-function-return-type
-export function createGetConfigurationSchema() {
-  return v.object({
-    deviceAction: v.literal('getConfiguration'),
-    mainConfiguration: v.optional(v.literal(true)),
-    channel0: getConfigurationChannelSchema,
-    channel1: getConfigurationChannelSchema,
-  })
-}
-
 export type PewTulip2DownlinkInput
   = | TULIP2DownlinkInput<PewTulip2Channels[number], typeof PEW_DOWNLINK_FEATURE_FLAGS>
-    | v.InferOutput<ReturnType<typeof createDropConfigurationSchema>>
-    | v.InferOutput<ReturnType<typeof createGetConfigurationSchema>>
+    | PEWTULIP2DownlinkExtraInput
 
 /**
  * PEW TULIP2 downlink command bytes.

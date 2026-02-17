@@ -1486,5 +1486,819 @@
         "messageSubType": 2
       }
     }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase TULIP2 downlink message: Reset to factory configuration",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "resetToFactory"
+      }
+    },
+    "output": {
+      "bytes": [1, 1],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase TULIP2 downlink message: Reset battery indicator",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "resetBatteryIndicator",
+        "configurationId": 25
+      }
+    },
+    "output": {
+      "bytes": [25, 5, 0],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase TULIP2 downlink message: Get main configuration",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "getConfiguration",
+        "mainConfiguration": true
+      }
+    },
+    "output": {
+      "bytes": [1, 4],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase TULIP2 downlink message: Get process alarm configuration",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "getConfiguration",
+        "processAlarmConfiguration": true
+      }
+    },
+    "output": {
+      "bytes": [1, 64, 0],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase TULIP2 downlink message: Get main configuration and process alarm configuration",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "getConfiguration",
+        "mainConfiguration": true,
+        "processAlarmConfiguration": true
+      }
+    },
+    "output": {
+      "bytes": [1, 4, 64, 0],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase TULIP2 downlink message: Set main configuration",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "configuration",
+        "configurationId": 7,
+        "mainConfiguration": {
+          "measuringRateWhenNoAlarm": 180,
+          "publicationFactorWhenNoAlarm": 5,
+          "measuringRateWhenAlarm": 60,
+          "publicationFactorWhenAlarm": 3
+        }
+      }
+    },
+    "output": {
+      "bytes": [
+        7,
+        2,
+        0,
+        0,
+        0,
+        180,
+        0,
+        5,
+        0,
+        0,
+        0,
+        60,
+        0,
+        3,
+        0
+      ],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase TULIP2 downlink message: Set process alarm configuration (high threshold)",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "configuration",
+        "configurationId": 1,
+        "channel0": {
+          "alarms": {
+            "deadBand": 0.1,
+            "highThreshold": 5.692
+          }
+        }
+      }
+    },
+    "output": {
+      "bytes": [1, 32, 0, 0, 100, 64, 32, 0],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase TULIP2 downlink message: Set combined main and process alarm configuration",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "configuration",
+        "configurationId": 9,
+        "mainConfiguration": {
+          "measuringRateWhenNoAlarm": 120,
+          "publicationFactorWhenNoAlarm": 2,
+          "measuringRateWhenAlarm": 60,
+          "publicationFactorWhenAlarm": 2
+        },
+        "channel0": {
+          "alarms": {
+            "deadBand": 0.1,
+            "lowThreshold": 6
+          }
+        }
+      }
+    },
+    "output": {
+      "bytes": [9, 2, 0, 0, 0, 120, 0, 2, 0, 0, 0, 60, 0, 2, 0, 32, 0, 0, 100, 128, 33, 52],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "Badcase TULIP2 downlink message: Get configuration without requested sections",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "getConfiguration"
+      }
+    },
+    "output": {
+      "errors": [
+        "NETRIS1 (JS): No get configuration commands were provided."
+      ]
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "Badcase TULIP2 downlink message: Configuration without commands",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "configuration"
+      }
+    },
+    "output": {
+      "errors": [
+        "NETRIS1 (JS): No configuration commands were provided for the downlink frame."
+      ]
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "Badcase TULIP2 downlink message: Reset battery indicator with invalid configurationId",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "resetBatteryIndicator",
+        "configurationId": 0
+      }
+    },
+    "output": {
+      "errors": [
+        "NETRIS1 (JS): × configurationId needs to be at least 1\n  → at configurationId"
+      ]
+    }
+  },
+  {
+    "type": "downlinkMultiple",
+    "description": "GoodCase TULIP2 multiple downlink message: Reset to factory configuration",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "resetToFactory"
+      }
+    },
+    "output": {
+      "frames": [[1, 1]],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlinkMultiple",
+    "description": "GoodCase TULIP2 multiple downlink message: Set process alarm configuration",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "configuration",
+        "configurationId": 3,
+        "channel0": {
+          "alarms": {
+            "deadBand": 0.1,
+            "highThreshold": 6
+          }
+        }
+      }
+    },
+    "output": {
+      "frames": [[3, 32, 0, 0, 100, 64, 33, 52]],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlinkMultiple",
+    "description": "Badcase TULIP2 multiple downlink message: Get configuration without requested sections",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "getConfiguration"
+      }
+    },
+    "output": {
+      "errors": [
+        "NETRIS1 (JS): No get configuration commands were provided."
+      ]
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "Badcase TULIP2 downlink message: Single encode cannot return multiple frames when byteLimit is too small",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "configuration",
+        "configurationId": 9,
+        "byteLimit": 18,
+        "mainConfiguration": {
+          "measuringRateWhenNoAlarm": 120,
+          "publicationFactorWhenNoAlarm": 2,
+          "measuringRateWhenAlarm": 60,
+          "publicationFactorWhenAlarm": 2
+        },
+        "channel0": {
+          "alarms": {
+            "deadBand": 0.1,
+            "lowThreshold": 6
+          }
+        }
+      }
+    },
+    "output": {
+      "errors": [
+        "NETRIS1 (JS): Encoding produced 2 frames but single encoder can only return one frame. Use encodeMultiple() or increase byteLimit."
+      ]
+    }
+  },
+  {
+    "type": "downlinkMultiple",
+    "description": "GoodCase TULIP2 multiple downlink message: Split combined configuration over multiple frames by byteLimit",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "configuration",
+        "configurationId": 9,
+        "byteLimit": 18,
+        "mainConfiguration": {
+          "measuringRateWhenNoAlarm": 120,
+          "publicationFactorWhenNoAlarm": 2,
+          "measuringRateWhenAlarm": 60,
+          "publicationFactorWhenAlarm": 2
+        },
+        "channel0": {
+          "alarms": {
+            "deadBand": 0.1,
+            "lowThreshold": 6
+          }
+        }
+      }
+    },
+    "output": {
+      "frames": [
+        [9, 2, 0, 0, 0, 120, 0, 2, 0, 0, 0, 60, 0, 2, 0],
+        [10, 32, 0, 0, 100, 128, 33, 52]
+      ],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase TULIP3 downstream message: Read identification registers (serial number)",
+    "input": {
+      "protocol": "TULIP3",
+      "input": {
+        "action": "readRegisters",
+        "input": {
+          "communicationModule": {
+            "identification": {
+              "serialNumberPart1": true,
+              "serialNumberPart2": true
+            }
+          }
+        }
+      }
+    },
+    "output": {
+      "bytes": [1, 1, 1, 171],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase TULIP3 downstream message: Write identification registers (unit, offset, gain)",
+    "input": {
+      "protocol": "TULIP3",
+      "input": {
+        "action": "writeRegisters",
+        "input": {
+          "sensor1": {
+            "channel1": {
+              "identification": {
+                "unit": "°F",
+                "offset": 0.05,
+                "gain": 1.001
+              }
+            }
+          }
+        }
+      }
+    },
+    "output": {
+      "bytes": [1, 2, 128, 17, 136, 61, 76, 204, 205, 63, 128, 32, 197, 15, 33, 2],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase TULIP3 downstream message: Read configuration registers",
+    "input": {
+      "protocol": "TULIP3",
+      "input": {
+        "action": "readRegisters",
+        "input": {
+          "sensor1": {
+            "channel1": {
+              "configuration": {
+                "processAlarmEnabled": true,
+                "processAlarmDeadBand": true,
+                "lowThresholdAlarmValue": true,
+                "highThresholdAlarmValue": true,
+                "fallingSlopeAlarmValue": true,
+                "risingSlopeAlarmValue": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "output": {
+      "bytes": [2, 1, 9, 21],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "Badcase TULIP3 downstream message: Single encode cannot combine read identification and configuration registers",
+    "input": {
+      "protocol": "TULIP3",
+      "input": {
+        "action": "readRegisters",
+        "input": {
+          "communicationModule": {
+            "identification": {
+              "serialNumberPart1": true
+            },
+            "configuration": {
+              "measuringPeriodAlarmOff": true
+            }
+          }
+        }
+      }
+    },
+    "output": {
+      "errors": [
+        "NETRIS1 (JS): Encoding produced 2 frames but single encoder can only return one frame. Use encodeMultiple() or call encode() separately for identification and configuration, or increase byteLimit."
+      ]
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "Badcase TULIP3 downstream message: Single encode cannot combine read identification and configuration registers on sensor level",
+    "input": {
+      "protocol": "TULIP3",
+      "input": {
+        "action": "readRegisters",
+        "input": {
+          "sensor1": {
+            "identification": {
+              "existingChannels": true
+            },
+            "channel1": {
+              "configuration": {
+                "processAlarmEnabled": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "output": {
+      "errors": [
+        "NETRIS1 (JS): Encoding produced 2 frames but single encoder can only return one frame. Use encodeMultiple() or call encode() separately for identification and configuration, or increase byteLimit."
+      ]
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "Badcase TULIP3 downstream message: Single encode cannot combine read identification and configuration registers on channel level",
+    "input": {
+      "protocol": "TULIP3",
+      "input": {
+        "action": "readRegisters",
+        "input": {
+          "sensor1": {
+            "channel1": {
+              "identification": {
+                "unit": true
+              },
+              "configuration": {
+                "processAlarmEnabled": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "output": {
+      "errors": [
+        "NETRIS1 (JS): Encoding produced 2 frames but single encoder can only return one frame. Use encodeMultiple() or call encode() separately for identification and configuration, or increase byteLimit."
+      ]
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "Badcase TULIP3 downstream message: Single encode cannot combine write identification and configuration registers",
+    "input": {
+      "protocol": "TULIP3",
+      "input": {
+        "action": "writeRegisters",
+        "input": {
+          "communicationModule": {
+            "configuration": {
+              "measuringPeriodAlarmOff": 1800
+            }
+          },
+          "sensor1": {
+            "channel1": {
+              "identification": {
+                "unit": "°C"
+              }
+            }
+          }
+        }
+      }
+    },
+    "output": {
+      "errors": [
+        "NETRIS1 (JS): Encoding produced 2 frames but single encoder can only return one frame. Use encodeMultiple() or call encode() separately for identification and configuration, or increase byteLimit."
+      ]
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "Badcase TULIP3 downstream message: Single encode cannot combine write identification and configuration registers on channel level",
+    "input": {
+      "protocol": "TULIP3",
+      "input": {
+        "action": "writeRegisters",
+        "input": {
+          "sensor1": {
+            "channel1": {
+              "identification": {
+                "unit": "°C"
+              },
+              "configuration": {
+                "processAlarmEnabled": {
+                  "lowThreshold": true,
+                  "highThreshold": false,
+                  "fallingSlope": false,
+                  "risingSlope": false,
+                  "lowThresholdWithDelay": false,
+                  "highThresholdWithDelay": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "output": {
+      "errors": [
+        "NETRIS1 (JS): Encoding produced 2 frames but single encoder can only return one frame. Use encodeMultiple() or call encode() separately for identification and configuration, or increase byteLimit."
+      ]
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "Badcase TULIP3 downstream message: Empty single read register selection should error",
+    "input": {
+      "protocol": "TULIP3",
+      "input": {
+        "action": "readRegisters",
+        "input": {}
+      }
+    },
+    "output": {
+      "errors": [
+        "NETRIS1 (JS): No registers selected for encoding"
+      ]
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "Badcase TULIP3 downstream message: Empty single write register selection should error",
+    "input": {
+      "protocol": "TULIP3",
+      "input": {
+        "action": "writeRegisters",
+        "input": {}
+      }
+    },
+    "output": {
+      "errors": [
+        "NETRIS1 (JS): No registers selected for encoding"
+      ]
+    }
+  },
+  {
+    "type": "downlinkMultiple",
+    "description": "Badcase TULIP3 downstream message: Empty multiple read register selection should error",
+    "input": {
+      "protocol": "TULIP3",
+      "input": {
+        "action": "readRegisters",
+        "input": {}
+      }
+    },
+    "output": {
+      "errors": [
+        "NETRIS1 (JS): No registers selected for encoding"
+      ]
+    }
+  },
+  {
+    "type": "downlinkMultiple",
+    "description": "Badcase TULIP3 downstream message: Empty multiple write register selection should error",
+    "input": {
+      "protocol": "TULIP3",
+      "input": {
+        "action": "writeRegisters",
+        "input": {}
+      }
+    },
+    "output": {
+      "errors": [
+        "NETRIS1 (JS): No registers selected for encoding"
+      ]
+    }
+  },
+  {
+    "type": "downlinkMultiple",
+    "description": "GoodCase TULIP3 downstream message: Write configuration registers split over multiple frames",
+    "input": {
+      "protocol": "TULIP3",
+      "input": {
+        "action": "writeRegisters",
+        "metadata": {
+          "byteLimit": 11
+        },
+        "input": {
+          "communicationModule": {
+            "configuration": {
+              "measuringPeriodAlarmOff": 1800,
+              "measuringPeriodAlarmOn": 1800,
+              "transmissionRateAlarmOff": 6,
+              "transmissionRateAlarmOn": 2
+            }
+          }
+        }
+      }
+    },
+    "output": {
+      "frames": [
+        [2, 2, 0, 0, 134, 0, 0, 7, 8, 0, 6],
+        [2, 2, 4, 0, 4, 0, 0, 7, 8],
+        [2, 2, 136, 1, 66, 0, 2]
+      ],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase TULIP3 downstream message: Write configuration single frame with frame counter 1 (no apply)",
+    "input": {
+      "protocol": "TULIP3",
+      "input": {
+        "action": "writeRegisters",
+        "metadata": {
+          "startingFrameCounter": 1,
+          "autoApplyConfig": false
+        },
+        "input": {
+          "communicationModule": {
+            "configuration": {
+              "measuringPeriodAlarmOn": 1800,
+              "transmissionRateAlarmOff": 6
+            }
+          }
+        }
+      }
+    },
+    "output": {
+      "bytes": [2, 2, 4, 0, 134, 0, 0, 7, 8, 0, 6],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase TULIP3 downstream message: Write configuration single frame with frame counter 2 (apply)",
+    "input": {
+      "protocol": "TULIP3",
+      "input": {
+        "action": "writeRegisters",
+        "metadata": {
+          "startingFrameCounter": 2
+        },
+        "input": {
+          "communicationModule": {
+            "configuration": {
+              "transmissionRateAlarmOn": 2
+            }
+          }
+        }
+      }
+    },
+    "output": {
+      "bytes": [2, 2, 136, 1, 66, 0, 2],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase TULIP3 downstream message: Write sensor1 bootTime register in single frame",
+    "input": {
+      "protocol": "TULIP3",
+      "input": {
+        "action": "writeRegisters",
+        "input": {
+          "sensor1": {
+            "configuration": {
+              "bootTime": 1500
+            }
+          }
+        }
+      }
+    },
+    "output": {
+      "bytes": [2, 2, 128, 5, 98, 5, 220],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlinkMultiple",
+    "description": "GoodCase TULIP3 downstream message: Write configuration multiple frames with frame counter 1 then apply on frame counter 2",
+    "input": {
+      "protocol": "TULIP3",
+      "input": {
+        "action": "writeRegisters",
+        "metadata": {
+          "byteLimit": 11,
+          "startingFrameCounter": 1
+        },
+        "input": {
+          "communicationModule": {
+            "configuration": {
+              "measuringPeriodAlarmOn": 1800,
+              "transmissionRateAlarmOff": 6,
+              "transmissionRateAlarmOn": 2
+            }
+          }
+        }
+      }
+    },
+    "output": {
+      "frames": [
+        [2, 2, 4, 0, 134, 0, 0, 7, 8, 0, 6],
+        [2, 2, 136, 1, 66, 0, 2]
+      ],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase TULIP3 downstream message: Force close session",
+    "input": {
+      "protocol": "TULIP3",
+      "input": {
+        "action": "forceCloseSession"
+      }
+    },
+    "output": {
+      "bytes": [3, 1],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase TULIP3 downstream message: Restore default configuration",
+    "input": {
+      "protocol": "TULIP3",
+      "input": {
+        "action": "restoreDefaultConfiguration"
+      }
+    },
+    "output": {
+      "bytes": [3, 2],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase TULIP3 downstream message: New battery inserted",
+    "input": {
+      "protocol": "TULIP3",
+      "input": {
+        "action": "newBatteryInserted"
+      }
+    },
+    "output": {
+      "bytes": [3, 3],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase TULIP3 downstream message: Get alarm status (communication module + process)",
+    "input": {
+      "protocol": "TULIP3",
+      "input": {
+        "action": "getAlarmStatus",
+        "input": {
+          "processAlarmRequested": true,
+          "cmAlarmRequested": true
+        }
+      }
+    },
+    "output": {
+      "bytes": [4, 1, 3],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase TULIP3 downstream message: Get alarm status targeted to sensor 1 channel 1",
+    "input": {
+      "protocol": "TULIP3",
+      "input": {
+        "action": "getAlarmStatus",
+        "input": {
+          "processAlarmRequested": true,
+          "cmAlarmRequested": true,
+          "sensorAlarmRequested": true,
+          "channelAlarmRequested": true,
+          "targets": {
+            "sensor1": {
+              "channel1": true
+            }
+          }
+        }
+      }
+    },
+    "output": {
+      "bytes": [4, 1, 15],
+      "fPort": 1
+    }
   }
 ]

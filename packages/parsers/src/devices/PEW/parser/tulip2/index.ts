@@ -5,7 +5,8 @@ import { PEW_NAME } from '..'
 import { defineTULIP2Codec } from '../../../../codecs/tulip2'
 import { validateTULIP2DownlinkInput } from '../../../../schemas/tulip2/downlink'
 import { DEFAULT_ROUNDING_DECIMALS, intTuple4ToFloat32WithThreshold, roundValue, slopeValueToValue, TULIPValueToValue } from '../../../../utils'
-import { createDropConfigurationSchema, createGetConfigurationSchema, createTULIP2PEWChannels, PEW_DOWNLINK_FEATURE_FLAGS } from './constants'
+import { createPEWTULIP2DropConfigurationSchema, createPEWTULIP2GetConfigurationSchema } from '../../schema/tulip2'
+import { createTULIP2PEWChannels, PEW_DOWNLINK_FEATURE_FLAGS } from './constants'
 import { PEWTULIP2EncodeHandler } from './encode'
 import { ALARM_EVENTS, DEVICE_ALARM_CAUSE_OF_FAILURE, DEVICE_ALARM_TYPES, PRESSURE_TYPES, PRESSURE_UNITS, PROCESS_ALARM_TYPES, TECHNICAL_ALARM_TYPES } from './lookups'
 
@@ -341,7 +342,7 @@ const pewEncoderFactory: EncoderFactory<PewTulip2DownlinkInput> = (options) => {
   const featureFlags = PEW_DOWNLINK_FEATURE_FLAGS
   return (input: PewTulip2DownlinkInput) => {
     const channels = options.getChannels()
-    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, [createDropConfigurationSchema(), createGetConfigurationSchema()])
+    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, [createPEWTULIP2DropConfigurationSchema(), createPEWTULIP2GetConfigurationSchema()])
     return PEWTULIP2EncodeHandler(validated as PewTulip2DownlinkInput)
   }
 }
@@ -350,7 +351,7 @@ const pewMultipleEncodeFactory: MultipleEncoderFactory<PewTulip2DownlinkInput> =
   const featureFlags = PEW_DOWNLINK_FEATURE_FLAGS
   return (input: PewTulip2DownlinkInput) => {
     const channels = options.getChannels()
-    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, [createDropConfigurationSchema(), createGetConfigurationSchema()])
+    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, [createPEWTULIP2DropConfigurationSchema(), createPEWTULIP2GetConfigurationSchema()])
     return PEWTULIP2EncodeHandler(validated as PewTulip2DownlinkInput, true)
   }
 }

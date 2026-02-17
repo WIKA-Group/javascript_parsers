@@ -1,6 +1,7 @@
 import type { DownlinkOutput, MultipleDownlinkOutput } from '../../../../../types'
 import type { DownlinkCommand, DownlinkFrame } from '../../../../../utils/encoding/tuilp2/frames'
 import type { Netris2Tulip2DownlinkInput } from '../constants'
+import { formatDisableChannelInput, formatMainConfigurationInput, formatMeasureOffsetInput, formatProcessAlarmInput, formatStartupTimeInput } from '../../../../../formatters'
 import { DEFAULT_BYTE_LIMIT, DEFAULT_CONFIGURATION_ID } from '../../../../../utils/encoding/tuilp2/constants'
 import { buildDisableChannelCommands } from '../../../../../utils/encoding/tuilp2/disableChannel'
 import { buildDownlinkFrame, buildDownlinkFrames } from '../../../../../utils/encoding/tuilp2/frames'
@@ -12,7 +13,6 @@ import { buildResetBatteryIndicatorCommand } from '../../../../../utils/encoding
 import { buildResetToFactoryCommand } from '../../../../../utils/encoding/tuilp2/resetToFactory'
 import { buildStartupTimeCommands } from '../../../../../utils/encoding/tuilp2/startupTime'
 import { NETRIS2_DOWNLINK_FEATURE_FLAGS } from '../constants'
-import { formatDisableChannelInput, formatMainConfigurationInput, formatMeasureOffsetInput, formatProcessAlarmInput, formatStartupTimeInput } from './formatters'
 
 export function NETRIS2TULIP2EncodeHandler(formattedInput: Netris2Tulip2DownlinkInput): DownlinkOutput
 export function NETRIS2TULIP2EncodeHandler(formattedInput: Netris2Tulip2DownlinkInput, allowMultiple: false): DownlinkOutput
@@ -77,8 +77,8 @@ function encodeDownlinkConfiguration(input: DownlinkConfigurationFrame, allowMul
     ...buildMainConfigurationCommands(formatMainConfigurationInput(input), payloadLimit),
     ...buildDisableChannelCommands(formatDisableChannelInput(input), payloadLimit),
     ...buildProcessAlarmCommands(formatProcessAlarmInput(input), payloadLimit),
-    ...buildMeasureOffsetCommands(formatMeasureOffsetInput(input), payloadLimit),
-    ...buildStartupTimeCommands(formatStartupTimeInput(input), payloadLimit),
+    ...buildMeasureOffsetCommands(formatMeasureOffsetInput(input, NETRIS2_DOWNLINK_FEATURE_FLAGS), payloadLimit),
+    ...buildStartupTimeCommands(formatStartupTimeInput(input, NETRIS2_DOWNLINK_FEATURE_FLAGS), payloadLimit),
   ]
 
   if (commands.length === 0) {

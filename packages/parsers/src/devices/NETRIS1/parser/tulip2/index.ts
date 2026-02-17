@@ -1,4 +1,4 @@
-import type { Handler, TULIP2Channel } from '../../../../codecs/tulip2'
+import type { EncoderFactory, Handler, MultipleEncoderFactory } from '../../../../codecs/tulip2'
 import type {
   NETRIS1TULIP2ChannelFailureAlarmData,
   NETRIS1TULIP2ChannelFailureAlarmUplinkOutput,
@@ -14,27 +14,19 @@ import type {
   NETRIS1TULIP2TechnicalAlarmsData,
   NETRIS1TULIP2TechnicalAlarmsUplinkOutput,
 } from '../../schema/tulip2'
+import type { NETRIS1Tulip2Channels, NETRIS1Tulip2DownlinkInput } from './constants'
 import { NETRIS1_NAME } from '..'
 import { defineTULIP2Codec } from '../../../../codecs/tulip2'
+import { validateTULIP2DownlinkInput } from '../../../../schemas/tulip2/downlink'
 import { DEFAULT_ROUNDING_DECIMALS, intTuple4ToFloat32WithThreshold, roundValue, slopeValueToValue, TULIPValueToValue } from '../../../../utils'
+import { createNETRIS1TULIP2GetConfigurationSchema, createNETRIS1TULIP2ResetBatterySchema } from '../../schema/tulip2'
+import { createTULIP2NETRIS1Channels, NETRIS1_DOWNLINK_FEATURE_FLAGS } from './constants'
+import { NETRIS1TULIP2EncodeHandler } from './encode'
 import { ALARM_EVENTS, DEVICE_ALARM_TYPES, LPP_MEASURANDS_BY_ID, LPP_UNITS_BY_ID, LPWAN_IDS_BY_ID, MEASUREMENT_ALARM_TYPES, PROCESS_ALARM_TYPES, PRODUCT_IDS_BY_ID, SENSOR_IDS_BY_ID, TECHNICAL_ALARM_TYPES } from './lookups'
 
 const ERROR_VALUE = 0xFFFF
 
-// Only one measurement channel for NETRIS1, name is caller-configured 'measurement'
-// eslint-disable-next-line ts/explicit-function-return-type
-function createTULIP2NETRIS1Channels() {
-  return [
-    {
-      channelId: 0,
-      name: 'measurement',
-      start: 0 as number,
-      end: 10 as number,
-    },
-  ] as const satisfies TULIP2Channel[]
-}
-
-type TULIP2NETRIS1Channels = ReturnType<typeof createTULIP2NETRIS1Channels>
+type TULIP2NETRIS1Channels = NETRIS1Tulip2Channels
 
 const handleDataMessage: Handler<TULIP2NETRIS1Channels, NETRIS1TULIP2DataMessageUplinkOutput> = (input, options) => {
   // Data message: 0x01/0x02, length 5 bytes expected for single channel
@@ -303,6 +295,24 @@ const handleChannelFailureAlarmMessage: Handler<TULIP2NETRIS1Channels, NETRIS1TU
   }
 }
 
+const netris1EncoderFactory: EncoderFactory<NETRIS1Tulip2DownlinkInput> = (options) => {
+  const featureFlags = NETRIS1_DOWNLINK_FEATURE_FLAGS
+  return (input: NETRIS1Tulip2DownlinkInput) => {
+    const channels = options.getChannels()
+    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, [createNETRIS1TULIP2GetConfigurationSchema(), createNETRIS1TULIP2ResetBatterySchema()])
+    return NETRIS1TULIP2EncodeHandler(validated as NETRIS1Tulip2DownlinkInput)
+  }
+}
+
+const netris1MultipleEncodeFactory: MultipleEncoderFactory<NETRIS1Tulip2DownlinkInput> = (options) => {
+  const featureFlags = NETRIS1_DOWNLINK_FEATURE_FLAGS
+  return (input: NETRIS1Tulip2DownlinkInput) => {
+    const channels = options.getChannels()
+    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, [createNETRIS1TULIP2GetConfigurationSchema(), createNETRIS1TULIP2ResetBatterySchema()])
+    return NETRIS1TULIP2EncodeHandler(validated as NETRIS1Tulip2DownlinkInput, true)
+  }
+}
+
 // eslint-disable-next-line ts/explicit-function-return-type
 export function createTULIP2NETRIS1Codec() {
   return defineTULIP2Codec({
@@ -319,6 +329,8 @@ export function createTULIP2NETRIS1Codec() {
       0x08: handleKeepAliveMessage,
       0x09: handleChannelFailureAlarmMessage,
     },
+    encoderFactory: netris1EncoderFactory,
+    multipleEncodeFactory: netris1MultipleEncodeFactory,
   })
 }
 

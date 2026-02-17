@@ -48,14 +48,13 @@ The following list shows whether a device is included in the package.
 |A2G           |    ❌    |  ❌  |
 |F98W6         |    ❌    |  ❌  |
 |GD20W         |    ❌    |  ❌  |
-|NETRIS1       |    ❌    |  ❌  |
+|NETRIS1       |    ✔️    |    `NETRIS1Parser` |
 |NETRIS2       |    ✔️    |    `NETRIS2Parser` |
 |FLRU+NETRIS3  |    ❌    |  ❌  |
 |PEU+NETRIS3   |    ❌    |  ❌  |
 |PGU+NETRIS3   |    ❌    |  ❌  |
 |TGU+NETRIS3   |    ❌    |  ❌  |
 |PEW           |    ✔️    |    `PEWParser` |
-|PEW           |    ✔️    |  `PEWParser`  |
 |PGW23         |    ❌    |  ❌  |
 |TRW           |    ❌    |  ❌  |
 <!-- #endregion devices-table -->

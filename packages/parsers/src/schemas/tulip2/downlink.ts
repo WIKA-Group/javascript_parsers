@@ -452,7 +452,6 @@ export function validateTULIP2DownlinkInput<TChannels extends TULIP2Channel, TFe
   const schema = createTULIP2DownlinkSchema(channels, featureFlags, extraActions, spanLimitFactors)
   const res = v.safeParse(schema, input)
   if (!res.success) {
-    console.error('Invalid TULIP2 downlink input:', res.issues)
     throw new Error(v.summarize(res.issues))
   }
   return res.output as TULIP2DownlinkInput<TChannels, TFeatureFlags>

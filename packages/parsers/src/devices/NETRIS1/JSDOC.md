@@ -84,6 +84,75 @@ function adjustRoundingDecimals(decimals: number): void
 ```
 Applies to future decodes only.
 
+### `encodeDownlink(input)`
+```ts
+type DownlinkInput = {
+  protocol: 'TULIP2'
+  input: {
+    deviceAction: 'configuration'
+    // Configuration fields...
+  } | {
+    deviceAction: 'resetToFactory'
+  } | {
+    deviceAction: 'resetBatteryIndicator'
+    configurationId?: number
+  } | {
+    deviceAction: 'getConfiguration'
+    mainConfiguration?: true
+    channel0?: true | { alarms?: true }
+  }
+} | {
+  protocol: 'TULIP3'
+  input: {
+    action: 'readRegisters'
+    // Read register fields...
+  } | {
+    action: 'writeRegisters'
+    // Write register fields...
+  } | {
+    action: 'forceCloseSession'
+  } | {
+    action: 'restoreDefaultConfiguration'
+  } | {
+    action: 'newBatteryInserted'
+  } | {
+    action: 'getAlarmStatus'
+    // Alarm status fields...
+  }
+}
+
+// encode a single downlink frame
+function encodeDownlink(input: DownlinkInput): {
+  bytes: number[] // Encoded downlink payload as array of unsigned bytes (0-255)
+  fPort: number // LoRaWAN FPort to use
+  warnings?: string[] // Non-fatal anomalies
+} | {
+  errors: string[] // Fatal or structural issues only
+}
+```
+
+Validates the input and encodes it into a single downlink frame. It uses the same range configuration as used for decoding.
+If the documentation refers to percentage values, use the real world values. (e.g. 20% deadband with 0-10 range is 2 (0.2 * 10)).
+
+To understand the input structure, refer to the [downlink schema definition](https://github.com/WIKA-Group/javascript_parsers/blob/main/packages/parsers/src/devices/NETRIS1/downlink.schema.json) and [downlink examples](https://github.com/WIKA-Group/javascript_parsers/blob/main/packages/parsers/src/devices/NETRIS1/examples.json).
+
+### `encodeMultipleDownlinks(input)`
+```ts
+// Same input type as encodeDownlink()
+// encodes the given configuration in one or more downlink frames depending on byte size
+function encodeMultipleDownlinks(
+  input: DownlinkInput
+): {
+  frames: number[][] // Encoded downlink payloads as arrays of unsigned bytes (0-255)
+  fPort: number // LoRaWAN FPort to use
+  warnings?: string[] // Non-fatal anomalies
+} | {
+  errors: string[] // Fatal or structural issues only
+}
+```
+
+To understand the input structure, refer to the [downlink schema definition](https://github.com/WIKA-Group/javascript_parsers/blob/main/packages/parsers/src/devices/NETRIS1/downlink.schema.json) and [downlink examples](https://github.com/WIKA-Group/javascript_parsers/blob/main/packages/parsers/src/devices/NETRIS1/examples.json).
+
 ## Verifying Measurement Ranges
 
 **Critical:** The default measurement range (0-10) is a placeholder and likely does not match your device. NETRIS1 devices are highly configurable and support various sensor types (temperature, current, voltage, resistance). Always verify the actual range and unit from one of these sources:
