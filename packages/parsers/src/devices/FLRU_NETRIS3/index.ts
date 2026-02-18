@@ -6,6 +6,8 @@ const {
   adjustRoundingDecimals,
   decodeHexUplink,
   decodeUplink,
+  encodeDownlink,
+  encodeMultipleDownlinks,
 } = useParser()
 
 export {
@@ -13,4 +15,6 @@ export {
   adjustRoundingDecimals,
   decodeHexUplink,
   decodeUplink,
+  encodeDownlink,
+  encodeMultipleDownlinks,
 }

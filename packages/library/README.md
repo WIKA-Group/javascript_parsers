@@ -50,10 +50,11 @@ The following list shows whether a device is included in the package.
 |GD20W         |    ❌    |  ❌  |
 |NETRIS1       |    ✔️    |    `NETRIS1Parser` |
 |NETRIS2       |    ✔️    |    `NETRIS2Parser` |
-|FLRU+NETRIS3  |    ❌    |  ❌  |
-|PEU+NETRIS3   |    ❌    |  ❌  |
-|PGU+NETRIS3   |    ❌    |  ❌  |
-|TGU+NETRIS3   |    ❌    |  ❌  |
+|FLRU+NETRIS3  |    ✔️    |    `FLRUParser` |
+|PEU+NETRIS3   |    ✔️    |    `PEUParser` |
+|PGU+NETRIS3   |    ✔️    |    `PGUParser` |
+|TGU+NETRIS3   |    ✔️    |    `TGUParser` |
+|TRU+NETRIS3   |    ✔️    |    `TRUParser` |
 |PEW           |    ✔️    |    `PEWParser` |
 |PGW23         |    ❌    |  ❌  |
 |TRW           |    ❌    |  ❌  |

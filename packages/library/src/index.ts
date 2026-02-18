@@ -1,3 +1,8 @@
+export { default as FLRUParser } from '../../parsers/src/devices/FLRU_NETRIS3/parser'
 export { default as NETRIS1Parser } from '../../parsers/src/devices/NETRIS1/parser'
 export { default as NETRIS2Parser } from '../../parsers/src/devices/NETRIS2/parser'
+export { default as PEUParser } from '../../parsers/src/devices/PEU_NETRIS3/parser'
 export { default as PEWParser } from '../../parsers/src/devices/PEW/parser'
+export { default as PGUParser } from '../../parsers/src/devices/PGU_NETRIS3/parser'
+export { default as TGUParser } from '../../parsers/src/devices/TGU_NETRIS3/parser'
+export { default as TRUParser } from '../../parsers/src/devices/TRU_NETRIS3/parser'

@@ -1,5 +1,18 @@
 import { describe, expect, it } from 'vitest'
-import { DEFAULT_ROUNDING_DECIMALS, getRoundingDecimals, hexStringToIntArray, numbersToIntArray, numberToIntArray, percentageToValue, roundValue, TULIPValueToValue } from '../src/utils'
+import {
+  DEFAULT_ROUNDING_DECIMALS,
+  getRoundingDecimals,
+  hexStringToIntArray,
+  intTuple4ToFloat32,
+  intTuple4ToFloat32WithThreshold,
+  numbersToIntArray,
+  numberToHexString,
+  numberToIntArray,
+  percentageToValue,
+  roundValue,
+  slopeValueToValue,
+  TULIPValueToValue,
+} from '../src/utils'
 
 describe('numberToIntArray', () => {
   it('should convert a 4-byte number to byte array correctly', () => {
@@ -368,6 +381,49 @@ describe('tULIPValueToValue', () => {
   })
 })
 
+describe('slopeValueToValue', () => {
+  it('converts boundary values for 0..100 range', () => {
+    expect(slopeValueToValue(0, { start: 0, end: 100 })).toBe(0)
+    expect(slopeValueToValue(5000, { start: 0, end: 100 })).toBe(50)
+    expect(slopeValueToValue(10000, { start: 0, end: 100 })).toBe(100)
+  })
+
+  it('returns span-relative value (not offset by range.start)', () => {
+    expect(slopeValueToValue(2500, { start: -10, end: 10 })).toBe(5)
+    expect(slopeValueToValue(2500, { start: 5, end: 15 })).toBe(2.5)
+  })
+
+  it('supports negative spans and decimals', () => {
+    expect(slopeValueToValue(2500, { start: 10, end: 0 })).toBe(-2.5)
+    expect(slopeValueToValue(3333, { start: 0.5, end: 1.5 })).toBeCloseTo(0.3333, 4)
+  })
+
+  it('throws for values outside 0..10_000', () => {
+    expect(() => slopeValueToValue(-1, { start: 0, end: 100 })).toThrow(RangeError)
+    expect(() => slopeValueToValue(-1, { start: 0, end: 100 })).toThrow('Slope value must be between 0 and 10_000, is -1')
+    expect(() => slopeValueToValue(10001, { start: 0, end: 100 })).toThrow(RangeError)
+    expect(() => slopeValueToValue(10001, { start: 0, end: 100 })).toThrow('Slope value must be between 0 and 10_000, is 10001')
+  })
+})
+
+describe('numberToHexString', () => {
+  it('formats single-byte values with 0x prefix and zero-padding', () => {
+    expect(numberToHexString(0)).toBe('0x00')
+    expect(numberToHexString(10)).toBe('0x0a')
+    expect(numberToHexString(255)).toBe('0xff')
+  })
+
+  it('returns full hex for values larger than one byte', () => {
+    expect(numberToHexString(256)).toBe('0x100')
+    expect(numberToHexString(0x1234)).toBe('0x1234')
+  })
+
+  it('preserves JavaScript toString(16) behavior for negatives', () => {
+    expect(numberToHexString(-1)).toBe('0x-1')
+    expect(numberToHexString(-255)).toBe('0x-ff')
+  })
+})
+
 describe('getRoundingDecimals', () => {
   it('returns fallback (currentDecimals) if roundingDecimals is undefined', () => {
     expect(getRoundingDecimals(undefined, 2)).toBe(2)
@@ -544,5 +600,44 @@ describe('roundValue', () => {
   it('should handle very large decimals (should not add extra precision)', () => {
     expect(roundValue(1.23456789, 10)).toBe(1.23456789)
     expect(roundValue(-1.23456789, 10)).toBe(-1.23456789)
+  })
+})
+
+describe('float32 conversion helpers', () => {
+  describe('intTuple4ToFloat32', () => {
+    it('decodes well-known IEEE-754 values', () => {
+      expect(intTuple4ToFloat32([0x3F, 0x80, 0x00, 0x00])).toBeCloseTo(1)
+      expect(intTuple4ToFloat32([0xBF, 0x80, 0x00, 0x00])).toBeCloseTo(-1)
+      expect(intTuple4ToFloat32([0x00, 0x00, 0x00, 0x00])).toBe(0)
+    })
+
+    it('masks input values to 8-bit bytes', () => {
+      expect(intTuple4ToFloat32([0x13F, 0x180, 0x100, 0x100] as unknown as [number, number, number, number])).toBeCloseTo(1)
+    })
+
+    it('handles special IEEE-754 values', () => {
+      expect(intTuple4ToFloat32([0x7F, 0x80, 0x00, 0x00])).toBe(Infinity)
+      expect(intTuple4ToFloat32([0xFF, 0x80, 0x00, 0x00])).toBe(-Infinity)
+      expect(intTuple4ToFloat32([0x7F, 0xC0, 0x00, 0x00])).toBeNaN()
+    })
+  })
+
+  describe('intTuple4ToFloat32WithThreshold', () => {
+    it('cleans common precision artifacts with default threshold', () => {
+      const bytes: [number, number, number, number] = [0x3E, 0x99, 0x99, 0x9A] // 0.3f
+      const raw = intTuple4ToFloat32(bytes)
+      expect(raw).not.toBe(0.3)
+      expect(intTuple4ToFloat32WithThreshold(bytes)).toBe(0.3)
+    })
+
+    it('clamps negative threshold to 0', () => {
+      const bytes: [number, number, number, number] = [0x3E, 0x99, 0x99, 0x9A]
+      expect(intTuple4ToFloat32WithThreshold(bytes, -7)).toBe(intTuple4ToFloat32WithThreshold(bytes, 0))
+    })
+
+    it('normalizes non-integer threshold via floor', () => {
+      const bytes: [number, number, number, number] = [0x42, 0xF6, 0xE9, 0x79] // 123.456f
+      expect(intTuple4ToFloat32WithThreshold(bytes, 3.9)).toBe(intTuple4ToFloat32WithThreshold(bytes, 3))
+    })
   })
 })
