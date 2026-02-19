@@ -1,6 +1,6 @@
 {
   "name": "wika-pew-1000-driver",
-  "version": "4.4.2",
+  "version": "4.5.0",
   "main": "index.js",
   "description": "WIKA PEW-1000 LoRaWAN decoder",
   "codecId": "0001",
