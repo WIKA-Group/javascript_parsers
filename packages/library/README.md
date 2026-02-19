@@ -45,9 +45,9 @@ const downlink = pewParser.encodeDownlink({
 The following list shows whether a device is included in the package.
 | Device       | Included | Factory function |
 |--------------|:--------:| :----------------:|
-|A2G           |    ❌    |  ❌  |
-|F98W6         |    ❌    |  ❌  |
-|GD20W         |    ❌    |  ❌  |
+|A2G           |    ✔️    |    `A2GParser` |
+|F98W6         |    ✔️    |    `F98W6Parser` |
+|GD20W         |    ✔️    |    `GD20WParser` |
 |NETRIS1       |    ✔️    |    `NETRIS1Parser` |
 |NETRIS2       |    ✔️    |    `NETRIS2Parser` |
 |FLRU+NETRIS3  |    ✔️    |    `FLRUParser` |
@@ -56,8 +56,8 @@ The following list shows whether a device is included in the package.
 |TGU+NETRIS3   |    ✔️    |    `TGUParser` |
 |TRU+NETRIS3   |    ✔️    |    `TRUParser` |
 |PEW           |    ✔️    |    `PEWParser` |
-|PGW23         |    ❌    |  ❌  |
-|TRW           |    ❌    |  ❌  |
+|PGW23         |    ✔️    |    `PGW23Parser` |
+|TRW           |    ✔️    |    `TRWParser` |
 <!-- #endregion devices-table -->
 
 ## API Reference

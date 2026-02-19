@@ -63,6 +63,7 @@ Distributed under the [MIT License](./LICENSE).
 
 ## Release Notes
 4.5.x
+  - feat: include all devices in npm module
   - feat: add NETRIS3 family TULIP2 downlink configuration support
   - feat: add NETRIS3 family to library
   - feat: add NETRIS3 family TULIP3 downlink configuration support
