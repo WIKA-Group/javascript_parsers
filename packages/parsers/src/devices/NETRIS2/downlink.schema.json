@@ -14,22 +14,6 @@
     {
       "type": "object",
       "properties": {
-        "configurationId": {
-          "type": "integer",
-          "minimum": 1,
-          "maximum": 31
-        },
-        "deviceAction": {
-          "const": "resetBatteryIndicator"
-        }
-      },
-      "required": [
-        "deviceAction"
-      ]
-    },
-    {
-      "type": "object",
-      "properties": {
         "deviceAction": {
           "const": "configuration"
         },
@@ -266,6 +250,22 @@
               "required": []
             }
           ]
+        }
+      },
+      "required": [
+        "deviceAction"
+      ]
+    },
+    {
+      "type": "object",
+      "properties": {
+        "configurationId": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 31
+        },
+        "deviceAction": {
+          "const": "resetBatteryIndicator"
         }
       },
       "required": [

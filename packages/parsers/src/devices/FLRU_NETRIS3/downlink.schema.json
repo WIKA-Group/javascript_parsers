@@ -1,0 +1,175 @@
+{
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "protocol": {
+          "const": "TULIP2"
+        },
+        "input": {
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {
+                "deviceAction": {
+                  "const": "resetToFactory"
+                }
+              },
+              "required": [
+                "deviceAction"
+              ]
+            },
+            {
+              "type": "object",
+              "properties": {
+                "deviceAction": {
+                  "const": "configuration"
+                },
+                "byteLimit": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "configurationId": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 31
+                },
+                "mainConfiguration": {
+                  "type": "object",
+                  "properties": {
+                    "publicationFactorWhenAlarm": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 2880
+                    },
+                    "publicationFactorWhenNoAlarm": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 2880
+                    },
+                    "measuringRateWhenNoAlarm": {
+                      "type": "integer",
+                      "minimum": 60,
+                      "maximum": 86400
+                    },
+                    "measuringRateWhenAlarm": {
+                      "type": "integer",
+                      "minimum": 60,
+                      "maximum": 86400
+                    }
+                  },
+                  "required": [
+                    "publicationFactorWhenAlarm",
+                    "publicationFactorWhenNoAlarm",
+                    "measuringRateWhenNoAlarm",
+                    "measuringRateWhenAlarm"
+                  ]
+                },
+                "channel0": {
+                  "anyOf": [
+                    {
+                      "const": false
+                    },
+                    {
+                      "const": true
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alarms": {
+                          "type": "object",
+                          "properties": {
+                            "deadBand": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 1000
+                            },
+                            "lowThreshold": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 1000
+                            },
+                            "highThreshold": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 1000
+                            },
+                            "lowThresholdWithDelay": {
+                              "type": "object",
+                              "properties": {
+                                "value": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1000
+                                },
+                                "delay": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 65535
+                                }
+                              },
+                              "required": [
+                                "value",
+                                "delay"
+                              ]
+                            },
+                            "highThresholdWithDelay": {
+                              "type": "object",
+                              "properties": {
+                                "value": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1000
+                                },
+                                "delay": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 65535
+                                }
+                              },
+                              "required": [
+                                "value",
+                                "delay"
+                              ]
+                            },
+                            "risingSlope": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 1000
+                            },
+                            "fallingSlope": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 1000
+                            }
+                          },
+                          "required": [
+                            "deadBand"
+                          ]
+                        },
+                        "measureOffset": {
+                          "type": "number",
+                          "minimum": -1000,
+                          "maximum": 1000
+                        }
+                      },
+                      "required": []
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "deviceAction"
+              ]
+            }
+          ]
+        }
+      },
+      "required": [
+        "protocol",
+        "input"
+      ]
+    }
+  ],
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

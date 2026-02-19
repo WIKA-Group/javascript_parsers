@@ -32,7 +32,7 @@
                 "configurationId": {
                   "type": "integer",
                   "minimum": 1,
-                  "maximum": 127
+                  "maximum": 31
                 },
                 "mainConfiguration": {
                   "type": "object",
@@ -46,9 +46,6 @@
                       "type": "integer",
                       "minimum": 1,
                       "maximum": 2880
-                    },
-                    "isBLEEnabled": {
-                      "type": "boolean"
                     },
                     "measuringRateWhenNoAlarm": {
                       "type": "integer",
@@ -64,7 +61,6 @@
                   "required": [
                     "publicationFactorWhenAlarm",
                     "publicationFactorWhenNoAlarm",
-                    "isBLEEnabled",
                     "measuringRateWhenNoAlarm",
                     "measuringRateWhenAlarm"
                   ]
@@ -178,25 +174,25 @@
                             "deadBand": {
                               "type": "number",
                               "minimum": 0,
-                              "maximum": 155
+                              "maximum": 100
                             },
                             "lowThreshold": {
                               "type": "number",
-                              "minimum": -45,
-                              "maximum": 110
+                              "minimum": -40,
+                              "maximum": 60
                             },
                             "highThreshold": {
                               "type": "number",
-                              "minimum": -45,
-                              "maximum": 110
+                              "minimum": -40,
+                              "maximum": 60
                             },
                             "lowThresholdWithDelay": {
                               "type": "object",
                               "properties": {
                                 "value": {
                                   "type": "number",
-                                  "minimum": -45,
-                                  "maximum": 110
+                                  "minimum": -40,
+                                  "maximum": 60
                                 },
                                 "delay": {
                                   "type": "integer",
@@ -214,8 +210,8 @@
                               "properties": {
                                 "value": {
                                   "type": "number",
-                                  "minimum": -45,
-                                  "maximum": 110
+                                  "minimum": -40,
+                                  "maximum": 60
                                 },
                                 "delay": {
                                   "type": "integer",
@@ -231,12 +227,12 @@
                             "risingSlope": {
                               "type": "number",
                               "minimum": 0,
-                              "maximum": 155
+                              "maximum": 100
                             },
                             "fallingSlope": {
                               "type": "number",
                               "minimum": 0,
-                              "maximum": 155
+                              "maximum": 100
                             }
                           },
                           "required": [
@@ -245,92 +241,8 @@
                         },
                         "measureOffset": {
                           "type": "number",
-                          "minimum": -155,
-                          "maximum": 155
-                        }
-                      },
-                      "required": []
-                    }
-                  ]
-                }
-              },
-              "required": [
-                "deviceAction"
-              ]
-            },
-            {
-              "type": "object",
-              "properties": {
-                "configurationId": {
-                  "type": "integer",
-                  "minimum": 1,
-                  "maximum": 127
-                },
-                "deviceAction": {
-                  "const": "resetBatteryIndicator"
-                }
-              },
-              "required": [
-                "deviceAction"
-              ]
-            },
-            {
-              "type": "object",
-              "properties": {
-                "deviceAction": {
-                  "const": "dropConfiguration"
-                },
-                "configurationId": {
-                  "type": "integer",
-                  "minimum": 1,
-                  "maximum": 127
-                }
-              },
-              "required": [
-                "deviceAction"
-              ]
-            },
-            {
-              "type": "object",
-              "properties": {
-                "deviceAction": {
-                  "const": "getConfiguration"
-                },
-                "mainConfiguration": {
-                  "const": true
-                },
-                "channel0": {
-                  "anyOf": [
-                    {
-                      "const": true
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "alarms": {
-                          "const": true
-                        },
-                        "measureOffset": {
-                          "const": true
-                        }
-                      },
-                      "required": []
-                    }
-                  ]
-                },
-                "channel1": {
-                  "anyOf": [
-                    {
-                      "const": true
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "alarms": {
-                          "const": true
-                        },
-                        "measureOffset": {
-                          "const": true
+                          "minimum": -100,
+                          "maximum": 100
                         }
                       },
                       "required": []
@@ -447,9 +359,6 @@
                                   "type": "boolean"
                                 },
                                 "underVoltageThreshold": {
-                                  "type": "boolean"
-                                },
-                                "enableBleAdvertising": {
                                   "type": "boolean"
                                 }
                               },
@@ -747,9 +656,6 @@
                             "transmissionRateAlarmOn": {
                               "type": "integer",
                               "minimum": 0
-                            },
-                            "enableBleAdvertising": {
-                              "type": "boolean"
                             }
                           },
                           "required": []
@@ -799,7 +705,9 @@
                                   "properties": {
                                     "unit": {
                                       "enum": [
-                                        "°C"
+                                        "°C",
+                                        "°F",
+                                        "K"
                                       ]
                                     },
                                     "offset": {
@@ -957,32 +865,32 @@
                                     "processAlarmDeadBand": {
                                       "type": "number",
                                       "minimum": 0,
-                                      "maximum": 155
+                                      "maximum": 100
                                     },
                                     "lowThresholdAlarmValue": {
                                       "type": "number",
-                                      "minimum": -45,
-                                      "maximum": 110
+                                      "minimum": -40,
+                                      "maximum": 60
                                     },
                                     "highThresholdAlarmValue": {
                                       "type": "number",
-                                      "minimum": -45,
-                                      "maximum": 110
+                                      "minimum": -40,
+                                      "maximum": 60
                                     },
                                     "fallingSlopeAlarmValue": {
                                       "type": "number",
                                       "minimum": 0,
-                                      "maximum": 155
+                                      "maximum": 100
                                     },
                                     "risingSlopeAlarmValue": {
                                       "type": "number",
                                       "minimum": 0,
-                                      "maximum": 155
+                                      "maximum": 100
                                     },
                                     "lowThresholdWithDelayAlarmValue": {
                                       "type": "number",
-                                      "minimum": -45,
-                                      "maximum": 110
+                                      "minimum": -40,
+                                      "maximum": 60
                                     },
                                     "lowThresholdWithDelayAlarmDelay": {
                                       "type": "integer",
@@ -990,8 +898,8 @@
                                     },
                                     "highThresholdWithDelayAlarmValue": {
                                       "type": "number",
-                                      "minimum": -45,
-                                      "maximum": 110
+                                      "minimum": -40,
+                                      "maximum": 60
                                     },
                                     "highThresholdWithDelayAlarmDelay": {
                                       "type": "integer",
