@@ -1,4 +1,5 @@
 /* eslint-disable ts/explicit-function-return-type */
+import type { createDownlinkResetBatteryIndicatorSchema } from '../../../schemas/tulip2/downlink'
 import * as v from 'valibot'
 import { createSemVerSchema } from '../../../schemas'
 import { createConfigurationIdSchema } from '../../../schemas/tulip2/downlink'
@@ -330,3 +331,4 @@ export function createPEWTULIP2GetConfigurationSchema() {
 export type PEWTULIP2DownlinkExtraInput
   = | v.InferOutput<ReturnType<typeof createPEWTULIP2DropConfigurationSchema>>
     | v.InferOutput<ReturnType<typeof createPEWTULIP2GetConfigurationSchema>>
+    | v.InferOutput<ReturnType<typeof createDownlinkResetBatteryIndicatorSchema>>

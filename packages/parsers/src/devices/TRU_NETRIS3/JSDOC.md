@@ -82,6 +82,80 @@ function adjustRoundingDecimals(decimals: number): void
 ```
 Applies to future decodes only.
 
+### `encodeDownlink(input)`
+```ts
+type DownlinkInput = {
+  protocol: 'TULIP2'
+  input: {
+    deviceAction: 'configuration'
+    configurationId?: number
+    byteLimit?: number
+    mainConfiguration?: {
+      measuringRateWhenNoAlarm: number
+      publicationFactorWhenNoAlarm: number
+      measuringRateWhenAlarm: number
+      publicationFactorWhenAlarm: number
+    }
+    channel0?: false | true | {
+      alarms?: {
+        deadBand: number
+        lowThreshold?: number
+        highThreshold?: number
+        fallingSlope?: number
+        risingSlope?: number
+        lowThresholdWithDelay?: { value: number, delay: number }
+        highThresholdWithDelay?: { value: number, delay: number }
+      }
+      measureOffset?: number
+    }
+  } | {
+    deviceAction: 'resetToFactory'
+  }
+} | {
+  protocol: 'TULIP3'
+  input: {
+    action: 'readRegisters'
+  } | {
+    action: 'writeRegisters'
+  } | {
+    action: 'forceCloseSession'
+  } | {
+    action: 'restoreDefaultConfiguration'
+  } | {
+    action: 'newBatteryInserted'
+  } | {
+    action: 'getAlarmStatus'
+  }
+}
+
+function encodeDownlink(input: DownlinkInput): {
+  bytes: number[]
+  fPort: number
+  warnings?: string[]
+} | {
+  errors: string[]
+}
+```
+
+Validates the input and encodes it into a single downlink frame. It uses the same range configuration as used for decoding.
+If the documentation refers to percentage values, use the real-world values.
+
+To understand the input structure, refer to the [downlink examples](https://github.com/WIKA-Group/javascript_parsers/blob/main/packages/parsers/src/devices/TRU_NETRIS3/examples.json).
+
+### `encodeMultipleDownlinks(input)`
+```ts
+// Same input type as encodeDownlink()
+function encodeMultipleDownlinks(input: DownlinkInput): {
+  frames: number[][]
+  fPort: number
+  warnings?: string[]
+} | {
+  errors: string[]
+}
+```
+
+To understand the input structure, refer to the [downlink examples](https://github.com/WIKA-Group/javascript_parsers/blob/main/packages/parsers/src/devices/TRU_NETRIS3/examples.json).
+
 ## Verifying Ranges
 
 The temperature channel on the TRU is **configurable**. You must verify the actual measurement range from your device specifications or identification frames. The parser default shown in the table above may not match your device configuration.

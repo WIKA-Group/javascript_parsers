@@ -1,4 +1,4 @@
-import type { Handler } from '../../../../codecs/tulip2'
+import type { EncoderFactory, Handler, MultipleEncoderFactory } from '../../../../codecs/tulip2'
 import type {
   TGUTULIP2DataMessageData,
   TGUTULIP2DataMessageUplinkOutput,
@@ -15,10 +15,14 @@ import type {
   TGUTULIP2TechnicalAlarmsData,
   TGUTULIP2TechnicalAlarmsUplinkOutput,
 } from '../../schema/tulip2'
+import type { TGUTulip2DownlinkInput } from './constants'
 import { TGU_NETRIS3_NAME } from '..'
 import { defineTULIP2Codec } from '../../../../codecs/tulip2'
+import { validateTULIP2DownlinkInput } from '../../../../schemas/tulip2/downlink'
 import { DEFAULT_ROUNDING_DECIMALS, intTuple4ToFloat32WithThreshold, roundValue, slopeValueToValue, TULIPValueToValue } from '../../../../utils'
 import { createTULIP2TGUChannels, TGUTULIP2_DEVICE_TEMPERATURE_CHANNEL, TGUTULIP2_TEMPERATURE_CHANNEL } from './channels'
+import { TGU_DOWNLINK_FEATURE_FLAGS, TGU_DOWNLINK_SPAN_LIMIT_FACTORS } from './constants'
+import { TGUTULIP2EncodeHandler } from './encode'
 import {
   ALARM_EVENTS,
   DEVICE_ALARM_STATUS_TYPES,
@@ -489,6 +493,24 @@ const handleExtendedDeviceIdentificationMessage: Handler<TULIP2TGUChannels, TGUT
   }
 }
 
+const tguEncoderFactory: EncoderFactory<TGUTulip2DownlinkInput> = (options) => {
+  const featureFlags = TGU_DOWNLINK_FEATURE_FLAGS
+  return (input: TGUTulip2DownlinkInput) => {
+    const channels = options.getChannels()
+    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, undefined, TGU_DOWNLINK_SPAN_LIMIT_FACTORS)
+    return TGUTULIP2EncodeHandler(validated as TGUTulip2DownlinkInput)
+  }
+}
+
+const tguMultipleEncodeFactory: MultipleEncoderFactory<TGUTulip2DownlinkInput> = (options) => {
+  const featureFlags = TGU_DOWNLINK_FEATURE_FLAGS
+  return (input: TGUTulip2DownlinkInput) => {
+    const channels = options.getChannels()
+    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, undefined, TGU_DOWNLINK_SPAN_LIMIT_FACTORS)
+    return TGUTULIP2EncodeHandler(validated as TGUTulip2DownlinkInput, true)
+  }
+}
+
 // eslint-disable-next-line ts/explicit-function-return-type
 export function createTGUTULIP2Codec() {
   return defineTULIP2Codec({
@@ -505,5 +527,7 @@ export function createTGUTULIP2Codec() {
       0x08: handleKeepAliveMessage,
       0x09: handleExtendedDeviceIdentificationMessage,
     },
+    encoderFactory: tguEncoderFactory,
+    multipleEncodeFactory: tguMultipleEncodeFactory,
   })
 }

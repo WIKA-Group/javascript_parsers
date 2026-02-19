@@ -58,4 +58,9 @@ export const NETRIS2_DOWNLINK_SPAN_LIMIT_FACTORS = {
 
 export type Netris2Tulip2FeatureFlags = typeof NETRIS2_DOWNLINK_FEATURE_FLAGS
 export type Netris2Tulip2Channels = ReturnType<typeof createTULIP2NETRIS2Channels>
-export type Netris2Tulip2DownlinkInput = TULIP2DownlinkInput<Netris2Tulip2Channels[number], typeof NETRIS2_DOWNLINK_FEATURE_FLAGS>
+export type Netris2Tulip2DownlinkInput
+  = | TULIP2DownlinkInput<Netris2Tulip2Channels[number], typeof NETRIS2_DOWNLINK_FEATURE_FLAGS>
+    | {
+      deviceAction: 'resetBatteryIndicator'
+      configurationId?: number
+    }

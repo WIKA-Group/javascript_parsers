@@ -1,4 +1,4 @@
-import type { Handler } from '../../../../codecs/tulip2'
+import type { EncoderFactory, Handler, MultipleEncoderFactory } from '../../../../codecs/tulip2'
 import type {
   TRUTULIP2DataMessageUplinkOutput,
   TRUTULIP2DeviceAlarmsData,
@@ -14,10 +14,14 @@ import type {
   TRUTULIP2TechnicalAlarmsData,
   TRUTULIP2TechnicalAlarmsUplinkOutput,
 } from '../../schema/tulip2'
+import type { TRUTulip2DownlinkInput } from './constants'
 import { TRU_NETRIS3_NAME } from '..'
 import { defineTULIP2Codec } from '../../../../codecs/tulip2'
+import { validateTULIP2DownlinkInput } from '../../../../schemas/tulip2/downlink'
 import { DEFAULT_ROUNDING_DECIMALS, intTuple4ToFloat32WithThreshold, roundValue, slopeValueToValue, TULIPValueToValue } from '../../../../utils'
 import { createTULIP2TRUChannels } from './channels'
+import { TRU_DOWNLINK_FEATURE_FLAGS, TRU_DOWNLINK_SPAN_LIMIT_FACTORS } from './constants'
+import { TRUTULIP2EncodeHandler } from './encode'
 import {
   ALARM_EVENTS,
   DEVICE_ALARM_STATUS_TYPES,
@@ -408,6 +412,24 @@ const handleExtendedDeviceIdentificationMessage: Handler<TULIP2TRUChannels, TRUT
   }
 }
 
+const truEncoderFactory: EncoderFactory<TRUTulip2DownlinkInput> = (options) => {
+  const featureFlags = TRU_DOWNLINK_FEATURE_FLAGS
+  return (input: TRUTulip2DownlinkInput) => {
+    const channels = options.getChannels()
+    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, undefined, TRU_DOWNLINK_SPAN_LIMIT_FACTORS)
+    return TRUTULIP2EncodeHandler(validated as TRUTulip2DownlinkInput)
+  }
+}
+
+const truMultipleEncodeFactory: MultipleEncoderFactory<TRUTulip2DownlinkInput> = (options) => {
+  const featureFlags = TRU_DOWNLINK_FEATURE_FLAGS
+  return (input: TRUTulip2DownlinkInput) => {
+    const channels = options.getChannels()
+    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, undefined, TRU_DOWNLINK_SPAN_LIMIT_FACTORS)
+    return TRUTULIP2EncodeHandler(validated as TRUTulip2DownlinkInput, true)
+  }
+}
+
 // eslint-disable-next-line ts/explicit-function-return-type
 export function createTRUTULIP2Codec() {
   return defineTULIP2Codec({
@@ -424,5 +446,7 @@ export function createTRUTULIP2Codec() {
       0x08: handleKeepAliveMessage,
       0x09: handleExtendedDeviceIdentificationMessage,
     },
+    encoderFactory: truEncoderFactory,
+    multipleEncodeFactory: truMultipleEncodeFactory,
   })
 }

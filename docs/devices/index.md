@@ -28,16 +28,16 @@ Note: region availability may change in the future, additional regions such as S
 | [A2G](./a2g.md) | ✔️ | ⚪ | ❌ | ⚪ |
 | [F98W6](./f98w6.md) | ✔️ | ❌ | ❌ | ❌ |
 | [GD20W](./gd20w.md) | ✔️ | ❌ | ❌ | ❌ |
-| [NETRIS1](./netris1.md) | ✔️ | ❌ | ✔️ | ❌ |
+| [NETRIS1](./netris1.md) | ✔️ | ✔️ | ✔️ | ✔️ |
 | [NETRIS2](./netris2.md) | ✔️ | ✔️ | ❌ | ❌ |
-| [PEW](./pew.md) | ✔️ | ❌ | ✔️ | ❌ |
+| [PEW](./pew.md) | ✔️ | ✔️ | ✔️ | ✔️ |
 | [PGW23](./pgw23.md) | ✔️ | ❌ | ❌ | ❌ |
 | [TRW](./trw.md) | ✔️ | ❌ | ✔️ | ❌ |
-| [FLRU+NETRIS3](./netris3/flru.md) | ✔️ | ❌ | ✔️ | ❌ |
-| [PEU+NETRIS3](./netris3/peu.md) | ✔️ | ❌ | ✔️ | ❌ |
-| [PGU+NETRIS3](./netris3/pgu.md) | ✔️ | ❌ | ✔️ | ❌ |
-| [TGU+NETRIS3](./netris3/tgu.md) | ✔️ | ❌ | ✔️ | ❌ |
-| [TRU+NETRIS3](./netris3/tru.md) | ✔️ | ❌ | ✔️ | ❌ |
+| [FLRU+NETRIS3](./netris3/flru.md) | ✔️ | ✔️ | ✔️ | ✔️ |
+| [PEU+NETRIS3](./netris3/peu.md) | ✔️ | ✔️ | ✔️ | ✔️ |
+| [PGU+NETRIS3](./netris3/pgu.md) | ✔️ | ✔️ | ✔️ | ✔️ |
+| [TGU+NETRIS3](./netris3/tgu.md) | ✔️ | ✔️ | ✔️ | ✔️ |
+| [TRU+NETRIS3](./netris3/tru.md) | ✔️ | ✔️ | ✔️ | ✔️ |
 
 **Legend:**
 - <span title="Implemented">✔️</span> implemented in the parser (and supported by device)

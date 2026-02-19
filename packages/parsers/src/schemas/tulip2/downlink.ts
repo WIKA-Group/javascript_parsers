@@ -11,9 +11,29 @@ export interface Tulip2EncodeFeatureFlags {
 }
 
 export interface Tulip2DownlinkSpanLimitFactors {
+  /**
+   * The maximum span factor for the dead band, meaning that the allowed dead band will be at most span * this factor.
+   * Default is 1 (100%).
+   * Only set if the dead band range is restricted to a smaller range than the full span, e.g. 10% of the span would be a factor of 0.1.
+   */
   deadBandMaxSpanFactor?: number
+  /**
+   * The maximum span factor for the slope, meaning that the allowed slope will be at most span * this factor.
+   * Default is 1 (100%).
+   * Only set if the slope range is restricted to a smaller range than the full span, e.g. 10% of the span would be a factor of 0.1.
+   */
   slopeMaxSpanFactor?: number
+  /**
+   * The minimum span factor for the measure offset, meaning that the allowed measure offset will be at least +/- span * this factor.
+   * Default is 1 (100%).
+   * Only set if the offset range is restricted to a smaller range than the full span, e.g. +/- 5% of the span would be a factor of 0.05.
+   */
   measureOffsetMinSpanFactor?: number
+  /**
+   * The maximum span factor for the measure offset, meaning that the allowed measure offset will be at most +/- span * this factor.
+   * Default is 1 (100%).
+   * Only set if the offset range is restricted to a smaller range than the full span, e.g. +/- 5% of the span would be a factor of 0.05.
+   */
   measureOffsetMaxSpanFactor?: number
 }
 
@@ -381,13 +401,13 @@ function createTulip2DownlinkConfigurationFrameSchema<TChannel extends TULIP2Cha
   })
 }
 
-function createDownlinkResetToFactorySchema() {
+export function createDownlinkResetToFactorySchema() {
   return v.object({
     deviceAction: v.literal('resetToFactory'),
   })
 }
 
-function createDownlinkResetBatteryIndicatorSchema(featureFlags: Tulip2EncodeFeatureFlags) {
+export function createDownlinkResetBatteryIndicatorSchema(featureFlags: Tulip2EncodeFeatureFlags) {
   return v.object({
     configurationId: createConfigurationIdSchema(featureFlags.maxConfigId),
     deviceAction: v.literal('resetBatteryIndicator'),
@@ -402,14 +422,12 @@ export function createTULIP2DownlinkSchema<TChannels extends TULIP2Channel, TFea
 ) {
   return v.variant('deviceAction', [
     createDownlinkResetToFactorySchema(),
-    createDownlinkResetBatteryIndicatorSchema(featureFlags),
     createTulip2DownlinkConfigurationFrameSchema(channels, featureFlags, spanLimitFactors),
     ...(extraActions ?? []),
   ])
 }
 
 type DownlinkResetToFactory = v.InferOutput<ReturnType<typeof createDownlinkResetToFactorySchema>>
-type DownlinkResetBatteryIndicator = v.InferOutput<ReturnType<typeof createDownlinkResetBatteryIndicatorSchema>>
 
 // Manually type the configuration frame output since ReturnType with generics doesn't work with Valibot's constraints
 type ChannelConfigOutput<TFeatureFlags extends Tulip2EncodeFeatureFlags>
@@ -430,7 +448,6 @@ type DownlinkConfigurationFrame<TChannels extends TULIP2Channel, TFeatureFlags e
 
 export type TULIP2DownlinkInput<TChannels extends TULIP2Channel, TFeatureFlags extends Tulip2EncodeFeatureFlags>
   = DownlinkResetToFactory
-    | DownlinkResetBatteryIndicator
     | DownlinkConfigurationFrame<TChannels, TFeatureFlags>
 
 /**

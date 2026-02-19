@@ -1,4 +1,4 @@
-import type { Handler } from '../../../../codecs/tulip2'
+import type { EncoderFactory, Handler, MultipleEncoderFactory } from '../../../../codecs/tulip2'
 import type {
   FLRUTULIP2DataMessageUplinkOutput,
   FLRUTULIP2DeviceAlarmsData,
@@ -14,10 +14,14 @@ import type {
   FLRUTULIP2TechnicalAlarmsData,
   FLRUTULIP2TechnicalAlarmsUplinkOutput,
 } from '../../schema/tulip2'
+import type { FLRUTulip2DownlinkInput } from './constants'
 import { FLRU_NETRIS3_NAME } from '..'
 import { defineTULIP2Codec } from '../../../../codecs/tulip2'
+import { validateTULIP2DownlinkInput } from '../../../../schemas/tulip2/downlink'
 import { DEFAULT_ROUNDING_DECIMALS, intTuple4ToFloat32WithThreshold, roundValue, slopeValueToValue, TULIPValueToValue } from '../../../../utils'
 import { createTULIP2FLRUChannels } from './channels'
+import { FLRU_DOWNLINK_FEATURE_FLAGS, FLRU_DOWNLINK_SPAN_LIMIT_FACTORS } from './constants'
+import { FLRUTULIP2EncodeHandler } from './encode'
 import {
   ALARM_EVENTS,
   DEVICE_ALARM_STATUS_TYPES,
@@ -407,6 +411,24 @@ const handleExtendedDeviceIdentificationMessage: Handler<TULIP2FLRUChannels, FLR
   }
 }
 
+const flruEncoderFactory: EncoderFactory<FLRUTulip2DownlinkInput> = (options) => {
+  const featureFlags = FLRU_DOWNLINK_FEATURE_FLAGS
+  return (input: FLRUTulip2DownlinkInput) => {
+    const channels = options.getChannels()
+    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, undefined, FLRU_DOWNLINK_SPAN_LIMIT_FACTORS)
+    return FLRUTULIP2EncodeHandler(validated as FLRUTulip2DownlinkInput)
+  }
+}
+
+const flruMultipleEncodeFactory: MultipleEncoderFactory<FLRUTulip2DownlinkInput> = (options) => {
+  const featureFlags = FLRU_DOWNLINK_FEATURE_FLAGS
+  return (input: FLRUTulip2DownlinkInput) => {
+    const channels = options.getChannels()
+    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, undefined, FLRU_DOWNLINK_SPAN_LIMIT_FACTORS)
+    return FLRUTULIP2EncodeHandler(validated as FLRUTulip2DownlinkInput, true)
+  }
+}
+
 // eslint-disable-next-line ts/explicit-function-return-type
 export function createFLRUTULIP2Codec() {
   return defineTULIP2Codec({
@@ -423,5 +445,7 @@ export function createFLRUTULIP2Codec() {
       0x08: handleKeepAliveMessage,
       0x09: handleExtendedDeviceIdentificationMessage,
     },
+    encoderFactory: flruEncoderFactory,
+    multipleEncodeFactory: flruMultipleEncodeFactory,
   })
 }

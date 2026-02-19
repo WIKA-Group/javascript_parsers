@@ -1,4 +1,4 @@
-import type { Handler } from '../../../../codecs/tulip2'
+import type { EncoderFactory, Handler, MultipleEncoderFactory } from '../../../../codecs/tulip2'
 import type {
   PEUTULIP2DataMessageData,
   PEUTULIP2DataMessageUplinkOutput,
@@ -15,10 +15,14 @@ import type {
   PEUTULIP2TechnicalAlarmsData,
   PEUTULIP2TechnicalAlarmsUplinkOutput,
 } from '../../schema/tulip2'
+import type { PEUTulip2DownlinkInput } from './constants'
 import { PEU_NETRIS3_NAME } from '..'
 import { defineTULIP2Codec } from '../../../../codecs/tulip2'
+import { validateTULIP2DownlinkInput } from '../../../../schemas/tulip2/downlink'
 import { DEFAULT_ROUNDING_DECIMALS, intTuple4ToFloat32WithThreshold, roundValue, slopeValueToValue, TULIPValueToValue } from '../../../../utils'
 import { createTULIP2PEUChannels, PEUTULIP2_DEVICE_TEMPERATURE_CHANNEL, PEUTULIP2_PRESSURE_CHANNEL } from './channels'
+import { PEU_DOWNLINK_FEATURE_FLAGS, PEU_DOWNLINK_SPAN_LIMIT_FACTORS } from './constants'
+import { PEUTULIP2EncodeHandler } from './encode'
 import {
   ALARM_EVENTS,
   DEVICE_ALARM_STATUS_TYPES,
@@ -532,6 +536,24 @@ const handleExtendedDeviceIdentificationMessage: Handler<TULIP2PEUChannels, PEUT
   }
 }
 
+const peuEncoderFactory: EncoderFactory<PEUTulip2DownlinkInput> = (options) => {
+  const featureFlags = PEU_DOWNLINK_FEATURE_FLAGS
+  return (input: PEUTulip2DownlinkInput) => {
+    const channels = options.getChannels()
+    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, undefined, PEU_DOWNLINK_SPAN_LIMIT_FACTORS)
+    return PEUTULIP2EncodeHandler(validated as PEUTulip2DownlinkInput)
+  }
+}
+
+const peuMultipleEncodeFactory: MultipleEncoderFactory<PEUTulip2DownlinkInput> = (options) => {
+  const featureFlags = PEU_DOWNLINK_FEATURE_FLAGS
+  return (input: PEUTulip2DownlinkInput) => {
+    const channels = options.getChannels()
+    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, undefined, PEU_DOWNLINK_SPAN_LIMIT_FACTORS)
+    return PEUTULIP2EncodeHandler(validated as PEUTulip2DownlinkInput, true)
+  }
+}
+
 // eslint-disable-next-line ts/explicit-function-return-type
 export function createPEUTULIP2Codec() {
   return defineTULIP2Codec({
@@ -548,5 +570,7 @@ export function createPEUTULIP2Codec() {
       0x08: handleKeepAliveMessage,
       0x09: handleExtendedDeviceIdentificationMessage,
     },
+    encoderFactory: peuEncoderFactory,
+    multipleEncodeFactory: peuMultipleEncodeFactory,
   })
 }

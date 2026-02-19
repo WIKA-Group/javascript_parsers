@@ -3,7 +3,7 @@ import type { PEWTULIP2DataMessageUplinkOutput, PEWTULIP2DeviceAlarmsData, PEWTU
 import type { PewTulip2Channels, PewTulip2DownlinkInput } from './constants'
 import { PEW_NAME } from '..'
 import { defineTULIP2Codec } from '../../../../codecs/tulip2'
-import { validateTULIP2DownlinkInput } from '../../../../schemas/tulip2/downlink'
+import { createDownlinkResetBatteryIndicatorSchema, validateTULIP2DownlinkInput } from '../../../../schemas/tulip2/downlink'
 import { DEFAULT_ROUNDING_DECIMALS, intTuple4ToFloat32WithThreshold, roundValue, slopeValueToValue, TULIPValueToValue } from '../../../../utils'
 import { createPEWTULIP2DropConfigurationSchema, createPEWTULIP2GetConfigurationSchema } from '../../schema/tulip2'
 import { createTULIP2PEWChannels, PEW_DOWNLINK_FEATURE_FLAGS } from './constants'
@@ -342,7 +342,7 @@ const pewEncoderFactory: EncoderFactory<PewTulip2DownlinkInput> = (options) => {
   const featureFlags = PEW_DOWNLINK_FEATURE_FLAGS
   return (input: PewTulip2DownlinkInput) => {
     const channels = options.getChannels()
-    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, [createPEWTULIP2DropConfigurationSchema(), createPEWTULIP2GetConfigurationSchema()])
+    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, [createDownlinkResetBatteryIndicatorSchema(featureFlags), createPEWTULIP2DropConfigurationSchema(), createPEWTULIP2GetConfigurationSchema()])
     return PEWTULIP2EncodeHandler(validated as PewTulip2DownlinkInput)
   }
 }
@@ -351,7 +351,7 @@ const pewMultipleEncodeFactory: MultipleEncoderFactory<PewTulip2DownlinkInput> =
   const featureFlags = PEW_DOWNLINK_FEATURE_FLAGS
   return (input: PewTulip2DownlinkInput) => {
     const channels = options.getChannels()
-    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, [createPEWTULIP2DropConfigurationSchema(), createPEWTULIP2GetConfigurationSchema()])
+    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, [createDownlinkResetBatteryIndicatorSchema(featureFlags), createPEWTULIP2DropConfigurationSchema(), createPEWTULIP2GetConfigurationSchema()])
     return PEWTULIP2EncodeHandler(validated as PewTulip2DownlinkInput, true)
   }
 }

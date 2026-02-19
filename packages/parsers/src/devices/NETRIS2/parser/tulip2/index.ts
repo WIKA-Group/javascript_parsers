@@ -13,7 +13,7 @@ import type {
 } from '../../schema/tulip2/uplink'
 import type { Netris2Tulip2DownlinkInput } from './constants'
 import { defineTULIP2Codec } from '../../../../codecs/tulip2'
-import { validateTULIP2DownlinkInput } from '../../../../schemas/tulip2/downlink'
+import { createDownlinkResetBatteryIndicatorSchema, validateTULIP2DownlinkInput } from '../../../../schemas/tulip2/downlink'
 import { DEFAULT_ROUNDING_DECIMALS, roundValue, slopeValueToValue, TULIPValueToValue } from '../../../../utils'
 import {
   createTULIP2NETRIS2Channels,
@@ -395,7 +395,7 @@ const netris2EncoderFactory: EncoderFactory<Netris2Tulip2DownlinkInput> = (optio
   const featureFlags = NETRIS2_DOWNLINK_FEATURE_FLAGS
   return (input: Netris2Tulip2DownlinkInput) => {
     const channels = options.getChannels()
-    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, undefined, NETRIS2_DOWNLINK_SPAN_LIMIT_FACTORS)
+    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, [createDownlinkResetBatteryIndicatorSchema(featureFlags)], NETRIS2_DOWNLINK_SPAN_LIMIT_FACTORS)
     return NETRIS2TULIP2EncodeHandler(validated)
   }
 }
@@ -404,7 +404,7 @@ const netris2MultipleEncodeFactory: MultipleEncoderFactory<Netris2Tulip2Downlink
   const featureFlags = NETRIS2_DOWNLINK_FEATURE_FLAGS
   return (input: Netris2Tulip2DownlinkInput) => {
     const channels = options.getChannels()
-    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, undefined, NETRIS2_DOWNLINK_SPAN_LIMIT_FACTORS)
+    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, [createDownlinkResetBatteryIndicatorSchema(featureFlags)], NETRIS2_DOWNLINK_SPAN_LIMIT_FACTORS)
     return NETRIS2TULIP2EncodeHandler(validated, true)
   }
 }

@@ -1089,6 +1089,144 @@
   },
   {
     "type": "downlink",
+    "description": "GoodCase TULIP2 downlink message: Reset to factory configuration",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "resetToFactory"
+      }
+    },
+    "output": {
+      "bytes": [0, 1],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase TULIP2 downlink message: Set main configuration",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "configuration",
+        "configurationId": 18,
+        "mainConfiguration": {
+          "measuringRateWhenNoAlarm": 3600,
+          "publicationFactorWhenNoAlarm": 2,
+          "measuringRateWhenAlarm": 600,
+          "publicationFactorWhenAlarm": 12
+        }
+      }
+    },
+    "output": {
+      "bytes": [18, 2, 0, 0, 14, 16, 0, 2, 0, 0, 2, 88, 0, 12, 0],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase TULIP2 downlink message: Disable channel 0",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "configuration",
+        "configurationId": 1,
+        "channel0": false
+      }
+    },
+    "output": {
+      "bytes": [1, 17, 0, 0],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase TULIP2 downlink message: Re-enable channel 0 with empty process alarm",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "configuration",
+        "configurationId": 4,
+        "channel0": {
+          "alarms": {
+            "deadBand": 3
+          }
+        }
+      }
+    },
+    "output": {
+      "bytes": [4, 32, 0, 0, 0, 50, 0],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase TULIP2 downlink message: Set channel 0 offset",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "configuration",
+        "configurationId": 12,
+        "channel0": {
+          "measureOffset": -2.31
+        }
+      }
+    },
+    "output": {
+      "bytes": [12, 48, 0, 0, 255, 218],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlinkMultiple",
+    "description": "GoodCase TULIP2 downlink multiple message: Split main configuration and disable channel commands over two frames",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "configuration",
+        "configurationId": 18,
+        "byteLimit": 15,
+        "mainConfiguration": {
+          "measuringRateWhenNoAlarm": 3600,
+          "publicationFactorWhenNoAlarm": 2,
+          "measuringRateWhenAlarm": 600,
+          "publicationFactorWhenAlarm": 12
+        },
+        "channel0": false
+      }
+    },
+    "output": {
+      "frames": [
+        [18, 2, 0, 0, 14, 16, 0, 2, 0, 0, 2, 88, 0, 12, 0],
+        [19, 17, 0, 0]
+      ],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "Badcase TULIP2 downlink message: byte limit too small for main configuration command",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "configuration",
+        "configurationId": 18,
+        "byteLimit": 14,
+        "mainConfiguration": {
+          "measuringRateWhenNoAlarm": 3600,
+          "publicationFactorWhenNoAlarm": 2,
+          "measuringRateWhenAlarm": 600,
+          "publicationFactorWhenAlarm": 12
+        }
+      }
+    },
+    "output": {
+      "errors": [
+        "TRU+NETRIS3 (JS): Main configuration command exceeds byte limit of 13 bytes."
+      ]
+    }
+  },
+  {
+    "type": "downlink",
     "description": "GoodCase TULIP3 downstream message: Read identification registers (serial number)",
     "input": {
       "protocol": "TULIP3",
