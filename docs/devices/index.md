@@ -32,7 +32,7 @@ Note: region availability may change in the future, additional regions such as S
 | [NETRIS2](./netris2.md) | ✔️ | ✔️ | ❌ | ❌ |
 | [PEW](./pew.md) | ✔️ | ✔️ | ✔️ | ✔️ |
 | [PGW23](./pgw23.md) | ✔️ | ❌ | ❌ | ❌ |
-| [TRW](./trw.md) | ✔️ | ❌ | ✔️ | ❌ |
+| [TRW](./trw.md) | ✔️ | ✔️ | ✔️ | ✔️ |
 | [FLRU+NETRIS3](./netris3/flru.md) | ✔️ | ✔️ | ✔️ | ✔️ |
 | [PEU+NETRIS3](./netris3/peu.md) | ✔️ | ✔️ | ✔️ | ✔️ |
 | [PGU+NETRIS3](./netris3/pgu.md) | ✔️ | ✔️ | ✔️ | ✔️ |

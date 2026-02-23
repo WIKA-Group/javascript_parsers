@@ -62,6 +62,10 @@ Review the contributor section of the docs for setup. Need help or spotted an is
 Distributed under the [MIT License](./LICENSE).
 
 ## Release Notes
+4.6.0
+  - feat: add TRW TULIP3 downlink configuration support
+  - feat: add TRW TULIP2 downlink configuration support
+
 4.5.0
   - feat: include all devices in npm module
   - feat: add NETRIS3 family TULIP2 downlink configuration support

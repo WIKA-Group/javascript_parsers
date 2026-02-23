@@ -1,4 +1,4 @@
-import type { Handler, TULIP2Channel } from '../../../../codecs/tulip2'
+import type { EncoderFactory, Handler, MultipleEncoderFactory } from '../../../../codecs/tulip2'
 import type {
   TRWTULIP2ChannelFailureAlarmData,
   TRWTULIP2ChannelFailureAlarmUplinkOutput,
@@ -14,27 +14,21 @@ import type {
   TRWTULIP2TechnicalAlarmsData,
   TRWTULIP2TechnicalAlarmsUplinkOutput,
 } from '../../schema/tulip2'
+import type { TRWTulip2Channels, TRWTulip2DownlinkInput } from './constants'
 import { defineTULIP2Codec } from '../../../../codecs/tulip2'
+import { validateTULIP2DownlinkInput } from '../../../../schemas/tulip2/downlink'
 import { DEFAULT_ROUNDING_DECIMALS, intTuple4ToFloat32WithThreshold, roundValue, slopeValueToValue, TULIPValueToValue } from '../../../../utils'
+import { createTRWTULIP2GetConfigurationSchema, createTRWTULIP2ResetBatterySchema } from '../../schema/tulip2'
 import { TRW_NAME } from '../index'
+import { createTULIP2TRWChannels, TRW_DOWNLINK_FEATURE_FLAGS } from './constants'
+import { TRWTULIP2EncodeHandler } from './encode'
 import { ALARM_EVENTS, DEVICE_ALARM_TYPES, LPP_MEASURANDS_BY_ID, LPP_UNITS_BY_ID, MEASUREMENT_ALARM_TYPES, PROCESS_ALARM_TYPES, TECHNICAL_ALARM_TYPES } from './lookups'
 
 const ERROR_VALUE = 0xFFFF
 
-// Only one temperature channel for TRW, name is 'temperature'
-// eslint-disable-next-line ts/explicit-function-return-type
-function createTULIP2TRWChannels() {
-  return [
-    {
-      channelId: 0,
-      name: 'temperature',
-      start: 0 as number, // placeholder; actual range comes from device config at runtime
-      end: 10 as number, // placeholder; actual range comes from device config at runtime
-    },
-  ] as const satisfies TULIP2Channel[]
-}
+type TULIP2TRWChannels = TRWTulip2Channels
 
-const handleDataMessage: Handler<TULIP2Channel[], TRWTULIP2DataMessageUplinkOutput> = (input, options) => {
+const handleDataMessage: Handler<TULIP2TRWChannels, TRWTULIP2DataMessageUplinkOutput> = (input, options) => {
   // Data message: 0x01/0x02, length 5 bytes expected for single channel
   if (input.bytes.length !== 5) {
     throw new Error(`Data message (0x01/0x02) requires 5 bytes, but received ${input.bytes.length} bytes`)
@@ -76,7 +70,7 @@ const handleDataMessage: Handler<TULIP2Channel[], TRWTULIP2DataMessageUplinkOutp
   return res
 }
 
-const handleProcessAlarmMessage: Handler<TULIP2Channel[], TRWTULIP2ProcessAlarmsUplinkOutput> = (input, options) => {
+const handleProcessAlarmMessage: Handler<TULIP2TRWChannels, TRWTULIP2ProcessAlarmsUplinkOutput> = (input, options) => {
   // Needs at least 6 bytes and (len - 3) % 3 === 0
   if (input.bytes.length < 6 || ((input.bytes.length - 3) % 3) !== 0) {
     throw new Error(`Process alarm message (0x03) requires at least 6 bytes (and target byte count 3n+3), but received ${input.bytes.length} bytes`)
@@ -135,7 +129,7 @@ const handleProcessAlarmMessage: Handler<TULIP2Channel[], TRWTULIP2ProcessAlarms
   return res
 }
 
-const handleTechnicalAlarmMessage: Handler<TULIP2Channel[], TRWTULIP2TechnicalAlarmsUplinkOutput> = (input) => {
+const handleTechnicalAlarmMessage: Handler<TULIP2TRWChannels, TRWTULIP2TechnicalAlarmsUplinkOutput> = (input) => {
   // Technical alarm is 5 bytes: [0x04, confId, sensorId, alarmTypeHi, alarmTypeLo]
   if (input.bytes.length !== 5) {
     throw new Error(`Technical alarm message (0x04) requires 5 bytes, but received ${input.bytes.length} bytes`)
@@ -165,7 +159,7 @@ const handleTechnicalAlarmMessage: Handler<TULIP2Channel[], TRWTULIP2TechnicalAl
   }
 }
 
-const handleDeviceAlarmMessage: Handler<TULIP2Channel[], TRWTULIP2DeviceAlarmsUplinkOutput> = (input) => {
+const handleDeviceAlarmMessage: Handler<TULIP2TRWChannels, TRWTULIP2DeviceAlarmsUplinkOutput> = (input) => {
   // Device alarm is 4 bytes: [0x05, confId, alarmHi, alarmLo]
   if (input.bytes.length !== 4) {
     throw new Error(`Device alarm message (0x05) requires 4 bytes, but received ${input.bytes.length} bytes`)
@@ -193,7 +187,7 @@ const handleDeviceAlarmMessage: Handler<TULIP2Channel[], TRWTULIP2DeviceAlarmsUp
   }
 }
 
-const handleDeviceIdentificationMessage: Handler<TULIP2Channel[], TRWTULIP2DeviceInformationUplinkOutput> = (input) => {
+const handleDeviceIdentificationMessage: Handler<TULIP2TRWChannels, TRWTULIP2DeviceInformationUplinkOutput> = (input) => {
   // According to our schema we require extended identification (>= 29 bytes)
   if (input.bytes.length < 29) {
     throw new Error(`Device identification message (0x07) requires at least 29 bytes, but received ${input.bytes.length} bytes`)
@@ -264,7 +258,7 @@ const handleDeviceIdentificationMessage: Handler<TULIP2Channel[], TRWTULIP2Devic
   }
 }
 
-const handleKeepAliveMessage: Handler<TULIP2Channel[], TRWTULIP2DeviceStatisticsUplinkOutput> = (input) => {
+const handleKeepAliveMessage: Handler<TULIP2TRWChannels, TRWTULIP2DeviceStatisticsUplinkOutput> = (input) => {
   // Keep alive is 3 bytes: [0x08, confId, batteryLevel]
   if (input.bytes.length !== 3) {
     throw new Error(`Keep alive message (0x08) requires 3 bytes, but received ${input.bytes.length} bytes`)
@@ -286,7 +280,7 @@ const handleKeepAliveMessage: Handler<TULIP2Channel[], TRWTULIP2DeviceStatistics
   }
 }
 
-const handleChannelFailureAlarmMessage: Handler<TULIP2Channel[], TRWTULIP2ChannelFailureAlarmUplinkOutput> = (input) => {
+const handleChannelFailureAlarmMessage: Handler<TULIP2TRWChannels, TRWTULIP2ChannelFailureAlarmUplinkOutput> = (input) => {
   // Channel failure is 5 bytes: [0x09, confId, sensorId, channelId, alarmType]
   if (input.bytes.length !== 5) {
     throw new Error(`Channel failure alarm message (0x09) requires 5 bytes, but received ${input.bytes.length} bytes`)
@@ -319,10 +313,29 @@ const handleChannelFailureAlarmMessage: Handler<TULIP2Channel[], TRWTULIP2Channe
   }
 }
 
+const trwEncoderFactory: EncoderFactory<TRWTulip2DownlinkInput> = (options) => {
+  const featureFlags = TRW_DOWNLINK_FEATURE_FLAGS
+  return (input: TRWTulip2DownlinkInput) => {
+    const channels = options.getChannels()
+    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, [createTRWTULIP2GetConfigurationSchema(), createTRWTULIP2ResetBatterySchema()])
+    return TRWTULIP2EncodeHandler(validated as TRWTulip2DownlinkInput)
+  }
+}
+
+const trwMultipleEncodeFactory: MultipleEncoderFactory<TRWTulip2DownlinkInput> = (options) => {
+  const featureFlags = TRW_DOWNLINK_FEATURE_FLAGS
+  return (input: TRWTulip2DownlinkInput) => {
+    const channels = options.getChannels()
+    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, [createTRWTULIP2GetConfigurationSchema(), createTRWTULIP2ResetBatterySchema()])
+    return TRWTULIP2EncodeHandler(validated as TRWTulip2DownlinkInput, true)
+  }
+}
+
 // eslint-disable-next-line ts/explicit-function-return-type
 export function createTULIP2TRWCodec() {
   return defineTULIP2Codec({
     deviceName: TRW_NAME,
+    roundingDecimals: DEFAULT_ROUNDING_DECIMALS,
     channels: createTULIP2TRWChannels(),
     handlers: {
       0x01: handleDataMessage,
@@ -334,6 +347,12 @@ export function createTULIP2TRWCodec() {
       0x08: handleKeepAliveMessage,
       0x09: handleChannelFailureAlarmMessage,
     },
-    roundingDecimals: DEFAULT_ROUNDING_DECIMALS,
+    encoderFactory: trwEncoderFactory,
+    multipleEncodeFactory: trwMultipleEncodeFactory,
   })
+}
+
+export {
+  createTULIP2TRWChannels,
+  TRW_DOWNLINK_FEATURE_FLAGS,
 }

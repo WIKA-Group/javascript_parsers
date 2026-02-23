@@ -1,6 +1,9 @@
 /* eslint-disable ts/explicit-function-return-type */
+import type { TULIP2ConfigurationAction } from '../../../schemas/tulip2/downlink'
+import type { TRWTulip2Channels, TRWTulip2FeatureFlags } from '../parser/tulip2/constants'
 import * as v from 'valibot'
 import { createSemVerSchema } from '../../../schemas'
+import { createTULIP2DownlinkActionSchemaFactory } from '../../../schemas/tulip2/downlink'
 import { createUplinkOutputSchemaFactory } from '../../../schemas/tulip2/uplink'
 import { ALARM_EVENTS, DEVICE_ALARM_TYPES, LPP_MEASURANDS_BY_ID, LPP_UNITS_BY_ID, MEASUREMENT_ALARM_TYPES, PROCESS_ALARM_TYPES, TECHNICAL_ALARM_TYPES } from '../parser/tulip2/lookups'
 
@@ -187,3 +190,33 @@ export type TRWTULIP2ChannelFailureAlarmUplinkOutput = v.InferOutput<ReturnType<
 
 export type TRWTULIP2DeviceInformationData = v.InferOutput<ReturnType<typeof createDeviceInformationUplinkOutputSchema>>['data']['deviceInformation']
 export type TRWTULIP2DeviceInformationUplinkOutput = v.InferOutput<ReturnType<typeof createDeviceInformationUplinkOutputSchema>>
+
+// Downlink extras (kept in schema layer, not parser constants)
+export function createTRWTULIP2GetConfigurationSchema() {
+  const createActionSchema = createTULIP2DownlinkActionSchemaFactory(31)
+  return createActionSchema({
+    action: 'getConfiguration',
+    extension: {
+      mainConfiguration: v.optional(v.literal(true)),
+      processAlarmConfiguration: v.optional(v.literal(true)),
+    },
+  })
+}
+
+export function createTRWTULIP2ResetBatterySchema() {
+  const createActionSchema = createTULIP2DownlinkActionSchemaFactory(31)
+  return createActionSchema({
+    action: 'resetBatteryIndicator',
+    meta: {
+      byteLimit: false,
+    },
+  })
+}
+
+export type TRWTULIP2GetConfigurationAction = v.InferOutput<ReturnType<typeof createTRWTULIP2GetConfigurationSchema>>
+export type TRWTULIP2ResetBatteryAction = v.InferOutput<ReturnType<typeof createTRWTULIP2ResetBatterySchema>>
+export type TRWTULIP2ConfigurationAction = TULIP2ConfigurationAction<TRWTulip2Channels[number], TRWTulip2FeatureFlags>
+
+export type TRWTULIP2DownlinkExtraInput
+  = | TRWTULIP2GetConfigurationAction
+    | TRWTULIP2ResetBatteryAction
