@@ -1,4 +1,5 @@
 import type { DownlinkOutput, MultipleDownlinkOutput } from '../../../../../types'
+import type { FLRUTULIP2ConfigurationAction } from '../../../schema/tulip2'
 import type { FLRUTulip2DownlinkInput } from '../constants'
 import { formatDisableChannelInput, formatMainConfigurationInput, formatMeasureOffsetInput, formatProcessAlarmInput } from '../../../../../formatters'
 import { buildDownlinkFrames } from '../../../../../utils/encoding/tuilp2/frames'
@@ -7,7 +8,6 @@ import { FLRU_DEFAULT_BYTE_LIMIT, FLRU_DEFAULT_CONFIGURATION_ID, FLRU_DOWNLINK_F
 import { buildFLRUDisableChannelCommands, buildFLRUMainConfigCommand, buildFLRUMeasureOffsetCommands, buildFLRUProcessAlarmCommands, buildResetFactoryCommand } from './commands'
 
 type DownlinkCommand = number[]
-type DownlinkConfigurationFrame = Extract<FLRUTulip2DownlinkInput, { deviceAction: 'configuration' }>
 
 export function FLRUTULIP2EncodeHandler(formattedInput: FLRUTulip2DownlinkInput): DownlinkOutput
 export function FLRUTULIP2EncodeHandler(formattedInput: FLRUTulip2DownlinkInput, allowMultiple: false): DownlinkOutput
@@ -36,9 +36,9 @@ function encodeResetToFactory(): number[] {
   return [0, ...command]
 }
 
-function encodeDownlinkConfiguration(input: DownlinkConfigurationFrame, allowMultiple: false): DownlinkOutput
-function encodeDownlinkConfiguration(input: DownlinkConfigurationFrame, allowMultiple: true): MultipleDownlinkOutput
-function encodeDownlinkConfiguration(input: DownlinkConfigurationFrame, allowMultiple: boolean): DownlinkOutput | MultipleDownlinkOutput {
+function encodeDownlinkConfiguration(input: FLRUTULIP2ConfigurationAction, allowMultiple: false): DownlinkOutput
+function encodeDownlinkConfiguration(input: FLRUTULIP2ConfigurationAction, allowMultiple: true): MultipleDownlinkOutput
+function encodeDownlinkConfiguration(input: FLRUTULIP2ConfigurationAction, allowMultiple: boolean): DownlinkOutput | MultipleDownlinkOutput {
   const configId = input.configurationId ?? FLRU_DEFAULT_CONFIGURATION_ID
   const byteLimit = input.byteLimit ?? FLRU_DEFAULT_BYTE_LIMIT
   const payloadLimit = byteLimit - 1

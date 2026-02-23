@@ -1,4 +1,6 @@
 /* eslint-disable ts/explicit-function-return-type */
+import type { TULIP2ConfigurationAction } from '../../../schemas/tulip2/downlink'
+import type { PEUTulip2Channels, PEUTulip2FeatureFlags } from '../parser/tulip2/constants'
 import * as v from 'valibot'
 import { createSemVerSchema } from '../../../schemas'
 import { createUplinkOutputSchemaFactory } from '../../../schemas/tulip2/uplink'
@@ -230,3 +232,4 @@ export type PEUTULIP2DeviceStatisticsUplinkOutput = v.InferOutput<ReturnType<typ
 
 export type PEUTULIP2ExtendedDeviceInformationData = v.InferOutput<ReturnType<typeof createExtendedDeviceInformationUplinkOutputSchema>>['data']['extendedDeviceInformation']
 export type PEUTULIP2ExtendedDeviceInformationUplinkOutput = v.InferOutput<ReturnType<typeof createExtendedDeviceInformationUplinkOutputSchema>>
+export type PEUTULIP2ConfigurationAction = TULIP2ConfigurationAction<PEUTulip2Channels[number], PEUTulip2FeatureFlags>

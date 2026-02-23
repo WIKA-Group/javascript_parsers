@@ -25,14 +25,14 @@
                 "deviceAction": {
                   "const": "configuration"
                 },
-                "byteLimit": {
-                  "type": "integer",
-                  "minimum": 0
-                },
                 "configurationId": {
                   "type": "integer",
                   "minimum": 1,
                   "maximum": 127
+                },
+                "byteLimit": {
+                  "type": "integer",
+                  "minimum": 0
                 },
                 "mainConfiguration": {
                   "type": "object",
@@ -261,13 +261,13 @@
             {
               "type": "object",
               "properties": {
+                "deviceAction": {
+                  "const": "resetBatteryIndicator"
+                },
                 "configurationId": {
                   "type": "integer",
                   "minimum": 1,
                   "maximum": 127
-                },
-                "deviceAction": {
-                  "const": "resetBatteryIndicator"
                 }
               },
               "required": [
@@ -295,6 +295,15 @@
               "properties": {
                 "deviceAction": {
                   "const": "getConfiguration"
+                },
+                "configurationId": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 127
+                },
+                "byteLimit": {
+                  "type": "integer",
+                  "minimum": 0
                 },
                 "mainConfiguration": {
                   "const": true

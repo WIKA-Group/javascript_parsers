@@ -1,4 +1,5 @@
 import type { DownlinkOutput, MultipleDownlinkOutput } from '../../../../../types'
+import type { PEUTULIP2ConfigurationAction } from '../../../schema/tulip2'
 import type { PEUTulip2DownlinkInput } from '../constants'
 import { formatDisableChannelInput, formatMainConfigurationInput, formatMeasureOffsetInput, formatProcessAlarmInput } from '../../../../../formatters'
 import { buildDownlinkFrames } from '../../../../../utils/encoding/tuilp2/frames'
@@ -7,7 +8,6 @@ import { PEU_DEFAULT_BYTE_LIMIT, PEU_DEFAULT_CONFIGURATION_ID, PEU_DOWNLINK_FEAT
 import { buildPEUDisableChannelCommands, buildPEUMainConfigCommand, buildPEUMeasureOffsetCommands, buildPEUProcessAlarmCommands, buildResetFactoryCommand } from './commands'
 
 type DownlinkCommand = number[]
-type DownlinkConfigurationFrame = Extract<PEUTulip2DownlinkInput, { deviceAction: 'configuration' }>
 
 export function PEUTULIP2EncodeHandler(formattedInput: PEUTulip2DownlinkInput): DownlinkOutput
 export function PEUTULIP2EncodeHandler(formattedInput: PEUTulip2DownlinkInput, allowMultiple: false): DownlinkOutput
@@ -36,9 +36,9 @@ function encodeResetToFactory(): number[] {
   return [0, ...command]
 }
 
-function encodeDownlinkConfiguration(input: DownlinkConfigurationFrame, allowMultiple: false): DownlinkOutput
-function encodeDownlinkConfiguration(input: DownlinkConfigurationFrame, allowMultiple: true): MultipleDownlinkOutput
-function encodeDownlinkConfiguration(input: DownlinkConfigurationFrame, allowMultiple: boolean): DownlinkOutput | MultipleDownlinkOutput {
+function encodeDownlinkConfiguration(input: PEUTULIP2ConfigurationAction, allowMultiple: false): DownlinkOutput
+function encodeDownlinkConfiguration(input: PEUTULIP2ConfigurationAction, allowMultiple: true): MultipleDownlinkOutput
+function encodeDownlinkConfiguration(input: PEUTULIP2ConfigurationAction, allowMultiple: boolean): DownlinkOutput | MultipleDownlinkOutput {
   const configId = input.configurationId ?? PEU_DEFAULT_CONFIGURATION_ID
   const byteLimit = input.byteLimit ?? PEU_DEFAULT_BYTE_LIMIT
   const payloadLimit = byteLimit - 1

@@ -17,14 +17,14 @@
         "deviceAction": {
           "const": "configuration"
         },
-        "byteLimit": {
-          "type": "integer",
-          "minimum": 0
-        },
         "configurationId": {
           "type": "integer",
           "minimum": 1,
           "maximum": 31
+        },
+        "byteLimit": {
+          "type": "integer",
+          "minimum": 0
         },
         "mainConfiguration": {
           "type": "object",
@@ -259,13 +259,13 @@
     {
       "type": "object",
       "properties": {
+        "deviceAction": {
+          "const": "resetBatteryIndicator"
+        },
         "configurationId": {
           "type": "integer",
           "minimum": 1,
           "maximum": 31
-        },
-        "deviceAction": {
-          "const": "resetBatteryIndicator"
         }
       },
       "required": [

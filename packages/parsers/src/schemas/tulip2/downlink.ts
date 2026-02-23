@@ -48,6 +48,160 @@ export function createConfigurationIdSchema(maxConfigId: number) {
   )
 }
 
+function createByteLimitSchema() {
+  return v.optional(v.pipe(
+    v.number(),
+    v.minValue(0),
+    v.integer(),
+  ))
+}
+
+interface TULIP2DownlinkActionMetaOptions {
+  configurationId?: boolean
+  byteLimit?: boolean
+}
+
+type TULIP2BaseActionEntries<TAction extends string, TObjectExtension extends v.ObjectEntries> = {
+  deviceAction: v.LiteralSchema<TAction, undefined>
+} & TObjectExtension
+
+type TULIP2ActionEntriesWithConfigurationId<TAction extends string, TObjectExtension extends v.ObjectEntries>
+  = TULIP2BaseActionEntries<TAction, TObjectExtension>
+    & {
+      configurationId: ReturnType<typeof createConfigurationIdSchema>
+    }
+
+type TULIP2ActionEntriesWithByteLimit<TAction extends string, TObjectExtension extends v.ObjectEntries>
+  = TULIP2BaseActionEntries<TAction, TObjectExtension>
+    & {
+      byteLimit: ReturnType<typeof createByteLimitSchema>
+    }
+
+type TULIP2ActionEntriesWithConfigurationIdAndByteLimit<TAction extends string, TObjectExtension extends v.ObjectEntries>
+  = TULIP2ActionEntriesWithConfigurationId<TAction, TObjectExtension>
+    & TULIP2ActionEntriesWithByteLimit<TAction, TObjectExtension>
+
+type TULIP2ActionSchemaByMeta<
+  TAction extends string,
+  TObjectExtension extends v.ObjectEntries,
+  TMeta extends TULIP2DownlinkActionMetaOptions | undefined,
+> = TMeta extends { configurationId: false }
+  ? TMeta extends { byteLimit: false }
+    ? v.ObjectSchema<TULIP2BaseActionEntries<TAction, TObjectExtension>, undefined>
+    : v.ObjectSchema<TULIP2ActionEntriesWithByteLimit<TAction, TObjectExtension>, undefined>
+  : TMeta extends { byteLimit: false }
+    ? v.ObjectSchema<TULIP2ActionEntriesWithConfigurationId<TAction, TObjectExtension>, undefined>
+    : v.ObjectSchema<TULIP2ActionEntriesWithConfigurationIdAndByteLimit<TAction, TObjectExtension>, undefined>
+
+function createGenericTULIP2DownlinkActionSchema<const TMaxConfigId extends number, const TAction extends string, const TObjectExtension extends v.ObjectEntries = Record<never, never>>(i: {
+  action: TAction
+  maxConfigId: TMaxConfigId
+  extension?: TObjectExtension
+  meta?: {
+    configurationId?: true
+    byteLimit?: true
+  }
+}): v.ObjectSchema<TULIP2ActionEntriesWithConfigurationIdAndByteLimit<TAction, TObjectExtension>, undefined>
+function createGenericTULIP2DownlinkActionSchema<const TMaxConfigId extends number, const TAction extends string, const TObjectExtension extends v.ObjectEntries = Record<never, never>>(i: {
+  action: TAction
+  maxConfigId: TMaxConfigId
+  extension?: TObjectExtension
+  meta: {
+    configurationId: false
+    byteLimit?: true
+  }
+}): v.ObjectSchema<TULIP2ActionEntriesWithByteLimit<TAction, TObjectExtension>, undefined>
+function createGenericTULIP2DownlinkActionSchema<const TMaxConfigId extends number, const TAction extends string, const TObjectExtension extends v.ObjectEntries = Record<never, never>>(i: {
+  action: TAction
+  maxConfigId: TMaxConfigId
+  extension?: TObjectExtension
+  meta: {
+    configurationId?: true
+    byteLimit: false
+  }
+}): v.ObjectSchema<TULIP2ActionEntriesWithConfigurationId<TAction, TObjectExtension>, undefined>
+function createGenericTULIP2DownlinkActionSchema<const TMaxConfigId extends number, const TAction extends string, const TObjectExtension extends v.ObjectEntries = Record<never, never>>(i: {
+  action: TAction
+  maxConfigId: TMaxConfigId
+  extension?: TObjectExtension
+  meta: {
+    configurationId: false
+    byteLimit: false
+  }
+}): v.ObjectSchema<TULIP2BaseActionEntries<TAction, TObjectExtension>, undefined>
+function createGenericTULIP2DownlinkActionSchema<const TMaxConfigId extends number, const TAction extends string, const TObjectExtension extends v.ObjectEntries = Record<never, never>>(i: {
+  action: TAction
+  maxConfigId: TMaxConfigId
+  extension?: TObjectExtension
+  meta?: TULIP2DownlinkActionMetaOptions
+}): v.ObjectSchema<v.ObjectEntries, undefined>
+function createGenericTULIP2DownlinkActionSchema<const TMaxConfigId extends number, const TAction extends string, const TObjectExtension extends v.ObjectEntries = Record<never, never>>(i: {
+  action: TAction
+  maxConfigId: TMaxConfigId
+  extension?: TObjectExtension
+  meta?: TULIP2DownlinkActionMetaOptions
+}): v.ObjectSchema<v.ObjectEntries, undefined> {
+  const includeConfigurationId = i.meta?.configurationId ?? true
+  const includeByteLimit = i.meta?.byteLimit ?? true
+  const extension = (i.extension ?? {}) as TObjectExtension
+
+  if (includeConfigurationId && includeByteLimit) {
+    return v.object({
+      deviceAction: v.literal(i.action),
+      configurationId: createConfigurationIdSchema(i.maxConfigId),
+      byteLimit: createByteLimitSchema(),
+      ...extension,
+    })
+  }
+
+  if (includeConfigurationId) {
+    return v.object({
+      deviceAction: v.literal(i.action),
+      configurationId: createConfigurationIdSchema(i.maxConfigId),
+      ...extension,
+    })
+  }
+
+  if (includeByteLimit) {
+    return v.object({
+      deviceAction: v.literal(i.action),
+      byteLimit: createByteLimitSchema(),
+      ...extension,
+    })
+  }
+
+  return v.object({
+    deviceAction: v.literal(i.action),
+    ...extension,
+  })
+}
+
+export function createTULIP2DownlinkActionSchemaFactory<const TMaxConfigId extends number>(
+  maxConfigId: TMaxConfigId,
+) {
+  return <
+    const TAction extends string,
+    const TObjectExtension extends v.ObjectEntries = Record<never, never>,
+    const TMeta extends TULIP2DownlinkActionMetaOptions | undefined = undefined,
+  >(i: {
+    action: TAction
+    extension?: TObjectExtension
+    meta?: TMeta
+  }): TULIP2ActionSchemaByMeta<TAction, TObjectExtension, TMeta> => {
+    return createGenericTULIP2DownlinkActionSchema({
+      action: i.action,
+      maxConfigId,
+      extension: i.extension,
+      meta: i.meta,
+    } as {
+      action: TAction
+      maxConfigId: TMaxConfigId
+      extension?: TObjectExtension
+      meta?: TULIP2DownlinkActionMetaOptions
+    }) as unknown as TULIP2ActionSchemaByMeta<TAction, TObjectExtension, TMeta>
+  }
+}
+
 // Base main config: no BLE, separate measuring rates
 type Tulip2DownlinkMainConfigBase = v.ObjectSchema<{
   publicationFactorWhenAlarm: v.NumberSchema<undefined>
@@ -368,11 +522,12 @@ type Tulip2ChannelSchemasObject<TChannels extends TULIP2Channel[], TFeatureFlags
   [K in TChannels[number] as `channel${K['channelId']}`]: v.OptionalSchema<v.UnionSchema<[v.LiteralSchema<false, undefined>, v.LiteralSchema<true, undefined>, Tulip2DownlinkChannelSchema<TFeatureFlags>], undefined>, undefined>
 }
 
-function createTulip2DownlinkConfigurationFrameSchema<TChannel extends TULIP2Channel, TFeatureFlags extends Tulip2EncodeFeatureFlags>(
+export function createTULIP2DownlinkConfigurationActionSchema<TChannel extends TULIP2Channel, TFeatureFlags extends Tulip2EncodeFeatureFlags>(
   channels: TChannel[],
   featureFlags: TFeatureFlags,
   spanLimitFactors?: Tulip2DownlinkSpanLimitFactors,
 ) {
+  const createActionSchema = createTULIP2DownlinkActionSchemaFactory(featureFlags.maxConfigId)
   const channelSchemas: Tulip2ChannelSchemasObject<TChannel[], TFeatureFlags> = channels.reduce((acc, channel) => {
     const channelKey = `channel${channel.channelId}` as `channel${TChannel['channelId']}`
 
@@ -387,17 +542,12 @@ function createTulip2DownlinkConfigurationFrameSchema<TChannel extends TULIP2Cha
     return acc
   }, {} as Tulip2ChannelSchemasObject<TChannel[], TFeatureFlags>)
 
-  return v.object({
-    deviceAction: v.literal('configuration'),
-    byteLimit:
-          v.optional(v.pipe(
-            v.number(),
-            v.minValue(0),
-            v.integer(),
-          )),
-    configurationId: createConfigurationIdSchema(featureFlags.maxConfigId),
-    mainConfiguration: v.optional(createTulip2DownlinkMainConfigurationSchema(featureFlags)),
-    ...channelSchemas,
+  return createActionSchema({
+    action: 'configuration',
+    extension: {
+      mainConfiguration: v.optional(createTulip2DownlinkMainConfigurationSchema(featureFlags)),
+      ...channelSchemas,
+    },
   })
 }
 
@@ -408,9 +558,12 @@ export function createDownlinkResetToFactorySchema() {
 }
 
 export function createDownlinkResetBatteryIndicatorSchema(featureFlags: Tulip2EncodeFeatureFlags) {
-  return v.object({
-    configurationId: createConfigurationIdSchema(featureFlags.maxConfigId),
-    deviceAction: v.literal('resetBatteryIndicator'),
+  const createActionSchema = createTULIP2DownlinkActionSchemaFactory(featureFlags.maxConfigId)
+  return createActionSchema({
+    action: 'resetBatteryIndicator',
+    meta: {
+      byteLimit: false,
+    },
   })
 }
 
@@ -422,7 +575,7 @@ export function createTULIP2DownlinkSchema<TChannels extends TULIP2Channel, TFea
 ) {
   return v.variant('deviceAction', [
     createDownlinkResetToFactorySchema(),
-    createTulip2DownlinkConfigurationFrameSchema(channels, featureFlags, spanLimitFactors),
+    createTULIP2DownlinkConfigurationActionSchema(channels, featureFlags, spanLimitFactors),
     ...(extraActions ?? []),
   ])
 }
@@ -446,9 +599,12 @@ type DownlinkConfigurationFrame<TChannels extends TULIP2Channel, TFeatureFlags e
   mainConfiguration?: v.InferOutput<Tulip2DownlinkMainConfiguration<TFeatureFlags>>
 } & ChannelSchemasOutput<TChannels[], TFeatureFlags>
 
+export type TULIP2ConfigurationAction<TChannels extends TULIP2Channel, TFeatureFlags extends Tulip2EncodeFeatureFlags>
+  = DownlinkConfigurationFrame<TChannels, TFeatureFlags>
+
 export type TULIP2DownlinkInput<TChannels extends TULIP2Channel, TFeatureFlags extends Tulip2EncodeFeatureFlags>
   = DownlinkResetToFactory
-    | DownlinkConfigurationFrame<TChannels, TFeatureFlags>
+    | TULIP2ConfigurationAction<TChannels, TFeatureFlags>
 
 /**
  * Validate TULIP2 downlink input for a given set of channels and feature flags.

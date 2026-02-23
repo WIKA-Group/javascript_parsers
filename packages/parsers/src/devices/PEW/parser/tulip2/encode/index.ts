@@ -1,4 +1,5 @@
 import type { DownlinkOutput, MultipleDownlinkOutput } from '../../../../../types'
+import type { PEWTULIP2ConfigurationAction, PEWTULIP2DropConfigurationAction, PEWTULIP2GetConfigurationAction, PEWTULIP2ResetBatteryAction } from '../../../schema/tulip2'
 import type { PewTulip2DownlinkInput } from '../constants'
 import type { DownlinkCommand } from './commands'
 import type { DownlinkFrame } from './frames'
@@ -19,12 +20,12 @@ export function PEWTULIP2EncodeHandler(formattedInput: PewTulip2DownlinkInput, a
     }
 
     case 'resetBatteryIndicator': {
-      const frame = encodeResetBatteryIndicator(formattedInput.configurationId)
+      const frame = encodeResetBatteryIndicator(formattedInput)
       return allowMultiple ? formatMultipleDownlinkOutput([frame]) : formatDownlinkOutput(frame)
     }
 
     case 'dropConfiguration': {
-      const frame = encodeDropConfiguration(formattedInput.configurationId)
+      const frame = encodeDropConfiguration(formattedInput)
       return allowMultiple ? formatMultipleDownlinkOutput([frame]) : formatDownlinkOutput(frame)
     }
 
@@ -54,8 +55,8 @@ function encodeResetToFactory(): DownlinkFrame {
   })
 }
 
-function encodeResetBatteryIndicator(configId?: number): DownlinkFrame {
-  configId ??= PEW_DEFAULT_CONFIGURATION_ID
+function encodeResetBatteryIndicator(input: PEWTULIP2ResetBatteryAction): DownlinkFrame {
+  const configId = input.configurationId ?? PEW_DEFAULT_CONFIGURATION_ID
   const command = buildResetBatteryCommand()
   return buildPEWDownlinkFrame([command], {
     configId,
@@ -64,8 +65,8 @@ function encodeResetBatteryIndicator(configId?: number): DownlinkFrame {
   })
 }
 
-function encodeDropConfiguration(configId?: number): DownlinkFrame {
-  configId ??= PEW_DEFAULT_CONFIGURATION_ID
+function encodeDropConfiguration(input: PEWTULIP2DropConfigurationAction): DownlinkFrame {
+  const configId = input.configurationId ?? PEW_DEFAULT_CONFIGURATION_ID
   const command = buildDropOnAirCommand()
   return buildPEWDownlinkFrame([command], {
     configId,
@@ -74,11 +75,9 @@ function encodeDropConfiguration(configId?: number): DownlinkFrame {
   })
 }
 
-type DownlinkConfigurationFrame = PewTulip2DownlinkInput & { deviceAction: 'configuration' }
-
-function encodeDownlinkConfiguration(input: DownlinkConfigurationFrame, allowMultiple: false): DownlinkOutput
-function encodeDownlinkConfiguration(input: DownlinkConfigurationFrame, allowMultiple: true): MultipleDownlinkOutput
-function encodeDownlinkConfiguration(input: DownlinkConfigurationFrame, allowMultiple: boolean): DownlinkOutput | MultipleDownlinkOutput {
+function encodeDownlinkConfiguration(input: PEWTULIP2ConfigurationAction, allowMultiple: false): DownlinkOutput
+function encodeDownlinkConfiguration(input: PEWTULIP2ConfigurationAction, allowMultiple: true): MultipleDownlinkOutput
+function encodeDownlinkConfiguration(input: PEWTULIP2ConfigurationAction, allowMultiple: boolean): DownlinkOutput | MultipleDownlinkOutput {
   const configId = input.configurationId ?? PEW_DEFAULT_CONFIGURATION_ID
 
   const byteLimit = input.byteLimit ?? PEW_DEFAULT_BYTE_LIMIT
@@ -116,11 +115,9 @@ function encodeDownlinkConfiguration(input: DownlinkConfigurationFrame, allowMul
 
 // ─── Get configuration ──────────────────────────────────────────────────────────
 
-type GetConfigurationAction = Extract<PewTulip2DownlinkInput, { deviceAction: 'getConfiguration' }>
-
-function encodeGetConfiguration(input: GetConfigurationAction, allowMultiple: false): DownlinkOutput
-function encodeGetConfiguration(input: GetConfigurationAction, allowMultiple: true): MultipleDownlinkOutput
-function encodeGetConfiguration(input: GetConfigurationAction, allowMultiple: boolean): DownlinkOutput | MultipleDownlinkOutput {
+function encodeGetConfiguration(input: PEWTULIP2GetConfigurationAction, allowMultiple: false): DownlinkOutput
+function encodeGetConfiguration(input: PEWTULIP2GetConfigurationAction, allowMultiple: true): MultipleDownlinkOutput
+function encodeGetConfiguration(input: PEWTULIP2GetConfigurationAction, allowMultiple: boolean): DownlinkOutput | MultipleDownlinkOutput {
   const commands: DownlinkCommand[] = []
 
   if (input.mainConfiguration) {
@@ -157,11 +154,12 @@ function encodeGetConfiguration(input: GetConfigurationAction, allowMultiple: bo
     throw new Error('No get configuration commands were provided.')
   }
 
-  const configId = PEW_DEFAULT_CONFIGURATION_ID
+  const configId = input.configurationId ?? PEW_DEFAULT_CONFIGURATION_ID
+  const byteLimit = input.byteLimit ?? Infinity
   const frame = buildPEWDownlinkFrame(commands, {
     configId,
     maxConfigId: PEW_DOWNLINK_FEATURE_FLAGS.maxConfigId,
-    byteLimit: Infinity,
+    byteLimit,
   })
 
   if (allowMultiple) {

@@ -1,8 +1,9 @@
 /* eslint-disable ts/explicit-function-return-type */
-import type { createDownlinkResetBatteryIndicatorSchema } from '../../../schemas/tulip2/downlink'
+import type { createDownlinkResetBatteryIndicatorSchema, TULIP2ConfigurationAction } from '../../../schemas/tulip2/downlink'
+import type { PewTulip2Channels, PewTulip2FeatureFlags } from '../parser/tulip2/constants'
 import * as v from 'valibot'
 import { createSemVerSchema } from '../../../schemas'
-import { createConfigurationIdSchema } from '../../../schemas/tulip2/downlink'
+import { createTULIP2DownlinkActionSchemaFactory } from '../../../schemas/tulip2/downlink'
 import { createUplinkOutputSchemaFactory } from '../../../schemas/tulip2/uplink'
 import { ALARM_EVENTS, DEVICE_ALARM_CAUSE_OF_FAILURE, DEVICE_ALARM_TYPES, MEASUREMENT_CHANNELS, PRESSURE_TYPES, PRESSURE_UNITS, PROCESS_ALARM_CHANNEL_NAMES, PROCESS_ALARM_TYPES, TECHNICAL_ALARM_TYPES } from '../parser/tulip2/lookups'
 
@@ -301,9 +302,12 @@ export type PEWTULIP2DeviceStatisticsUplinkOutput = v.InferOutput<ReturnType<typ
 
 // Downlink extras (kept in schema layer, not parser constants)
 export function createPEWTULIP2DropConfigurationSchema() {
-  return v.object({
-    deviceAction: v.literal('dropConfiguration'),
-    configurationId: createConfigurationIdSchema(127),
+  const createActionSchema = createTULIP2DownlinkActionSchemaFactory(127)
+  return createActionSchema({
+    action: 'dropConfiguration',
+    meta: {
+      byteLimit: false,
+    },
   })
 }
 
@@ -320,15 +324,23 @@ function getConfigurationChannelSchema() {
 }
 
 export function createPEWTULIP2GetConfigurationSchema() {
-  return v.object({
-    deviceAction: v.literal('getConfiguration'),
-    mainConfiguration: v.optional(v.literal(true)),
-    channel0: getConfigurationChannelSchema(),
-    channel1: getConfigurationChannelSchema(),
+  const createActionSchema = createTULIP2DownlinkActionSchemaFactory(127)
+  return createActionSchema({
+    action: 'getConfiguration',
+    extension: {
+      mainConfiguration: v.optional(v.literal(true)),
+      channel0: getConfigurationChannelSchema(),
+      channel1: getConfigurationChannelSchema(),
+    },
   })
 }
 
+export type PEWTULIP2DropConfigurationAction = v.InferOutput<ReturnType<typeof createPEWTULIP2DropConfigurationSchema>>
+export type PEWTULIP2GetConfigurationAction = v.InferOutput<ReturnType<typeof createPEWTULIP2GetConfigurationSchema>>
+export type PEWTULIP2ResetBatteryAction = v.InferOutput<ReturnType<typeof createDownlinkResetBatteryIndicatorSchema>>
+export type PEWTULIP2ConfigurationAction = TULIP2ConfigurationAction<PewTulip2Channels[number], PewTulip2FeatureFlags>
+
 export type PEWTULIP2DownlinkExtraInput
-  = | v.InferOutput<ReturnType<typeof createPEWTULIP2DropConfigurationSchema>>
-    | v.InferOutput<ReturnType<typeof createPEWTULIP2GetConfigurationSchema>>
-    | v.InferOutput<ReturnType<typeof createDownlinkResetBatteryIndicatorSchema>>
+  = | PEWTULIP2DropConfigurationAction
+    | PEWTULIP2GetConfigurationAction
+    | PEWTULIP2ResetBatteryAction

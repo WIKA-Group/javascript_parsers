@@ -1,4 +1,5 @@
 import type { DownlinkOutput, MultipleDownlinkOutput } from '../../../../../types'
+import type { PGUTULIP2ConfigurationAction } from '../../../schema/tulip2'
 import type { PGUTulip2DownlinkInput } from '../constants'
 import { formatDisableChannelInput, formatMainConfigurationInput, formatMeasureOffsetInput, formatProcessAlarmInput } from '../../../../../formatters'
 import { buildDownlinkFrames } from '../../../../../utils/encoding/tuilp2/frames'
@@ -7,7 +8,6 @@ import { PGU_DEFAULT_BYTE_LIMIT, PGU_DEFAULT_CONFIGURATION_ID, PGU_DOWNLINK_FEAT
 import { buildPGUDisableChannelCommands, buildPGUMainConfigCommand, buildPGUMeasureOffsetCommands, buildPGUProcessAlarmCommands, buildResetFactoryCommand } from './commands'
 
 type DownlinkCommand = number[]
-type DownlinkConfigurationFrame = Extract<PGUTulip2DownlinkInput, { deviceAction: 'configuration' }>
 
 export function PGUTULIP2EncodeHandler(formattedInput: PGUTulip2DownlinkInput): DownlinkOutput
 export function PGUTULIP2EncodeHandler(formattedInput: PGUTulip2DownlinkInput, allowMultiple: false): DownlinkOutput
@@ -36,9 +36,9 @@ function encodeResetToFactory(): number[] {
   return [0, ...command]
 }
 
-function encodeDownlinkConfiguration(input: DownlinkConfigurationFrame, allowMultiple: false): DownlinkOutput
-function encodeDownlinkConfiguration(input: DownlinkConfigurationFrame, allowMultiple: true): MultipleDownlinkOutput
-function encodeDownlinkConfiguration(input: DownlinkConfigurationFrame, allowMultiple: boolean): DownlinkOutput | MultipleDownlinkOutput {
+function encodeDownlinkConfiguration(input: PGUTULIP2ConfigurationAction, allowMultiple: false): DownlinkOutput
+function encodeDownlinkConfiguration(input: PGUTULIP2ConfigurationAction, allowMultiple: true): MultipleDownlinkOutput
+function encodeDownlinkConfiguration(input: PGUTULIP2ConfigurationAction, allowMultiple: boolean): DownlinkOutput | MultipleDownlinkOutput {
   const configId = input.configurationId ?? PGU_DEFAULT_CONFIGURATION_ID
   const byteLimit = input.byteLimit ?? PGU_DEFAULT_BYTE_LIMIT
   const payloadLimit = byteLimit - 1

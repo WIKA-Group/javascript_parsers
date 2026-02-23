@@ -1,6 +1,7 @@
+import type { TULIP2ConfigurationAction } from '../../../../../schemas/tulip2/downlink'
 import type { DownlinkOutput, MultipleDownlinkOutput } from '../../../../../types'
 import type { DownlinkCommand, DownlinkFrame } from '../../../../../utils/encoding/tuilp2/frames'
-import type { Netris2Tulip2DownlinkInput } from '../constants'
+import type { Netris2Tulip2Channels, Netris2Tulip2DownlinkInput, Netris2Tulip2FeatureFlags } from '../constants'
 import { formatDisableChannelInput, formatMainConfigurationInput, formatMeasureOffsetInput, formatProcessAlarmInput, formatStartupTimeInput } from '../../../../../formatters'
 import { DEFAULT_BYTE_LIMIT, DEFAULT_CONFIGURATION_ID } from '../../../../../utils/encoding/tuilp2/constants'
 import { buildDisableChannelCommands } from '../../../../../utils/encoding/tuilp2/disableChannel'
@@ -62,11 +63,9 @@ function encodeResetBatteryIndicator(configId?: number): DownlinkFrame {
   })
 }
 
-type DownlinkConfigurationFrame = Netris2Tulip2DownlinkInput & { deviceAction: 'configuration' }
-
-function encodeDownlinkConfiguration(input: DownlinkConfigurationFrame, allowMultiple: false): DownlinkOutput
-function encodeDownlinkConfiguration(input: DownlinkConfigurationFrame, allowMultiple: true): MultipleDownlinkOutput
-function encodeDownlinkConfiguration(input: DownlinkConfigurationFrame, allowMultiple: boolean): DownlinkOutput | MultipleDownlinkOutput {
+function encodeDownlinkConfiguration(input: TULIP2ConfigurationAction<Netris2Tulip2Channels[number], Netris2Tulip2FeatureFlags>, allowMultiple: false): DownlinkOutput
+function encodeDownlinkConfiguration(input: TULIP2ConfigurationAction<Netris2Tulip2Channels[number], Netris2Tulip2FeatureFlags>, allowMultiple: true): MultipleDownlinkOutput
+function encodeDownlinkConfiguration(input: TULIP2ConfigurationAction<Netris2Tulip2Channels[number], Netris2Tulip2FeatureFlags>, allowMultiple: boolean): DownlinkOutput | MultipleDownlinkOutput {
   const configId = input.configurationId ?? DEFAULT_CONFIGURATION_ID
 
   const byteLimit = input.byteLimit ?? DEFAULT_BYTE_LIMIT

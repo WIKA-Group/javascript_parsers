@@ -1,4 +1,5 @@
 import type { DownlinkOutput, MultipleDownlinkOutput } from '../../../../../types'
+import type { TRUTULIP2ConfigurationAction } from '../../../schema/tulip2'
 import type { TRUTulip2DownlinkInput } from '../constants'
 import { formatDisableChannelInput, formatMainConfigurationInput, formatMeasureOffsetInput, formatProcessAlarmInput } from '../../../../../formatters'
 import { buildDownlinkFrames } from '../../../../../utils/encoding/tuilp2/frames'
@@ -7,7 +8,6 @@ import { TRU_DEFAULT_BYTE_LIMIT, TRU_DEFAULT_CONFIGURATION_ID, TRU_DOWNLINK_FEAT
 import { buildResetFactoryCommand, buildTRUDisableChannelCommands, buildTRUMainConfigCommand, buildTRUMeasureOffsetCommands, buildTRUProcessAlarmCommands } from './commands'
 
 type DownlinkCommand = number[]
-type DownlinkConfigurationFrame = Extract<TRUTulip2DownlinkInput, { deviceAction: 'configuration' }>
 
 export function TRUTULIP2EncodeHandler(formattedInput: TRUTulip2DownlinkInput): DownlinkOutput
 export function TRUTULIP2EncodeHandler(formattedInput: TRUTulip2DownlinkInput, allowMultiple: false): DownlinkOutput
@@ -36,9 +36,9 @@ function encodeResetToFactory(): number[] {
   return [0, ...command]
 }
 
-function encodeDownlinkConfiguration(input: DownlinkConfigurationFrame, allowMultiple: false): DownlinkOutput
-function encodeDownlinkConfiguration(input: DownlinkConfigurationFrame, allowMultiple: true): MultipleDownlinkOutput
-function encodeDownlinkConfiguration(input: DownlinkConfigurationFrame, allowMultiple: boolean): DownlinkOutput | MultipleDownlinkOutput {
+function encodeDownlinkConfiguration(input: TRUTULIP2ConfigurationAction, allowMultiple: false): DownlinkOutput
+function encodeDownlinkConfiguration(input: TRUTULIP2ConfigurationAction, allowMultiple: true): MultipleDownlinkOutput
+function encodeDownlinkConfiguration(input: TRUTULIP2ConfigurationAction, allowMultiple: boolean): DownlinkOutput | MultipleDownlinkOutput {
   const configId = input.configurationId ?? TRU_DEFAULT_CONFIGURATION_ID
   const byteLimit = input.byteLimit ?? TRU_DEFAULT_BYTE_LIMIT
   const payloadLimit = byteLimit - 1

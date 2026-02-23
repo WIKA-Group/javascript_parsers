@@ -1,7 +1,9 @@
 /* eslint-disable ts/explicit-function-return-type */
+import type { TULIP2ConfigurationAction } from '../../../schemas/tulip2/downlink'
+import type { NETRIS1Tulip2Channels, NETRIS1Tulip2FeatureFlags } from '../parser/tulip2/constants'
 import * as v from 'valibot'
 import { createSemVerSchema } from '../../../schemas'
-import { createConfigurationIdSchema } from '../../../schemas/tulip2/downlink'
+import { createTULIP2DownlinkActionSchemaFactory } from '../../../schemas/tulip2/downlink'
 import { createUplinkOutputSchemaFactory } from '../../../schemas/tulip2/uplink'
 import { ALARM_EVENTS, DEVICE_ALARM_TYPES, LPP_MEASURANDS_BY_ID, LPP_UNITS_BY_ID, LPWAN_IDS_BY_ID, MEASUREMENT_ALARM_TYPES, PROCESS_ALARM_TYPES, PRODUCT_IDS_BY_ID, SENSOR_IDS_BY_ID, TECHNICAL_ALARM_TYPES } from '../parser/tulip2/lookups'
 
@@ -220,20 +222,31 @@ export type NETRIS1TULIP2DeviceInformationUplinkOutput = v.InferOutput<ReturnTyp
 
 // Downlink extras (kept in schema layer, not parser constants)
 export function createNETRIS1TULIP2GetConfigurationSchema() {
-  return v.object({
-    deviceAction: v.literal('getConfiguration'),
-    mainConfiguration: v.optional(v.literal(true)),
-    processAlarmConfiguration: v.optional(v.literal(true)),
+  const createActionSchema = createTULIP2DownlinkActionSchemaFactory(31)
+  return createActionSchema({
+    action: 'getConfiguration',
+    extension: {
+      mainConfiguration: v.optional(v.literal(true)),
+      processAlarmConfiguration: v.optional(v.literal(true)),
+    },
   })
 }
 
 export function createNETRIS1TULIP2ResetBatterySchema() {
-  return v.object({
-    deviceAction: v.literal('resetBatteryIndicator'),
-    configurationId: createConfigurationIdSchema(31),
+  const createActionSchema = createTULIP2DownlinkActionSchemaFactory(31)
+  return createActionSchema({
+    action: 'resetBatteryIndicator',
+    meta: {
+      byteLimit: false,
+    },
   })
 }
 
+export type NETRIS1TULIP2GetConfigurationAction = v.InferOutput<ReturnType<typeof createNETRIS1TULIP2GetConfigurationSchema>>
+export type NETRIS1TULIP2ResetBatteryAction = v.InferOutput<ReturnType<typeof createNETRIS1TULIP2ResetBatterySchema>>
+
+export type NETRIS1TULIP2ConfigurationAction = TULIP2ConfigurationAction<NETRIS1Tulip2Channels[number], NETRIS1Tulip2FeatureFlags>
+
 export type NETRIS1TULIP2DownlinkExtraInput
-  = | v.InferOutput<ReturnType<typeof createNETRIS1TULIP2GetConfigurationSchema>>
-    | v.InferOutput<ReturnType<typeof createNETRIS1TULIP2ResetBatterySchema>>
+  = | NETRIS1TULIP2GetConfigurationAction
+    | NETRIS1TULIP2ResetBatteryAction

@@ -1,4 +1,5 @@
 import type { DownlinkOutput, MultipleDownlinkOutput } from '../../../../../types'
+import type { NETRIS1TULIP2ConfigurationAction, NETRIS1TULIP2GetConfigurationAction, NETRIS1TULIP2ResetBatteryAction } from '../../../schema/tulip2'
 import type { NETRIS1Tulip2DownlinkInput } from '../constants'
 import { formatMainConfigurationInput, formatProcessAlarmInput } from '../../../../../formatters'
 import { pushUint16, pushUint32 } from '../../../../../utils/encoding/push'
@@ -9,11 +10,8 @@ import { NETRIS1_COMMANDS, NETRIS1_DEFAULT_BYTE_LIMIT, NETRIS1_DEFAULT_CONFIGURA
 type DownlinkCommand = number[]
 type DownlinkFrame = number[]
 
-type DownlinkConfigurationFrame = Extract<NETRIS1Tulip2DownlinkInput, { deviceAction: 'configuration' }>
-type GetConfigurationAction = Extract<NETRIS1Tulip2DownlinkInput, { deviceAction: 'getConfiguration' }>
-
 function buildMainConfigCommand(
-  config: DownlinkConfigurationFrame['mainConfiguration'],
+  config: NETRIS1TULIP2ConfigurationAction['mainConfiguration'],
 ): DownlinkCommand {
   if (!config) {
     return []
@@ -125,23 +123,19 @@ export function NETRIS1TULIP2EncodeHandler(formattedInput: NETRIS1Tulip2Downlink
     }
 
     case 'resetBatteryIndicator': {
-      const frame = encodeResetBatteryIndicator(formattedInput.configurationId)
+      const frame = encodeResetBatteryIndicator(formattedInput)
       return allowMultiple ? formatMultipleDownlinkOutput([frame]) : formatDownlinkOutput(frame)
     }
 
     case 'getConfiguration':
-      return encodeGetConfiguration(formattedInput,
-        // @ts-expect-error - overload resolution
-        allowMultiple)
+
+      return encodeGetConfiguration(formattedInput, allowMultiple)
 
     case 'configuration':
-      return encodeDownlinkConfiguration(formattedInput,
-        // @ts-expect-error - overload resolution
-        allowMultiple)
+      return encodeDownlinkConfiguration(formattedInput, allowMultiple)
 
     default: {
-      // @ts-expect-error - exhaustive check
-      throw new Error(`Unknown device action: ${formattedInput.deviceAction}`)
+      throw new Error('Unknown device action')
     }
   }
 }
@@ -155,8 +149,8 @@ function encodeResetToFactory(): DownlinkFrame {
   })
 }
 
-function encodeResetBatteryIndicator(configId?: number): DownlinkFrame {
-  configId ??= NETRIS1_DEFAULT_CONFIGURATION_ID
+function encodeResetBatteryIndicator(input: NETRIS1TULIP2ResetBatteryAction): DownlinkFrame {
+  const configId = input.configurationId ?? NETRIS1_DEFAULT_CONFIGURATION_ID
   const command = [NETRIS1_COMMANDS.RESET_BATTERY, 0x00]
   return buildDownlinkFrame([command], {
     configId,
@@ -165,9 +159,7 @@ function encodeResetBatteryIndicator(configId?: number): DownlinkFrame {
   })
 }
 
-function encodeDownlinkConfiguration(input: DownlinkConfigurationFrame, allowMultiple: false): DownlinkOutput
-function encodeDownlinkConfiguration(input: DownlinkConfigurationFrame, allowMultiple: true): MultipleDownlinkOutput
-function encodeDownlinkConfiguration(input: DownlinkConfigurationFrame, allowMultiple: boolean): DownlinkOutput | MultipleDownlinkOutput {
+function encodeDownlinkConfiguration(input: NETRIS1TULIP2ConfigurationAction, allowMultiple: boolean): DownlinkOutput | MultipleDownlinkOutput {
   const configId = input.configurationId ?? NETRIS1_DEFAULT_CONFIGURATION_ID
 
   const byteLimit = input.byteLimit ?? NETRIS1_DEFAULT_BYTE_LIMIT
@@ -207,9 +199,7 @@ function encodeDownlinkConfiguration(input: DownlinkConfigurationFrame, allowMul
   return formatDownlinkOutput(frames[0]!)
 }
 
-function encodeGetConfiguration(input: GetConfigurationAction, allowMultiple: false): DownlinkOutput
-function encodeGetConfiguration(input: GetConfigurationAction, allowMultiple: true): MultipleDownlinkOutput
-function encodeGetConfiguration(input: GetConfigurationAction, allowMultiple: boolean): DownlinkOutput | MultipleDownlinkOutput {
+function encodeGetConfiguration(input: NETRIS1TULIP2GetConfigurationAction, allowMultiple: boolean): DownlinkOutput | MultipleDownlinkOutput {
   const commands: DownlinkCommand[] = []
 
   if (input.mainConfiguration) {
@@ -224,11 +214,12 @@ function encodeGetConfiguration(input: GetConfigurationAction, allowMultiple: bo
     throw new Error('No get configuration commands were provided.')
   }
 
-  const configId = NETRIS1_DEFAULT_CONFIGURATION_ID
+  const configId = ('configurationId' in input ? input.configurationId : undefined) ?? NETRIS1_DEFAULT_CONFIGURATION_ID
+  const byteLimit = ('byteLimit' in input ? input.byteLimit : undefined) ?? Infinity
   const frame = buildDownlinkFrame(commands, {
     configId,
     maxConfigId: NETRIS1_DOWNLINK_FEATURE_FLAGS.maxConfigId,
-    byteLimit: Infinity,
+    byteLimit,
   })
 
   if (allowMultiple) {
