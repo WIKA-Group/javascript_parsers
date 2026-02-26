@@ -1,4 +1,6 @@
 /* eslint-disable ts/explicit-function-return-type */
+import type { createDownlinkResetBatteryIndicatorSchema, TULIP2ConfigurationAction } from '../../../schemas/tulip2/downlink'
+import type { PGWTulip2Channels } from '../parser/tulip2/constants'
 import * as v from 'valibot'
 import { createSemVerSchema } from '../../../schemas'
 import { createUplinkOutputSchemaFactory } from '../../../schemas/tulip2/uplink'
@@ -14,6 +16,14 @@ import {
   TECHNICAL_ALARM_CAUSE_OF_FAILURE,
   TEMPERATURE_UNITS,
 } from '../parser/tulip2/lookups'
+
+interface PGWTulip2FeatureFlags {
+  maxConfigId: 127
+  channelsStartupTime: false
+  channelsMeasureOffset: false
+  mainConfigBLE: false
+  mainConfigSingleMeasuringRate: true
+}
 
 const createUplinkSchema = createUplinkOutputSchemaFactory(31)
 
@@ -235,3 +245,8 @@ export type PGW23_100_11TULIP2DeviceInformationUplinkOutput = v.InferOutput<Retu
 
 export type PGW23_100_11TULIP2DeviceStatisticsData = v.InferOutput<ReturnType<typeof createDeviceStatisticsUplinkOutputSchema>>['data']['deviceStatistic']
 export type PGW23_100_11TULIP2DeviceStatisticsUplinkOutput = v.InferOutput<ReturnType<typeof createDeviceStatisticsUplinkOutputSchema>>
+export type PGW23_100_11TULIP2ResetBatteryAction = v.InferOutput<ReturnType<typeof createDownlinkResetBatteryIndicatorSchema>>
+export type PGW23_100_11TULIP2ConfigurationAction = TULIP2ConfigurationAction<PGWTulip2Channels[number], PGWTulip2FeatureFlags>
+
+export type PGW23_100_11TULIP2DownlinkExtraInput
+  = PGW23_100_11TULIP2ResetBatteryAction

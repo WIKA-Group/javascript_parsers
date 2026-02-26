@@ -3,11 +3,43 @@ import type { TULIP2Channel } from '../../codecs/tulip2'
 import * as v from 'valibot'
 
 export interface Tulip2EncodeFeatureFlags {
+  /**
+   * Maximum allowed configurationId value for actions that include configurationId.
+   * Used by the generated action schema validators.
+   */
   maxConfigId: number
+  /**
+   * Enables `startUpTime` on per-channel configuration object schemas.
+   * If omitted/false, `startUpTime` is not accepted.
+   */
   channelsStartupTime?: boolean
+  /**
+   * Enables `measureOffset` on per-channel configuration object schemas.
+   * If omitted/false, `measureOffset` is not accepted.
+   */
   channelsMeasureOffset?: boolean
+  /**
+   * Enables `isBLEEnabled` in mainConfiguration schema.
+   */
   mainConfigBLE?: boolean
+  /**
+   * Switches mainConfiguration from dual measuring rates
+   * (`measuringRateWhenNoAlarm` + `measuringRateWhenAlarm`)
+   * to single `measuringRate`.
+   */
   mainConfigSingleMeasuringRate?: boolean
+  /**
+   * Channel keys that must be boolean-only in configuration actions.
+   *
+   * Example: `['channel1']`
+   * - `channel1: true | false` is allowed
+   * - `channel1: { alarms: ... }` is rejected by schema
+   *
+   * This also affects TypeScript output types (`TULIP2ConfigurationAction`) so
+   * listed channels are inferred as `true | false` only, while other channels
+   * still allow full channel configuration objects.
+   */
+  channelsBooleanOnly?: readonly [`channel${number}`, ...`channel${number}`[]]
 }
 
 export interface Tulip2DownlinkSpanLimitFactors {
@@ -519,8 +551,13 @@ function createTulip2DownlinkChannelSchema<TFeatureFlags extends Tulip2EncodeFea
 }
 
 type Tulip2ChannelSchemasObject<TChannels extends TULIP2Channel[], TFeatureFlags extends Tulip2EncodeFeatureFlags> = {
-  [K in TChannels[number] as `channel${K['channelId']}`]: v.OptionalSchema<v.UnionSchema<[v.LiteralSchema<false, undefined>, v.LiteralSchema<true, undefined>, Tulip2DownlinkChannelSchema<TFeatureFlags>], undefined>, undefined>
+  [K in TChannels[number] as `channel${K['channelId']}`]: `channel${K['channelId']}` extends ChannelBooleanOnlyKeys<TFeatureFlags>
+    ? v.OptionalSchema<v.UnionSchema<[v.LiteralSchema<false, undefined>, v.LiteralSchema<true, undefined>], undefined>, undefined>
+    : v.OptionalSchema<v.UnionSchema<[v.LiteralSchema<false, undefined>, v.LiteralSchema<true, undefined>, Tulip2DownlinkChannelSchema<TFeatureFlags>], undefined>, undefined>
 }
+
+type ChannelBooleanOnlyKeys<TFeatureFlags extends Tulip2EncodeFeatureFlags>
+  = TFeatureFlags['channelsBooleanOnly'] extends readonly `channel${number}`[] ? TFeatureFlags['channelsBooleanOnly'][number] : never
 
 export function createTULIP2DownlinkConfigurationActionSchema<TChannel extends TULIP2Channel, TFeatureFlags extends Tulip2EncodeFeatureFlags>(
   channels: TChannel[],
@@ -528,8 +565,20 @@ export function createTULIP2DownlinkConfigurationActionSchema<TChannel extends T
   spanLimitFactors?: Tulip2DownlinkSpanLimitFactors,
 ) {
   const createActionSchema = createTULIP2DownlinkActionSchemaFactory(featureFlags.maxConfigId)
+  const channelsBooleanOnly = new Set(featureFlags.channelsBooleanOnly ?? [])
   const channelSchemas: Tulip2ChannelSchemasObject<TChannel[], TFeatureFlags> = channels.reduce((acc, channel) => {
     const channelKey = `channel${channel.channelId}` as `channel${TChannel['channelId']}`
+
+    if (channelsBooleanOnly.has(channelKey)) {
+      // @ts-expect-error - TypeScript can't infer that this specific channel.channelId matches the mapped type key
+      acc[channelKey] = v.optional(
+        v.union([
+          v.literal(false),
+          v.literal(true),
+        ]),
+      )
+      return acc
+    }
 
     // @ts-expect-error - TypeScript can't infer that this specific channel.channelId matches the mapped type key
     acc[channelKey] = v.optional(
@@ -582,25 +631,13 @@ export function createTULIP2DownlinkSchema<TChannels extends TULIP2Channel, TFea
 
 type DownlinkResetToFactory = v.InferOutput<ReturnType<typeof createDownlinkResetToFactorySchema>>
 
-// Manually type the configuration frame output since ReturnType with generics doesn't work with Valibot's constraints
-type ChannelConfigOutput<TFeatureFlags extends Tulip2EncodeFeatureFlags>
-  = | false
-    | true
-    | v.InferOutput<Tulip2DownlinkChannelSchema<TFeatureFlags>>
-
-type ChannelSchemasOutput<TChannels extends TULIP2Channel[], TFeatureFlags extends Tulip2EncodeFeatureFlags> = {
-  [K in TChannels[number] as `channel${K['channelId']}`]?: ChannelConfigOutput<TFeatureFlags>
-}
-
-type DownlinkConfigurationFrame<TChannels extends TULIP2Channel, TFeatureFlags extends Tulip2EncodeFeatureFlags> = {
-  deviceAction: 'configuration'
-  byteLimit?: number
-  configurationId?: number
-  mainConfiguration?: v.InferOutput<Tulip2DownlinkMainConfiguration<TFeatureFlags>>
-} & ChannelSchemasOutput<TChannels[], TFeatureFlags>
+// necessary as InferOutput from valibot has strict inputs and with dynamic schemas it gets confused
+type InferValibotOutput<TSchema> = TSchema extends { '~types'?: { output: infer TOutput } }
+  ? TOutput
+  : never
 
 export type TULIP2ConfigurationAction<TChannels extends TULIP2Channel, TFeatureFlags extends Tulip2EncodeFeatureFlags>
-  = DownlinkConfigurationFrame<TChannels, TFeatureFlags>
+  = InferValibotOutput<ReturnType<typeof createTULIP2DownlinkConfigurationActionSchema<TChannels, TFeatureFlags>>>
 
 export type TULIP2DownlinkInput<TChannels extends TULIP2Channel, TFeatureFlags extends Tulip2EncodeFeatureFlags>
   = DownlinkResetToFactory

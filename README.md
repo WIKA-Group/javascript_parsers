@@ -62,6 +62,9 @@ Review the contributor section of the docs for setup. Need help or spotted an is
 Distributed under the [MIT License](./LICENSE).
 
 ## Release Notes
+4.7.0
+  - feat: add PGW TULIP2 downlink configuration support
+
 4.6.0
   - feat: add TRW TULIP3 downlink configuration support
   - feat: add TRW TULIP2 downlink configuration support

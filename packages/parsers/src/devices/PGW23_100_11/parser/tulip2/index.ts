@@ -1,9 +1,10 @@
-import type { Handler, TULIP2Channel } from '../../../../codecs/tulip2'
+import type { EncoderFactory, Handler, MultipleEncoderFactory } from '../../../../codecs/tulip2'
 import type {
   PGW23_100_11TULIP2DataMessageUplinkOutput,
   PGW23_100_11TULIP2DeviceAlarmsUplinkOutput,
   PGW23_100_11TULIP2DeviceInformationUplinkOutput,
   PGW23_100_11TULIP2DeviceStatisticsUplinkOutput,
+  PGW23_100_11TULIP2DownlinkExtraInput,
   PGW23_100_11TULIP2ProcessAlarmsData,
   PGW23_100_11TULIP2ProcessAlarmsUplinkOutput,
   PGW23_100_11TULIP2TechnicalAlarmsUplinkOutput,
@@ -11,9 +12,13 @@ import type {
   PressureUnitValues,
   TemperatureUnitValues,
 } from '../../schema/tulip2'
+import type { PGWTulip2BaseDownlinkInput } from './constants'
 import { PGW23_100_11_NAME } from '..'
 import { defineTULIP2Codec } from '../../../../codecs/tulip2'
+import { createDownlinkResetBatteryIndicatorSchema, validateTULIP2DownlinkInput } from '../../../../schemas/tulip2/downlink'
 import { DEFAULT_ROUNDING_DECIMALS, intTuple4ToFloat32WithThreshold, roundValue, slopeValueToValue, TULIPValueToValue } from '../../../../utils'
+import { createTULIP2PGWChannels, PGW_DOWNLINK_FEATURE_FLAGS } from './constants'
+import { PGWTULIP2EncodeHandler } from './encode'
 import {
   ALARM_EVENTS,
   DEVICE_ALARM_CAUSE_OF_FAILURE,
@@ -28,25 +33,26 @@ import {
 
 const ERROR_VALUE = 0xFFFF
 
-// eslint-disable-next-line ts/explicit-function-return-type
-function createTULIP2PGWChannels() {
-  return [
-    {
-      channelId: MEASUREMENT_CHANNELS.pressure,
-      name: 'pressure',
-      start: 0 as number,
-      end: 10 as number,
-    },
-    {
-      channelId: MEASUREMENT_CHANNELS['device temperature'],
-      name: 'device temperature',
-      start: -40 as number,
-      end: 60 as number,
-    },
-  ] as const satisfies TULIP2Channel[]
+type TULIP2PGWChannels = ReturnType<typeof createTULIP2PGWChannels>
+type PGWTulip2DownlinkInput = PGWTulip2BaseDownlinkInput | PGW23_100_11TULIP2DownlinkExtraInput
+
+const pgwEncoderFactory: EncoderFactory<PGWTulip2DownlinkInput> = (options) => {
+  const featureFlags = PGW_DOWNLINK_FEATURE_FLAGS
+  return (input: PGWTulip2DownlinkInput) => {
+    const channels = options.getChannels()
+    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, [createDownlinkResetBatteryIndicatorSchema(featureFlags)])
+    return PGWTULIP2EncodeHandler(validated as PGWTulip2DownlinkInput)
+  }
 }
 
-type TULIP2PGWChannels = ReturnType<typeof createTULIP2PGWChannels>
+const pgwMultipleEncodeFactory: MultipleEncoderFactory<PGWTulip2DownlinkInput> = (options) => {
+  const featureFlags = PGW_DOWNLINK_FEATURE_FLAGS
+  return (input: PGWTulip2DownlinkInput) => {
+    const channels = options.getChannels()
+    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, [createDownlinkResetBatteryIndicatorSchema(featureFlags)])
+    return PGWTULIP2EncodeHandler(validated as PGWTulip2DownlinkInput, true)
+  }
+}
 
 const handleDataMessage: Handler<TULIP2PGWChannels, PGW23_100_11TULIP2DataMessageUplinkOutput> = (input, options) => {
   if (input.bytes.length !== 7) {
@@ -362,6 +368,8 @@ export function createTULIP2PGWCodec() {
       0x07: handleDeviceIdentificationMessage,
       0x08: handleKeepAliveMessage,
     },
+    encoderFactory: pgwEncoderFactory,
+    multipleEncodeFactory: pgwMultipleEncodeFactory,
   })
 }
 

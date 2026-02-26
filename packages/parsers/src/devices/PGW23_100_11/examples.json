@@ -496,5 +496,269 @@
         }
       }
     }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase downlink message: Main configuration",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "configuration",
+        "configurationId": 1,
+        "mainConfiguration": {
+          "measuringRate": 60,
+          "publicationFactorWhenNoAlarm": 3,
+          "publicationFactorWhenAlarm": 3
+        }
+      }
+    },
+    "output": {
+      "bytes": [1, 0, 2, 0, 6, 0, 3, 0, 3],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase downlink message: Reset configuration",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "resetToFactory"
+      }
+    },
+    "output": {
+      "bytes": [1, 0, 1],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase downlink message: Disable pressure and device temperature",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "configuration",
+        "configurationId": 2,
+        "channel0": false,
+        "channel1": false
+      }
+    },
+    "output": {
+      "bytes": [2, 0, 16, 17],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase downlink message: Configure falling threshold alarm",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "configuration",
+        "configurationId": 4,
+        "channel0": {
+          "alarms": {
+            "deadBand": 0.1,
+            "lowThreshold": 2.5
+          }
+        }
+      }
+    },
+    "output": {
+      "bytes": [4, 0, 32, 0, 100, 128, 19, 136],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase downlink message: Configure delayed pressure alarms",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "configuration",
+        "configurationId": 7,
+        "channel0": {
+          "alarms": {
+            "deadBand": 0.1,
+            "lowThresholdWithDelay": {
+              "value": 2.048,
+              "delay": 6
+            },
+            "highThresholdWithDelay": {
+              "value": 4.096,
+              "delay": 6
+            }
+          }
+        }
+      }
+    },
+    "output": {
+      "bytes": [7, 0, 32, 0, 100, 12, 17, 196, 0, 6, 25, 196, 0, 6],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase downlink message: Configure all pressure alarms",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "configuration",
+        "configurationId": 6,
+        "channel0": {
+          "alarms": {
+            "deadBand": 0.1,
+            "lowThreshold": 2.048,
+            "highThreshold": 4.096,
+            "fallingSlope": 0.001,
+            "risingSlope": 0.002,
+            "lowThresholdWithDelay": {
+              "value": 2,
+              "delay": 4
+            },
+            "highThresholdWithDelay": {
+              "value": 4,
+              "delay": 6
+            }
+          }
+        }
+      }
+    },
+    "output": {
+      "bytes": [6, 0, 32, 0, 100, 252, 17, 196, 25, 196, 0, 1, 0, 2, 17, 148, 0, 4, 25, 100, 0, 6],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase downlink message: Reset battery indicator",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "resetBatteryIndicator",
+        "configurationId": 9
+      }
+    },
+    "output": {
+      "bytes": [9, 0, 64],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase custom downlink message: Disable pressure channel only",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "configuration",
+        "configurationId": 13,
+        "channel0": false
+      }
+    },
+    "output": {
+      "bytes": [13, 0, 16],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase custom downlink message: Disable device temperature channel only",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "configuration",
+        "configurationId": 21,
+        "channel1": false
+      }
+    },
+    "output": {
+      "bytes": [21, 0, 17],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase custom downlink message: Reset battery indicator with default configuration id",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "resetBatteryIndicator"
+      }
+    },
+    "output": {
+      "bytes": [1, 0, 64],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlinkMultiple",
+    "description": "GoodCase downlink multiple message: Split delayed alarm and disable-temperature commands across frames",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "configuration",
+        "configurationId": 7,
+        "byteLimit": 14,
+        "channel0": {
+          "alarms": {
+            "deadBand": 0.1,
+            "lowThresholdWithDelay": {
+              "value": 2.048,
+              "delay": 6
+            },
+            "highThresholdWithDelay": {
+              "value": 4.096,
+              "delay": 6
+            }
+          }
+        },
+        "channel1": false
+      }
+    },
+    "output": {
+      "frames": [
+        [7, 1, 32, 0, 100, 12, 17, 196, 0, 6, 25, 196, 0, 6],
+        [7, 17, 17]
+      ],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "Badcase downlink message: channel 1 process alarms are not supported",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "configuration",
+        "configurationId": 12,
+        "channel1": {
+          "alarms": {
+            "deadBand": 1,
+            "lowThreshold": 10
+          }
+        }
+      }
+    },
+    "output": {
+      "errors": [
+        "PGW23.100.11 (JS): × Invalid type: Expected (false | true) but received Object\n  → at channel1"
+      ]
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "Badcase downlink message: no configuration commands provided",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "configuration",
+        "configurationId": 14
+      }
+    },
+    "output": {
+      "errors": [
+        "PGW23.100.11 (JS): No configuration commands were provided for the downlink frame."
+      ]
+    }
   }
 ]
