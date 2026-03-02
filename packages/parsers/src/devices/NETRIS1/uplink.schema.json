@@ -3686,7 +3686,7 @@
                 },
                 "messageType": {
                   "enum": [
-                    9
+                    10
                   ]
                 },
                 "channelFailureAlarm": {

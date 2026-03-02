@@ -142,10 +142,10 @@ function createDeviceStatisticsUplinkOutputSchema() {
   })
 }
 
-// Channel failure alarm (0x09)
+// Channel failure alarm (0x0A)
 function createChannelFailureAlarmUplinkOutputSchema() {
   return createUplinkSchema({
-    messageType: [0x09],
+    messageType: [0x0A],
     extension: {
       channelFailureAlarm: v.object({
         sensorId: v.literal(0),

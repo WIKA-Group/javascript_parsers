@@ -70,6 +70,7 @@ Distributed under the [MIT License](./LICENSE).
 4.6.0
   - feat: add TRW TULIP3 downlink configuration support
   - feat: add TRW TULIP2 downlink configuration support
+  - fix: use correct messageType for technical alarm uplink message in NETRIS1 TULIP2 decoder
 
 4.5.0
   - feat: include all devices in npm module

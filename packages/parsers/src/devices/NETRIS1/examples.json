@@ -345,7 +345,7 @@
     "description": "GoodCase data message: Uplink example for Measurement Input Failure Alarm Message",
     "input": {
       "bytes": [
-        9,
+        10,
         0,
         0,
         0,
@@ -356,7 +356,7 @@
     },
     "output": {
       "data": {
-        "messageType": 9,
+        "messageType": 10,
         "configurationId": 0,
         "channelFailureAlarm": {
           "sensorId": 0,
@@ -375,7 +375,7 @@
     "description": "GoodCase data message: Uplink example for Measurement Input Failure Alarm Message",
     "input": {
       "bytes": [
-        9,
+        10,
         0,
         0,
         0,
@@ -386,7 +386,7 @@
     },
     "output": {
       "data": {
-        "messageType": 9,
+        "messageType": 10,
         "configurationId": 0,
         "channelFailureAlarm": {
           "sensorId": 0,

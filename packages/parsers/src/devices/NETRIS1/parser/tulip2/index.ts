@@ -266,7 +266,7 @@ const handleKeepAliveMessage: Handler<TULIP2NETRIS1Channels, NETRIS1TULIP2Device
 
 const handleChannelFailureAlarmMessage: Handler<TULIP2NETRIS1Channels, NETRIS1TULIP2ChannelFailureAlarmUplinkOutput> = (input) => {
   if (input.bytes.length !== 5) {
-    throw new Error(`Channel failure alarm message (0x09) requires 5 bytes, but received ${input.bytes.length} bytes`)
+    throw new Error(`Channel failure alarm message (0x0A) requires 5 bytes, but received ${input.bytes.length} bytes`)
   }
 
   const configurationId = input.bytes[1]!
@@ -282,7 +282,7 @@ const handleChannelFailureAlarmMessage: Handler<TULIP2NETRIS1Channels, NETRIS1TU
 
   return {
     data: {
-      messageType: 0x09,
+      messageType: 0x0A,
       configurationId,
       channelFailureAlarm: {
         sensorId: 0,
@@ -327,7 +327,7 @@ export function createTULIP2NETRIS1Codec() {
       0x05: handleDeviceAlarmMessage,
       0x07: handleDeviceIdentificationMessage,
       0x08: handleKeepAliveMessage,
-      0x09: handleChannelFailureAlarmMessage,
+      0x0A: handleChannelFailureAlarmMessage,
     },
     encoderFactory: netris1EncoderFactory,
     multipleEncodeFactory: netris1MultipleEncodeFactory,
