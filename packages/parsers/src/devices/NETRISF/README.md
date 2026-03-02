@@ -1,6 +1,6 @@
-# F98W6
+# NETRIS_F
 
-![F98W6](../../../../../docs/public/F98W6.png)
+![NETRIS_F](../../../../../docs/public/NETRIS_F.png)
 
 #### Description of the device
 
@@ -12,4 +12,4 @@ that contains an amplifier for system control.
 
 ---
 
-For more information see [product site](https://www.wika.com/en-en/f9846.WIKA).
+For more information see [product site](https://www.wika.com/en-en/netris_f.WIKA).

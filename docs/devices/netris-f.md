@@ -1,6 +1,6 @@
 <script setup>
-import README from '../../packages/parsers/src/devices/F98W6/README.md'
-import JSDOC from '../../packages/parsers/src/devices/F98W6/JSDOC.md'
+import README from '../../packages/parsers/src/devices/NETRISF/README.md'
+import JSDOC from '../../packages/parsers/src/devices/NETRISF/JSDOC.md'
 </script>
 
 <README />

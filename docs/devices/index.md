@@ -26,7 +26,7 @@ Note: region availability may change in the future, additional regions such as S
 | Device | TULIP2 Uplink | TULIP2 Downlink | TULIP3 Uplink | TULIP3 Downlink |
 |--------|:-------------:|:---------------:|:-------------:|:---------------:|
 | [A2G](./a2g.md) | ✔️ | ⚪ | ❌ | ⚪ |
-| [F98W6](./f98w6.md) | ✔️ | ❌ | ❌ | ❌ |
+| [NETRIS_F (prev. F98W6)](./netris-f.md) | ✔️ | ❌ | ❌ | ❌ |
 | [GD20W](./gd20w.md) | ✔️ | ❌ | ❌ | ❌ |
 | [NETRIS1](./netris1.md) | ✔️ | ✔️ | ✔️ | ✔️ |
 | [NETRIS2](./netris2.md) | ✔️ | ✔️ | ❌ | ❌ |

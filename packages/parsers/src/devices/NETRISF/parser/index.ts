@@ -1,13 +1,13 @@
 import { defineParser } from '../../../parser'
-import { createF98W6TULIP2Codec } from './tulip2'
+import { createNetrisFTULIP2Codec } from './tulip2'
 
-export const F98W6_NAME = 'F98W6'
+export const NETRISF_NAME = 'NETRIS_F'
 
 // eslint-disable-next-line ts/explicit-function-return-type
 export function useParser() {
   return defineParser({
-    parserName: F98W6_NAME,
-    codecs: [createF98W6TULIP2Codec()],
+    parserName: NETRISF_NAME,
+    codecs: [createNetrisFTULIP2Codec()],
   })
 }
 

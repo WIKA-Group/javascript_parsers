@@ -1,11 +1,11 @@
 import type { HexUplinkInput, UplinkInput } from '../../parsers/src/schemas'
 import type { DownlinkOutput, GenericUplinkOutputFailure, MultipleDownlinkOutput, MultipleDownlinkOutputFailure } from '../../parsers/src/types'
 import A2GParser from '../../parsers/src/devices/A2G/parser'
-import F98W6Parser from '../../parsers/src/devices/F98W6/parser'
 import FLRUParser from '../../parsers/src/devices/FLRU_NETRIS3/parser'
 import GD20WParser from '../../parsers/src/devices/GD20W/parser'
 import NETRIS1Parser from '../../parsers/src/devices/NETRIS1/parser'
 import NETRIS2Parser from '../../parsers/src/devices/NETRIS2/parser'
+import NETRISFParser from '../../parsers/src/devices/NETRISF/parser'
 import PEUParser from '../../parsers/src/devices/PEU_NETRIS3/parser'
 import PEWParser from '../../parsers/src/devices/PEW/parser'
 import PGUParser from '../../parsers/src/devices/PGU_NETRIS3/parser'
@@ -16,11 +16,11 @@ import TRWParser from '../../parsers/src/devices/TRW/parser'
 
 export {
   A2GParser,
-  F98W6Parser,
   FLRUParser,
   GD20WParser,
   NETRIS1Parser,
   NETRIS2Parser,
+  NETRISFParser,
   PEUParser,
   PEWParser,
   PGUParser,
@@ -49,11 +49,11 @@ export type EncodeDownlinkFailureOutput = GenericUplinkOutputFailure
 export type EncodeMultipleDownlinksOutput = MultipleDownlinkOutput
 export type EncodeMultipleDownlinksFailureOutput = MultipleDownlinkOutputFailure
 
-// F98W6
-export type F98W6DecodeUplinkOutput = ReturnType<ReturnType<typeof F98W6Parser>['decodeUplink']>
-export type F98W6DecodeUplinkSuccessfulOutput = InferGenericSuccessfulUplinkData<F98W6DecodeUplinkOutput>
-export type F98W6DecodeHexUplinkOutput = ReturnType<ReturnType<typeof F98W6Parser>['decodeHexUplink']>
-export type F98W6DecodeHexUplinkSuccessfulOutput = InferGenericSuccessfulUplinkData<F98W6DecodeHexUplinkOutput>
+// NETRISF
+export type NETRISFDecodeUplinkOutput = ReturnType<ReturnType<typeof NETRISFParser>['decodeUplink']>
+export type NETRISFDecodeUplinkSuccessfulOutput = InferGenericSuccessfulUplinkData<NETRISFDecodeUplinkOutput>
+export type NETRISFDecodeHexUplinkOutput = ReturnType<ReturnType<typeof NETRISFParser>['decodeHexUplink']>
+export type NETRISFDecodeHexUplinkSuccessfulOutput = InferGenericSuccessfulUplinkData<NETRISFDecodeHexUplinkOutput>
 // FLRU_NETRIS3
 
 export type FLRUNETRIS3DecodeUplinkgOutput = ReturnType<ReturnType<typeof FLRUParser>['decodeUplink']>

@@ -46,7 +46,7 @@ The following list shows whether a device is included in the package.
 | Device       | Included | Factory function |
 |--------------|:--------:| :----------------:|
 |A2G           |    ✔️    |    `A2GParser` |
-|F98W6         |    ✔️    |    `F98W6Parser` |
+|NETRIS_F (prev. F98W6)         |    ✔️    |    `NetrisFParser` |
 |GD20W         |    ✔️    |    `GD20WParser` |
 |NETRIS1       |    ✔️    |    `NETRIS1Parser` |
 |NETRIS2       |    ✔️    |    `NETRIS2Parser` |

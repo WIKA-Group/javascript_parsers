@@ -29,7 +29,7 @@ features:
     details: Simple installation via npm with TypeScript support. Works in Node.js, browsers, and serverless environments.
   - icon: 📡
     title: 13+ Supported Devices
-    details: Comprehensive support for A2G, F98W6, GD20W, NETRIS1/2/3, PEU, PGU, TGU, TRU, PEW, PGW23, and TRW devices.
+    details: Comprehensive support for A2G, NETRIS_F (previously F98W6), GD20W, NETRIS1/2/3, PEU, PGU, TGU, TRU, PEW, PGW23, and TRW devices.
   - icon: 🔧
     title: Modern & Legacy Support
     details: Both modern TULIP3 protocol implementation and backward compatibility with legacy parsers.

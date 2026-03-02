@@ -1,4 +1,4 @@
-# F98W6 Parser Quick Start
+# NETRIS_F Parser Quick Start
 
 ## Parser API
 
@@ -31,7 +31,7 @@ type Result = {
 }
 ```
 
-To understand the data field, take a look at the [examples](https://github.com/WIKA-Group/javascript_parsers/blob/main/packages/parsers/src/devices/F98W6/examples.json) and the [schema definition](https://github.com/WIKA-Group/javascript_parsers/blob/main/packages/parsers/src/devices/F98W6/uplink.schema.json).
+To understand the data field, take a look at the [examples](https://github.com/WIKA-Group/javascript_parsers/blob/main/packages/parsers/src/devices/NetrisF/examples.json) and the [schema definition](https://github.com/WIKA-Group/javascript_parsers/blob/main/packages/parsers/src/devices/NetrisF/uplink.schema.json).
 
 Supported `channels` to identify different sensors by:
 ```ts
@@ -100,7 +100,7 @@ Identification messages (message type `6`/`0x06`) confirm the configured ranges:
   "data": {
     "messageType": 6,
     "configurationId": 1,
-    "productIdName": "F98W6",
+    "productIdName": "NETRIS_F",
     "channels": [
       {
         "channelId": 0,

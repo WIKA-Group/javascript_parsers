@@ -59,7 +59,7 @@ export default defineConfig({
         items: [
           { text: 'Overview', link: '/devices/' },
           { text: 'A2G', link: '/devices/a2g' },
-          { text: 'F98W6', link: '/devices/f98w6' },
+          { text: 'NETRIS_F (prev. F98W6)', link: '/devices/netris-f' },
           { text: 'GD20W', link: '/devices/gd20w' },
           { text: 'NETRIS1', link: '/devices/netris1' },
           { text: 'NETRIS2', link: '/devices/netris2' },

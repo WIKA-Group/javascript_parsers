@@ -2,20 +2,20 @@ import * as v from 'valibot'
 import { describe, expect, it } from 'vitest'
 import examples from './examples.json' assert { type: 'json' }
 import { useParser } from './parser'
-import { createF98W6UplinkOutputSchema } from './schema'
+import { createNetrisFUplinkOutputSchema } from './schema'
 
 const uplinkExamples = examples.filter(example => example.type === 'uplink')
 const hexUplinkExamples = examples.filter(example => example.type === 'uplink_hex')
 // const base64UplinkExamples = examples.filter(example => example.type === 'uplink_base64')
 
-describe('f98W6 parser', () => {
+describe('netrisF parser', () => {
   const {
     adjustMeasuringRange,
     decodeHexUplink,
     decodeUplink,
   } = useParser()
 
-  const outputSchema = createF98W6UplinkOutputSchema()
+  const outputSchema = createNetrisFUplinkOutputSchema()
 
   adjustMeasuringRange('strain', { start: -312.5, end: 312.5 })
 

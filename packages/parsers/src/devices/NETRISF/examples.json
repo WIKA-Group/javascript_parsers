@@ -143,7 +143,7 @@
     },
     "output": {
       "errors": [
-        "F98W6 (JS): Message could not be decoded. No codec matched the input."
+        "NETRIS_F (JS): Message could not be decoded. No codec matched the input."
       ]
     }
   },
@@ -161,7 +161,7 @@
     },
     "output": {
       "errors": [
-        "F98W6 (JS): Data message (0x01/0x02) requires 7 bytes, but received 3 bytes"
+        "NETRIS_F (JS): Data message (0x01/0x02) requires 7 bytes, but received 3 bytes"
       ]
     }
   },
@@ -385,7 +385,7 @@
     },
     "output": {
       "errors": [
-        "F98W6 (JS): Message could not be decoded. No codec matched the input."
+        "NETRIS_F (JS): Message could not be decoded. No codec matched the input."
       ]
     }
   },
@@ -403,7 +403,7 @@
     },
     "output": {
       "errors": [
-        "F98W6 (JS): Message could not be decoded. No codec matched the input."
+        "NETRIS_F (JS): Message could not be decoded. No codec matched the input."
       ]
     }
   },
@@ -459,7 +459,7 @@
         "messageType": 7,
         "configurationId": 65,
         "deviceInformation": {
-          "productIdName": "F98W6",
+          "productIdName": "NETRIS_F",
           "productId": 18,
           "productSubId": 0,
           "productSubIdName": "LoRaWAN",

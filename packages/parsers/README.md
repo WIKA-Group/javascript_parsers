@@ -14,7 +14,7 @@ If you are looking for a way to include javascript parsers in your project, plea
 | Device                                    | Current | Previous |
 |-------------------------------------------|:-------:|:--------:|
 | A2G                                       | `4.x.x` | `2.x.x`  |
-| F98W6                                     | `4.x.x` | `2.x.x`  |
+| NETRIS_F (prev. F98W6)                    | `4.x.x` | `2.x.x`  |
 | GD20W                                     | `4.x.x` | `2.x.x`  |
 | PGW23                                     | `4.x.x` | `2.x.x`  |
 | NETRIS2                                   | `4.x.x` | `3.x.x`  |
@@ -59,7 +59,7 @@ The parser was written in TypeScript and shipped as a function that returned the
 
 ## Version 2.x.x (Legacy)
 
-> **Note:** A2G, F98W6, GD20W, and PGW23 have been migrated to `4.x.x`. The information below is preserved to help users migrate from `2.x.x`.
+> **Note:** A2G, NETRIS_F (previously F98W6), GD20W, and PGW23 have been migrated to `4.x.x`. The information below is preserved to help users migrate from `2.x.x`.
 
 The parser was delivered as a single JavaScript file that manipulated global measurement ranges. Before the decoding helpers could be used you had to edit the top-level variables (for example `FORCE_RANGE_START`, `FORCE_RANGE_END`, `DEVICE_TEMPERATURE_RANGE_START`, `DEVICE_TEMPERATURE_RANGE_END`) so they reflected the sensor-specific measuring span published in the device documentation.
 

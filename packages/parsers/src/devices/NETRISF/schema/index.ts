@@ -1,16 +1,16 @@
 /* eslint-disable ts/explicit-function-return-type */
 import * as v from 'valibot'
 import { createUplinkOutputFailureSchema } from '../../../schemas'
-import { createF98W6TULIP2UplinkOutputSchema } from './tulip2'
+import { createNetrisFTULIP2UplinkOutputSchema } from './tulip2'
 
-export function createF98W6UplinkOutputSchema() {
+export function createNetrisFUplinkOutputSchema() {
   return v.union([
-    createF98W6TULIP2UplinkOutputSchema(),
+    createNetrisFTULIP2UplinkOutputSchema(),
     createUplinkOutputFailureSchema(),
   ])
 }
 
-const UplinkOutputSchema = createF98W6UplinkOutputSchema
+const UplinkOutputSchema = createNetrisFUplinkOutputSchema
 
 export {
   UplinkOutputSchema,

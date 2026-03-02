@@ -1,7 +1,7 @@
 /* eslint-disable ts/explicit-function-return-type */
 import * as v from 'valibot'
 import { createUplinkOutputSchemaFactory } from '../../../schemas/tulip2/uplink'
-import { F98W6_BATTERY_VOLTAGE_CHANNEL, F98W6_DEVICE_TEMPERATURE_CHANNEL, F98W6_STRAIN_CHANNEL } from '../parser/tulip2/channels'
+import { NETRISF_BATTERY_VOLTAGE_CHANNEL, NETRISF_DEVICE_TEMPERATURE_CHANNEL, NETRISF_STRAIN_CHANNEL } from '../parser/tulip2/channels'
 import {
   ALARM_EVENTS,
   DEVICE_ALARM_CAUSE_OF_FAILURE_NAMES_BY_VALUE,
@@ -37,14 +37,14 @@ function createDataMessageUplinkOutputSchema() {
       measurement: v.object({
         channels: v.array(v.object({
           channelId: v.picklist([
-            F98W6_STRAIN_CHANNEL.channelId,
-            F98W6_DEVICE_TEMPERATURE_CHANNEL.channelId,
-            F98W6_BATTERY_VOLTAGE_CHANNEL.channelId,
+            NETRISF_STRAIN_CHANNEL.channelId,
+            NETRISF_DEVICE_TEMPERATURE_CHANNEL.channelId,
+            NETRISF_BATTERY_VOLTAGE_CHANNEL.channelId,
           ] as const),
           channelName: v.picklist([
-            F98W6_STRAIN_CHANNEL.name,
-            F98W6_DEVICE_TEMPERATURE_CHANNEL.name,
-            F98W6_BATTERY_VOLTAGE_CHANNEL.name,
+            NETRISF_STRAIN_CHANNEL.name,
+            NETRISF_DEVICE_TEMPERATURE_CHANNEL.name,
+            NETRISF_BATTERY_VOLTAGE_CHANNEL.name,
           ] as const),
           value: v.number(),
         })),
@@ -116,7 +116,7 @@ function createDeviceInformationUplinkOutputSchema() {
       deviceInformation: v.object({
         productId: v.literal(18),
         productIdName:
-          v.literal('F98W6'),
+          v.literal('NETRIS_F'),
         productSubId: v.literal(0x00),
         productSubIdName:
           v.literal('LoRaWAN'),
@@ -150,7 +150,7 @@ function createDeviceStatisticsUplinkOutputSchema() {
   })
 }
 
-export function createF98W6TULIP2UplinkOutputSchema() {
+export function createNetrisFTULIP2UplinkOutputSchema() {
   return v.union([
     createDataMessageUplinkOutputSchema(),
     createProcessAlarmsUplinkOutputSchema(),
@@ -161,12 +161,12 @@ export function createF98W6TULIP2UplinkOutputSchema() {
   ])
 }
 
-export type F98W6TULIP2DataMessageUplinkOutput = v.InferOutput<ReturnType<typeof createDataMessageUplinkOutputSchema>>
-export type F98W6TULIP2ProcessAlarmsData = v.InferOutput<ReturnType<typeof createProcessAlarmsUplinkOutputSchema>>['data']['processAlarms']
-export type F98W6TULIP2ProcessAlarmsUplinkOutput = v.InferOutput<ReturnType<typeof createProcessAlarmsUplinkOutputSchema>>
-export type F98W6TULIP2TechnicalAlarmsData = v.InferOutput<ReturnType<typeof createTechnicalAlarmsUplinkOutputSchema>>['data']['technicalAlarms']
-export type F98W6TULIP2TechnicalAlarmsUplinkOutput = v.InferOutput<ReturnType<typeof createTechnicalAlarmsUplinkOutputSchema>>
-export type F98W6TULIP2DeviceAlarmsData = v.InferOutput<ReturnType<typeof createDeviceAlarmsUplinkOutputSchema>>['data']['deviceAlarm']
-export type F98W6TULIP2DeviceAlarmsUplinkOutput = v.InferOutput<ReturnType<typeof createDeviceAlarmsUplinkOutputSchema>>
-export type F98W6TULIP2DeviceInformationUplinkOutput = v.InferOutput<ReturnType<typeof createDeviceInformationUplinkOutputSchema>>
-export type F98W6TULIP2DeviceStatisticsUplinkOutput = v.InferOutput<ReturnType<typeof createDeviceStatisticsUplinkOutputSchema>>
+export type NetrisFTULIP2DataMessageUplinkOutput = v.InferOutput<ReturnType<typeof createDataMessageUplinkOutputSchema>>
+export type NetrisFTULIP2ProcessAlarmsData = v.InferOutput<ReturnType<typeof createProcessAlarmsUplinkOutputSchema>>['data']['processAlarms']
+export type NetrisFTULIP2ProcessAlarmsUplinkOutput = v.InferOutput<ReturnType<typeof createProcessAlarmsUplinkOutputSchema>>
+export type NetrisFTULIP2TechnicalAlarmsData = v.InferOutput<ReturnType<typeof createTechnicalAlarmsUplinkOutputSchema>>['data']['technicalAlarms']
+export type NetrisFTULIP2TechnicalAlarmsUplinkOutput = v.InferOutput<ReturnType<typeof createTechnicalAlarmsUplinkOutputSchema>>
+export type NetrisFTULIP2DeviceAlarmsData = v.InferOutput<ReturnType<typeof createDeviceAlarmsUplinkOutputSchema>>['data']['deviceAlarm']
+export type NetrisFTULIP2DeviceAlarmsUplinkOutput = v.InferOutput<ReturnType<typeof createDeviceAlarmsUplinkOutputSchema>>
+export type NetrisFTULIP2DeviceInformationUplinkOutput = v.InferOutput<ReturnType<typeof createDeviceInformationUplinkOutputSchema>>
+export type NetrisFTULIP2DeviceStatisticsUplinkOutput = v.InferOutput<ReturnType<typeof createDeviceStatisticsUplinkOutputSchema>>

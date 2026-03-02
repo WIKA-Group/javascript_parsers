@@ -1,23 +1,23 @@
 import type { Handler } from '../../../../codecs/tulip2'
 import type {
-  F98W6TULIP2DataMessageUplinkOutput,
-  F98W6TULIP2DeviceAlarmsData,
-  F98W6TULIP2DeviceAlarmsUplinkOutput,
-  F98W6TULIP2DeviceInformationUplinkOutput,
-  F98W6TULIP2DeviceStatisticsUplinkOutput,
-  F98W6TULIP2ProcessAlarmsData,
-  F98W6TULIP2ProcessAlarmsUplinkOutput,
-  F98W6TULIP2TechnicalAlarmsData,
-  F98W6TULIP2TechnicalAlarmsUplinkOutput,
+  NetrisFTULIP2DataMessageUplinkOutput,
+  NetrisFTULIP2DeviceAlarmsData,
+  NetrisFTULIP2DeviceAlarmsUplinkOutput,
+  NetrisFTULIP2DeviceInformationUplinkOutput,
+  NetrisFTULIP2DeviceStatisticsUplinkOutput,
+  NetrisFTULIP2ProcessAlarmsData,
+  NetrisFTULIP2ProcessAlarmsUplinkOutput,
+  NetrisFTULIP2TechnicalAlarmsData,
+  NetrisFTULIP2TechnicalAlarmsUplinkOutput,
   StrainUnitId,
   StrainUnitName,
   TemperatureUnitId,
   TemperatureUnitName,
 } from '../../schema/tulip2'
-import { F98W6_NAME } from '..'
+import { NETRISF_NAME } from '..'
 import { defineTULIP2Codec } from '../../../../codecs/tulip2'
 import { DEFAULT_ROUNDING_DECIMALS, intTuple4ToFloat32WithThreshold, roundValue, slopeValueToValue, TULIPValueToValue } from '../../../../utils'
-import { createF98W6TULIP2Channels, F98W6_BATTERY_VOLTAGE_CHANNEL, F98W6_DEVICE_TEMPERATURE_CHANNEL, F98W6_STRAIN_CHANNEL } from './channels'
+import { createNetrisFTULIP2Channels, NETRISF_BATTERY_VOLTAGE_CHANNEL, NETRISF_DEVICE_TEMPERATURE_CHANNEL, NETRISF_STRAIN_CHANNEL } from './channels'
 import {
   ALARM_EVENTS,
   DEVICE_ALARM_CAUSE_OF_FAILURE_NAMES_BY_VALUE,
@@ -32,11 +32,11 @@ import {
 
 const ERROR_VALUE = 0xFFFF
 
-type F98W6Channels = ReturnType<typeof createF98W6TULIP2Channels>
+type NetrisFChannels = ReturnType<typeof createNetrisFTULIP2Channels>
 
 type AlarmEvent = (typeof ALARM_EVENTS)[keyof typeof ALARM_EVENTS]
 
-const handleDataMessage: Handler<F98W6Channels, F98W6TULIP2DataMessageUplinkOutput> = (input, options) => {
+const handleDataMessage: Handler<NetrisFChannels, NetrisFTULIP2DataMessageUplinkOutput> = (input, options) => {
   if (input.bytes.length !== 7) {
     throw new Error(`Data message (0x01/0x02) requires 7 bytes, but received ${input.bytes.length} bytes`)
   }
@@ -47,8 +47,8 @@ const handleDataMessage: Handler<F98W6Channels, F98W6TULIP2DataMessageUplinkOutp
   const rawStrain = (input.bytes[3]! << 8) | input.bytes[4]!
   const rawTemperature = (input.bytes[5]! << 8) | input.bytes[6]!
 
-  const strainChannel = options.channels.find((candidate): candidate is F98W6Channels[number] => candidate.channelId === F98W6_STRAIN_CHANNEL.channelId)
-  const temperatureChannel = options.channels.find((candidate): candidate is F98W6Channels[number] => candidate.channelId === F98W6_DEVICE_TEMPERATURE_CHANNEL.channelId)
+  const strainChannel = options.channels.find((candidate): candidate is NetrisFChannels[number] => candidate.channelId === NETRISF_STRAIN_CHANNEL.channelId)
+  const temperatureChannel = options.channels.find((candidate): candidate is NetrisFChannels[number] => candidate.channelId === NETRISF_DEVICE_TEMPERATURE_CHANNEL.channelId)
 
   if (!strainChannel || !temperatureChannel) {
     throw new Error('Channel configuration missing for strain or temperature channel')
@@ -74,8 +74,8 @@ const handleDataMessage: Handler<F98W6Channels, F98W6TULIP2DataMessageUplinkOutp
             value: temperatureValue,
           },
           {
-            channelId: F98W6_BATTERY_VOLTAGE_CHANNEL.channelId,
-            channelName: F98W6_BATTERY_VOLTAGE_CHANNEL.name,
+            channelId: NETRISF_BATTERY_VOLTAGE_CHANNEL.channelId,
+            channelName: NETRISF_BATTERY_VOLTAGE_CHANNEL.name,
             value: roundValue(batteryVoltage, options.roundingDecimals),
           },
         ],
@@ -84,13 +84,13 @@ const handleDataMessage: Handler<F98W6Channels, F98W6TULIP2DataMessageUplinkOutp
   }
 }
 
-const handleProcessAlarmMessage: Handler<F98W6Channels, F98W6TULIP2ProcessAlarmsUplinkOutput> = (input, options) => {
+const handleProcessAlarmMessage: Handler<NetrisFChannels, NetrisFTULIP2ProcessAlarmsUplinkOutput> = (input, options) => {
   if (input.bytes.length < 5 || ((input.bytes.length - 2) % 3) !== 0) {
     throw new Error(`Process alarm message (0x03) requires at least 5 bytes (and target byte count 3n+2), but received ${input.bytes.length} bytes`)
   }
 
   const configurationId = input.bytes[1]!
-  const processAlarms: F98W6TULIP2ProcessAlarmsData = []
+  const processAlarms: NetrisFTULIP2ProcessAlarmsData = []
   const warnings: string[] = []
 
   for (let byteIndex = 2, alarmIndex = 0; byteIndex < input.bytes.length; byteIndex += 3, alarmIndex += 1) {
@@ -140,14 +140,14 @@ const handleProcessAlarmMessage: Handler<F98W6Channels, F98W6TULIP2ProcessAlarms
       alarmType,
       alarmTypeName,
       value,
-    } as F98W6TULIP2ProcessAlarmsData[number]
+    } as NetrisFTULIP2ProcessAlarmsData[number]
 
     if (value === ERROR_VALUE) {
       warnings.push(`Invalid data for ${channelName} channel`)
     }
   }
 
-  const result: F98W6TULIP2ProcessAlarmsUplinkOutput = {
+  const result: NetrisFTULIP2ProcessAlarmsUplinkOutput = {
     data: {
       messageType: 0x03,
       configurationId,
@@ -162,7 +162,7 @@ const handleProcessAlarmMessage: Handler<F98W6Channels, F98W6TULIP2ProcessAlarms
   return result
 }
 
-const handleTechnicalAlarmMessage: Handler<F98W6Channels, F98W6TULIP2TechnicalAlarmsUplinkOutput> = (input) => {
+const handleTechnicalAlarmMessage: Handler<NetrisFChannels, NetrisFTULIP2TechnicalAlarmsUplinkOutput> = (input) => {
   if (input.bytes.length !== 3) {
     throw new Error(`Technical alarm message (0x04) requires 3 bytes, but received ${input.bytes.length} bytes`)
   }
@@ -195,12 +195,12 @@ const handleTechnicalAlarmMessage: Handler<F98W6Channels, F98W6TULIP2TechnicalAl
           event,
           eventName,
         },
-      ] as F98W6TULIP2TechnicalAlarmsData,
+      ] as NetrisFTULIP2TechnicalAlarmsData,
     },
   }
 }
 
-const handleDeviceAlarmMessage: Handler<F98W6Channels, F98W6TULIP2DeviceAlarmsUplinkOutput> = (input) => {
+const handleDeviceAlarmMessage: Handler<NetrisFChannels, NetrisFTULIP2DeviceAlarmsUplinkOutput> = (input) => {
   if (input.bytes.length < 3 || input.bytes.length > 4) {
     throw new Error(`Device alarm message (0x05) requires 3 or 4 bytes, but received ${input.bytes.length} bytes`)
   }
@@ -225,7 +225,7 @@ const handleDeviceAlarmMessage: Handler<F98W6Channels, F98W6TULIP2DeviceAlarmsUp
   }
   const [alarmTypeName, alarmType] = alarmTypeEntry
 
-  const deviceAlarm: F98W6TULIP2DeviceAlarmsData = {
+  const deviceAlarm: NetrisFTULIP2DeviceAlarmsData = {
     event,
     eventName,
     causeOfFailure,
@@ -250,7 +250,7 @@ const handleDeviceAlarmMessage: Handler<F98W6Channels, F98W6TULIP2DeviceAlarmsUp
   }
 }
 
-const handleDeviceIdentificationMessage: Handler<F98W6Channels, F98W6TULIP2DeviceInformationUplinkOutput> = (input) => {
+const handleDeviceIdentificationMessage: Handler<NetrisFChannels, NetrisFTULIP2DeviceInformationUplinkOutput> = (input) => {
   if (input.bytes.length < 8 || input.bytes.length > 38) {
     throw new Error(`Device identification message (0x07) requires at least 8 and at most 38 bytes, but received ${input.bytes.length} bytes`)
   }
@@ -262,9 +262,9 @@ const handleDeviceIdentificationMessage: Handler<F98W6Channels, F98W6TULIP2Devic
   const configurationId = input.bytes[1]!
   const productId = input.bytes[2]!
   if (productId !== 18) {
-    throw new Error(`Invalid productId ${productId} in device identification message. Expected 18 (F98W6).`)
+    throw new Error(`Invalid productId ${productId} in device identification message. Expected 18 (NETRIS_F).`)
   }
-  const productIdName = 'F98W6'
+  const productIdName = 'NETRIS_F'
   const productSubId = input.bytes[3]!
   const productSubIdName = (Object.entries(PRODUCT_SUB_ID_NAMES) as [keyof typeof PRODUCT_SUB_ID_NAMES, number][]).find(([, id]) => id === productSubId)?.[0]
 
@@ -342,10 +342,10 @@ const handleDeviceIdentificationMessage: Handler<F98W6Channels, F98W6TULIP2Devic
         deviceTemperatureUnitName: deviceTemperatureUnitName as TemperatureUnitName,
       },
     },
-  } satisfies F98W6TULIP2DeviceInformationUplinkOutput
+  } satisfies NetrisFTULIP2DeviceInformationUplinkOutput
 }
 
-const handleKeepAliveMessage: Handler<F98W6Channels, F98W6TULIP2DeviceStatisticsUplinkOutput> = (input) => {
+const handleKeepAliveMessage: Handler<NetrisFChannels, NetrisFTULIP2DeviceStatisticsUplinkOutput> = (input) => {
   if (input.bytes.length !== 3) {
     throw new Error(`Keep alive message (0x08) requires 3 bytes, but received ${input.bytes.length} bytes`)
   }
@@ -366,11 +366,11 @@ const handleKeepAliveMessage: Handler<F98W6Channels, F98W6TULIP2DeviceStatistics
 }
 
 // eslint-disable-next-line ts/explicit-function-return-type
-export function createF98W6TULIP2Codec() {
+export function createNetrisFTULIP2Codec() {
   return defineTULIP2Codec({
-    deviceName: F98W6_NAME,
+    deviceName: NETRISF_NAME,
     roundingDecimals: DEFAULT_ROUNDING_DECIMALS,
-    channels: createF98W6TULIP2Channels(),
+    channels: createNetrisFTULIP2Channels(),
     handlers: {
       0x01: handleDataMessage,
       0x02: handleDataMessage,

@@ -63,7 +63,9 @@ Distributed under the [MIT License](./LICENSE).
 
 ## Release Notes
 4.7.0
+  - feat: add type exports to NPM package
   - feat: add PGW TULIP2 downlink configuration support
+  - BREAKING: renamed `F98W6` to `NETRIS_F`
 
 4.6.0
   - feat: add TRW TULIP3 downlink configuration support
