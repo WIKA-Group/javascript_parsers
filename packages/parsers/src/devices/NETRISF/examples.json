@@ -190,7 +190,7 @@
             "event": 0,
             "eventName": "triggered",
             "alarmType": 1,
-            "alarmTypeName": "high threshold",
+            "alarmTypeName": "low threshold",
             "value": -57.5
           }
         ]
@@ -204,7 +204,7 @@
       "bytes": [
         3,
         0,
-        139,
+        200,
         0,
         127
       ],
@@ -221,7 +221,7 @@
             "channelName": "device temperature",
             "event": 1,
             "eventName": "disappeared",
-            "alarmType": 3,
+            "alarmType": 8,
             "alarmTypeName": "rising slope",
             "value": 1.9685
           }
@@ -236,7 +236,7 @@
       "bytes": [
         3,
         15,
-        5,
+        32,
         5,
         44
       ],
@@ -253,9 +253,41 @@
             "channelName": "strain",
             "event": 0,
             "eventName": "triggered",
-            "alarmType": 5,
+            "alarmType": 32,
             "alarmTypeName": "high threshold with delay",
             "value": -386
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase process alarm message: Uplink example for alert message falling slope on temperature channel",
+    "input": {
+      "bytes": [
+        3,
+        15,
+        68,
+        0,
+        217
+      ],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 3,
+        "configurationId": 15,
+        "processAlarms": [
+          {
+            "channelId": 1,
+            "channelName": "device temperature",
+            "event": 0,
+            "eventName": "triggered",
+            "alarmType": 4,
+            "alarmTypeName": "falling slope",
+            "value": 3.3635
           }
         ]
       }
@@ -310,6 +342,33 @@
             "alarmType": 1,
             "event": 1,
             "eventName": "disappeared"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase technical message: Uplink example for strain value out of limit alarm",
+    "input": {
+      "bytes": [
+        4,
+        0,
+        32
+      ],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 4,
+        "configurationId": 0,
+        "technicalAlarms": [
+          {
+            "alarmTypeName": "strain value out of limit",
+            "alarmType": 32,
+            "event": 0,
+            "eventName": "triggered"
           }
         ]
       }
@@ -384,9 +443,12 @@
       "recvTime": "1992-12-22T17:00:00+01:00"
     },
     "output": {
-      "errors": [
-        "NETRIS_F (JS): Message could not be decoded. No codec matched the input."
-      ]
+      "data": {
+        "messageType": 6,
+        "configurationId": 15,
+        "configStatus": 2,
+        "configStatusName": "configuration applied"
+      }
     }
   },
   {
@@ -402,9 +464,167 @@
       "recvTime": "1992-12-22T17:00:00+01:00"
     },
     "output": {
-      "errors": [
-        "NETRIS_F (JS): Message could not be decoded. No codec matched the input."
-      ]
+      "data": {
+        "messageType": 6,
+        "configurationId": 10,
+        "configStatus": 3,
+        "configStatusName": "configuration rejected"
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase configuration status message: Uplink example for reset battery indicator (command success)",
+    "input": {
+      "bytes": [
+        6,
+        0,
+        96,
+        64,
+        0
+      ],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 6,
+        "configurationId": 0,
+        "configStatus": 6,
+        "configStatusName": "command success",
+        "commandResponse": {
+          "commandType": 64,
+          "commandTypeName": "reset battery indicator",
+          "commandStatus": 0,
+          "resetSuccess": true
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase configuration status message: Uplink example for get main configuration response",
+    "input": {
+      "bytes": [
+        6,
+        0,
+        96,
+        4,
+        0,
+        0,
+        0,
+        0,
+        60,
+        0,
+        5,
+        0,
+        0,
+        0,
+        30,
+        0,
+        2,
+        0,
+        0
+      ],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 6,
+        "configurationId": 0,
+        "configStatus": 6,
+        "configStatusName": "command success",
+        "commandResponse": {
+          "commandType": 4,
+          "commandTypeName": "get main configuration",
+          "commandStatus": 0,
+          "measurementPeriodNoAlarm": 60,
+          "transmissionMultiplierNoAlarm": 5,
+          "measurementPeriodWithAlarm": 30,
+          "transmissionMultiplierWithAlarm": 2,
+          "bleAdvertisingEnabled": true
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase configuration status message: Uplink example for get process alarm configuration strain (low threshold enabled)",
+    "input": {
+      "bytes": [
+        6,
+        0,
+        96,
+        80,
+        0,
+        0,
+        7,
+        208,
+        128,
+        25,
+        180
+      ],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 6,
+        "configurationId": 0,
+        "configStatus": 6,
+        "configStatusName": "command success",
+        "commandResponse": {
+          "commandType": 80,
+          "commandTypeName": "get process alarm configuration strain",
+          "commandStatus": 0,
+          "channel": 0,
+          "channelName": "strain",
+          "deadBand": 125,
+          "lowThreshold": true,
+          "lowThresholdValue": -57.5,
+          "highThreshold": false,
+          "fallingSlope": false,
+          "risingSlope": false,
+          "lowThresholdWithDelay": false,
+          "highThresholdWithDelay": false
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase configuration status message: Uplink example for get channel property configuration strain (zero offset)",
+    "input": {
+      "bytes": [
+        6,
+        0,
+        96,
+        96,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 6,
+        "configurationId": 0,
+        "configStatus": 6,
+        "configStatusName": "command success",
+        "commandResponse": {
+          "commandType": 96,
+          "commandTypeName": "get channel property configuration strain",
+          "commandStatus": 0,
+          "channel": 0,
+          "channelName": "strain",
+          "measurementOffset": 0
+        }
+      }
     }
   },
   {
@@ -414,7 +634,7 @@
       "bytes": [
         7,
         65,
-        18,
+        11,
         0,
         2,
         0,
@@ -460,7 +680,7 @@
         "configurationId": 65,
         "deviceInformation": {
           "productIdName": "NETRIS_F",
-          "productId": 18,
+          "productId": 11,
           "productSubId": 0,
           "productSubIdName": "LoRaWAN",
           "wirelessModuleFirmwareVersion": "0.2.0",

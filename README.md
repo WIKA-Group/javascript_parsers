@@ -62,15 +62,14 @@ Review the contributor section of the docs for setup. Need help or spotted an is
 Distributed under the [MIT License](./LICENSE).
 
 ## Release Notes
-4.7.0
-  - feat: add type exports to NPM package
-  - feat: add PGW TULIP2 downlink configuration support
-  - BREAKING: renamed `F98W6` to `NETRIS_F`
-
 4.6.0
   - feat: add TRW TULIP3 downlink configuration support
   - feat: add TRW TULIP2 downlink configuration support
   - fix: use correct messageType for technical alarm uplink message in NETRIS1 TULIP2 decoder
+  - feat: add type exports to NPM package
+  - feat: add PGW TULIP2 downlink configuration support
+  - BREAKING: renamed `F98W6` to `NETRIS_F`
+  - fix: add missing configuration status message decoder for NETRIS_F TULIP2 codec
 
 4.5.0
   - feat: include all devices in npm module

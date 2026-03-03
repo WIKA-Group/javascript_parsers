@@ -4,6 +4,7 @@ import { createUplinkOutputSchemaFactory } from '../../../schemas/tulip2/uplink'
 import { NETRISF_BATTERY_VOLTAGE_CHANNEL, NETRISF_DEVICE_TEMPERATURE_CHANNEL, NETRISF_STRAIN_CHANNEL } from '../parser/tulip2/channels'
 import {
   ALARM_EVENTS,
+  CONFIG_STATUS_NAMES_BY_VALUE,
   DEVICE_ALARM_CAUSE_OF_FAILURE_NAMES_BY_VALUE,
   DEVICE_ALARM_TYPES,
   PHYSICAL_UNIT_NAMES_STRAIN,
@@ -114,7 +115,7 @@ function createDeviceInformationUplinkOutputSchema() {
     messageType: [0x07],
     extension: {
       deviceInformation: v.object({
-        productId: v.literal(18),
+        productId: v.literal(11),
         productIdName:
           v.literal('NETRIS_F'),
         productSubId: v.literal(0x00),
@@ -138,6 +139,86 @@ function createDeviceInformationUplinkOutputSchema() {
   })
 }
 
+function createConfigStatusMainConfigResponseSchema() {
+  return v.object({
+    commandType: v.literal(0x04 as const),
+    commandTypeName: v.literal('get main configuration' as const),
+    commandStatus: v.literal(0 as const),
+    measurementPeriodNoAlarm: v.pipe(v.number(), v.integer(), v.minValue(0)),
+    transmissionMultiplierNoAlarm: v.pipe(v.number(), v.integer(), v.minValue(0)),
+    measurementPeriodWithAlarm: v.pipe(v.number(), v.integer(), v.minValue(0)),
+    transmissionMultiplierWithAlarm: v.pipe(v.number(), v.integer(), v.minValue(0)),
+    bleAdvertisingEnabled: v.boolean(),
+  })
+}
+
+function createConfigStatusResetBatteryResponseSchema() {
+  return v.object({
+    commandType: v.literal(0x40 as const),
+    commandTypeName: v.literal('reset battery indicator' as const),
+    commandStatus: v.picklist([0, 1] as const),
+    resetSuccess: v.boolean(),
+  })
+}
+
+function createConfigStatusProcessAlarmConfigResponseSchema() {
+  return v.object({
+    commandType: v.picklist([0x50, 0x51] as const),
+    commandTypeName: v.picklist([
+      'get process alarm configuration strain',
+      'get process alarm configuration temperature',
+    ] as const),
+    commandStatus: v.literal(0 as const),
+    channel: v.picklist([0, 1] as const),
+    channelName: v.picklist(Object.values(PROCESS_ALARM_CHANNEL_NAMES_BY_ID) as (typeof PROCESS_ALARM_CHANNEL_NAMES_BY_ID)[keyof typeof PROCESS_ALARM_CHANNEL_NAMES_BY_ID][]),
+    deadBand: v.number(),
+    lowThreshold: v.boolean(),
+    lowThresholdValue: v.optional(v.number()),
+    highThreshold: v.boolean(),
+    highThresholdValue: v.optional(v.number()),
+    fallingSlope: v.boolean(),
+    fallingSlopeValue: v.optional(v.number()),
+    risingSlope: v.boolean(),
+    risingSlopeValue: v.optional(v.number()),
+    lowThresholdWithDelay: v.boolean(),
+    lowThresholdWithDelayValue: v.optional(v.number()),
+    lowThresholdWithDelayDelay: v.optional(v.pipe(v.number(), v.integer(), v.minValue(0))),
+    highThresholdWithDelay: v.boolean(),
+    highThresholdWithDelayValue: v.optional(v.number()),
+    highThresholdWithDelayDelay: v.optional(v.pipe(v.number(), v.integer(), v.minValue(0))),
+  })
+}
+
+function createConfigStatusChannelPropertyResponseSchema() {
+  return v.object({
+    commandType: v.picklist([0x60, 0x61] as const),
+    commandTypeName: v.picklist([
+      'get channel property configuration strain',
+      'get channel property configuration temperature',
+    ] as const),
+    commandStatus: v.literal(0 as const),
+    channel: v.picklist([0, 1] as const),
+    channelName: v.picklist(Object.values(PROCESS_ALARM_CHANNEL_NAMES_BY_ID) as (typeof PROCESS_ALARM_CHANNEL_NAMES_BY_ID)[keyof typeof PROCESS_ALARM_CHANNEL_NAMES_BY_ID][]),
+    measurementOffset: v.pipe(v.number(), v.integer()),
+  })
+}
+
+function createConfigurationStatusUplinkOutputSchema() {
+  return createUplinkSchema({
+    messageType: [0x06 as const],
+    extension: {
+      configStatus: v.picklist(Object.keys(CONFIG_STATUS_NAMES_BY_VALUE).map(Number) as (keyof typeof CONFIG_STATUS_NAMES_BY_VALUE)[]),
+      configStatusName: v.picklist(Object.values(CONFIG_STATUS_NAMES_BY_VALUE) as (typeof CONFIG_STATUS_NAMES_BY_VALUE)[keyof typeof CONFIG_STATUS_NAMES_BY_VALUE][]),
+      commandResponse: v.optional(v.union([
+        createConfigStatusMainConfigResponseSchema(),
+        createConfigStatusResetBatteryResponseSchema(),
+        createConfigStatusProcessAlarmConfigResponseSchema(),
+        createConfigStatusChannelPropertyResponseSchema(),
+      ])),
+    },
+  })
+}
+
 function createDeviceStatisticsUplinkOutputSchema() {
   return createUplinkSchema({
     messageType: [0x08],
@@ -156,6 +237,7 @@ export function createNetrisFTULIP2UplinkOutputSchema() {
     createProcessAlarmsUplinkOutputSchema(),
     createTechnicalAlarmsUplinkOutputSchema(),
     createDeviceAlarmsUplinkOutputSchema(),
+    createConfigurationStatusUplinkOutputSchema(),
     createDeviceInformationUplinkOutputSchema(),
     createDeviceStatisticsUplinkOutputSchema(),
   ])
@@ -169,4 +251,5 @@ export type NetrisFTULIP2TechnicalAlarmsUplinkOutput = v.InferOutput<ReturnType<
 export type NetrisFTULIP2DeviceAlarmsData = v.InferOutput<ReturnType<typeof createDeviceAlarmsUplinkOutputSchema>>['data']['deviceAlarm']
 export type NetrisFTULIP2DeviceAlarmsUplinkOutput = v.InferOutput<ReturnType<typeof createDeviceAlarmsUplinkOutputSchema>>
 export type NetrisFTULIP2DeviceInformationUplinkOutput = v.InferOutput<ReturnType<typeof createDeviceInformationUplinkOutputSchema>>
+export type NetrisFTULIP2ConfigurationStatusUplinkOutput = v.InferOutput<ReturnType<typeof createConfigurationStatusUplinkOutputSchema>>
 export type NetrisFTULIP2DeviceStatisticsUplinkOutput = v.InferOutput<ReturnType<typeof createDeviceStatisticsUplinkOutputSchema>>

@@ -16,12 +16,12 @@ export const ALARM_EVENTS = {
 } as const
 
 export const PROCESS_ALARM_TYPES = {
-  'low threshold': 0,
-  'high threshold': 1,
-  'falling slope': 2,
-  'rising slope': 3,
-  'low threshold with delay': 4,
-  'high threshold with delay': 5,
+  'low threshold': 1,
+  'high threshold': 2,
+  'falling slope': 4,
+  'rising slope': 8,
+  'low threshold with delay': 16,
+  'high threshold with delay': 32,
 } as const
 
 export const PROCESS_ALARM_CHANNEL_NAMES_BY_ID = {
@@ -42,6 +42,8 @@ export const DEVICE_ALARM_TYPES = {
 export const TECHNICAL_ALARM_TYPES = {
   'Punctual sensor error': 1,
   'Permanent sensor error': 4,
+  'strain value out of limit': 32,
+  'temperature value out of limit': 64,
 } as const
 
 export const PRODUCT_SUB_ID_NAMES = {
@@ -55,9 +57,8 @@ export const STRAIN_TYPES_BY_ID = {
 } as const
 
 export const PHYSICAL_UNIT_NAMES_STRAIN = {
-  29: 'strain / dehnung',
   45: 'N',
-  47: 'KN',
+  47: 'kN',
   55: 'kg',
   56: 'g',
   185: 'µeps',
@@ -68,36 +69,24 @@ export const PHYSICAL_UNIT_NAMES_TEMPERATURE = {
   33: '°F',
 } as const
 
+export const CONFIG_STATUS_NAMES_BY_VALUE = {
+  2: 'configuration applied',
+  3: 'configuration rejected',
+  5: 'configuration discarded',
+  6: 'command success',
+  7: 'command failed',
+} as const
+
+export const CONFIG_STATUS_COMMAND_TYPES = {
+  'get main configuration': 0x04,
+  'reset battery indicator': 0x40,
+  'get process alarm configuration strain': 0x50,
+  'get process alarm configuration temperature': 0x51,
+  'get channel property configuration strain': 0x60,
+  'get channel property configuration temperature': 0x61,
+} as const
+
 export const PHYSICAL_UNIT_NAMES_BY_ID = {
-  1: 'inH2O',
-  2: 'inHg',
-  3: 'ftH2O',
-  4: 'mmH2O',
-  5: 'mmHg',
-  6: 'psi',
-  7: 'bar',
-  8: 'mbar',
-  9: 'g/cm²',
-  10: 'kg/cm²',
-  11: 'Pa',
-  12: 'kPa',
-  13: 'Torr',
-  14: 'at',
   ...PHYSICAL_UNIT_NAMES_STRAIN,
   ...PHYSICAL_UNIT_NAMES_TEMPERATURE,
-  145: 'inH2O (60 °F)',
-  170: 'cmH2O (4 °C)',
-  171: 'mH2O (4 °C)',
-  172: 'cmHg',
-  173: 'lb/ft²',
-  174: 'hPa',
-  175: 'psia',
-  176: 'kg/m²',
-  177: 'ftH2O (4 °C)',
-  178: 'ftH2O (60 °F)',
-  179: 'mHg',
-  180: 'Mpsi',
-  237: 'MPa',
-  238: 'inH2O (4 °C)',
-  239: 'mmH2O (4 °C)',
 } as const
