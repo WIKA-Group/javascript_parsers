@@ -1,3 +1,5 @@
+import type { Tulip2EncodeFeatureFlags } from '../schemas/tulip2/downlink'
+
 export interface ChannelAlarmConfig {
   deadBand: number
   lowThreshold?: number
@@ -29,10 +31,7 @@ export interface BaseConfigurationInput<TMainConfiguration> {
   [key: ChannelKey]: false | ChannelConfig
 }
 
-export interface FormatterFeatureFlags {
-  channelsStartupTime?: boolean
-  channelsMeasureOffset?: boolean
-}
+export type FormatterFeatureFlags = Pick<Tulip2EncodeFeatureFlags, 'channelsStartupTime' | 'channelsMeasureOffset'>
 
 export interface SharedDisableChannelConfig {
   [key: ChannelKey]: boolean

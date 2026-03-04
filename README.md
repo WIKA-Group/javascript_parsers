@@ -68,6 +68,9 @@ Distributed under the [MIT License](./LICENSE).
   - fix: use correct messageType for technical alarm uplink message in NETRIS1 TULIP2 decoder
   - feat: add type exports to NPM package
   - feat: add PGW TULIP2 downlink configuration support
+  - feat: add NETRIS_F TULIP2 downlink configuration support
+  - BREAKING: rename NETRIS_F device identification fields: `strainType` → `measurementType`, `measurementRangeStartStrain` → `measurementRangeStart`, `measurementRangeEndStrain` → `measurementRangeEnd`, `strainUnit` → `measurementUnit`, `strainUnitName` → `unitName`
+  - BREAKING: rename NETRIS_F `measurementType` value `gauge / relative` → `relative`
   - BREAKING: renamed `F98W6` to `NETRIS_F`
   - fix: add missing configuration status message decoder for NETRIS_F TULIP2 codec
 

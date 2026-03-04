@@ -636,16 +636,16 @@
                     "serialNumber": {
                       "type": "string"
                     },
-                    "strainType": {
+                    "measurementType": {
                       "enum": [
                         "absolute",
-                        "gauge / relative"
+                        "relative"
                       ]
                     },
-                    "measurementRangeStartStrain": {
+                    "measurementRangeStart": {
                       "type": "number"
                     },
-                    "measurementRangeEndStrain": {
+                    "measurementRangeEnd": {
                       "type": "number"
                     },
                     "measurementRangeStartDeviceTemperature": {
@@ -654,7 +654,7 @@
                     "measurementRangeEndDeviceTemperature": {
                       "type": "number"
                     },
-                    "strainUnit": {
+                    "measurementUnit": {
                       "enum": [
                         45,
                         47,
@@ -663,7 +663,7 @@
                         185
                       ]
                     },
-                    "strainUnitName": {
+                    "unitName": {
                       "enum": [
                         "N",
                         "kN",
@@ -693,13 +693,13 @@
                     "wirelessModuleFirmwareVersion",
                     "wirelessModuleHardwareVersion",
                     "serialNumber",
-                    "strainType",
-                    "measurementRangeStartStrain",
-                    "measurementRangeEndStrain",
+                    "measurementType",
+                    "measurementRangeStart",
+                    "measurementRangeEnd",
                     "measurementRangeStartDeviceTemperature",
                     "measurementRangeEndDeviceTemperature",
-                    "strainUnit",
-                    "strainUnitName",
+                    "measurementUnit",
+                    "unitName",
                     "deviceTemperatureUnit",
                     "deviceTemperatureUnitName"
                   ]

@@ -1,5 +1,8 @@
 /* eslint-disable ts/explicit-function-return-type */
+import type { createDownlinkResetBatteryIndicatorSchema, TULIP2ConfigurationAction } from '../../../schemas/tulip2/downlink'
+import type { NetrisFTulip2Channels, NetrisFTulip2FeatureFlags } from '../parser/tulip2/constants'
 import * as v from 'valibot'
+import { createTULIP2DownlinkActionSchemaFactory } from '../../../schemas/tulip2/downlink'
 import { createUplinkOutputSchemaFactory } from '../../../schemas/tulip2/uplink'
 import { NETRISF_BATTERY_VOLTAGE_CHANNEL, NETRISF_DEVICE_TEMPERATURE_CHANNEL, NETRISF_STRAIN_CHANNEL } from '../parser/tulip2/channels'
 import {
@@ -7,22 +10,22 @@ import {
   CONFIG_STATUS_NAMES_BY_VALUE,
   DEVICE_ALARM_CAUSE_OF_FAILURE_NAMES_BY_VALUE,
   DEVICE_ALARM_TYPES,
-  PHYSICAL_UNIT_NAMES_STRAIN,
+  MEASUREMENT_TYPES_BY_ID,
+  PHYSICAL_UNIT_NAMES_MEASUREMENT,
   PHYSICAL_UNIT_NAMES_TEMPERATURE,
   PROCESS_ALARM_CHANNEL_NAMES_BY_ID,
   PROCESS_ALARM_TYPES,
-  STRAIN_TYPES_BY_ID,
   TECHNICAL_ALARM_TYPES,
 } from '../parser/tulip2/lookups'
 
 const createUplinkSchema = createUplinkOutputSchemaFactory(255)
 
-// Strain unit lists
-const STRAIN_UNIT_ID_LIST = Object.keys(PHYSICAL_UNIT_NAMES_STRAIN).map(Number) as (keyof typeof PHYSICAL_UNIT_NAMES_STRAIN)[]
-const STRAIN_UNIT_NAME_LIST = Object.values(PHYSICAL_UNIT_NAMES_STRAIN) as typeof PHYSICAL_UNIT_NAMES_STRAIN[keyof typeof PHYSICAL_UNIT_NAMES_STRAIN][]
+// Measurement unit lists
+const MEASUREMENT_UNIT_ID_LIST = Object.keys(PHYSICAL_UNIT_NAMES_MEASUREMENT).map(Number) as (keyof typeof PHYSICAL_UNIT_NAMES_MEASUREMENT)[]
+const MEASUREMENT_UNIT_NAME_LIST = Object.values(PHYSICAL_UNIT_NAMES_MEASUREMENT) as typeof PHYSICAL_UNIT_NAMES_MEASUREMENT[keyof typeof PHYSICAL_UNIT_NAMES_MEASUREMENT][]
 
-export type StrainUnitName = typeof PHYSICAL_UNIT_NAMES_STRAIN[keyof typeof PHYSICAL_UNIT_NAMES_STRAIN]
-export type StrainUnitId = keyof typeof PHYSICAL_UNIT_NAMES_STRAIN
+export type MeasurementUnitName = typeof PHYSICAL_UNIT_NAMES_MEASUREMENT[keyof typeof PHYSICAL_UNIT_NAMES_MEASUREMENT]
+export type MeasurementUnitId = keyof typeof PHYSICAL_UNIT_NAMES_MEASUREMENT
 
 // Temperature unit lists
 const TEMPERATURE_UNIT_ID_LIST = Object.keys(PHYSICAL_UNIT_NAMES_TEMPERATURE).map(Number) as (keyof typeof PHYSICAL_UNIT_NAMES_TEMPERATURE)[]
@@ -124,14 +127,14 @@ function createDeviceInformationUplinkOutputSchema() {
         wirelessModuleFirmwareVersion: v.string(),
         wirelessModuleHardwareVersion: v.string(),
         serialNumber: v.string(),
-        strainType:
-          v.picklist(Object.values(STRAIN_TYPES_BY_ID) as (typeof STRAIN_TYPES_BY_ID)[keyof typeof STRAIN_TYPES_BY_ID][]),
-        measurementRangeStartStrain: v.number(),
-        measurementRangeEndStrain: v.number(),
+        measurementType:
+          v.picklist(Object.values(MEASUREMENT_TYPES_BY_ID) as (typeof MEASUREMENT_TYPES_BY_ID)[keyof typeof MEASUREMENT_TYPES_BY_ID][]),
+        measurementRangeStart: v.number(),
+        measurementRangeEnd: v.number(),
         measurementRangeStartDeviceTemperature: v.number(),
         measurementRangeEndDeviceTemperature: v.number(),
-        strainUnit: v.picklist(STRAIN_UNIT_ID_LIST),
-        strainUnitName: v.picklist(STRAIN_UNIT_NAME_LIST),
+        measurementUnit: v.picklist(MEASUREMENT_UNIT_ID_LIST),
+        unitName: v.picklist(MEASUREMENT_UNIT_NAME_LIST),
         deviceTemperatureUnit: v.picklist(TEMPERATURE_UNIT_ID_LIST),
         deviceTemperatureUnitName: v.picklist(TEMPERATURE_UNIT_NAME_LIST),
       }),
@@ -253,3 +256,37 @@ export type NetrisFTULIP2DeviceAlarmsUplinkOutput = v.InferOutput<ReturnType<typ
 export type NetrisFTULIP2DeviceInformationUplinkOutput = v.InferOutput<ReturnType<typeof createDeviceInformationUplinkOutputSchema>>
 export type NetrisFTULIP2ConfigurationStatusUplinkOutput = v.InferOutput<ReturnType<typeof createConfigurationStatusUplinkOutputSchema>>
 export type NetrisFTULIP2DeviceStatisticsUplinkOutput = v.InferOutput<ReturnType<typeof createDeviceStatisticsUplinkOutputSchema>>
+
+// ─── Downlink schemas ─────────────────────────────────────────────────────────
+
+function getConfigurationChannelSchema() {
+  return v.optional(
+    v.union([
+      v.literal(true),
+      v.object({
+        alarms: v.optional(v.literal(true)),
+        measureOffset: v.optional(v.literal(true)),
+      }),
+    ]),
+  )
+}
+
+export function createNetrisFTULIP2GetConfigurationSchema() {
+  const createActionSchema = createTULIP2DownlinkActionSchemaFactory(31)
+  return createActionSchema({
+    action: 'getConfiguration',
+    extension: {
+      mainConfiguration: v.optional(v.literal(true)),
+      channel0: getConfigurationChannelSchema(),
+      channel1: getConfigurationChannelSchema(),
+    },
+  })
+}
+
+export type NetrisFTULIP2GetConfigurationAction = v.InferOutput<ReturnType<typeof createNetrisFTULIP2GetConfigurationSchema>>
+export type NetrisFTULIP2ResetBatteryAction = v.InferOutput<ReturnType<typeof createDownlinkResetBatteryIndicatorSchema>>
+export type NetrisFTULIP2ConfigurationAction = TULIP2ConfigurationAction<NetrisFTulip2Channels[number], NetrisFTulip2FeatureFlags>
+
+export type NetrisFTULIP2DownlinkExtraInput
+  = | NetrisFTULIP2GetConfigurationAction
+    | NetrisFTULIP2ResetBatteryAction

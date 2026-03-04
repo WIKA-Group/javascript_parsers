@@ -686,13 +686,13 @@
           "wirelessModuleFirmwareVersion": "0.2.0",
           "wirelessModuleHardwareVersion": "0.1.0",
           "serialNumber": "2201080247",
-          "strainType": "gauge / relative",
-          "measurementRangeStartStrain": -312.5,
-          "measurementRangeEndStrain": 312.5,
+          "measurementType": "relative",
+          "measurementRangeStart": -312.5,
+          "measurementRangeEnd": 312.5,
           "measurementRangeStartDeviceTemperature": -45.0,
           "measurementRangeEndDeviceTemperature": 110.0,
-          "strainUnit": 185,
-          "strainUnitName": "µeps",
+          "measurementUnit": 185,
+          "unitName": "µeps",
           "deviceTemperatureUnit": 32,
           "deviceTemperatureUnitName": "°C"
         }
@@ -811,6 +811,303 @@
           ]
         }
       }
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase downlink message: Reset to factory configuration",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "resetToFactory"
+      }
+    },
+    "output": {
+      "bytes": [1, 0, 1],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase downlink message: Reset battery indicator (configId=25)",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "resetBatteryIndicator",
+        "configurationId": 25
+      }
+    },
+    "output": {
+      "bytes": [25, 0, 64],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase downlink message: Get main configuration",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "getConfiguration",
+        "configurationId": 1,
+        "mainConfiguration": true
+      }
+    },
+    "output": {
+      "bytes": [1, 0, 4],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase downlink message: Get all channel configurations (configId=5)",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "getConfiguration",
+        "configurationId": 5,
+        "mainConfiguration": true,
+        "channel0": true,
+        "channel1": true
+      }
+    },
+    "output": {
+      "bytes": [5, 0, 4, 80, 96, 81, 97],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase downlink message: Get strain channel alarm and property configs",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "getConfiguration",
+        "configurationId": 1,
+        "channel0": true
+      }
+    },
+    "output": {
+      "bytes": [1, 0, 80, 96],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase downlink message: Get temperature alarm config only",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "getConfiguration",
+        "configurationId": 1,
+        "channel1": {
+          "alarms": true
+        }
+      }
+    },
+    "output": {
+      "bytes": [1, 0, 81],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase downlink message: Set main configuration with BLE enabled (spec example: configId=7, 180s/5, 60s/3)",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "configuration",
+        "configurationId": 7,
+        "mainConfiguration": {
+          "measuringRateWhenNoAlarm": 180,
+          "publicationFactorWhenNoAlarm": 5,
+          "measuringRateWhenAlarm": 60,
+          "publicationFactorWhenAlarm": 3,
+          "isBLEEnabled": true
+        }
+      }
+    },
+    "output": {
+      "bytes": [7, 0, 2, 0, 0, 0, 180, 0, 5, 0, 0, 0, 60, 0, 3, 0, 0],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase downlink message: Set main configuration with BLE advertising disabled (configId=1, 3600s/2, 600s/12)",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "configuration",
+        "configurationId": 1,
+        "mainConfiguration": {
+          "measuringRateWhenNoAlarm": 3600,
+          "publicationFactorWhenNoAlarm": 2,
+          "measuringRateWhenAlarm": 600,
+          "publicationFactorWhenAlarm": 12,
+          "isBLEEnabled": false
+        }
+      }
+    },
+    "output": {
+      "bytes": [1, 0, 2, 0, 0, 14, 16, 0, 2, 0, 0, 2, 88, 0, 12, 0, 1],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase downlink message: Set strain process alarm - high threshold (spec example: configId=1, deadBand=62.5, highThreshold=250)",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "configuration",
+        "configurationId": 1,
+        "channel0": {
+          "alarms": {
+            "deadBand": 62.5,
+            "highThreshold": 250
+          }
+        }
+      }
+    },
+    "output": {
+      "bytes": [1, 0, 32, 3, 232, 64, 44, 236],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase downlink message: Set temperature process alarm - low threshold (configId=1, deadBand=0, lowThreshold=3)",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "configuration",
+        "configurationId": 1,
+        "channel1": {
+          "alarms": {
+            "deadBand": 0,
+            "lowThreshold": 3
+          }
+        }
+      }
+    },
+    "output": {
+      "bytes": [1, 0, 33, 0, 0, 128, 21, 221],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase downlink message: Set strain channel measurement offset to zero",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "configuration",
+        "configurationId": 1,
+        "channel0": {
+          "measureOffset": 0
+        }
+      }
+    },
+    "output": {
+      "bytes": [1, 0, 48, 0, 0],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "GoodCase downlink message: Set temperature channel measurement offset to 52",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "configuration",
+        "configurationId": 1,
+        "channel1": {
+          "measureOffset": 52
+        }
+      }
+    },
+    "output": {
+      "bytes": [1, 0, 49, 13, 27],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "Badcase downlink message: Configuration without any commands",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "configuration",
+        "configurationId": 1
+      }
+    },
+    "output": {
+      "errors": [
+        "NETRIS_F (JS): No configuration commands were provided for the downlink frame."
+      ]
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "Badcase downlink message: getConfiguration without any requested items",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "getConfiguration",
+        "configurationId": 1
+      }
+    },
+    "output": {
+      "errors": [
+        "NETRIS_F (JS): No get configuration commands were provided."
+      ]
+    }
+  },
+  {
+    "type": "downlinkMultiple",
+    "description": "GoodCase multiple downlink message: Reset to factory configuration",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "resetToFactory"
+      }
+    },
+    "output": {
+      "frames": [
+        [1, 0, 1]
+      ],
+      "fPort": 1
+    }
+  },
+  {
+    "type": "downlinkMultiple",
+    "description": "GoodCase multiple downlink message: Set main configuration and strain process alarm in one frame (configId=7)",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "configuration",
+        "configurationId": 7,
+        "mainConfiguration": {
+          "measuringRateWhenNoAlarm": 180,
+          "publicationFactorWhenNoAlarm": 5,
+          "measuringRateWhenAlarm": 60,
+          "publicationFactorWhenAlarm": 3,
+          "isBLEEnabled": true
+        },
+        "channel0": {
+          "alarms": {
+            "deadBand": 52,
+            "highThreshold": 236
+          }
+        }
+      }
+    },
+    "output": {
+      "frames": [
+        [7, 0, 2, 0, 0, 0, 180, 0, 5, 0, 0, 0, 60, 0, 3, 0, 0, 32, 3, 64, 64, 44, 12]
+      ],
+      "fPort": 1
     }
   }
 ]

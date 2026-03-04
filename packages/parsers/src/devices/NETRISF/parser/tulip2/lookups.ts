@@ -51,12 +51,12 @@ export const PRODUCT_SUB_ID_NAMES = {
   MIOTY: 1,
 } as const
 
-export const STRAIN_TYPES_BY_ID = {
+export const MEASUREMENT_TYPES_BY_ID = {
   1: 'absolute',
-  2: 'gauge / relative',
+  2: 'relative',
 } as const
 
-export const PHYSICAL_UNIT_NAMES_STRAIN = {
+export const PHYSICAL_UNIT_NAMES_MEASUREMENT = {
   45: 'N',
   47: 'kN',
   55: 'kg',
@@ -87,6 +87,6 @@ export const CONFIG_STATUS_COMMAND_TYPES = {
 } as const
 
 export const PHYSICAL_UNIT_NAMES_BY_ID = {
-  ...PHYSICAL_UNIT_NAMES_STRAIN,
+  ...PHYSICAL_UNIT_NAMES_MEASUREMENT,
   ...PHYSICAL_UNIT_NAMES_TEMPERATURE,
 } as const

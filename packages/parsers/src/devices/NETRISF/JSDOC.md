@@ -92,31 +92,26 @@ Applies to future decodes only.
 
 ### TULIP2 Identification Frames
 
-Identification messages (message type `6`/`0x06`) confirm the configured ranges:
+Identification messages (message type `7`/`0x07`) confirm the configured ranges:
 
 **Example TULIP2 identification frame:**
 ```json
 {
   "data": {
-    "messageType": 6,
-    "configurationId": 1,
-    "productIdName": "NETRIS_F",
-    "channels": [
-      {
-        "channelId": 0,
-        "channelName": "strain",
-        "measurementRangeStart": -312.5,
-        "measurementRangeEnd": 312.5
-      },
-      {
-        "channelId": 1,
-        "channelName": "device temperature"
-      },
-      {
-        "channelId": 2,
-        "channelName": "battery voltage"
-      }
-    ]
+    "messageType": 7,
+    "configurationId": 65,
+    "deviceInformation": {
+      "productIdName": "NETRIS_F",
+      "measurementType": "relative",
+      "measurementRangeStart": -312.5,
+      "measurementRangeEnd": 312.5,
+      "measurementRangeStartDeviceTemperature": -45.0,
+      "measurementRangeEndDeviceTemperature": 110.0,
+      "measurementUnit": 185,
+      "unitName": "µeps",
+      "deviceTemperatureUnit": 32,
+      "deviceTemperatureUnitName": "°C"
+    }
   }
 }
 ```

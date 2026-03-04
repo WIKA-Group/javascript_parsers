@@ -4,6 +4,24 @@
 
 This guide walks you through upgrading the prebuilt JavaScript parsers that are typically embedded in LoRaWAN network servers. The focus is on the practical steps required when moving from the legacy `2.x.x` bundles to the modular `4.x.x` architecture, plus the smaller hop from `3.x.x` to `4.x.x`.
 
+## Breaking Changes in 4.6.0
+
+::: warning BREAKING CHANGE - Version 4.6.0
+If you use the **NETRIS_F** (prev. F98W6) parser, several fields in the device identification message (message type `7`) have been renamed:
+
+| Before (4.5.x and earlier) | After (4.6.0+) |
+|---|---|
+| `strainType` | `measurementType` |
+| `measurementRangeStartStrain` | `measurementRangeStart` |
+| `measurementRangeEndStrain` | `measurementRangeEnd` |
+| `strainUnit` | `measurementUnit` |
+| `strainUnitName` | `unitName` |
+
+Additionally, the `measurementType` value `"gauge / relative"` has been renamed to `"relative"`.
+
+Update any code that reads these fields from the decoded output accordingly.
+:::
+
 ## Breaking Changes in 4.4.0
 
 ::: warning BREAKING CHANGE - Version 4.4.0

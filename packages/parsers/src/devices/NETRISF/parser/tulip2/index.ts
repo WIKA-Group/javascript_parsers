@@ -1,5 +1,7 @@
-import type { Handler } from '../../../../codecs/tulip2'
+import type { EncoderFactory, Handler, MultipleEncoderFactory } from '../../../../codecs/tulip2'
 import type {
+  MeasurementUnitId,
+  MeasurementUnitName,
   NetrisFTULIP2ConfigurationStatusUplinkOutput,
   NetrisFTULIP2DataMessageUplinkOutput,
   NetrisFTULIP2DeviceAlarmsData,
@@ -10,26 +12,29 @@ import type {
   NetrisFTULIP2ProcessAlarmsUplinkOutput,
   NetrisFTULIP2TechnicalAlarmsData,
   NetrisFTULIP2TechnicalAlarmsUplinkOutput,
-  StrainUnitId,
-  StrainUnitName,
   TemperatureUnitId,
   TemperatureUnitName,
 } from '../../schema/tulip2'
+import type { NetrisFTulip2DownlinkInput } from './constants'
 import { NETRISF_NAME } from '..'
 import { defineTULIP2Codec } from '../../../../codecs/tulip2'
+import { createDownlinkResetBatteryIndicatorSchema, validateTULIP2DownlinkInput } from '../../../../schemas/tulip2/downlink'
 import { DEFAULT_ROUNDING_DECIMALS, intTuple4ToFloat32WithThreshold, roundValue, slopeValueToValue, TULIPValueToValue } from '../../../../utils'
+import { createNetrisFTULIP2GetConfigurationSchema } from '../../schema/tulip2'
 import { createNetrisFTULIP2Channels, NETRISF_BATTERY_VOLTAGE_CHANNEL, NETRISF_DEVICE_TEMPERATURE_CHANNEL, NETRISF_STRAIN_CHANNEL } from './channels'
+import { NETRISF_DOWNLINK_FEATURE_FLAGS } from './constants'
+import { NETRISFTULIP2EncodeHandler } from './encode'
 import {
   ALARM_EVENTS,
   CONFIG_STATUS_COMMAND_TYPES,
   CONFIG_STATUS_NAMES_BY_VALUE,
   DEVICE_ALARM_CAUSE_OF_FAILURE_NAMES_BY_VALUE,
   DEVICE_ALARM_TYPES,
+  MEASUREMENT_TYPES_BY_ID,
   PHYSICAL_UNIT_NAMES_BY_ID,
   PROCESS_ALARM_CHANNEL_NAMES_BY_ID,
   PROCESS_ALARM_TYPES,
   PRODUCT_SUB_ID_NAMES,
-  STRAIN_TYPES_BY_ID,
   TECHNICAL_ALARM_TYPES,
 } from './lookups'
 
@@ -500,16 +505,16 @@ const handleDeviceIdentificationMessage: Handler<NetrisFChannels, NetrisFTULIP2D
     serialNumber += String.fromCharCode(char)
   }
 
-  const strainType = STRAIN_TYPES_BY_ID[input.bytes[19]! as keyof typeof STRAIN_TYPES_BY_ID] ?? 'unknown'
+  const measurementType = MEASUREMENT_TYPES_BY_ID[input.bytes[19]! as keyof typeof MEASUREMENT_TYPES_BY_ID] ?? 'unknown'
 
-  const measurementRangeStartStrain = intTuple4ToFloat32WithThreshold([
+  const measurementRangeStart = intTuple4ToFloat32WithThreshold([
     input.bytes[20]!,
     input.bytes[21]!,
     input.bytes[22]!,
     input.bytes[23]!,
   ])
 
-  const measurementRangeEndStrain = intTuple4ToFloat32WithThreshold([
+  const measurementRangeEnd = intTuple4ToFloat32WithThreshold([
     input.bytes[24]!,
     input.bytes[25]!,
     input.bytes[26]!,
@@ -530,8 +535,8 @@ const handleDeviceIdentificationMessage: Handler<NetrisFChannels, NetrisFTULIP2D
     input.bytes[35]!,
   ])
 
-  const strainUnit = input.bytes[36]!
-  const strainUnitName = PHYSICAL_UNIT_NAMES_BY_ID[strainUnit as keyof typeof PHYSICAL_UNIT_NAMES_BY_ID] ?? 'Unknown'
+  const measurementUnit = input.bytes[36]!
+  const unitName = PHYSICAL_UNIT_NAMES_BY_ID[measurementUnit as keyof typeof PHYSICAL_UNIT_NAMES_BY_ID] ?? 'Unknown'
   const deviceTemperatureUnit = input.bytes[37]!
   const deviceTemperatureUnitName = PHYSICAL_UNIT_NAMES_BY_ID[deviceTemperatureUnit as keyof typeof PHYSICAL_UNIT_NAMES_BY_ID] ?? 'Unknown'
 
@@ -547,13 +552,13 @@ const handleDeviceIdentificationMessage: Handler<NetrisFChannels, NetrisFTULIP2D
         wirelessModuleFirmwareVersion,
         wirelessModuleHardwareVersion,
         serialNumber,
-        strainType,
-        measurementRangeStartStrain,
-        measurementRangeEndStrain,
+        measurementType,
+        measurementRangeStart,
+        measurementRangeEnd,
         measurementRangeStartDeviceTemperature,
         measurementRangeEndDeviceTemperature,
-        strainUnit: strainUnit as StrainUnitId,
-        strainUnitName: strainUnitName as StrainUnitName,
+        measurementUnit: measurementUnit as MeasurementUnitId,
+        unitName: unitName as MeasurementUnitName,
         deviceTemperatureUnit: deviceTemperatureUnit as TemperatureUnitId,
         deviceTemperatureUnitName: deviceTemperatureUnitName as TemperatureUnitName,
       },
@@ -581,6 +586,24 @@ const handleKeepAliveMessage: Handler<NetrisFChannels, NetrisFTULIP2DeviceStatis
   }
 }
 
+const netrisFEncoderFactory: EncoderFactory<NetrisFTulip2DownlinkInput> = (options) => {
+  const featureFlags = NETRISF_DOWNLINK_FEATURE_FLAGS
+  return (input: NetrisFTulip2DownlinkInput) => {
+    const channels = options.getChannels()
+    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, [createDownlinkResetBatteryIndicatorSchema(featureFlags), createNetrisFTULIP2GetConfigurationSchema()])
+    return NETRISFTULIP2EncodeHandler(validated as NetrisFTulip2DownlinkInput)
+  }
+}
+
+const netrisFMultipleEncodeFactory: MultipleEncoderFactory<NetrisFTulip2DownlinkInput> = (options) => {
+  const featureFlags = NETRISF_DOWNLINK_FEATURE_FLAGS
+  return (input: NetrisFTulip2DownlinkInput) => {
+    const channels = options.getChannels()
+    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, [createDownlinkResetBatteryIndicatorSchema(featureFlags), createNetrisFTULIP2GetConfigurationSchema()])
+    return NETRISFTULIP2EncodeHandler(validated as NetrisFTulip2DownlinkInput, true)
+  }
+}
+
 // eslint-disable-next-line ts/explicit-function-return-type
 export function createNetrisFTULIP2Codec() {
   return defineTULIP2Codec({
@@ -597,5 +620,7 @@ export function createNetrisFTULIP2Codec() {
       0x07: handleDeviceIdentificationMessage,
       0x08: handleKeepAliveMessage,
     },
+    encoderFactory: netrisFEncoderFactory,
+    multipleEncodeFactory: netrisFMultipleEncodeFactory,
   })
 }
