@@ -403,5 +403,201 @@
         }
       }
     }
+  },
+  {
+    "type": "downlink",
+    "description": "Goodcase downlink - reset to factory",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "resetToFactory"
+      }
+    },
+    "output": {
+      "fPort": 1,
+      "bytes": [
+        0,
+        1
+      ]
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "Goodcase downlink - reset battery indicator",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "resetBatteryIndicator",
+        "configurationId": 1
+      }
+    },
+    "output": {
+      "fPort": 1,
+      "bytes": [
+        1,
+        5,
+        0
+      ]
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "Goodcase downlink - set main configuration",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "configuration",
+        "configurationId": 7,
+        "mainConfiguration": {
+          "measuringRateWhenNoAlarm": 180,
+          "publicationFactorWhenNoAlarm": 3,
+          "measuringRateWhenAlarm": 60,
+          "publicationFactorWhenAlarm": 18
+        }
+      }
+    },
+    "output": {
+      "fPort": 1,
+      "bytes": [
+        7,
+        2,
+        0,
+        0,
+        0,
+        180,
+        0,
+        3,
+        0,
+        0,
+        0,
+        60,
+        0,
+        18,
+        0
+      ]
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "Goodcase downlink - disable channel 3",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "configuration",
+        "configurationId": 1,
+        "channel3": false
+      }
+    },
+    "output": {
+      "fPort": 1,
+      "bytes": [
+        1,
+        17,
+        1,
+        3,
+        0
+      ]
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "Goodcase downlink - set process alarm on channel 0",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "configuration",
+        "configurationId": 1,
+        "channel0": {
+          "alarms": {
+            "deadBand": 0.12,
+            "lowThreshold": 3
+          }
+        }
+      }
+    },
+    "output": {
+      "fPort": 1,
+      "bytes": [
+        1,
+        32,
+        0,
+        0,
+        100,
+        128,
+        19,
+        136
+      ]
+    }
+  },
+  {
+    "type": "downlink",
+    "description": "Goodcase downlink - get main and channel 1 process alarm configuration",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "getConfiguration",
+        "configurationId": 1,
+        "mainConfiguration": true,
+        "channel1": true
+      }
+    },
+    "output": {
+      "fPort": 1,
+      "bytes": [
+        1,
+        4,
+        64,
+        1
+      ]
+    }
+  },
+  {
+    "type": "downlinkMultiple",
+    "description": "Goodcase downlink multiple - split process alarms by byteLimit",
+    "input": {
+      "protocol": "TULIP2",
+      "input": {
+        "deviceAction": "configuration",
+        "configurationId": 10,
+        "byteLimit": 10,
+        "channel0": {
+          "alarms": {
+            "deadBand": 0.12,
+            "lowThreshold": 3
+          }
+        },
+        "channel1": {
+          "alarms": {
+            "deadBand": 0.12,
+            "lowThreshold": 2
+          }
+        }
+      }
+    },
+    "output": {
+      "fPort": 1,
+      "frames": [
+        [
+          10,
+          32,
+          0,
+          0,
+          100,
+          128,
+          19,
+          136
+        ],
+        [
+          11,
+          32,
+          1,
+          0,
+          100,
+          128,
+          19,
+          147
+        ]
+      ]
+    }
   }
 ]

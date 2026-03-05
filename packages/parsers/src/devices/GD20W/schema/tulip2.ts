@@ -1,5 +1,8 @@
 /* eslint-disable ts/explicit-function-return-type */
+import type { createDownlinkResetBatteryIndicatorSchema, TULIP2ConfigurationAction } from '../../../schemas/tulip2/downlink'
+import type { GD20WTulip2Channels, GD20WTulip2FeatureFlags } from '../parser/tulip2/constants'
 import * as v from 'valibot'
+import { createTULIP2DownlinkActionSchemaFactory } from '../../../schemas/tulip2/downlink'
 import { createUplinkOutputSchemaFactory } from '../../../schemas/tulip2/uplink'
 import {
   createGD20WTULIP2Channels,
@@ -298,3 +301,38 @@ export type GD20WTULIP2ExtendedDeviceIdentificationUplinkOutput = v.InferOutput<
 
 export type GD20WTULIP2MainConfigurationData = v.InferOutput<ReturnType<typeof createMainConfigurationSchema>>
 export type GD20WTULIP2ChannelConfigurationData = v.InferOutput<ReturnType<typeof createChannelConfigurationSchema>>
+
+function getConfigurationChannelSchema() {
+  return v.optional(
+    v.union([
+      v.literal(true),
+      v.object({
+        alarms: v.optional(v.literal(true)),
+      }),
+    ]),
+  )
+}
+
+export function createGD20WTULIP2GetConfigurationSchema() {
+  const createActionSchema = createTULIP2DownlinkActionSchemaFactory(255)
+  return createActionSchema({
+    action: 'getConfiguration',
+    extension: {
+      mainConfiguration: v.optional(v.literal(true)),
+      channel0: getConfigurationChannelSchema(),
+      channel1: getConfigurationChannelSchema(),
+      channel2: getConfigurationChannelSchema(),
+      channel3: getConfigurationChannelSchema(),
+      channel4: getConfigurationChannelSchema(),
+      channel5: getConfigurationChannelSchema(),
+    },
+  })
+}
+
+export type GD20WTULIP2GetConfigurationAction = v.InferOutput<ReturnType<typeof createGD20WTULIP2GetConfigurationSchema>>
+export type GD20WTULIP2ResetBatteryAction = v.InferOutput<ReturnType<typeof createDownlinkResetBatteryIndicatorSchema>>
+export type GD20WTULIP2ConfigurationAction = TULIP2ConfigurationAction<GD20WTulip2Channels[number], GD20WTulip2FeatureFlags>
+
+export type GD20WTULIP2DownlinkExtraInput
+  = | GD20WTULIP2GetConfigurationAction
+    | GD20WTULIP2ResetBatteryAction

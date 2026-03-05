@@ -1,0 +1,740 @@
+{
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "protocol": {
+          "const": "TULIP2"
+        },
+        "input": {
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {
+                "deviceAction": {
+                  "const": "resetToFactory"
+                }
+              },
+              "required": [
+                "deviceAction"
+              ]
+            },
+            {
+              "type": "object",
+              "properties": {
+                "deviceAction": {
+                  "const": "configuration"
+                },
+                "configurationId": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 255
+                },
+                "byteLimit": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "mainConfiguration": {
+                  "type": "object",
+                  "properties": {
+                    "publicationFactorWhenAlarm": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 2880
+                    },
+                    "publicationFactorWhenNoAlarm": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 2880
+                    },
+                    "measuringRateWhenNoAlarm": {
+                      "type": "integer",
+                      "minimum": 60,
+                      "maximum": 86400
+                    },
+                    "measuringRateWhenAlarm": {
+                      "type": "integer",
+                      "minimum": 60,
+                      "maximum": 86400
+                    }
+                  },
+                  "required": [
+                    "publicationFactorWhenAlarm",
+                    "publicationFactorWhenNoAlarm",
+                    "measuringRateWhenNoAlarm",
+                    "measuringRateWhenAlarm"
+                  ]
+                },
+                "channel0": {
+                  "anyOf": [
+                    {
+                      "const": false
+                    },
+                    {
+                      "const": true
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alarms": {
+                          "type": "object",
+                          "properties": {
+                            "deadBand": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 12
+                            },
+                            "lowThreshold": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 12
+                            },
+                            "highThreshold": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 12
+                            },
+                            "lowThresholdWithDelay": {
+                              "type": "object",
+                              "properties": {
+                                "value": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 12
+                                },
+                                "delay": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 65535
+                                }
+                              },
+                              "required": [
+                                "value",
+                                "delay"
+                              ]
+                            },
+                            "highThresholdWithDelay": {
+                              "type": "object",
+                              "properties": {
+                                "value": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 12
+                                },
+                                "delay": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 65535
+                                }
+                              },
+                              "required": [
+                                "value",
+                                "delay"
+                              ]
+                            },
+                            "risingSlope": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 12
+                            },
+                            "fallingSlope": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 12
+                            }
+                          },
+                          "required": [
+                            "deadBand"
+                          ]
+                        }
+                      },
+                      "required": []
+                    }
+                  ]
+                },
+                "channel1": {
+                  "anyOf": [
+                    {
+                      "const": false
+                    },
+                    {
+                      "const": true
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alarms": {
+                          "type": "object",
+                          "properties": {
+                            "deadBand": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 12
+                            },
+                            "lowThreshold": {
+                              "type": "number",
+                              "minimum": -1.013,
+                              "maximum": 10.987
+                            },
+                            "highThreshold": {
+                              "type": "number",
+                              "minimum": -1.013,
+                              "maximum": 10.987
+                            },
+                            "lowThresholdWithDelay": {
+                              "type": "object",
+                              "properties": {
+                                "value": {
+                                  "type": "number",
+                                  "minimum": -1.013,
+                                  "maximum": 10.987
+                                },
+                                "delay": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 65535
+                                }
+                              },
+                              "required": [
+                                "value",
+                                "delay"
+                              ]
+                            },
+                            "highThresholdWithDelay": {
+                              "type": "object",
+                              "properties": {
+                                "value": {
+                                  "type": "number",
+                                  "minimum": -1.013,
+                                  "maximum": 10.987
+                                },
+                                "delay": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 65535
+                                }
+                              },
+                              "required": [
+                                "value",
+                                "delay"
+                              ]
+                            },
+                            "risingSlope": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 12
+                            },
+                            "fallingSlope": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 12
+                            }
+                          },
+                          "required": [
+                            "deadBand"
+                          ]
+                        }
+                      },
+                      "required": []
+                    }
+                  ]
+                },
+                "channel2": {
+                  "anyOf": [
+                    {
+                      "const": false
+                    },
+                    {
+                      "const": true
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alarms": {
+                          "type": "object",
+                          "properties": {
+                            "deadBand": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 85.7879104614
+                            },
+                            "lowThreshold": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 85.7879104614
+                            },
+                            "highThreshold": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 85.7879104614
+                            },
+                            "lowThresholdWithDelay": {
+                              "type": "object",
+                              "properties": {
+                                "value": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 85.7879104614
+                                },
+                                "delay": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 65535
+                                }
+                              },
+                              "required": [
+                                "value",
+                                "delay"
+                              ]
+                            },
+                            "highThresholdWithDelay": {
+                              "type": "object",
+                              "properties": {
+                                "value": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 85.7879104614
+                                },
+                                "delay": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 65535
+                                }
+                              },
+                              "required": [
+                                "value",
+                                "delay"
+                              ]
+                            },
+                            "risingSlope": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 85.7879104614
+                            },
+                            "fallingSlope": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 85.7879104614
+                            }
+                          },
+                          "required": [
+                            "deadBand"
+                          ]
+                        }
+                      },
+                      "required": []
+                    }
+                  ]
+                },
+                "channel3": {
+                  "anyOf": [
+                    {
+                      "const": false
+                    },
+                    {
+                      "const": true
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alarms": {
+                          "type": "object",
+                          "properties": {
+                            "deadBand": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 15.7481512909
+                            },
+                            "lowThreshold": {
+                              "type": "number",
+                              "minimum": -1.013,
+                              "maximum": 14.7351512909
+                            },
+                            "highThreshold": {
+                              "type": "number",
+                              "minimum": -1.013,
+                              "maximum": 14.7351512909
+                            },
+                            "lowThresholdWithDelay": {
+                              "type": "object",
+                              "properties": {
+                                "value": {
+                                  "type": "number",
+                                  "minimum": -1.013,
+                                  "maximum": 14.7351512909
+                                },
+                                "delay": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 65535
+                                }
+                              },
+                              "required": [
+                                "value",
+                                "delay"
+                              ]
+                            },
+                            "highThresholdWithDelay": {
+                              "type": "object",
+                              "properties": {
+                                "value": {
+                                  "type": "number",
+                                  "minimum": -1.013,
+                                  "maximum": 14.7351512909
+                                },
+                                "delay": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 65535
+                                }
+                              },
+                              "required": [
+                                "value",
+                                "delay"
+                              ]
+                            },
+                            "risingSlope": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 15.7481512909
+                            },
+                            "fallingSlope": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 15.7481512909
+                            }
+                          },
+                          "required": [
+                            "deadBand"
+                          ]
+                        }
+                      },
+                      "required": []
+                    }
+                  ]
+                },
+                "channel4": {
+                  "anyOf": [
+                    {
+                      "const": false
+                    },
+                    {
+                      "const": true
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alarms": {
+                          "type": "object",
+                          "properties": {
+                            "deadBand": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 15.7481508255
+                            },
+                            "lowThreshold": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 15.7481508255
+                            },
+                            "highThreshold": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 15.7481508255
+                            },
+                            "lowThresholdWithDelay": {
+                              "type": "object",
+                              "properties": {
+                                "value": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 15.7481508255
+                                },
+                                "delay": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 65535
+                                }
+                              },
+                              "required": [
+                                "value",
+                                "delay"
+                              ]
+                            },
+                            "highThresholdWithDelay": {
+                              "type": "object",
+                              "properties": {
+                                "value": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 15.7481508255
+                                },
+                                "delay": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 65535
+                                }
+                              },
+                              "required": [
+                                "value",
+                                "delay"
+                              ]
+                            },
+                            "risingSlope": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 15.7481508255
+                            },
+                            "fallingSlope": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 15.7481508255
+                            }
+                          },
+                          "required": [
+                            "deadBand"
+                          ]
+                        }
+                      },
+                      "required": []
+                    }
+                  ]
+                },
+                "channel5": {
+                  "anyOf": [
+                    {
+                      "const": false
+                    },
+                    {
+                      "const": true
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alarms": {
+                          "type": "object",
+                          "properties": {
+                            "deadBand": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 120
+                            },
+                            "lowThreshold": {
+                              "type": "number",
+                              "minimum": -40,
+                              "maximum": 80
+                            },
+                            "highThreshold": {
+                              "type": "number",
+                              "minimum": -40,
+                              "maximum": 80
+                            },
+                            "lowThresholdWithDelay": {
+                              "type": "object",
+                              "properties": {
+                                "value": {
+                                  "type": "number",
+                                  "minimum": -40,
+                                  "maximum": 80
+                                },
+                                "delay": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 65535
+                                }
+                              },
+                              "required": [
+                                "value",
+                                "delay"
+                              ]
+                            },
+                            "highThresholdWithDelay": {
+                              "type": "object",
+                              "properties": {
+                                "value": {
+                                  "type": "number",
+                                  "minimum": -40,
+                                  "maximum": 80
+                                },
+                                "delay": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 65535
+                                }
+                              },
+                              "required": [
+                                "value",
+                                "delay"
+                              ]
+                            },
+                            "risingSlope": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 120
+                            },
+                            "fallingSlope": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 120
+                            }
+                          },
+                          "required": [
+                            "deadBand"
+                          ]
+                        }
+                      },
+                      "required": []
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "deviceAction"
+              ]
+            },
+            {
+              "type": "object",
+              "properties": {
+                "deviceAction": {
+                  "const": "resetBatteryIndicator"
+                },
+                "configurationId": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 255
+                }
+              },
+              "required": [
+                "deviceAction"
+              ]
+            },
+            {
+              "type": "object",
+              "properties": {
+                "deviceAction": {
+                  "const": "getConfiguration"
+                },
+                "configurationId": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 255
+                },
+                "byteLimit": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "mainConfiguration": {
+                  "const": true
+                },
+                "channel0": {
+                  "anyOf": [
+                    {
+                      "const": true
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alarms": {
+                          "const": true
+                        }
+                      },
+                      "required": []
+                    }
+                  ]
+                },
+                "channel1": {
+                  "anyOf": [
+                    {
+                      "const": true
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alarms": {
+                          "const": true
+                        }
+                      },
+                      "required": []
+                    }
+                  ]
+                },
+                "channel2": {
+                  "anyOf": [
+                    {
+                      "const": true
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alarms": {
+                          "const": true
+                        }
+                      },
+                      "required": []
+                    }
+                  ]
+                },
+                "channel3": {
+                  "anyOf": [
+                    {
+                      "const": true
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alarms": {
+                          "const": true
+                        }
+                      },
+                      "required": []
+                    }
+                  ]
+                },
+                "channel4": {
+                  "anyOf": [
+                    {
+                      "const": true
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alarms": {
+                          "const": true
+                        }
+                      },
+                      "required": []
+                    }
+                  ]
+                },
+                "channel5": {
+                  "anyOf": [
+                    {
+                      "const": true
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "alarms": {
+                          "const": true
+                        }
+                      },
+                      "required": []
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "deviceAction"
+              ]
+            }
+          ]
+        }
+      },
+      "required": [
+        "protocol",
+        "input"
+      ]
+    }
+  ],
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

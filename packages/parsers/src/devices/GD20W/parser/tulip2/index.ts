@@ -1,4 +1,4 @@
-import type { Handler, TULIP2Channel } from '../../../../codecs/tulip2'
+import type { EncoderFactory, Handler, MultipleEncoderFactory, TULIP2Channel } from '../../../../codecs/tulip2'
 import type {
   ChannelIdentification,
   GD20WTULIP2ChannelConfigurationData,
@@ -12,10 +12,18 @@ import type {
   GD20WTULIP2ProcessAlarmsUplinkOutput,
   GD20WTULIP2SensorTechnicalAlarmsUplinkOutput,
 } from '../../schema/tulip2'
+import type { GD20WTulip2DownlinkInput } from './constants'
 import { GD20W_NAME } from '..'
 import { defineTULIP2Codec } from '../../../../codecs/tulip2'
+import { createDownlinkResetBatteryIndicatorSchema, validateTULIP2DownlinkInput } from '../../../../schemas/tulip2/downlink'
 import { intTuple4ToFloat32WithThreshold, roundValue, slopeValueToValue, TULIPValueToValue } from '../../../../utils'
+import { createGD20WTULIP2GetConfigurationSchema } from '../../schema/tulip2'
 import { createGD20WTULIP2Channels } from './channels'
+import {
+  GD20W_DOWNLINK_FEATURE_FLAGS,
+
+} from './constants'
+import { GD20WTULIP2EncodeHandler } from './encode'
 import {
   ALARM_EVENTS,
   CONFIGURATION_STATUS_BY_ID,
@@ -487,12 +495,42 @@ const handleExtendedDeviceIdentificationMessage: Handler<GD20WTULIP2Channels, GD
   return result
 }
 
+const gd20wEncoderFactory: EncoderFactory<GD20WTulip2DownlinkInput> = (options) => {
+  const featureFlags = GD20W_DOWNLINK_FEATURE_FLAGS
+  return (input: GD20WTulip2DownlinkInput) => {
+    const channels = options.getChannels()
+    const validated = validateTULIP2DownlinkInput(
+      input,
+      channels,
+      featureFlags,
+      [createDownlinkResetBatteryIndicatorSchema(featureFlags), createGD20WTULIP2GetConfigurationSchema()],
+    )
+    return GD20WTULIP2EncodeHandler(validated as GD20WTulip2DownlinkInput)
+  }
+}
+
+const gd20wMultipleEncodeFactory: MultipleEncoderFactory<GD20WTulip2DownlinkInput> = (options) => {
+  const featureFlags = GD20W_DOWNLINK_FEATURE_FLAGS
+  return (input: GD20WTulip2DownlinkInput) => {
+    const channels = options.getChannels()
+    const validated = validateTULIP2DownlinkInput(
+      input,
+      channels,
+      featureFlags,
+      [createDownlinkResetBatteryIndicatorSchema(featureFlags), createGD20WTULIP2GetConfigurationSchema()],
+    )
+    return GD20WTULIP2EncodeHandler(validated as GD20WTulip2DownlinkInput, true)
+  }
+}
+
 // eslint-disable-next-line ts/explicit-function-return-type
 export function createTULIP2GD20WCodec() {
   return defineTULIP2Codec({
     deviceName: GD20W_NAME,
     roundingDecimals: GD20W_ROUNDING_DECIMALS,
     channels: createGD20WTULIP2Channels(),
+    encoderFactory: gd20wEncoderFactory,
+    multipleEncodeFactory: gd20wMultipleEncodeFactory,
     handlers: {
       0x01: handleDataMessage,
       0x02: handleDataMessage,

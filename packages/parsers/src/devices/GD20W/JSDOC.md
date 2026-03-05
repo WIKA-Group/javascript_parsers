@@ -2,7 +2,7 @@
 
 ## Parser API
 
-All functions are pure (no global mutation) except `setMeasurementRanges` which updates internal range configuration for subsequent decodes.
+All functions are pure (no global mutation) except `adjustMeasuringRange` which updates internal range configuration for subsequent decodes and encodes.
 
 ### Types:
 
@@ -59,16 +59,16 @@ type AdjustableChannelName = 'channel0' | 'channel1' | 'channel2' | 'channel3' |
 function decodeUplink(input: UplinkInput): Result
 ```
 
-### `decodeHexString(hexInput)`
+### `decodeHexUplink(hexInput)`
 ```ts
-function decodeHexString(hexInput: HexUplinkInput): DecodeResult
+function decodeHexUplink(hexInput: HexUplinkInput): Result
 ```
 `bytes` must have even length; case-insensitive.
 
-### `setMeasurementRanges(channel, range)`
+### `adjustMeasuringRange(channel, range)`
 ```ts
 // Will throw on invalid channel name or if the channel disallows range updates
-function setMeasurementRanges(
+function adjustMeasuringRange(
   channelName: AdjustableChannelName,
   range: {
     start: number
@@ -87,27 +87,86 @@ function adjustRoundingDecimals(decimals: number): void
 ```
 Applies to future decodes only.
 
+### `encodeDownlink(input)`
+```ts
+interface DownlinkInput {
+  protocol: 'TULIP2'
+  input: {
+    deviceAction: 'configuration'
+    mainConfiguration?: {
+      measuringRateWhenNoAlarm: number
+      publicationFactorWhenNoAlarm: number
+      measuringRateWhenAlarm: number
+      publicationFactorWhenAlarm: number
+    }
+    channel0?: false | true | { alarms?: object }
+    channel1?: false | true | { alarms?: object }
+    channel2?: false | true | { alarms?: object }
+    channel3?: false | true | { alarms?: object }
+    channel4?: false | true | { alarms?: object }
+    channel5?: false | true | { alarms?: object }
+    configurationId?: number
+    byteLimit?: number
+  } | {
+    deviceAction: 'resetToFactory'
+  } | {
+    deviceAction: 'resetBatteryIndicator'
+    configurationId?: number
+  } | {
+    deviceAction: 'getConfiguration'
+    mainConfiguration?: true
+    channel0?: true | { alarms?: true }
+    channel1?: true | { alarms?: true }
+    channel2?: true | { alarms?: true }
+    channel3?: true | { alarms?: true }
+    channel4?: true | { alarms?: true }
+    channel5?: true | { alarms?: true }
+    configurationId?: number
+    byteLimit?: number
+  }
+}
+
+function encodeDownlink(input: DownlinkInput): {
+  bytes: number[]
+  fPort: number
+  warnings?: string[]
+} | {
+  errors: string[]
+}
+```
+
+### `encodeMultipleDownlinks(input)`
+```ts
+function encodeMultipleDownlinks(input: DownlinkInput): {
+  frames: number[][]
+  fPort: number
+  warnings?: string[]
+} | {
+  errors: string[]
+}
+```
+
 ## Verifying Ranges
 
 All channels on the GD20W are 4-20 mA current loop inputs and are **configurable**. You must verify the actual measurement ranges from your device specifications or identification frames. The parser defaults to placeholder ranges that may not match your device configuration.
 
 ### Using Identification Frames (TULIP2)
 
-Both TULIP2 and TULIP3 supported devices send identification frames containing channel configuration. For TULIP2 devices, look for message type 6:
+GD20W currently supports TULIP2. Look for identification message type `0x09` (extended device identification) to get actual channel ranges:
 
 ```json
 {
   "data": {
-    "messageType": 6,
-    "channelId": 0,
-    "channelName": "channel0",
-    "measurementRangeStart": 0,
-    "measurementRangeEnd": 100
+    "messageType": 9,
+    "channelRanges": {
+      "channel0": { "min": 0, "max": 12 },
+      "channel1": { "min": 0, "max": 200000 }
+    }
   }
 }
 ```
 
-Use `measurementRangeStart` and `measurementRangeEnd` to configure the parser before decoding data messages.
+Use `channelRanges.channelX.min/max` to configure the parser before decoding or encoding range-based values.
 
 ## Quick Start
 
@@ -119,7 +178,7 @@ Use `measurementRangeStart` and `measurementRangeEnd` to configure the parser be
 
 ```ts
 // Replace values with your device's actual measurement ranges from specifications or identification frames
-setMeasurementRanges('channel0', { start: 0, end: 100 })
-setMeasurementRanges('channel1', { start: 0, end: 250 })
+adjustMeasuringRange('channel0', { start: 0, end: 100 })
+adjustMeasuringRange('channel1', { start: 0, end: 250 })
 // ... configure other channels as needed
 ```
