@@ -1,6 +1,6 @@
 {
   "name": "wika-netris-f-decoder",
-  "version": "4.6.0",
+  "version": "4.7.0",
   "main": "index.js",
   "description": "WIKA NETRIS_F LoRaWAN decoder",
   "codecId": "0001",
