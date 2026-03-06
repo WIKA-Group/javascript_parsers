@@ -65,6 +65,7 @@ Distributed under the [MIT License](./LICENSE).
 
 4.7.0
   - feat: add GD20W TULIP2 downlink configuration support
+  - fix: type inference for TULIP2 downlink configuration encoding
 
 4.6.0
   - feat: add TRW TULIP3 downlink configuration support

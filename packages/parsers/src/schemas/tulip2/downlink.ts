@@ -632,7 +632,9 @@ export function createTULIP2DownlinkSchema<TChannels extends TULIP2Channel, TFea
 type DownlinkResetToFactory = v.InferOutput<ReturnType<typeof createDownlinkResetToFactorySchema>>
 
 // necessary as InferOutput from valibot has strict inputs and with dynamic schemas it gets confused
-type InferValibotOutput<TSchema> = TSchema extends { '~types'?: { output: infer TOutput } }
+// Note: `| undefined` in the value type is required for exactOptionalPropertyTypes compatibility,
+// as Valibot declares `~types` as `{ output: T } | undefined`.
+type InferValibotOutput<TSchema> = TSchema extends { '~types'?: { output: infer TOutput } | undefined }
   ? TOutput
   : never
 

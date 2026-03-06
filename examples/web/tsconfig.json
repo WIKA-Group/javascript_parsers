@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
+    "target": "esnext",
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "moduleDetection": "force",
     "useDefineForClassFields": true,
@@ -8,17 +8,34 @@
 
     /* Bundler mode */
     "moduleResolution": "bundler",
+
+    "resolveJsonModule": true,
+    "types": ["node"],
     "allowImportingTsExtensions": true,
 
     /* Linting */
+
     "strict": true,
+    "strictNullChecks": true,
+    "exactOptionalPropertyTypes": true,
     "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "noPropertyAccessFromIndexSignature": false,
+    "noUncheckedIndexedAccess": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    "declaration": true,
     "noEmit": true,
+    "esModuleInterop": true,
+
+    "forceConsistentCasingInFileNames": true,
+    "isolatedDeclarations": false,
     "isolatedModules": true,
-    "skipLibCheck": true,
-    "noUncheckedSideEffectImports": true
+    "verbatimModuleSyntax": true,
+    "erasableSyntaxOnly": true,
+    "skipDefaultLibCheck": true,
+    "noUncheckedSideEffectImports": true,
+    "skipLibCheck": true
   },
   "include": ["src"]
 }
