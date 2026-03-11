@@ -1,5 +1,6 @@
 import { defineParser } from '../../../parser'
 import { createNETRIS2TULIP2Codec } from './tulip2'
+import { createTULIP3NETRIS2Codec } from './tulip3'
 
 export const NETRIS2_NAME = 'NETRIS2'
 
@@ -7,7 +8,7 @@ export const NETRIS2_NAME = 'NETRIS2'
 export function useParser() {
   return defineParser({
     parserName: NETRIS2_NAME,
-    codecs: [createNETRIS2TULIP2Codec()],
+    codecs: [createNETRIS2TULIP2Codec(), createTULIP3NETRIS2Codec()],
   })
 }
 

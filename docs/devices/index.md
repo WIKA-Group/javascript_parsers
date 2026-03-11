@@ -29,7 +29,7 @@ Note: region availability may change in the future, additional regions such as S
 | [NETRIS_F (prev. F98W6)](./netris-f.md) | ✔️ | ✔️ | ❌ | ❌ |
 | [GD20W](./gd20w.md) | ✔️ | ✔️ | ⚪ | ⚪ |
 | [NETRIS1](./netris1.md) | ✔️ | ✔️ | ✔️ | ✔️ |
-| [NETRIS2](./netris2.md) | ✔️ | ✔️ | ❌ | ❌ |
+| [NETRIS2](./netris2.md) | ✔️ | ✔️ | ✔️ | ✔️ |
 | [PEW](./pew.md) | ✔️ | ✔️ | ✔️ | ✔️ |
 | [PGW23](./pgw23.md) | ✔️ | ✔️ | ⚪ | ⚪ |
 | [TRW](./trw.md) | ✔️ | ✔️ | ✔️ | ✔️ |

@@ -9,6 +9,12 @@ const hexUplinkExamples = examples.filter(e => e.type === ('hexUplink'))
 const downlinkExamples = examples.filter(e => e.type === ('downlink'))
 const downlinkMultiple = examples.filter(e => e.type === ('downlinkMultiple'))
 
+function throwSchemaError(context: string, issues: [v.BaseIssue<unknown>, ...v.BaseIssue<unknown>[]]): never {
+  const summary = v.summarize(issues)
+  const details = JSON.stringify(issues, null, 2)
+  throw new Error(`${context}\n${summary}\n${details}`)
+}
+
 describe('netris2 parser', () => {
   const {
     decodeUplink,
@@ -27,9 +33,8 @@ describe('netris2 parser', () => {
 
     const result = v.safeParse(outputSchema, output)
     if (!result.success) {
-      console.error('Schema validation failed:', JSON.stringify(result.issues, null, 2))
+      throwSchemaError(`Uplink output schema validation failed: ${example.description}`, result.issues)
     }
-    expect(result.success).toBe(true)
   })
 
   it.each(hexUplinkExamples)(`should decode hexUplink example: $description`, (example) => {
@@ -40,9 +45,8 @@ describe('netris2 parser', () => {
 
     const result = v.safeParse(outputSchema, output)
     if (!result.success) {
-      console.error('Schema validation failed:', JSON.stringify(result.issues, null, 2))
+      throwSchemaError(`Hex uplink output schema validation failed: ${example.description}`, result.issues)
     }
-    expect(result.success).toBe(true)
   })
 
   it.each(downlinkExamples)(`should encode downlink example: $description`, (example) => {
@@ -65,4 +69,6 @@ describe('netris2 parser', () => {
       }
     }) */
   })
+
+  // No range changing tests as NETRIS2 doesn't support that
 })

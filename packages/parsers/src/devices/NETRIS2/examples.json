@@ -461,6 +461,229 @@
     }
   },
   {
+    "type": "uplink",
+    "description": "GoodCase TULIP3 data message: Uplink example with compact encoding for 2 current channels",
+    "input": {
+      "bytes": [16, 1, 6, 46, 151, 14, 21, 47],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 16,
+        "messageSubType": 1,
+        "measurements": [
+          {
+            "channel": "channel1",
+            "channelId": 0,
+            "channelName": "Electrical current1",
+            "sensor": "sensor1",
+            "sensorId": 0,
+            "sourceDataType": "uint16 - TULIP scale 2500 - 12500",
+            "value": 19.0832,
+            "valueAcquisitionError": false
+          },
+          {
+            "channel": "channel2",
+            "channelId": 1,
+            "channelName": "Electrical current2",
+            "sensor": "sensor1",
+            "sensorId": 0,
+            "sourceDataType": "uint16 - TULIP scale 2500 - 12500",
+            "value": 8.6768,
+            "valueAcquisitionError": false
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase TULIP3 process alarm message: low threshold alarm on the 2nd current channel",
+    "input": {
+      "bytes": [18, 1, 8, 128],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageSubType": 1,
+        "messageType": 18,
+        "processAlarms": [
+          {
+            "alarmFlags": {
+              "fallingSlope": false,
+              "highThreshold": false,
+              "highThresholdWithDelay": false,
+              "lowThreshold": true,
+              "lowThresholdWithDelay": false,
+              "risingSlope": false
+            },
+            "channel": "channel2",
+            "channelId": 1,
+            "channelName": "Electrical current2",
+            "sensor": "sensor1",
+            "sensorId": 0
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase TULIP3 process alarm message: low threshold alarm disappears on the 2nd current channel",
+    "input": {
+      "bytes": [18, 1, 8, 0],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageSubType": 1,
+        "messageType": 18,
+        "processAlarms": [
+          {
+            "alarmFlags": {
+              "fallingSlope": false,
+              "highThreshold": false,
+              "highThresholdWithDelay": false,
+              "lowThreshold": false,
+              "lowThresholdWithDelay": false,
+              "risingSlope": false
+            },
+            "channel": "channel2",
+            "channelId": 1,
+            "channelName": "Electrical current2",
+            "sensor": "sensor1",
+            "sensorId": 0
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase TULIP3 device alarm message: communication module alarms - low and air time limitation",
+    "input": {
+      "bytes": [19, 1, 0, 40],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 19,
+        "messageSubType": 1,
+        "communicationModuleAlarms": {
+          "alarmFlags": {
+            "airTimeLimitation": true,
+            "cmChipHighTemperature": false,
+            "cmChipLowTemperature": false,
+            "highVoltage": false,
+            "lowVoltage": true,
+            "memoryError": false
+          }
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase TULIP3 device alarm message: sensor alarms - communication error",
+    "input": {
+      "bytes": [19, 2, 0, 0, 1],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 19,
+        "messageSubType": 2,
+        "sensorAlarms": [
+          {
+            "alarmFlags": {
+              "sensorCommunicationError": true,
+              "sensorIdentificationError": false,
+              "sensorInternalError": false
+            },
+            "sensor": "sensor1",
+            "sensorId": 0
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase TULIP3 device alarm message: channel alarms - min physical on channel 1 and max physical on channel 2",
+    "input": {
+      "bytes": [19, 3, 0, 0, 16, 8, 0, 32],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 19,
+        "messageSubType": 3,
+        "channelAlarms": [
+          {
+            "alarmFlags": {
+              "openCondition": false,
+              "outOfMaxMeasurementRange": false,
+              "outOfMaxPhysicalSensorLimit": false,
+              "outOfMinMeasurementRange": false,
+              "outOfMinPhysicalSensorLimit": true,
+              "shortCondition": false
+            },
+            "channel": "channel1",
+            "channelId": 0,
+            "channelName": "Electrical current1",
+            "sensor": "sensor1",
+            "sensorId": 0
+          },
+          {
+            "alarmFlags": {
+              "openCondition": false,
+              "outOfMaxMeasurementRange": false,
+              "outOfMaxPhysicalSensorLimit": true,
+              "outOfMinMeasurementRange": false,
+              "outOfMinPhysicalSensorLimit": false,
+              "shortCondition": false
+            },
+            "channel": "channel2",
+            "channelId": 1,
+            "channelName": "Electrical current2",
+            "sensor": "sensor1",
+            "sensorId": 0
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase TULIP3 keep alive message: battery powered, revision counter 2, battery 100%",
+    "input": {
+      "bytes": [22, 1, 96, 0, 2, 100],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageSubType": 1,
+        "messageType": 22,
+        "keepAliveData": {
+          "batteryLevel": 100,
+          "revisionCounter": 2,
+          "status": {
+            "ableToComputeBatteryLevel": true,
+            "hasCommunicationModuleRestarted": true,
+            "mainPowered": false
+          }
+        }
+      }
+    }
+  },
+  {
     "type": "downlink",
     "description": "GoodCase downlink message: Reset to factory",
     "input": {

@@ -2,7 +2,7 @@
 
 ## Parser API
 
-All functions are pure (no global mutation) except `setMeasurementRanges` which updates internal range configuration for subsequent decodes.
+All functions are pure. NETRIS2 does not support changing measuring ranges because both channels are fixed to 4-20 mA.
 
 ### Types:
 
@@ -38,6 +38,7 @@ Supported `channels` to identify different sensors by:
 // Is used in the returned data
 type ChannelName = 'Electrical current1' | 'Electrical current2'
 ```
+
 Channels that support adjusting the measurement range:
 ```ts
 type AdjustableChannelName = never // No adjustable channels in NETRIS2
@@ -50,23 +51,24 @@ type AdjustableChannelName = never // No adjustable channels in NETRIS2
 | `Electrical current1` | 4 | 20 | mA | No |
 | `Electrical current2` | 4 | 20 | mA | No |
 
-*Both channels have fixed 4-20 mA ranges that cannot be adjusted.
+Both channels have fixed 4-20 mA ranges that cannot be adjusted.
 
 ### `decodeUplink(input)`
 ```ts
 function decodeUplink(input: UplinkInput): Result
 ```
 
-### `decodeHexString(hexInput)`
+### `decodeHexUplink(hexInput)`
 ```ts
-function decodeHexString(hexInput: HexUplinkInput): DecodeResult
+function decodeHexUplink(hexInput: HexUplinkInput): Result
 ```
+
 `bytes` must have even length; case-insensitive.
 
-### `setMeasurementRanges(channel, range)`
+### `adjustMeasuringRange(channel, range)`
 ```ts
-// Will throw on invalid channel name or if the channel disallows range updates
-function setMeasurementRanges(
+// Will always throw for NETRIS2 because no channel supports range updates
+function adjustMeasuringRange(
   channelName: AdjustableChannelName,
   range: {
     start: number
@@ -74,7 +76,8 @@ function setMeasurementRanges(
   }
 ): void
 ```
-Applies to future decodes only.
+
+NETRIS2 exposes the common parser API, but both current channels are fixed by the device and protocol. No range adjustment is required or supported.
 
 ### `adjustRoundingDecimals(decimals)`
 ```ts
@@ -83,13 +86,38 @@ Applies to future decodes only.
 // Default is 4
 function adjustRoundingDecimals(decimals: number): void
 ```
+
 Applies to future decodes only.
 
 ### `encodeDownlink(input)`
 ```ts
-interface DownlinkInput {
-  codec: 'NETRIS2TULIP2'
-  input: ConfigurationInput | ResetInput | ResetBatteryInput
+type DownlinkInput = {
+  protocol: 'TULIP2'
+  input: {
+    deviceAction: 'configuration'
+    // Configuration fields...
+  } | {
+    deviceAction: 'resetBatteryIndicator'
+    configurationId?: number
+  }
+} | {
+  protocol: 'TULIP3'
+  input: {
+    action: 'readRegisters'
+    // Read register fields...
+  } | {
+    action: 'writeRegisters'
+    // Write register fields...
+  } | {
+    action: 'forceCloseSession'
+  } | {
+    action: 'restoreDefaultConfiguration'
+  } | {
+    action: 'newBatteryInserted'
+  } | {
+    action: 'getAlarmStatus'
+    // Alarm status fields...
+  }
 }
 
 // encode a single downlink frame
@@ -102,13 +130,14 @@ function encodeDownlink(input: DownlinkInput): {
 }
 ```
 
-Validates the input and encodes it into a single downlink frame. It uses the same range configuration as used for decoding.
-If the documentation refers to percentage values, use the real world values. (e.g. 20% for threshold with 4-20mA range is 7.2mA (0.2 * (20-4) + 4)).
+Validates the input and encodes it into a single downlink frame.
+If the documentation refers to percentage values, use the real-world current values. For NETRIS2, 20% within a 4-20 mA span corresponds to 7.2 mA because 0.2 multiplied by (20 minus 4), plus 4, equals 7.2.
 
 To understand the input structure, refer to the [downlink schema definition](https://github.com/WIKA-Group/javascript_parsers/blob/main/packages/parsers/src/devices/NETRIS2/downlink.schema.json) and [downlink examples](https://github.com/WIKA-Group/javascript_parsers/blob/main/packages/parsers/src/devices/NETRIS2/examples.json).
 
 ### `encodeMultipleDownlinks(input)`
 ```ts
+// Same input type as encodeDownlink()
 // encodes the given configuration in one or more downlink frames depending on byte size
 function encodeMultipleDownlinks(
   input: DownlinkInput
@@ -128,6 +157,42 @@ To understand the input structure, refer to the [downlink schema definition](htt
 **Note:** NETRIS2 has fixed 4-20 mA measurement ranges for both channels that cannot be adjusted. The device always reads electrical current in the 4-20 mA range. No configuration is required for measurement ranges.
 
 If you need to verify the device configuration, check the identification frames after device activation.
+
+### TULIP3 Identification Frames
+
+For devices using TULIP3 protocol, the first uplinks after device activation can include identification messages (message type `20`/`0x14`) that report the actual configured measurands, units, and register-backed metadata for both channels.
+
+- **Current channel 1**: Check `sensor1/channel1` for `measurand`, `unit`, and identification registers.
+- **Current channel 2**: Check `sensor1/channel2` for `measurand`, `unit`, and identification registers.
+- **Communication module**: Product, channel plan, firmware, and serial number are exposed on the communication module level.
+
+**Example TULIP3 identification frame:**
+```json
+{
+  "data": {
+    "messageType": 20,
+    "messageSubType": 1,
+    "identification": {
+      "sensor1": {
+        "channel1": {
+          "measurand": "Current",
+          "unit": "mA",
+          "minMeasureRange": 4,
+          "maxMeasureRange": 20,
+          "channelName": "Electrical current1"
+        },
+        "channel2": {
+          "measurand": "Current",
+          "unit": "mA",
+          "minMeasureRange": 4,
+          "maxMeasureRange": 20,
+          "channelName": "Electrical current2"
+        }
+      }
+    }
+  }
+}
+```
 
 ### TULIP2 Identification Frames
 
@@ -158,6 +223,7 @@ Identification messages (message type `6`/`0x06`) confirm the configured channel
 
 ## Quick Start
 
-1. No measurement range configuration needed (fixed 4-20 mA)
-2. Add wrapper function if your network server is non-compliant: `function decode(input) { return decodeUplink(input) }`
-3. For downlink configuration, refer to the downlink schema documentation above
+1. No measurement range configuration is needed because both channels are fixed to 4-20 mA.
+2. Add a wrapper function if your network server is non-compliant: `function decode(input) { return decodeUplink(input) }`
+3. Use `protocol: 'TULIP2'` or `protocol: 'TULIP3'` when encoding downlinks.
+4. Refer to the schema and examples for the exact downlink structure.

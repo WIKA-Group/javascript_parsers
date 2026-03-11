@@ -63,6 +63,9 @@ Distributed under the [MIT License](./LICENSE).
 
 ## Release Notes
 
+4.8.0
+  - feat: add NETRIS2 TULIP3 uplink and downlink support
+
 4.7.0
   - feat: add GD20W TULIP2 downlink configuration support
   - fix: type inference for TULIP2 downlink configuration encoding
