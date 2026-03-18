@@ -2865,11 +2865,36 @@
                           "eventName": {
                             "const": "triggered"
                           },
-                          "alarmType": {
-                            "const": 0
-                          },
-                          "alarmTypeName": {
-                            "const": "low threshold"
+                          "alarmFlags": {
+                            "type": "object",
+                            "properties": {
+                              "lowThreshold": {
+                                "type": "boolean"
+                              },
+                              "highThreshold": {
+                                "type": "boolean"
+                              },
+                              "fallingSlope": {
+                                "type": "boolean"
+                              },
+                              "risingSlope": {
+                                "type": "boolean"
+                              },
+                              "lowThresholdDelay": {
+                                "type": "boolean"
+                              },
+                              "highThresholdDelay": {
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "lowThreshold",
+                              "highThreshold",
+                              "fallingSlope",
+                              "risingSlope",
+                              "lowThresholdDelay",
+                              "highThresholdDelay"
+                            ]
                           },
                           "value": {
                             "type": "number"
@@ -2881,8 +2906,7 @@
                           "channelName",
                           "event",
                           "eventName",
-                          "alarmType",
-                          "alarmTypeName",
+                          "alarmFlags",
                           "value"
                         ]
                       },
@@ -2904,11 +2928,36 @@
                           "eventName": {
                             "const": "triggered"
                           },
-                          "alarmType": {
-                            "const": 1
-                          },
-                          "alarmTypeName": {
-                            "const": "high threshold"
+                          "alarmFlags": {
+                            "type": "object",
+                            "properties": {
+                              "lowThreshold": {
+                                "type": "boolean"
+                              },
+                              "highThreshold": {
+                                "type": "boolean"
+                              },
+                              "fallingSlope": {
+                                "type": "boolean"
+                              },
+                              "risingSlope": {
+                                "type": "boolean"
+                              },
+                              "lowThresholdDelay": {
+                                "type": "boolean"
+                              },
+                              "highThresholdDelay": {
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "lowThreshold",
+                              "highThreshold",
+                              "fallingSlope",
+                              "risingSlope",
+                              "lowThresholdDelay",
+                              "highThresholdDelay"
+                            ]
                           },
                           "value": {
                             "type": "number"
@@ -2920,8 +2969,7 @@
                           "channelName",
                           "event",
                           "eventName",
-                          "alarmType",
-                          "alarmTypeName",
+                          "alarmFlags",
                           "value"
                         ]
                       },
@@ -2943,11 +2991,36 @@
                           "eventName": {
                             "const": "triggered"
                           },
-                          "alarmType": {
-                            "const": 2
-                          },
-                          "alarmTypeName": {
-                            "const": "falling slope"
+                          "alarmFlags": {
+                            "type": "object",
+                            "properties": {
+                              "lowThreshold": {
+                                "type": "boolean"
+                              },
+                              "highThreshold": {
+                                "type": "boolean"
+                              },
+                              "fallingSlope": {
+                                "type": "boolean"
+                              },
+                              "risingSlope": {
+                                "type": "boolean"
+                              },
+                              "lowThresholdDelay": {
+                                "type": "boolean"
+                              },
+                              "highThresholdDelay": {
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "lowThreshold",
+                              "highThreshold",
+                              "fallingSlope",
+                              "risingSlope",
+                              "lowThresholdDelay",
+                              "highThresholdDelay"
+                            ]
                           },
                           "value": {
                             "type": "number"
@@ -2959,8 +3032,7 @@
                           "channelName",
                           "event",
                           "eventName",
-                          "alarmType",
-                          "alarmTypeName",
+                          "alarmFlags",
                           "value"
                         ]
                       },
@@ -2982,11 +3054,36 @@
                           "eventName": {
                             "const": "triggered"
                           },
-                          "alarmType": {
-                            "const": 3
-                          },
-                          "alarmTypeName": {
-                            "const": "rising slope"
+                          "alarmFlags": {
+                            "type": "object",
+                            "properties": {
+                              "lowThreshold": {
+                                "type": "boolean"
+                              },
+                              "highThreshold": {
+                                "type": "boolean"
+                              },
+                              "fallingSlope": {
+                                "type": "boolean"
+                              },
+                              "risingSlope": {
+                                "type": "boolean"
+                              },
+                              "lowThresholdDelay": {
+                                "type": "boolean"
+                              },
+                              "highThresholdDelay": {
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "lowThreshold",
+                              "highThreshold",
+                              "fallingSlope",
+                              "risingSlope",
+                              "lowThresholdDelay",
+                              "highThresholdDelay"
+                            ]
                           },
                           "value": {
                             "type": "number"
@@ -2998,8 +3095,7 @@
                           "channelName",
                           "event",
                           "eventName",
-                          "alarmType",
-                          "alarmTypeName",
+                          "alarmFlags",
                           "value"
                         ]
                       },
@@ -3021,11 +3117,36 @@
                           "eventName": {
                             "const": "triggered"
                           },
-                          "alarmType": {
-                            "const": 4
-                          },
-                          "alarmTypeName": {
-                            "const": "low threshold with delay"
+                          "alarmFlags": {
+                            "type": "object",
+                            "properties": {
+                              "lowThreshold": {
+                                "type": "boolean"
+                              },
+                              "highThreshold": {
+                                "type": "boolean"
+                              },
+                              "fallingSlope": {
+                                "type": "boolean"
+                              },
+                              "risingSlope": {
+                                "type": "boolean"
+                              },
+                              "lowThresholdDelay": {
+                                "type": "boolean"
+                              },
+                              "highThresholdDelay": {
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "lowThreshold",
+                              "highThreshold",
+                              "fallingSlope",
+                              "risingSlope",
+                              "lowThresholdDelay",
+                              "highThresholdDelay"
+                            ]
                           },
                           "value": {
                             "type": "number"
@@ -3037,8 +3158,7 @@
                           "channelName",
                           "event",
                           "eventName",
-                          "alarmType",
-                          "alarmTypeName",
+                          "alarmFlags",
                           "value"
                         ]
                       },
@@ -3060,11 +3180,36 @@
                           "eventName": {
                             "const": "triggered"
                           },
-                          "alarmType": {
-                            "const": 5
-                          },
-                          "alarmTypeName": {
-                            "const": "high threshold with delay"
+                          "alarmFlags": {
+                            "type": "object",
+                            "properties": {
+                              "lowThreshold": {
+                                "type": "boolean"
+                              },
+                              "highThreshold": {
+                                "type": "boolean"
+                              },
+                              "fallingSlope": {
+                                "type": "boolean"
+                              },
+                              "risingSlope": {
+                                "type": "boolean"
+                              },
+                              "lowThresholdDelay": {
+                                "type": "boolean"
+                              },
+                              "highThresholdDelay": {
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "lowThreshold",
+                              "highThreshold",
+                              "fallingSlope",
+                              "risingSlope",
+                              "lowThresholdDelay",
+                              "highThresholdDelay"
+                            ]
                           },
                           "value": {
                             "type": "number"
@@ -3076,8 +3221,7 @@
                           "channelName",
                           "event",
                           "eventName",
-                          "alarmType",
-                          "alarmTypeName",
+                          "alarmFlags",
                           "value"
                         ]
                       },
@@ -3099,11 +3243,36 @@
                           "eventName": {
                             "const": "disappeared"
                           },
-                          "alarmType": {
-                            "const": 0
-                          },
-                          "alarmTypeName": {
-                            "const": "low threshold"
+                          "alarmFlags": {
+                            "type": "object",
+                            "properties": {
+                              "lowThreshold": {
+                                "type": "boolean"
+                              },
+                              "highThreshold": {
+                                "type": "boolean"
+                              },
+                              "fallingSlope": {
+                                "type": "boolean"
+                              },
+                              "risingSlope": {
+                                "type": "boolean"
+                              },
+                              "lowThresholdDelay": {
+                                "type": "boolean"
+                              },
+                              "highThresholdDelay": {
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "lowThreshold",
+                              "highThreshold",
+                              "fallingSlope",
+                              "risingSlope",
+                              "lowThresholdDelay",
+                              "highThresholdDelay"
+                            ]
                           },
                           "value": {
                             "type": "number"
@@ -3115,8 +3284,7 @@
                           "channelName",
                           "event",
                           "eventName",
-                          "alarmType",
-                          "alarmTypeName",
+                          "alarmFlags",
                           "value"
                         ]
                       },
@@ -3138,11 +3306,36 @@
                           "eventName": {
                             "const": "disappeared"
                           },
-                          "alarmType": {
-                            "const": 1
-                          },
-                          "alarmTypeName": {
-                            "const": "high threshold"
+                          "alarmFlags": {
+                            "type": "object",
+                            "properties": {
+                              "lowThreshold": {
+                                "type": "boolean"
+                              },
+                              "highThreshold": {
+                                "type": "boolean"
+                              },
+                              "fallingSlope": {
+                                "type": "boolean"
+                              },
+                              "risingSlope": {
+                                "type": "boolean"
+                              },
+                              "lowThresholdDelay": {
+                                "type": "boolean"
+                              },
+                              "highThresholdDelay": {
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "lowThreshold",
+                              "highThreshold",
+                              "fallingSlope",
+                              "risingSlope",
+                              "lowThresholdDelay",
+                              "highThresholdDelay"
+                            ]
                           },
                           "value": {
                             "type": "number"
@@ -3154,8 +3347,7 @@
                           "channelName",
                           "event",
                           "eventName",
-                          "alarmType",
-                          "alarmTypeName",
+                          "alarmFlags",
                           "value"
                         ]
                       },
@@ -3177,11 +3369,36 @@
                           "eventName": {
                             "const": "disappeared"
                           },
-                          "alarmType": {
-                            "const": 2
-                          },
-                          "alarmTypeName": {
-                            "const": "falling slope"
+                          "alarmFlags": {
+                            "type": "object",
+                            "properties": {
+                              "lowThreshold": {
+                                "type": "boolean"
+                              },
+                              "highThreshold": {
+                                "type": "boolean"
+                              },
+                              "fallingSlope": {
+                                "type": "boolean"
+                              },
+                              "risingSlope": {
+                                "type": "boolean"
+                              },
+                              "lowThresholdDelay": {
+                                "type": "boolean"
+                              },
+                              "highThresholdDelay": {
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "lowThreshold",
+                              "highThreshold",
+                              "fallingSlope",
+                              "risingSlope",
+                              "lowThresholdDelay",
+                              "highThresholdDelay"
+                            ]
                           },
                           "value": {
                             "type": "number"
@@ -3193,8 +3410,7 @@
                           "channelName",
                           "event",
                           "eventName",
-                          "alarmType",
-                          "alarmTypeName",
+                          "alarmFlags",
                           "value"
                         ]
                       },
@@ -3216,11 +3432,36 @@
                           "eventName": {
                             "const": "disappeared"
                           },
-                          "alarmType": {
-                            "const": 3
-                          },
-                          "alarmTypeName": {
-                            "const": "rising slope"
+                          "alarmFlags": {
+                            "type": "object",
+                            "properties": {
+                              "lowThreshold": {
+                                "type": "boolean"
+                              },
+                              "highThreshold": {
+                                "type": "boolean"
+                              },
+                              "fallingSlope": {
+                                "type": "boolean"
+                              },
+                              "risingSlope": {
+                                "type": "boolean"
+                              },
+                              "lowThresholdDelay": {
+                                "type": "boolean"
+                              },
+                              "highThresholdDelay": {
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "lowThreshold",
+                              "highThreshold",
+                              "fallingSlope",
+                              "risingSlope",
+                              "lowThresholdDelay",
+                              "highThresholdDelay"
+                            ]
                           },
                           "value": {
                             "type": "number"
@@ -3232,8 +3473,7 @@
                           "channelName",
                           "event",
                           "eventName",
-                          "alarmType",
-                          "alarmTypeName",
+                          "alarmFlags",
                           "value"
                         ]
                       },
@@ -3255,11 +3495,36 @@
                           "eventName": {
                             "const": "disappeared"
                           },
-                          "alarmType": {
-                            "const": 4
-                          },
-                          "alarmTypeName": {
-                            "const": "low threshold with delay"
+                          "alarmFlags": {
+                            "type": "object",
+                            "properties": {
+                              "lowThreshold": {
+                                "type": "boolean"
+                              },
+                              "highThreshold": {
+                                "type": "boolean"
+                              },
+                              "fallingSlope": {
+                                "type": "boolean"
+                              },
+                              "risingSlope": {
+                                "type": "boolean"
+                              },
+                              "lowThresholdDelay": {
+                                "type": "boolean"
+                              },
+                              "highThresholdDelay": {
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "lowThreshold",
+                              "highThreshold",
+                              "fallingSlope",
+                              "risingSlope",
+                              "lowThresholdDelay",
+                              "highThresholdDelay"
+                            ]
                           },
                           "value": {
                             "type": "number"
@@ -3271,8 +3536,7 @@
                           "channelName",
                           "event",
                           "eventName",
-                          "alarmType",
-                          "alarmTypeName",
+                          "alarmFlags",
                           "value"
                         ]
                       },
@@ -3294,11 +3558,36 @@
                           "eventName": {
                             "const": "disappeared"
                           },
-                          "alarmType": {
-                            "const": 5
-                          },
-                          "alarmTypeName": {
-                            "const": "high threshold with delay"
+                          "alarmFlags": {
+                            "type": "object",
+                            "properties": {
+                              "lowThreshold": {
+                                "type": "boolean"
+                              },
+                              "highThreshold": {
+                                "type": "boolean"
+                              },
+                              "fallingSlope": {
+                                "type": "boolean"
+                              },
+                              "risingSlope": {
+                                "type": "boolean"
+                              },
+                              "lowThresholdDelay": {
+                                "type": "boolean"
+                              },
+                              "highThresholdDelay": {
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "lowThreshold",
+                              "highThreshold",
+                              "fallingSlope",
+                              "risingSlope",
+                              "lowThresholdDelay",
+                              "highThresholdDelay"
+                            ]
                           },
                           "value": {
                             "type": "number"
@@ -3310,8 +3599,7 @@
                           "channelName",
                           "event",
                           "eventName",
-                          "alarmType",
-                          "alarmTypeName",
+                          "alarmFlags",
                           "value"
                         ]
                       }

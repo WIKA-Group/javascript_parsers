@@ -4,6 +4,65 @@
 
 This guide walks you through upgrading the prebuilt JavaScript parsers that are typically embedded in LoRaWAN network servers. The focus is on the practical steps required when moving from the legacy `2.x.x` bundles to the modular `4.x.x` architecture, plus the smaller hop from `3.x.x` to `4.x.x`.
 
+## Breaking Changes in 4.8.2
+
+::: warning BREAKING CHANGE - Version 4.8.2
+The **TULIP2** process alert message output (message type `3`) has been modified for some devices to reflect the devices bitflags as boolean values instead of a alertTypeName and a alertType.
+
+Devices affected by this change:
+- **NETRIS1**
+- **NETRISF**
+- **PEW**
+- **TRW**
+
+Before (4.6.x and earlier)
+
+```json{10,11}
+     "data": {
+        "messageType": 3,
+        "configurationId": 0,
+        "processAlarms": [
+          {
+            "channelId": 0,
+            "channelName": "temperature",
+            "event": 0,
+            "eventName": "triggered",
+            "alarmType": 0,
+            "alarmTypeName": "low threshold",
+            "value": 0
+          }
+        ]
+      }
+```
+
+After (4.8.2+)
+
+```json{10-17}
+      "data": {
+        "messageType": 3,
+        "configurationId": 0,
+        "processAlarms": [
+          {
+            "channelId": 0,
+            "channelName": "temperature",
+            "event": 0,
+            "eventName": "triggered",
+            "alarmFlags": {
+              "lowThreshold": true,
+              "highThreshold": false,
+              "fallingSlope": false,
+              "risingSlope": false,
+              "lowThresholdDelay": false,
+              "highThresholdDelay": false
+            },
+            "value": 0
+          }
+        ]
+      }
+
+```
+
+:::
 ## Breaking Changes in 4.6.0
 
 ::: warning BREAKING CHANGE - Version 4.6.0

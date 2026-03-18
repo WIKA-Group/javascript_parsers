@@ -68,26 +68,37 @@ const handleProcessAlarmMessage: Handler<TULIP2PEWChannels, PEWTULIP2ProcessAlar
   const processAlarms: PEWTULIP2ProcessAlarmsData = []
 
   for (let byteIndex = 2; byteIndex < input.bytes.length; byteIndex += 3) {
-    const channelId = ((input.bytes[byteIndex]! & 0x78) >> 3) as 0 | 1
+    const channelId = ((input.bytes[byteIndex]! & 0x40) >> 6) as 0 | 1
     const channel = options.channels.find(c => c.channelId === channelId)
     if (!channel) {
       throw new TypeError(`Unknown channel ID: ${channelId} in process alarm message`)
     }
 
-    const alarmType = (input.bytes[byteIndex]! & 0x07)
-    const event = ((input.bytes[byteIndex]! & 0x80) >> 7)
+    const event = ((input.bytes[byteIndex]! & 0x80) >> 7) as 0 | 1
+    const alarmTypeByte = input.bytes[byteIndex]!
+    const alarmType = alarmTypeByte & 0x3F
+    const alarmFlags = {
+      lowThreshold: !!(alarmType & PROCESS_ALARM_TYPES['low threshold']),
+      highThreshold: !!(alarmType & PROCESS_ALARM_TYPES['high threshold']),
+      fallingSlope: !!(alarmType & PROCESS_ALARM_TYPES['falling slope']),
+      risingSlope: !!(alarmType & PROCESS_ALARM_TYPES['rising slope']),
+      lowThresholdDelay: !!(alarmType & PROCESS_ALARM_TYPES['low threshold with delay']),
+      highThresholdDelay: !!(alarmType & PROCESS_ALARM_TYPES['high threshold with delay']),
+    }
+
     // if alarmType is 2 | 3 -> slopeValue with ranges else use TULIPValue
-    const value = alarmType === 2 || alarmType === 3
-      ? slopeValueToValue(input.bytes[byteIndex + 1]! << 8 | input.bytes[byteIndex + 2]!, channel)
-      : TULIPValueToValue(input.bytes[byteIndex + 1]! << 8 | input.bytes[byteIndex + 2]!, channel)
+    const rawValue = (input.bytes[byteIndex + 1]! << 8) | input.bytes[byteIndex + 2]!
+    const isSlope = alarmFlags.fallingSlope || alarmFlags.risingSlope
+    const value = isSlope
+      ? slopeValueToValue(rawValue, channel)
+      : TULIPValueToValue(rawValue, channel)
 
     processAlarms.push({
       channelId,
       channelName: channel.name,
       value: roundValue(value, options.roundingDecimals),
       event,
-      alarmType,
-      alarmTypeName: Object.keys(PROCESS_ALARM_TYPES).find(key => PROCESS_ALARM_TYPES[key as keyof typeof PROCESS_ALARM_TYPES] === alarmType),
+      alarmFlags,
       eventName: Object.keys(ALARM_EVENTS).find(key => ALARM_EVENTS[key as keyof typeof ALARM_EVENTS] === event),
     } as PEWTULIP2ProcessAlarmsData[number])
   }
@@ -105,7 +116,7 @@ const handleProcessAlarmMessage: Handler<TULIP2PEWChannels, PEWTULIP2ProcessAlar
   // if any of the values are the error value add a warning
   for (const alarm of processAlarms) {
     if (alarm.value === ERROR_VALUE) {
-      warnings.push(`Invalid data for ${alarm.channelName}channel`)
+      warnings.push(`Invalid data for ${alarm.channelName} channel`)
     }
   }
 

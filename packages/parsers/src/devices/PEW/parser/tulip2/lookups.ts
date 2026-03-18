@@ -20,12 +20,12 @@ export const PROCESS_ALARM_CHANNEL_NAMES = {
 } as const
 
 export const PROCESS_ALARM_TYPES = {
-  'low threshold': 0,
-  'high threshold': 1,
-  'falling slope': 2,
-  'rising slope': 3,
-  'low threshold with delay': 4,
-  'high threshold with delay': 5,
+  'low threshold': 0b0000_0001,
+  'high threshold': 0b0000_0010,
+  'falling slope': 0b0000_0100,
+  'rising slope': 0b0000_1000,
+  'low threshold with delay': 0b0001_0000,
+  'high threshold with delay': 0b0010_0000,
 } as const
 
 export const TECHNICAL_ALARM_TYPES = {

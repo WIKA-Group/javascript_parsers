@@ -87,9 +87,18 @@ const handleProcessAlarmMessage: Handler<TULIP2TRWChannels, TRWTULIP2ProcessAlar
   for (let byteIndex = 3; byteIndex < input.bytes.length; byteIndex += 3) {
     const channelId = (input.bytes[2]! & 0x0F) as 0
     const event = ((input.bytes[byteIndex]! & 0x80) >> 7) as 0 | 1
-    const alarmType = (input.bytes[byteIndex]! & 0x07) as 0 | 1 | 2 | 3 | 4 | 5
+    const alarmTypeByte = input.bytes[byteIndex]!
+    const alarmType = alarmTypeByte & 0x3F
+    const alarmFlags = {
+      lowThreshold: !!(alarmType & PROCESS_ALARM_TYPES['low threshold']),
+      highThreshold: !!(alarmType & PROCESS_ALARM_TYPES['high threshold']),
+      fallingSlope: !!(alarmType & PROCESS_ALARM_TYPES['falling slope']),
+      risingSlope: !!(alarmType & PROCESS_ALARM_TYPES['rising slope']),
+      lowThresholdDelay: !!(alarmType & PROCESS_ALARM_TYPES['low threshold with delay']),
+      highThresholdDelay: !!(alarmType & PROCESS_ALARM_TYPES['high threshold with delay']),
+    }
 
-    const isSlope = alarmType === PROCESS_ALARM_TYPES['rising slope'] || alarmType === PROCESS_ALARM_TYPES['falling slope']
+    const isSlope = alarmFlags.risingSlope || alarmFlags.fallingSlope
     const raw = (input.bytes[byteIndex + 1]! << 8) | input.bytes[byteIndex + 2]!
     const value = isSlope ? slopeValueToValue(raw, options.channels[0]) : TULIPValueToValue(raw, options.channels[0])
 
@@ -99,8 +108,7 @@ const handleProcessAlarmMessage: Handler<TULIP2TRWChannels, TRWTULIP2ProcessAlar
       channelName: 'temperature',
       event,
       eventName: Object.keys(ALARM_EVENTS).find(k => (ALARM_EVENTS)[k as keyof typeof ALARM_EVENTS] === event) as keyof typeof ALARM_EVENTS,
-      alarmType,
-      alarmTypeName: Object.keys(PROCESS_ALARM_TYPES).find(k => (PROCESS_ALARM_TYPES)[k as keyof typeof PROCESS_ALARM_TYPES] === alarmType) as keyof typeof PROCESS_ALARM_TYPES,
+      alarmFlags,
       value: roundValue(value, options.roundingDecimals),
     } as TRWTULIP2ProcessAlarmsData[number])
   }

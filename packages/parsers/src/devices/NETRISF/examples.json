@@ -189,8 +189,14 @@
             "channelName": "strain",
             "event": 0,
             "eventName": "triggered",
-            "alarmType": 1,
-            "alarmTypeName": "low threshold",
+            "alarmFlags": {
+              "lowThreshold": true,
+              "highThreshold": false,
+              "fallingSlope": false,
+              "risingSlope": false,
+              "lowThresholdDelay": false,
+              "highThresholdDelay": false
+            },
             "value": -57.5
           }
         ]
@@ -221,8 +227,14 @@
             "channelName": "device temperature",
             "event": 1,
             "eventName": "disappeared",
-            "alarmType": 8,
-            "alarmTypeName": "rising slope",
+            "alarmFlags": {
+              "lowThreshold": false,
+              "highThreshold": false,
+              "fallingSlope": false,
+              "risingSlope": true,
+              "lowThresholdDelay": false,
+              "highThresholdDelay": false
+            },
             "value": 1.9685
           }
         ]
@@ -253,8 +265,14 @@
             "channelName": "strain",
             "event": 0,
             "eventName": "triggered",
-            "alarmType": 32,
-            "alarmTypeName": "high threshold with delay",
+            "alarmFlags": {
+              "lowThreshold": false,
+              "highThreshold": false,
+              "fallingSlope": false,
+              "risingSlope": false,
+              "lowThresholdDelay": false,
+              "highThresholdDelay": true
+            },
             "value": -386
           }
         ]
@@ -285,9 +303,54 @@
             "channelName": "device temperature",
             "event": 0,
             "eventName": "triggered",
-            "alarmType": 4,
-            "alarmTypeName": "falling slope",
+            "alarmFlags": {
+              "lowThreshold": false,
+              "highThreshold": false,
+              "fallingSlope": true,
+              "risingSlope": false,
+              "lowThresholdDelay": false,
+              "highThresholdDelay": false
+            },
             "value": 3.3635
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase data message: Uplink example for Process Alarm Message (temperature/multiple flags in single alarm - low and high threshold)",
+    "input": {
+      "bytes": [
+        3,
+        15,
+        67,
+        21,
+        253
+
+      ],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 3,
+        "configurationId": 15,
+        "processAlarms": [
+          {
+            "channelId": 1,
+            "channelName": "device temperature",
+            "event": 0,
+            "eventName": "triggered",
+            "alarmFlags": {
+              "lowThreshold": true,
+              "highThreshold": true,
+              "fallingSlope": false,
+              "risingSlope": false,
+              "lowThresholdDelay": false,
+              "highThresholdDelay": false
+            },
+            "value": 3.4995
           }
         ]
       }

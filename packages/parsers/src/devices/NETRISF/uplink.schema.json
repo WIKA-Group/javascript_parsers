@@ -120,24 +120,35 @@
                           "disappeared"
                         ]
                       },
-                      "alarmType": {
-                        "enum": [
-                          1,
-                          2,
-                          4,
-                          8,
-                          16,
-                          32
-                        ]
-                      },
-                      "alarmTypeName": {
-                        "enum": [
-                          "low threshold",
-                          "high threshold",
-                          "falling slope",
-                          "rising slope",
-                          "low threshold with delay",
-                          "high threshold with delay"
+                      "alarmFlags": {
+                        "type": "object",
+                        "properties": {
+                          "lowThreshold": {
+                            "type": "boolean"
+                          },
+                          "highThreshold": {
+                            "type": "boolean"
+                          },
+                          "fallingSlope": {
+                            "type": "boolean"
+                          },
+                          "risingSlope": {
+                            "type": "boolean"
+                          },
+                          "lowThresholdDelay": {
+                            "type": "boolean"
+                          },
+                          "highThresholdDelay": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": [
+                          "lowThreshold",
+                          "highThreshold",
+                          "fallingSlope",
+                          "risingSlope",
+                          "lowThresholdDelay",
+                          "highThresholdDelay"
                         ]
                       },
                       "value": {
@@ -149,8 +160,7 @@
                       "channelName",
                       "event",
                       "eventName",
-                      "alarmType",
-                      "alarmTypeName",
+                      "alarmFlags",
                       "value"
                     ]
                   }

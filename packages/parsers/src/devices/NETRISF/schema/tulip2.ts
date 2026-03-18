@@ -14,7 +14,6 @@ import {
   PHYSICAL_UNIT_NAMES_MEASUREMENT,
   PHYSICAL_UNIT_NAMES_TEMPERATURE,
   PROCESS_ALARM_CHANNEL_NAMES_BY_ID,
-  PROCESS_ALARM_TYPES,
   TECHNICAL_ALARM_TYPES,
 } from '../parser/tulip2/lookups'
 
@@ -63,8 +62,14 @@ function createProcessAlarmsDataSchema() {
     channelName: v.picklist(Object.values(PROCESS_ALARM_CHANNEL_NAMES_BY_ID) as (typeof PROCESS_ALARM_CHANNEL_NAMES_BY_ID)[keyof typeof PROCESS_ALARM_CHANNEL_NAMES_BY_ID][]),
     event: v.picklist(Object.values(ALARM_EVENTS) as (typeof ALARM_EVENTS)[keyof typeof ALARM_EVENTS][]),
     eventName: v.picklist(Object.keys(ALARM_EVENTS) as (keyof typeof ALARM_EVENTS)[]),
-    alarmType: v.picklist(Object.values(PROCESS_ALARM_TYPES) as (typeof PROCESS_ALARM_TYPES)[keyof typeof PROCESS_ALARM_TYPES][]),
-    alarmTypeName: v.picklist(Object.keys(PROCESS_ALARM_TYPES) as (keyof typeof PROCESS_ALARM_TYPES)[]),
+    alarmFlags: v.object({
+      lowThreshold: v.boolean(),
+      highThreshold: v.boolean(),
+      fallingSlope: v.boolean(),
+      risingSlope: v.boolean(),
+      lowThresholdDelay: v.boolean(),
+      highThresholdDelay: v.boolean(),
+    }),
     value: v.number(),
   }))
 }

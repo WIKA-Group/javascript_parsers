@@ -108,15 +108,17 @@ const handleProcessAlarmMessage: Handler<NetrisFChannels, NetrisFTULIP2ProcessAl
     const alarmTypeBits = header & 0x3F
     const rawValue = (input.bytes[byteIndex + 1]! << 8) | input.bytes[byteIndex + 2]!
 
-    const alarmTypeEntry = (Object.entries(PROCESS_ALARM_TYPES) as [keyof typeof PROCESS_ALARM_TYPES, number][]).find(([, mask]) => (alarmTypeBits & mask) !== 0)
-    const alarmType = alarmTypeEntry?.[1]
-    const alarmTypeName = alarmTypeEntry?.[0]
+    const alarmFlags = {
+      lowThreshold: !!(alarmTypeBits & PROCESS_ALARM_TYPES['low threshold']),
+      highThreshold: !!(alarmTypeBits & PROCESS_ALARM_TYPES['high threshold']),
+      fallingSlope: !!(alarmTypeBits & PROCESS_ALARM_TYPES['falling slope']),
+      risingSlope: !!(alarmTypeBits & PROCESS_ALARM_TYPES['rising slope']),
+      lowThresholdDelay: !!(alarmTypeBits & PROCESS_ALARM_TYPES['low threshold with delay']),
+      highThresholdDelay: !!(alarmTypeBits & PROCESS_ALARM_TYPES['high threshold with delay']),
+    }
+
     const eventName = (Object.entries(ALARM_EVENTS) as [keyof typeof ALARM_EVENTS, number][]).find(([, id]) => id === event)?.[0]
     const channelName = PROCESS_ALARM_CHANNEL_NAMES_BY_ID[channelId as keyof typeof PROCESS_ALARM_CHANNEL_NAMES_BY_ID]
-
-    if (!alarmTypeEntry || alarmType === undefined) {
-      throw new Error(`Unknown alarmType ${alarmTypeBits} in process alarm message`)
-    }
 
     if (!eventName) {
       throw new Error(`Unknown event ${event} in process alarm message`)
@@ -135,7 +137,7 @@ const handleProcessAlarmMessage: Handler<NetrisFChannels, NetrisFTULIP2ProcessAl
     if (rawValue === ERROR_VALUE) {
       value = ERROR_VALUE
     }
-    else if (alarmType === PROCESS_ALARM_TYPES['falling slope'] || alarmType === PROCESS_ALARM_TYPES['rising slope']) {
+    else if (alarmTypeBits === PROCESS_ALARM_TYPES['falling slope'] || alarmTypeBits === PROCESS_ALARM_TYPES['rising slope']) {
       value = roundValue(slopeValueToValue(rawValue, channel), options.roundingDecimals)
     }
     else {
@@ -147,8 +149,7 @@ const handleProcessAlarmMessage: Handler<NetrisFChannels, NetrisFTULIP2ProcessAl
       channelName,
       event,
       eventName,
-      alarmType,
-      alarmTypeName,
+      alarmFlags,
       value,
     } as NetrisFTULIP2ProcessAlarmsData[number]
 

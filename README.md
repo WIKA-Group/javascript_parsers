@@ -63,6 +63,9 @@ Distributed under the [MIT License](./LICENSE).
 
 ## Release Notes
 
+4.8.3
+  - fix!: process alarm type parsing for TULIP2 in **NETRIS1**, **NETRISF**, **PEW** and **TRW**
+
 4.8.2
   - fix: align NETRIS2 TULIP3 to have 2 sensors and 1 channel
 
@@ -71,7 +74,6 @@ Distributed under the [MIT License](./LICENSE).
 
 4.8.0
   - feat: add NETRIS2 TULIP3 uplink and downlink support
-
 4.7.0
   - feat: add GD20W TULIP2 downlink configuration support
   - fix: type inference for TULIP2 downlink configuration encoding

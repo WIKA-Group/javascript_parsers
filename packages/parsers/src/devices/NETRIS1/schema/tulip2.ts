@@ -63,8 +63,14 @@ type ProcessAlarmsPossibility = {
       channelName: v.LiteralSchema<'measurement', undefined>
       event: v.LiteralSchema<typeof ALARM_EVENTS[AlarmEvent], undefined>
       eventName: v.LiteralSchema<AlarmEvent, undefined>
-      alarmType: v.LiteralSchema<typeof PROCESS_ALARM_TYPES[AlarmType], undefined>
-      alarmTypeName: v.LiteralSchema<AlarmType, undefined>
+      alarmFlags: v.ObjectSchema<{
+        lowThreshold: v.BooleanSchema<undefined>
+        highThreshold: v.BooleanSchema<undefined>
+        fallingSlope: v.BooleanSchema<undefined>
+        risingSlope: v.BooleanSchema<undefined>
+        lowThresholdDelay: v.BooleanSchema<undefined>
+        highThresholdDelay: v.BooleanSchema<undefined>
+      }, undefined>
       value: v.NumberSchema<undefined>
     }, undefined>
   }[keyof typeof PROCESS_ALARM_TYPES]
@@ -73,7 +79,7 @@ type ProcessAlarmsPossibility = {
 function createProcessAlarmsDataSchema() {
   const pos: ProcessAlarmsPossibility[] = []
   Object.keys(ALARM_EVENTS).forEach((eventName) => {
-    Object.keys(PROCESS_ALARM_TYPES).forEach((alarmTypeName) => {
+    Object.keys(PROCESS_ALARM_TYPES).forEach((_) => {
       pos.push(
         v.object({
           sensorId: v.literal(0),
@@ -81,8 +87,14 @@ function createProcessAlarmsDataSchema() {
           channelName: v.literal('measurement'),
           event: v.literal(ALARM_EVENTS[eventName as keyof typeof ALARM_EVENTS]),
           eventName: v.literal(eventName as keyof typeof ALARM_EVENTS),
-          alarmType: v.literal(PROCESS_ALARM_TYPES[alarmTypeName as keyof typeof PROCESS_ALARM_TYPES]),
-          alarmTypeName: v.literal(alarmTypeName as keyof typeof PROCESS_ALARM_TYPES),
+          alarmFlags: v.object({
+            lowThreshold: v.boolean(),
+            highThreshold: v.boolean(),
+            fallingSlope: v.boolean(),
+            risingSlope: v.boolean(),
+            lowThresholdDelay: v.boolean(),
+            highThresholdDelay: v.boolean(),
+          }),
           value: v.number(),
         }) as ProcessAlarmsPossibility,
       )

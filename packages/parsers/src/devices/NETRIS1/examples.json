@@ -127,7 +127,7 @@
         3,
         17,
         0,
-        0,
+        1,
         13,
         115
       ],
@@ -144,8 +144,14 @@
             "channelName": "measurement",
             "event": 0,
             "eventName": "triggered",
-            "alarmType": 0,
-            "alarmTypeName": "low threshold",
+            "alarmFlags": {
+              "lowThreshold": true,
+              "highThreshold": false,
+              "fallingSlope": false,
+              "risingSlope": false,
+              "lowThresholdDelay": false,
+              "highThresholdDelay": false
+            },
             "sensorId": 0,
             "value": 0.943
           }
@@ -161,7 +167,7 @@
         3,
         15,
         0,
-        131,
+        136,
         0,
         217
       ],
@@ -178,8 +184,14 @@
             "channelName": "measurement",
             "event": 1,
             "eventName": "disappeared",
-            "alarmType": 3,
-            "alarmTypeName": "rising slope",
+            "alarmFlags": {
+              "lowThreshold": false,
+              "highThreshold": false,
+              "fallingSlope": false,
+              "risingSlope": true,
+              "lowThresholdDelay": false,
+              "highThresholdDelay": false
+            },
             "sensorId": 0,
             "value": 0.217
           }
@@ -195,10 +207,10 @@
         3,
         15,
         0,
-        5,
+        32,
         44,
         168,
-        1,
+        2,
         38,
         184
       ],
@@ -215,8 +227,14 @@
             "channelName": "measurement",
             "event": 0,
             "eventName": "triggered",
-            "alarmType": 5,
-            "alarmTypeName": "high threshold with delay",
+            "alarmFlags": {
+              "lowThreshold": false,
+              "highThreshold": false,
+              "fallingSlope": false,
+              "risingSlope": false,
+              "lowThresholdDelay": false,
+              "highThresholdDelay": true
+            },
             "sensorId": 0,
             "value": 8.932
           },
@@ -225,10 +243,56 @@
             "channelName": "measurement",
             "event": 0,
             "eventName": "triggered",
-            "alarmType": 1,
-            "alarmTypeName": "high threshold",
+            "alarmFlags": {
+              "lowThreshold": false,
+              "highThreshold": true,
+              "fallingSlope": false,
+              "risingSlope": false,
+              "lowThresholdDelay": false,
+              "highThresholdDelay": false
+            },
             "sensorId": 0,
             "value": 7.412
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "uplink - voltage",
+    "description": "GoodCase data message: Uplink example for Process Alarm Message (temperature/multiple flags in single alarm - low and high threshold)",
+    "input": {
+      "bytes": [
+        3,
+        15,
+        0,
+        3,
+        13,
+        115
+      ],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 3,
+        "configurationId": 15,
+        "processAlarms": [
+          {
+            "channelId": 0,
+            "channelName": "measurement",
+            "event": 0,
+            "eventName": "triggered",
+            "alarmFlags": {
+              "lowThreshold": true,
+              "highThreshold": true,
+              "fallingSlope": false,
+              "risingSlope": false,
+              "lowThresholdDelay": false,
+              "highThresholdDelay": false
+            },
+            "sensorId": 0,
+            "value": 0.943
           }
         ]
       }
