@@ -63,6 +63,12 @@ Distributed under the [MIT License](./LICENSE).
 
 ## Release Notes
 
+4.8.2
+  - fix: align NETRIS2 TULIP3 to have 2 sensors and 1 channel
+
+4.8.1
+  > No notable changes
+
 4.8.0
   - feat: add NETRIS2 TULIP3 uplink and downlink support
 

@@ -490,50 +490,6 @@
                               "required": [
                                 "identification"
                               ]
-                            },
-                            "channel2": {
-                              "type": "object",
-                              "properties": {
-                                "identification": {
-                                  "type": "object",
-                                  "properties": {
-                                    "measurand": {
-                                      "type": "boolean"
-                                    },
-                                    "unit": {
-                                      "type": "boolean"
-                                    },
-                                    "minMeasureRange": {
-                                      "type": "boolean"
-                                    },
-                                    "maxMeasureRange": {
-                                      "type": "boolean"
-                                    },
-                                    "minPhysicalLimit": {
-                                      "type": "boolean"
-                                    },
-                                    "maxPhysicalLimit": {
-                                      "type": "boolean"
-                                    },
-                                    "accuracy": {
-                                      "type": "boolean"
-                                    },
-                                    "offset": {
-                                      "type": "boolean"
-                                    },
-                                    "gain": {
-                                      "type": "boolean"
-                                    },
-                                    "calibrationDate": {
-                                      "type": "boolean"
-                                    }
-                                  },
-                                  "required": []
-                                }
-                              },
-                              "required": [
-                                "identification"
-                              ]
                             }
                           },
                           "required": []
@@ -605,8 +561,113 @@
                               "required": [
                                 "configuration"
                               ]
+                            }
+                          },
+                          "required": []
+                        }
+                      ]
+                    },
+                    "sensor2": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "identification": {
+                              "type": "object",
+                              "properties": {
+                                "sensorType": {
+                                  "type": "boolean"
+                                },
+                                "existingChannels": {
+                                  "type": "boolean"
+                                },
+                                "firmwareVersion": {
+                                  "type": "boolean"
+                                },
+                                "hardwareVersion": {
+                                  "type": "boolean"
+                                },
+                                "productionDate": {
+                                  "type": "boolean"
+                                },
+                                "serialNumberPart1": {
+                                  "type": "boolean"
+                                },
+                                "serialNumberPart2": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "required": []
                             },
-                            "channel2": {
+                            "channel1": {
+                              "type": "object",
+                              "properties": {
+                                "identification": {
+                                  "type": "object",
+                                  "properties": {
+                                    "measurand": {
+                                      "type": "boolean"
+                                    },
+                                    "unit": {
+                                      "type": "boolean"
+                                    },
+                                    "minMeasureRange": {
+                                      "type": "boolean"
+                                    },
+                                    "maxMeasureRange": {
+                                      "type": "boolean"
+                                    },
+                                    "minPhysicalLimit": {
+                                      "type": "boolean"
+                                    },
+                                    "maxPhysicalLimit": {
+                                      "type": "boolean"
+                                    },
+                                    "accuracy": {
+                                      "type": "boolean"
+                                    },
+                                    "offset": {
+                                      "type": "boolean"
+                                    },
+                                    "gain": {
+                                      "type": "boolean"
+                                    },
+                                    "calibrationDate": {
+                                      "type": "boolean"
+                                    }
+                                  },
+                                  "required": []
+                                }
+                              },
+                              "required": [
+                                "identification"
+                              ]
+                            }
+                          },
+                          "required": []
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "configuration": {
+                              "type": "object",
+                              "properties": {
+                                "samplingChannels": {
+                                  "type": "boolean"
+                                },
+                                "bootTime": {
+                                  "type": "boolean"
+                                },
+                                "communicationTimeout": {
+                                  "type": "boolean"
+                                },
+                                "communicationRetryCount": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "required": []
+                            },
+                            "channel1": {
                               "type": "object",
                               "properties": {
                                 "configuration": {
@@ -774,31 +835,6 @@
                               "required": [
                                 "identification"
                               ]
-                            },
-                            "channel2": {
-                              "type": "object",
-                              "properties": {
-                                "identification": {
-                                  "type": "object",
-                                  "properties": {
-                                    "unit": {
-                                      "enum": [
-                                        "mA"
-                                      ]
-                                    },
-                                    "offset": {
-                                      "type": "number"
-                                    },
-                                    "gain": {
-                                      "type": "number"
-                                    }
-                                  },
-                                  "required": []
-                                }
-                              },
-                              "required": [
-                                "identification"
-                              ]
                             }
                           },
                           "required": []
@@ -814,14 +850,10 @@
                                   "properties": {
                                     "channel1": {
                                       "type": "boolean"
-                                    },
-                                    "channel2": {
-                                      "type": "boolean"
                                     }
                                   },
                                   "required": [
-                                    "channel1",
-                                    "channel2"
+                                    "channel1"
                                   ]
                                 },
                                 "bootTime": {
@@ -925,8 +957,78 @@
                               "required": [
                                 "configuration"
                               ]
+                            }
+                          },
+                          "required": []
+                        }
+                      ]
+                    },
+                    "sensor2": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "channel1": {
+                              "type": "object",
+                              "properties": {
+                                "identification": {
+                                  "type": "object",
+                                  "properties": {
+                                    "unit": {
+                                      "enum": [
+                                        "mA"
+                                      ]
+                                    },
+                                    "offset": {
+                                      "type": "number"
+                                    },
+                                    "gain": {
+                                      "type": "number"
+                                    }
+                                  },
+                                  "required": []
+                                }
+                              },
+                              "required": [
+                                "identification"
+                              ]
+                            }
+                          },
+                          "required": []
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "configuration": {
+                              "type": "object",
+                              "properties": {
+                                "samplingChannels": {
+                                  "type": "object",
+                                  "properties": {
+                                    "channel1": {
+                                      "type": "boolean"
+                                    }
+                                  },
+                                  "required": [
+                                    "channel1"
+                                  ]
+                                },
+                                "bootTime": {
+                                  "type": "integer",
+                                  "minimum": 0
+                                },
+                                "communicationTimeout": {
+                                  "type": "integer",
+                                  "minimum": 0
+                                },
+                                "communicationRetryCount": {
+                                  "type": "integer",
+                                  "minimum": 0
+                                }
+                              },
+                              "required": []
                             },
-                            "channel2": {
+                            "channel1": {
                               "type": "object",
                               "properties": {
                                 "configuration": {
@@ -1161,8 +1263,14 @@
                           "properties": {
                             "channel1": {
                               "type": "boolean"
-                            },
-                            "channel2": {
+                            }
+                          },
+                          "required": []
+                        },
+                        "sensor2": {
+                          "type": "object",
+                          "properties": {
+                            "channel1": {
                               "type": "boolean"
                             }
                           },

@@ -7,9 +7,11 @@ const {
   adjustRoundingDecimals,
   decodeHexUplink,
   encodeMultipleDownlinks,
+  adjustMeasuringRange,
 } = useParser()
 
 export {
+  adjustMeasuringRange,
   adjustRoundingDecimals,
   decodeHexUplink,
   decodeUplink,

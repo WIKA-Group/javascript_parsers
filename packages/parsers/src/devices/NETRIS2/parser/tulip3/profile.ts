@@ -123,7 +123,16 @@ export function createdTULIP3NETRIS2DeviceProfile() {
           alarmFlags: netris2ChannelAlarmFlags,
           registerConfig: netris2ChannelRegisterConfig,
         },
-        channel2: {
+      },
+      sensor2: {
+        alarmFlags: netris2SensorAlarmFlags,
+        registerConfig: {
+          tulip3ConfigurationRegisters: netris2SensorConfigurationRegisters,
+          tulip3IdentificationRegisters: netris2SensorIdentificationRegisters,
+          sensorSpecificConfigurationRegisters: {},
+          sensorSpecificIdentificationRegisters: {},
+        },
+        channel1: {
           channelName: 'Electrical current2',
           start: 4,
           end: 20,

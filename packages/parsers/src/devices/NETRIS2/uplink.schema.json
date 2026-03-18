@@ -67,16 +67,16 @@
                           "type": "object",
                           "properties": {
                             "sensor": {
-                              "const": "sensor1"
+                              "const": "sensor2"
                             },
                             "sensorId": {
-                              "const": 0
+                              "const": 1
                             },
                             "channel": {
-                              "const": "channel2"
+                              "const": "channel1"
                             },
                             "channelId": {
-                              "const": 1
+                              "const": 0
                             },
                             "channelName": {
                               "const": "Electrical current2"
@@ -148,16 +148,16 @@
                           "type": "object",
                           "properties": {
                             "sensor": {
-                              "const": "sensor1"
+                              "const": "sensor2"
                             },
                             "sensorId": {
-                              "const": 0
+                              "const": 1
                             },
                             "channel": {
-                              "const": "channel2"
+                              "const": "channel1"
                             },
                             "channelId": {
-                              "const": 1
+                              "const": 0
                             },
                             "channelName": {
                               "const": "Electrical current2"
@@ -235,16 +235,16 @@
                         "type": "object",
                         "properties": {
                           "sensor": {
-                            "const": "sensor1"
+                            "const": "sensor2"
                           },
                           "sensorId": {
-                            "const": 0
+                            "const": 1
                           },
                           "channel": {
-                            "const": "channel2"
+                            "const": "channel1"
                           },
                           "channelId": {
-                            "const": 1
+                            "const": 0
                           },
                           "channelName": {
                             "const": "Electrical current2"
@@ -316,16 +316,16 @@
                         "type": "object",
                         "properties": {
                           "sensor": {
-                            "const": "sensor1"
+                            "const": "sensor2"
                           },
                           "sensorId": {
-                            "const": 0
+                            "const": 1
                           },
                           "channel": {
-                            "const": "channel2"
+                            "const": "channel1"
                           },
                           "channelId": {
-                            "const": 1
+                            "const": 0
                           },
                           "channelName": {
                             "const": "Electrical current2"
@@ -445,14 +445,10 @@
                               "properties": {
                                 "channel1": {
                                   "type": "boolean"
-                                },
-                                "channel2": {
-                                  "type": "boolean"
                                 }
                               },
                               "required": [
-                                "channel1",
-                                "channel2"
+                                "channel1"
                               ]
                             },
                             "bootTime": {
@@ -534,8 +530,40 @@
                           "required": [
                             "channelName"
                           ]
+                        }
+                      },
+                      "required": []
+                    },
+                    "sensor2": {
+                      "type": "object",
+                      "properties": {
+                        "configuration": {
+                          "type": "object",
+                          "properties": {
+                            "samplingChannels": {
+                              "type": "object",
+                              "properties": {
+                                "channel1": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "required": [
+                                "channel1"
+                              ]
+                            },
+                            "bootTime": {
+                              "type": "number"
+                            },
+                            "communicationTimeout": {
+                              "type": "number"
+                            },
+                            "communicationRetryCount": {
+                              "type": "number"
+                            }
+                          },
+                          "required": []
                         },
-                        "channel2": {
+                        "channel1": {
                           "type": "object",
                           "properties": {
                             "protocolDataType": {
@@ -815,16 +843,16 @@
                           "type": "object",
                           "properties": {
                             "sensor": {
-                              "const": "sensor1"
+                              "const": "sensor2"
                             },
                             "sensorId": {
-                              "const": 0
+                              "const": 1
                             },
                             "channel": {
-                              "const": "channel2"
+                              "const": "channel1"
                             },
                             "channelId": {
-                              "const": 1
+                              "const": 0
                             },
                             "channelName": {
                               "const": "Electrical current2"
@@ -939,16 +967,16 @@
                         "type": "object",
                         "properties": {
                           "sensor": {
-                            "const": "sensor1"
+                            "const": "sensor2"
                           },
                           "sensorId": {
-                            "const": 0
+                            "const": 1
                           },
                           "channel": {
-                            "const": "channel2"
+                            "const": "channel1"
                           },
                           "channelId": {
-                            "const": 1
+                            "const": 0
                           },
                           "channelName": {
                             "const": "Electrical current2"
@@ -1143,6 +1171,41 @@
                             "sensorId",
                             "alarmFlags"
                           ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "sensor": {
+                              "const": "sensor2"
+                            },
+                            "sensorId": {
+                              "const": 1
+                            },
+                            "alarmFlags": {
+                              "type": "object",
+                              "properties": {
+                                "sensorIdentificationError": {
+                                  "type": "boolean"
+                                },
+                                "sensorCommunicationError": {
+                                  "type": "boolean"
+                                },
+                                "sensorInternalError": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "required": [
+                                "sensorIdentificationError",
+                                "sensorCommunicationError",
+                                "sensorInternalError"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "sensor",
+                            "sensorId",
+                            "alarmFlags"
+                          ]
                         }
                       ]
                     }
@@ -1158,6 +1221,41 @@
                           },
                           "sensorId": {
                             "const": 0
+                          },
+                          "alarmFlags": {
+                            "type": "object",
+                            "properties": {
+                              "sensorIdentificationError": {
+                                "type": "boolean"
+                              },
+                              "sensorCommunicationError": {
+                                "type": "boolean"
+                              },
+                              "sensorInternalError": {
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "sensorIdentificationError",
+                              "sensorCommunicationError",
+                              "sensorInternalError"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "sensor",
+                          "sensorId",
+                          "alarmFlags"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "sensor": {
+                            "const": "sensor2"
+                          },
+                          "sensorId": {
+                            "const": 1
                           },
                           "alarmFlags": {
                             "type": "object",
@@ -2081,16 +2179,130 @@
                           "type": "object",
                           "properties": {
                             "sensor": {
-                              "const": "sensor1"
+                              "const": "sensor2"
                             },
                             "sensorId": {
-                              "const": 0
+                              "const": 1
                             },
                             "channel": {
-                              "const": "channel2"
+                              "const": "alarmFlags"
                             },
                             "channelId": {
+                              "const": null
+                            },
+                            "channelName": {},
+                            "alarmFlags": {
+                              "type": "object",
+                              "properties": {
+                                "lowThreshold": {
+                                  "type": "boolean"
+                                },
+                                "highThreshold": {
+                                  "type": "boolean"
+                                },
+                                "fallingSlope": {
+                                  "type": "boolean"
+                                },
+                                "risingSlope": {
+                                  "type": "boolean"
+                                },
+                                "lowThresholdWithDelay": {
+                                  "type": "boolean"
+                                },
+                                "highThresholdWithDelay": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "required": [
+                                "lowThreshold",
+                                "highThreshold",
+                                "fallingSlope",
+                                "risingSlope",
+                                "lowThresholdWithDelay",
+                                "highThresholdWithDelay"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "sensor",
+                            "sensorId",
+                            "channel",
+                            "channelId",
+                            "channelName",
+                            "alarmFlags"
+                          ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "sensor": {
+                              "const": "sensor2"
+                            },
+                            "sensorId": {
                               "const": 1
+                            },
+                            "channel": {
+                              "const": "registerConfig"
+                            },
+                            "channelId": {
+                              "const": null
+                            },
+                            "channelName": {},
+                            "alarmFlags": {
+                              "type": "object",
+                              "properties": {
+                                "lowThreshold": {
+                                  "type": "boolean"
+                                },
+                                "highThreshold": {
+                                  "type": "boolean"
+                                },
+                                "fallingSlope": {
+                                  "type": "boolean"
+                                },
+                                "risingSlope": {
+                                  "type": "boolean"
+                                },
+                                "lowThresholdWithDelay": {
+                                  "type": "boolean"
+                                },
+                                "highThresholdWithDelay": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "required": [
+                                "lowThreshold",
+                                "highThreshold",
+                                "fallingSlope",
+                                "risingSlope",
+                                "lowThresholdWithDelay",
+                                "highThresholdWithDelay"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "sensor",
+                            "sensorId",
+                            "channel",
+                            "channelId",
+                            "channelName",
+                            "alarmFlags"
+                          ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "sensor": {
+                              "const": "sensor2"
+                            },
+                            "sensorId": {
+                              "const": 1
+                            },
+                            "channel": {
+                              "const": "channel1"
+                            },
+                            "channelId": {
+                              "const": 0
                             },
                             "channelName": {
                               "const": "Electrical current2"
@@ -2889,16 +3101,130 @@
                         "type": "object",
                         "properties": {
                           "sensor": {
-                            "const": "sensor1"
+                            "const": "sensor2"
                           },
                           "sensorId": {
-                            "const": 0
+                            "const": 1
                           },
                           "channel": {
-                            "const": "channel2"
+                            "const": "alarmFlags"
                           },
                           "channelId": {
+                            "const": null
+                          },
+                          "channelName": {},
+                          "alarmFlags": {
+                            "type": "object",
+                            "properties": {
+                              "lowThreshold": {
+                                "type": "boolean"
+                              },
+                              "highThreshold": {
+                                "type": "boolean"
+                              },
+                              "fallingSlope": {
+                                "type": "boolean"
+                              },
+                              "risingSlope": {
+                                "type": "boolean"
+                              },
+                              "lowThresholdWithDelay": {
+                                "type": "boolean"
+                              },
+                              "highThresholdWithDelay": {
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "lowThreshold",
+                              "highThreshold",
+                              "fallingSlope",
+                              "risingSlope",
+                              "lowThresholdWithDelay",
+                              "highThresholdWithDelay"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "sensor",
+                          "sensorId",
+                          "channel",
+                          "channelId",
+                          "channelName",
+                          "alarmFlags"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "sensor": {
+                            "const": "sensor2"
+                          },
+                          "sensorId": {
                             "const": 1
+                          },
+                          "channel": {
+                            "const": "registerConfig"
+                          },
+                          "channelId": {
+                            "const": null
+                          },
+                          "channelName": {},
+                          "alarmFlags": {
+                            "type": "object",
+                            "properties": {
+                              "lowThreshold": {
+                                "type": "boolean"
+                              },
+                              "highThreshold": {
+                                "type": "boolean"
+                              },
+                              "fallingSlope": {
+                                "type": "boolean"
+                              },
+                              "risingSlope": {
+                                "type": "boolean"
+                              },
+                              "lowThresholdWithDelay": {
+                                "type": "boolean"
+                              },
+                              "highThresholdWithDelay": {
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "lowThreshold",
+                              "highThreshold",
+                              "fallingSlope",
+                              "risingSlope",
+                              "lowThresholdWithDelay",
+                              "highThresholdWithDelay"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "sensor",
+                          "sensorId",
+                          "channel",
+                          "channelId",
+                          "channelName",
+                          "alarmFlags"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "sensor": {
+                            "const": "sensor2"
+                          },
+                          "sensorId": {
+                            "const": 1
+                          },
+                          "channel": {
+                            "const": "channel1"
+                          },
+                          "channelId": {
+                            "const": 0
                           },
                           "channelName": {
                             "const": "Electrical current2"
@@ -3319,7 +3645,7 @@
                               "const": true
                             },
                             "sensor2": {
-                              "const": false
+                              "const": true
                             },
                             "sensor3": {
                               "const": false
@@ -3370,7 +3696,7 @@
                                   "const": true
                                 },
                                 "channel2": {
-                                  "const": true
+                                  "const": false
                                 },
                                 "channel3": {
                                   "const": false
@@ -3466,8 +3792,78 @@
                           "required": [
                             "channelName"
                           ]
+                        }
+                      },
+                      "required": []
+                    },
+                    "sensor2": {
+                      "type": "object",
+                      "properties": {
+                        "identification": {
+                          "type": "object",
+                          "properties": {
+                            "sensorType": {
+                              "type": "number"
+                            },
+                            "existingChannels": {
+                              "type": "object",
+                              "properties": {
+                                "channel1": {
+                                  "const": true
+                                },
+                                "channel2": {
+                                  "const": false
+                                },
+                                "channel3": {
+                                  "const": false
+                                },
+                                "channel4": {
+                                  "const": false
+                                },
+                                "channel5": {
+                                  "const": false
+                                },
+                                "channel6": {
+                                  "const": false
+                                },
+                                "channel7": {
+                                  "const": false
+                                },
+                                "channel8": {
+                                  "const": false
+                                }
+                              },
+                              "required": [
+                                "channel1",
+                                "channel2",
+                                "channel3",
+                                "channel4",
+                                "channel5",
+                                "channel6",
+                                "channel7",
+                                "channel8"
+                              ]
+                            },
+                            "firmwareVersion": {
+                              "type": "string"
+                            },
+                            "hardwareVersion": {
+                              "type": "string"
+                            },
+                            "productionDate": {
+                              "type": "string",
+                              "format": "date"
+                            },
+                            "serialNumberPart1": {
+                              "type": "string"
+                            },
+                            "serialNumberPart2": {
+                              "type": "string"
+                            }
+                          },
+                          "required": []
                         },
-                        "channel2": {
+                        "channel1": {
                           "type": "object",
                           "properties": {
                             "measurand": {
