@@ -32,6 +32,10 @@ export interface MessageHandlers<TChannels extends TULIP2Channel[] = TULIP2Chann
   0x07?: Handler<TChannels, TReturn>
   0x08?: Handler<TChannels, TReturn>
   0x09?: Handler<TChannels, TReturn>
+  0x0A?: Handler<TChannels, TReturn>
+  0x0B?: Handler<TChannels, TReturn>
+  0x0C?: Handler<TChannels, TReturn>
+  0x0D?: Handler<TChannels, TReturn>
 }
 
 export type ReturnTypeOfHandlers<TChannels extends TULIP2Channel[], THandlers extends MessageHandlers<TChannels, any>> = {
@@ -54,7 +58,7 @@ export interface TULIP2CodecOptions<TChannels extends TULIP2Channel[] = TULIP2Ch
 
   /**
    * The message handlers for this codec.
-   * Each handler is responsible for decoding a specific message type. (0x00 - 0x09)
+   * Each handler is responsible for decoding a specific message type. (0x00 - 0x0D)
    */
   handlers: THandlers
 

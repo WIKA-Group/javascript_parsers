@@ -4,6 +4,9 @@ export const MESSAGE_TYPES = {
   3: 'PROCESS_ALARM',
   4: 'TECHNICAL_ALARM',
   5: 'DEVICE_ALARM',
+  11: 'MAIN_CONFIGURATION',
+  12: 'PROCESS_ALARM_CONFIGURATION',
+  13: 'CHANNEL_PROPERTY_CONFIGURATION',
   7: 'DEVICE_IDENTIFICATION',
   8: 'KEEP_ALIVE',
 } as const
@@ -51,6 +54,23 @@ export const ALARM_EVENTS = {
 export const DEVICE_ALARM_CAUSE_OF_FAILURE = {
   'generic': 0,
   'device dependent': 1,
+} as const
+
+export const CONFIG_STATUS_NAMES_BY_VALUE = {
+  2: 'configuration applied',
+  3: 'configuration rejected',
+  5: 'configuration discarded',
+  6: 'command success',
+  7: 'command failed',
+} as const
+
+export const CONFIG_STATUS_COMMAND_TYPES = {
+  'get main configuration': 0x04,
+  'reset battery indicator': 0x40,
+  'get process alarm configuration pressure': 0x50,
+  'get process alarm configuration temperature': 0x51,
+  'get channel property configuration pressure': 0x60,
+  'get channel property configuration temperature': 0x61,
 } as const
 
 export const PRODUCT_SUB_ID_NAMES = {

@@ -1996,6 +1996,501 @@
                 },
                 "messageType": {
                   "enum": [
+                    6
+                  ]
+                },
+                "configStatus": {
+                  "enum": [
+                    2,
+                    3,
+                    5,
+                    6,
+                    7
+                  ]
+                },
+                "configStatusName": {
+                  "enum": [
+                    "configuration applied",
+                    "configuration rejected",
+                    "configuration discarded",
+                    "command success",
+                    "command failed"
+                  ]
+                },
+                "commandResponse": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "commandType": {
+                          "const": 4
+                        },
+                        "commandTypeName": {
+                          "const": "get main configuration"
+                        },
+                        "commandStatus": {
+                          "const": 0
+                        },
+                        "measurementPeriodNoAlarm": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "transmissionMultiplierNoAlarm": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "measurementPeriodWithAlarm": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "transmissionMultiplierWithAlarm": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "bleAdvertisingEnabled": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "commandType",
+                        "commandTypeName",
+                        "commandStatus",
+                        "measurementPeriodNoAlarm",
+                        "transmissionMultiplierNoAlarm",
+                        "measurementPeriodWithAlarm",
+                        "transmissionMultiplierWithAlarm",
+                        "bleAdvertisingEnabled"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "commandType": {
+                          "const": 64
+                        },
+                        "commandTypeName": {
+                          "const": "reset battery indicator"
+                        },
+                        "commandStatus": {
+                          "enum": [
+                            0,
+                            1
+                          ]
+                        },
+                        "resetSuccess": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "commandType",
+                        "commandTypeName",
+                        "commandStatus",
+                        "resetSuccess"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "commandType": {
+                          "enum": [
+                            80,
+                            81
+                          ]
+                        },
+                        "commandTypeName": {
+                          "enum": [
+                            "get process alarm configuration pressure",
+                            "get process alarm configuration temperature"
+                          ]
+                        },
+                        "commandStatus": {
+                          "const": 0
+                        },
+                        "channel": {
+                          "enum": [
+                            0,
+                            1
+                          ]
+                        },
+                        "channelName": {
+                          "enum": [
+                            "pressure",
+                            "device temperature"
+                          ]
+                        },
+                        "deadBand": {
+                          "type": "number"
+                        },
+                        "lowThreshold": {
+                          "type": "boolean"
+                        },
+                        "lowThresholdValue": {
+                          "type": "number"
+                        },
+                        "highThreshold": {
+                          "type": "boolean"
+                        },
+                        "highThresholdValue": {
+                          "type": "number"
+                        },
+                        "fallingSlope": {
+                          "type": "boolean"
+                        },
+                        "fallingSlopeValue": {
+                          "type": "number"
+                        },
+                        "risingSlope": {
+                          "type": "boolean"
+                        },
+                        "risingSlopeValue": {
+                          "type": "number"
+                        },
+                        "lowThresholdWithDelay": {
+                          "type": "boolean"
+                        },
+                        "lowThresholdWithDelayValue": {
+                          "type": "number"
+                        },
+                        "lowThresholdWithDelayDelay": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "highThresholdWithDelay": {
+                          "type": "boolean"
+                        },
+                        "highThresholdWithDelayValue": {
+                          "type": "number"
+                        },
+                        "highThresholdWithDelayDelay": {
+                          "type": "integer",
+                          "minimum": 0
+                        }
+                      },
+                      "required": [
+                        "commandType",
+                        "commandTypeName",
+                        "commandStatus",
+                        "channel",
+                        "channelName",
+                        "deadBand",
+                        "lowThreshold",
+                        "highThreshold",
+                        "fallingSlope",
+                        "risingSlope",
+                        "lowThresholdWithDelay",
+                        "highThresholdWithDelay"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "commandType": {
+                          "enum": [
+                            96,
+                            97
+                          ]
+                        },
+                        "commandTypeName": {
+                          "enum": [
+                            "get channel property configuration pressure",
+                            "get channel property configuration temperature"
+                          ]
+                        },
+                        "commandStatus": {
+                          "const": 0
+                        },
+                        "channel": {
+                          "enum": [
+                            0,
+                            1
+                          ]
+                        },
+                        "channelName": {
+                          "enum": [
+                            "pressure",
+                            "device temperature"
+                          ]
+                        },
+                        "measurementOffset": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "commandType",
+                        "commandTypeName",
+                        "commandStatus",
+                        "channel",
+                        "channelName",
+                        "measurementOffset"
+                      ]
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "configurationId",
+                "messageType",
+                "configStatus",
+                "configStatusName"
+              ]
+            },
+            "warnings": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "data"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "configurationId": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 31
+                },
+                "messageType": {
+                  "enum": [
+                    11
+                  ]
+                },
+                "mainConfiguration": {
+                  "type": "object",
+                  "properties": {
+                    "measurementPeriodNoAlarm": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "transmissionMultiplierNoAlarm": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "measurementPeriodWithAlarm": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "transmissionMultiplierWithAlarm": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "bleAdvertisingEnabled": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "measurementPeriodNoAlarm",
+                    "transmissionMultiplierNoAlarm",
+                    "measurementPeriodWithAlarm",
+                    "transmissionMultiplierWithAlarm",
+                    "bleAdvertisingEnabled"
+                  ]
+                }
+              },
+              "required": [
+                "configurationId",
+                "messageType",
+                "mainConfiguration"
+              ]
+            },
+            "warnings": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "data"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "configurationId": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 31
+                },
+                "messageType": {
+                  "enum": [
+                    12
+                  ]
+                },
+                "processAlarmConfiguration": {
+                  "type": "object",
+                  "properties": {
+                    "channel": {
+                      "enum": [
+                        0,
+                        1
+                      ]
+                    },
+                    "channelName": {
+                      "enum": [
+                        "pressure",
+                        "device temperature"
+                      ]
+                    },
+                    "deadBand": {
+                      "type": "number"
+                    },
+                    "lowThreshold": {
+                      "type": "boolean"
+                    },
+                    "lowThresholdValue": {
+                      "type": "number"
+                    },
+                    "highThreshold": {
+                      "type": "boolean"
+                    },
+                    "highThresholdValue": {
+                      "type": "number"
+                    },
+                    "fallingSlope": {
+                      "type": "boolean"
+                    },
+                    "fallingSlopeValue": {
+                      "type": "number"
+                    },
+                    "risingSlope": {
+                      "type": "boolean"
+                    },
+                    "risingSlopeValue": {
+                      "type": "number"
+                    },
+                    "lowThresholdWithDelay": {
+                      "type": "boolean"
+                    },
+                    "lowThresholdWithDelayValue": {
+                      "type": "number"
+                    },
+                    "lowThresholdWithDelayDelay": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "highThresholdWithDelay": {
+                      "type": "boolean"
+                    },
+                    "highThresholdWithDelayValue": {
+                      "type": "number"
+                    },
+                    "highThresholdWithDelayDelay": {
+                      "type": "integer",
+                      "minimum": 0
+                    }
+                  },
+                  "required": [
+                    "channel",
+                    "channelName",
+                    "deadBand",
+                    "lowThreshold",
+                    "highThreshold",
+                    "fallingSlope",
+                    "risingSlope",
+                    "lowThresholdWithDelay",
+                    "highThresholdWithDelay"
+                  ]
+                }
+              },
+              "required": [
+                "configurationId",
+                "messageType",
+                "processAlarmConfiguration"
+              ]
+            },
+            "warnings": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "data"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "configurationId": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 31
+                },
+                "messageType": {
+                  "enum": [
+                    13
+                  ]
+                },
+                "channelPropertyConfiguration": {
+                  "type": "object",
+                  "properties": {
+                    "channel": {
+                      "enum": [
+                        0,
+                        1
+                      ]
+                    },
+                    "channelName": {
+                      "enum": [
+                        "pressure",
+                        "device temperature"
+                      ]
+                    },
+                    "measurementOffset": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "channel",
+                    "channelName",
+                    "measurementOffset"
+                  ]
+                }
+              },
+              "required": [
+                "configurationId",
+                "messageType",
+                "channelPropertyConfiguration"
+              ]
+            },
+            "warnings": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "data"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "configurationId": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 31
+                },
+                "messageType": {
+                  "enum": [
                     7
                   ]
                 },

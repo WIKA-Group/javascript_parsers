@@ -359,6 +359,202 @@
       "bytes": [
         6,
         1,
+        32
+      ],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 6,
+        "configurationId": 1,
+        "configStatus": 2,
+        "configStatusName": "configuration applied"
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase configuration status message: Uplink example for reset battery indicator success",
+    "input": {
+      "bytes": [
+        6,
+        1,
+        96,
+        64,
+        0
+      ],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 6,
+        "configurationId": 1,
+        "configStatus": 6,
+        "configStatusName": "command success",
+        "commandResponse": {
+          "commandType": 64,
+          "commandTypeName": "reset battery indicator",
+          "commandStatus": 0,
+          "resetSuccess": true
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase configuration status message: Uplink example for get main configuration response",
+    "input": {
+      "bytes": [
+        6,
+        3,
+        96,
+        4,
+        0,
+        0,
+        0,
+        14,
+        16,
+        0,
+        2,
+        0,
+        0,
+        1,
+        44,
+        0,
+        1,
+        0,
+        0
+      ],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 6,
+        "configurationId": 3,
+        "configStatus": 6,
+        "configStatusName": "command success",
+        "commandResponse": {
+          "commandType": 4,
+          "commandTypeName": "get main configuration",
+          "commandStatus": 0,
+          "measurementPeriodNoAlarm": 3600,
+          "transmissionMultiplierNoAlarm": 2,
+          "measurementPeriodWithAlarm": 300,
+          "transmissionMultiplierWithAlarm": 1,
+          "bleAdvertisingEnabled": true
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase configuration status message: Uplink example for get process alarm configuration pressure",
+    "input": {
+      "bytes": [
+        6,
+        3,
+        96,
+        80,
+        0,
+        0,
+        0,
+        100,
+        128,
+        19,
+        136
+      ],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 6,
+        "configurationId": 3,
+        "configStatus": 6,
+        "configStatusName": "command success",
+        "commandResponse": {
+          "commandType": 80,
+          "commandTypeName": "get process alarm configuration pressure",
+          "commandStatus": 0,
+          "channel": 0,
+          "channelName": "pressure",
+          "deadBand": 0.1,
+          "lowThreshold": true,
+          "lowThresholdValue": 2.5,
+          "highThreshold": false,
+          "fallingSlope": false,
+          "risingSlope": false,
+          "lowThresholdWithDelay": false,
+          "highThresholdWithDelay": false
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase configuration status message: Uplink example for get channel property configuration pressure",
+    "input": {
+      "bytes": [
+        6,
+        3,
+        96,
+        96,
+        0,
+        0,
+        255,
+        246,
+        0
+      ],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 6,
+        "configurationId": 3,
+        "configStatus": 6,
+        "configStatusName": "command success",
+        "commandResponse": {
+          "commandType": 96,
+          "commandTypeName": "get channel property configuration pressure",
+          "commandStatus": 0,
+          "channel": 0,
+          "channelName": "pressure",
+          "measurementOffset": -10
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "BadCase configuration status message: Uplink example for reserved configuration status value",
+    "input": {
+      "bytes": [
+        6,
+        1,
+        16
+      ],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "errors": [
+        "PEW-1000 (JS): Unknown configuration status value 1 in configuration status message"
+      ]
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "BadCase configuration status message: Uplink example for unknown command type",
+    "input": {
+      "bytes": [
+        6,
+        1,
+        96,
+        65,
         0
       ],
       "fPort": 1,
@@ -366,7 +562,304 @@
     },
     "output": {
       "errors": [
-        "PEW-1000 (JS): Message could not be decoded. No codec matched the input."
+        "PEW-1000 (JS): Unknown command type 0x41 in configuration status message"
+      ]
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "BadCase configuration status message: Uplink example for reset battery response with invalid length",
+    "input": {
+      "bytes": [
+        6,
+        1,
+        96,
+        64
+      ],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "errors": [
+        "PEW-1000 (JS): Reset battery indicator response requires 5 bytes total, but received 4"
+      ]
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase mioty main configuration message",
+    "input": {
+      "bytes": [
+        11,
+        3,
+        0,
+        0,
+        14,
+        16,
+        0,
+        2,
+        0,
+        0,
+        1,
+        44,
+        0,
+        1,
+        0,
+        0
+      ],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 11,
+        "configurationId": 3,
+        "mainConfiguration": {
+          "measurementPeriodNoAlarm": 3600,
+          "transmissionMultiplierNoAlarm": 2,
+          "measurementPeriodWithAlarm": 300,
+          "transmissionMultiplierWithAlarm": 1,
+          "bleAdvertisingEnabled": true
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase mioty main configuration message with non-zero reserved byte",
+    "input": {
+      "bytes": [
+        11,
+        3,
+        0,
+        0,
+        14,
+        16,
+        0,
+        2,
+        0,
+        0,
+        1,
+        44,
+        0,
+        1,
+        170,
+        0
+      ],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 11,
+        "configurationId": 3,
+        "mainConfiguration": {
+          "measurementPeriodNoAlarm": 3600,
+          "transmissionMultiplierNoAlarm": 2,
+          "measurementPeriodWithAlarm": 300,
+          "transmissionMultiplierWithAlarm": 1,
+          "bleAdvertisingEnabled": true
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase mioty process alarm configuration message for pressure",
+    "input": {
+      "bytes": [
+        12,
+        3,
+        0,
+        0,
+        100,
+        128,
+        19,
+        136
+      ],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 12,
+        "configurationId": 3,
+        "processAlarmConfiguration": {
+          "channel": 0,
+          "channelName": "pressure",
+          "deadBand": 0.1,
+          "lowThreshold": true,
+          "lowThresholdValue": 2.5,
+          "highThreshold": false,
+          "fallingSlope": false,
+          "risingSlope": false,
+          "lowThresholdWithDelay": false,
+          "highThresholdWithDelay": false
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase mioty process alarm configuration message for temperature with reserved bits set",
+    "input": {
+      "bytes": [
+        12,
+        3,
+        1,
+        0,
+        100,
+        11,
+        16,
+        17,
+        7,
+        8
+      ],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 12,
+        "configurationId": 3,
+        "processAlarmConfiguration": {
+          "channel": 1,
+          "channelName": "device temperature",
+          "deadBand": 1.55,
+          "lowThreshold": false,
+          "highThreshold": false,
+          "fallingSlope": false,
+          "risingSlope": false,
+          "lowThresholdWithDelay": true,
+          "lowThresholdWithDelayValue": -19.9985,
+          "lowThresholdWithDelayDelay": 1800,
+          "highThresholdWithDelay": false
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase mioty channel property configuration message for pressure",
+    "input": {
+      "bytes": [
+        13,
+        3,
+        0,
+        255,
+        246,
+        0
+      ],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 13,
+        "configurationId": 3,
+        "channelPropertyConfiguration": {
+          "channel": 0,
+          "channelName": "pressure",
+          "measurementOffset": -10
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase mioty channel property configuration message for temperature with non-zero reserved byte",
+    "input": {
+      "bytes": [
+        13,
+        3,
+        1,
+        0,
+        0,
+        170
+      ],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 13,
+        "configurationId": 3,
+        "channelPropertyConfiguration": {
+          "channel": 1,
+          "channelName": "device temperature",
+          "measurementOffset": 0
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "BadCase mioty main configuration message with invalid length",
+    "input": {
+      "bytes": [
+        11,
+        3,
+        0,
+        0,
+        14,
+        16,
+        0,
+        2,
+        0,
+        0,
+        1,
+        44,
+        0,
+        1,
+        0
+      ],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "errors": [
+        "PEW-1000 (JS): Main configuration message (0x0B) requires 16 bytes, but received 15 bytes"
+      ]
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "BadCase mioty process alarm configuration message with unknown channel",
+    "input": {
+      "bytes": [
+        12,
+        3,
+        2,
+        0,
+        100,
+        0
+      ],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "errors": [
+        "PEW-1000 (JS): Unknown channel 2 in process alarm configuration message"
+      ]
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "BadCase mioty channel property configuration message with invalid length",
+    "input": {
+      "bytes": [
+        13,
+        3,
+        0,
+        255,
+        246
+      ],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "errors": [
+        "PEW-1000 (JS): Channel property configuration message (0x0D) requires 6 bytes, but received 5 bytes"
       ]
     }
   },

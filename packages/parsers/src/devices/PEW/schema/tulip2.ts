@@ -5,7 +5,7 @@ import * as v from 'valibot'
 import { createSemVerSchema } from '../../../schemas'
 import { createTULIP2DownlinkActionSchemaFactory } from '../../../schemas/tulip2/downlink'
 import { createUplinkOutputSchemaFactory } from '../../../schemas/tulip2/uplink'
-import { ALARM_EVENTS, DEVICE_ALARM_CAUSE_OF_FAILURE, DEVICE_ALARM_TYPES, MEASUREMENT_CHANNELS, PRESSURE_TYPES, PRESSURE_UNITS, PROCESS_ALARM_CHANNEL_NAMES, PROCESS_ALARM_TYPES, TECHNICAL_ALARM_TYPES } from '../parser/tulip2/lookups'
+import { ALARM_EVENTS, CONFIG_STATUS_COMMAND_TYPES, CONFIG_STATUS_NAMES_BY_VALUE, DEVICE_ALARM_CAUSE_OF_FAILURE, DEVICE_ALARM_TYPES, MEASUREMENT_CHANNELS, PRESSURE_TYPES, PRESSURE_UNITS, PROCESS_ALARM_CHANNEL_NAMES, PROCESS_ALARM_TYPES, TECHNICAL_ALARM_TYPES } from '../parser/tulip2/lookups'
 
 const createUplinkSchema = createUplinkOutputSchemaFactory(31)
 
@@ -193,6 +193,147 @@ function createDeviceAlarmsUplinkOutputSchema() {
   })
 }
 
+function createConfigStatusMainConfigResponseSchema() {
+  return v.object({
+    commandType: v.literal(CONFIG_STATUS_COMMAND_TYPES['get main configuration']),
+    commandTypeName: v.literal('get main configuration'),
+    commandStatus: v.literal(0),
+    measurementPeriodNoAlarm: v.pipe(v.number(), v.integer(), v.minValue(0)),
+    transmissionMultiplierNoAlarm: v.pipe(v.number(), v.integer(), v.minValue(0)),
+    measurementPeriodWithAlarm: v.pipe(v.number(), v.integer(), v.minValue(0)),
+    transmissionMultiplierWithAlarm: v.pipe(v.number(), v.integer(), v.minValue(0)),
+    bleAdvertisingEnabled: v.boolean(),
+  })
+}
+
+function createConfigStatusResetBatteryResponseSchema() {
+  return v.object({
+    commandType: v.literal(CONFIG_STATUS_COMMAND_TYPES['reset battery indicator']),
+    commandTypeName: v.literal('reset battery indicator'),
+    commandStatus: v.picklist([0, 1] as const),
+    resetSuccess: v.boolean(),
+  })
+}
+
+function createConfigStatusProcessAlarmConfigResponseSchema() {
+  return v.object({
+    commandType: v.picklist([
+      CONFIG_STATUS_COMMAND_TYPES['get process alarm configuration pressure'],
+      CONFIG_STATUS_COMMAND_TYPES['get process alarm configuration temperature'],
+    ] as const),
+    commandTypeName: v.picklist([
+      'get process alarm configuration pressure',
+      'get process alarm configuration temperature',
+    ] as const),
+    commandStatus: v.literal(0),
+    channel: v.picklist([0, 1] as const),
+    channelName: v.picklist(Object.keys(PROCESS_ALARM_CHANNEL_NAMES) as (keyof typeof PROCESS_ALARM_CHANNEL_NAMES)[]),
+    deadBand: v.number(),
+    lowThreshold: v.boolean(),
+    lowThresholdValue: v.optional(v.number()),
+    highThreshold: v.boolean(),
+    highThresholdValue: v.optional(v.number()),
+    fallingSlope: v.boolean(),
+    fallingSlopeValue: v.optional(v.number()),
+    risingSlope: v.boolean(),
+    risingSlopeValue: v.optional(v.number()),
+    lowThresholdWithDelay: v.boolean(),
+    lowThresholdWithDelayValue: v.optional(v.number()),
+    lowThresholdWithDelayDelay: v.optional(v.pipe(v.number(), v.integer(), v.minValue(0))),
+    highThresholdWithDelay: v.boolean(),
+    highThresholdWithDelayValue: v.optional(v.number()),
+    highThresholdWithDelayDelay: v.optional(v.pipe(v.number(), v.integer(), v.minValue(0))),
+  })
+}
+
+function createConfigStatusChannelPropertyResponseSchema() {
+  return v.object({
+    commandType: v.picklist([
+      CONFIG_STATUS_COMMAND_TYPES['get channel property configuration pressure'],
+      CONFIG_STATUS_COMMAND_TYPES['get channel property configuration temperature'],
+    ] as const),
+    commandTypeName: v.picklist([
+      'get channel property configuration pressure',
+      'get channel property configuration temperature',
+    ] as const),
+    commandStatus: v.literal(0),
+    channel: v.picklist([0, 1] as const),
+    channelName: v.picklist(Object.keys(PROCESS_ALARM_CHANNEL_NAMES) as (keyof typeof PROCESS_ALARM_CHANNEL_NAMES)[]),
+    measurementOffset: v.pipe(v.number(), v.integer()),
+  })
+}
+
+function createConfigurationStatusUplinkOutputSchema() {
+  return createUplinkSchema({
+    messageType: [0x06 as const],
+    extension: {
+      configStatus: v.picklist(Object.keys(CONFIG_STATUS_NAMES_BY_VALUE).map(Number) as (keyof typeof CONFIG_STATUS_NAMES_BY_VALUE)[]),
+      configStatusName: v.picklist(Object.values(CONFIG_STATUS_NAMES_BY_VALUE) as (typeof CONFIG_STATUS_NAMES_BY_VALUE)[keyof typeof CONFIG_STATUS_NAMES_BY_VALUE][]),
+      commandResponse: v.optional(v.union([
+        createConfigStatusMainConfigResponseSchema(),
+        createConfigStatusResetBatteryResponseSchema(),
+        createConfigStatusProcessAlarmConfigResponseSchema(),
+        createConfigStatusChannelPropertyResponseSchema(),
+      ])),
+    },
+  })
+}
+
+function createMainConfigurationUplinkOutputSchema() {
+  return createUplinkSchema({
+    messageType: [0x0B as const],
+    extension: {
+      mainConfiguration: v.object({
+        measurementPeriodNoAlarm: v.pipe(v.number(), v.integer(), v.minValue(0)),
+        transmissionMultiplierNoAlarm: v.pipe(v.number(), v.integer(), v.minValue(0)),
+        measurementPeriodWithAlarm: v.pipe(v.number(), v.integer(), v.minValue(0)),
+        transmissionMultiplierWithAlarm: v.pipe(v.number(), v.integer(), v.minValue(0)),
+        bleAdvertisingEnabled: v.boolean(),
+      }),
+    },
+  })
+}
+
+function createProcessAlarmConfigurationUplinkOutputSchema() {
+  return createUplinkSchema({
+    messageType: [0x0C as const],
+    extension: {
+      processAlarmConfiguration: v.object({
+        channel: v.picklist([0, 1] as const),
+        channelName: v.picklist(Object.keys(PROCESS_ALARM_CHANNEL_NAMES) as (keyof typeof PROCESS_ALARM_CHANNEL_NAMES)[]),
+        deadBand: v.number(),
+        lowThreshold: v.boolean(),
+        lowThresholdValue: v.optional(v.number()),
+        highThreshold: v.boolean(),
+        highThresholdValue: v.optional(v.number()),
+        fallingSlope: v.boolean(),
+        fallingSlopeValue: v.optional(v.number()),
+        risingSlope: v.boolean(),
+        risingSlopeValue: v.optional(v.number()),
+        lowThresholdWithDelay: v.boolean(),
+        lowThresholdWithDelayValue: v.optional(v.number()),
+        lowThresholdWithDelayDelay: v.optional(v.pipe(v.number(), v.integer(), v.minValue(0))),
+        highThresholdWithDelay: v.boolean(),
+        highThresholdWithDelayValue: v.optional(v.number()),
+        highThresholdWithDelayDelay: v.optional(v.pipe(v.number(), v.integer(), v.minValue(0))),
+      }),
+    },
+  })
+}
+
+function createChannelPropertyConfigurationUplinkOutputSchema() {
+  return createUplinkSchema({
+    messageType: [0x0D as const],
+    extension: {
+      channelPropertyConfiguration: v.object({
+        channel: v.picklist([0, 1] as const),
+        channelName: v.picklist(Object.keys(PROCESS_ALARM_CHANNEL_NAMES) as (keyof typeof PROCESS_ALARM_CHANNEL_NAMES)[]),
+        measurementOffset: v.pipe(v.number(), v.integer()),
+      }),
+    },
+  })
+}
+
 type DeviceInformationPossibility = {
   [PressureType in keyof typeof PRESSURE_TYPES]: {
     [PressureUnit in keyof typeof PRESSURE_UNITS]: v.ObjectSchema<{
@@ -288,6 +429,10 @@ export function createPEWTULIP2UplinkOutputSchema() {
     createProcessAlarmsUplinkOutputSchema(),
     createTechnicalAlarmsUplinkOutputSchema(),
     createDeviceAlarmsUplinkOutputSchema(),
+    createConfigurationStatusUplinkOutputSchema(),
+    createMainConfigurationUplinkOutputSchema(),
+    createProcessAlarmConfigurationUplinkOutputSchema(),
+    createChannelPropertyConfigurationUplinkOutputSchema(),
     createDeviceInformationUplinkOutputSchema(),
     createDeviceStatisticsUplinkOutputSchema(),
   ])
@@ -305,6 +450,11 @@ export type PEWTULIP2TechnicalAlarmsUplinkOutput = v.InferOutput<ReturnType<type
 
 export type PEWTULIP2DeviceAlarmsData = v.InferOutput<ReturnType<typeof createDeviceAlarmsUplinkOutputSchema>>['data']['deviceAlarm']
 export type PEWTULIP2DeviceAlarmsUplinkOutput = v.InferOutput<ReturnType<typeof createDeviceAlarmsUplinkOutputSchema>>
+
+export type PEWTULIP2ConfigurationStatusUplinkOutput = v.InferOutput<ReturnType<typeof createConfigurationStatusUplinkOutputSchema>>
+export type PEWTULIP2MainConfigurationUplinkOutput = v.InferOutput<ReturnType<typeof createMainConfigurationUplinkOutputSchema>>
+export type PEWTULIP2ProcessAlarmConfigurationUplinkOutput = v.InferOutput<ReturnType<typeof createProcessAlarmConfigurationUplinkOutputSchema>>
+export type PEWTULIP2ChannelPropertyConfigurationUplinkOutput = v.InferOutput<ReturnType<typeof createChannelPropertyConfigurationUplinkOutputSchema>>
 
 export type PEWTULIP2DeviceInformationData = v.InferOutput<ReturnType<typeof createDeviceInformationUplinkOutputSchema>>['data']['deviceInformation']
 export type PEWTULIP2DeviceInformationUplinkOutput = v.InferOutput<ReturnType<typeof createDeviceInformationUplinkOutputSchema>>

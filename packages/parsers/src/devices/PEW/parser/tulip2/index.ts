@@ -1,18 +1,26 @@
 import type { EncoderFactory, Handler, MultipleEncoderFactory } from '../../../../codecs/tulip2'
-import type { PEWTULIP2DataMessageUplinkOutput, PEWTULIP2DeviceAlarmsData, PEWTULIP2DeviceAlarmsUplinkOutput, PEWTULIP2DeviceInformationData, PEWTULIP2DeviceInformationUplinkOutput, PEWTULIP2DeviceStatisticsData, PEWTULIP2DeviceStatisticsUplinkOutput, PEWTULIP2ProcessAlarmsData, PEWTULIP2ProcessAlarmsUplinkOutput, PEWTULIP2TechnicalAlarmsData, PEWTULIP2TechnicalAlarmsUplinkOutput } from '../../schema/tulip2'
+import type { PEWTULIP2ChannelPropertyConfigurationUplinkOutput, PEWTULIP2ConfigurationStatusUplinkOutput, PEWTULIP2DataMessageUplinkOutput, PEWTULIP2DeviceAlarmsData, PEWTULIP2DeviceAlarmsUplinkOutput, PEWTULIP2DeviceInformationData, PEWTULIP2DeviceInformationUplinkOutput, PEWTULIP2DeviceStatisticsData, PEWTULIP2DeviceStatisticsUplinkOutput, PEWTULIP2MainConfigurationUplinkOutput, PEWTULIP2ProcessAlarmConfigurationUplinkOutput, PEWTULIP2ProcessAlarmsData, PEWTULIP2ProcessAlarmsUplinkOutput, PEWTULIP2TechnicalAlarmsData, PEWTULIP2TechnicalAlarmsUplinkOutput } from '../../schema/tulip2'
 import type { PewTulip2Channels, PewTulip2DownlinkInput } from './constants'
 import { PEW_NAME } from '..'
 import { defineTULIP2Codec } from '../../../../codecs/tulip2'
+import { intTuple2ToUInt16 } from '../../../../codecs/tulip3/registers'
 import { createDownlinkResetBatteryIndicatorSchema, validateTULIP2DownlinkInput } from '../../../../schemas/tulip2/downlink'
 import { DEFAULT_ROUNDING_DECIMALS, intTuple4ToFloat32WithThreshold, roundValue, slopeValueToValue, TULIPValueToValue } from '../../../../utils'
 import { createPEWTULIP2DropConfigurationSchema, createPEWTULIP2GetConfigurationSchema } from '../../schema/tulip2'
 import { createTULIP2PEWChannels, PEW_DOWNLINK_FEATURE_FLAGS } from './constants'
 import { PEWTULIP2EncodeHandler } from './encode'
-import { ALARM_EVENTS, DEVICE_ALARM_CAUSE_OF_FAILURE, DEVICE_ALARM_TYPES, PRESSURE_TYPES, PRESSURE_UNITS, PROCESS_ALARM_TYPES, TECHNICAL_ALARM_TYPES } from './lookups'
+import { ALARM_EVENTS, CONFIG_STATUS_COMMAND_TYPES, CONFIG_STATUS_NAMES_BY_VALUE, DEVICE_ALARM_CAUSE_OF_FAILURE, DEVICE_ALARM_TYPES, PRESSURE_TYPES, PRESSURE_UNITS, PROCESS_ALARM_TYPES, TECHNICAL_ALARM_TYPES } from './lookups'
 
 const ERROR_VALUE = 0xFFFF
 
 type TULIP2PEWChannels = PewTulip2Channels
+interface TULIP2PEWDecodeOptions {
+  roundingDecimals: number
+  channels: TULIP2PEWChannels
+}
+type PEWTULIP2MainConfigurationData = PEWTULIP2MainConfigurationUplinkOutput['data']['mainConfiguration']
+type PEWTULIP2ProcessAlarmConfigurationData = PEWTULIP2ProcessAlarmConfigurationUplinkOutput['data']['processAlarmConfiguration']
+type PEWTULIP2ChannelPropertyConfigurationData = PEWTULIP2ChannelPropertyConfigurationUplinkOutput['data']['channelPropertyConfiguration']
 
 const handleDataMessage: Handler<TULIP2PEWChannels, PEWTULIP2DataMessageUplinkOutput> = (input, options) => {
   // validate that the message needs to be 7 bytes long
@@ -219,6 +227,316 @@ const handleDeviceAlarmMessage: Handler<TULIP2PEWChannels, PEWTULIP2DeviceAlarms
   return res
 }
 
+/**
+ * Parse the raw main configuration payload.
+ *
+ * Expected payload bytes, without message header and configuration id:
+ * [measurementPeriodNoAlarm(4), transmissionMultiplierNoAlarm(2), measurementPeriodWithAlarm(4), transmissionMultiplierWithAlarm(2), reserved(1), advertisingFlag(1)]
+ */
+function parseMainConfigurationData(payload: number[]): PEWTULIP2MainConfigurationData {
+  if (payload.length !== 14) {
+    throw new Error(`Main configuration payload requires 14 bytes, but received ${payload.length} bytes`)
+  }
+
+  const measurementPeriodNoAlarm = ((payload[0]! * 0x1000000) + (payload[1]! << 16) + (payload[2]! << 8) + payload[3]!) >>> 0
+  const transmissionMultiplierNoAlarm = intTuple2ToUInt16([payload[4]!, payload[5]!])
+  const measurementPeriodWithAlarm = ((payload[6]! * 0x1000000) + (payload[7]! << 16) + (payload[8]! << 8) + payload[9]!) >>> 0
+  const transmissionMultiplierWithAlarm = intTuple2ToUInt16([payload[10]!, payload[11]!])
+  const bleAdvertisingEnabled = payload[13]! === 0
+
+  return {
+    measurementPeriodNoAlarm,
+    transmissionMultiplierNoAlarm,
+    measurementPeriodWithAlarm,
+    transmissionMultiplierWithAlarm,
+    bleAdvertisingEnabled,
+  }
+}
+
+/**
+ * Parse the raw process alarm configuration payload.
+ *
+ * Expected payload bytes, without message header and configuration id:
+ * [channel(1), deadBand(2), enableMask(1), ...alarmValues]
+ */
+function parseProcessAlarmConfigurationData(payload: number[], options: TULIP2PEWDecodeOptions): PEWTULIP2ProcessAlarmConfigurationData {
+  if (payload.length < 4) {
+    throw new Error(`Process alarm configuration payload requires at least 4 bytes, but received ${payload.length} bytes`)
+  }
+
+  const channel = payload[0]! as 0 | 1
+  const channelConfig = options.channels.find(c => c.channelId === channel)
+
+  if (!channelConfig) {
+    throw new Error(`Unknown channel ${channel} in process alarm configuration message`)
+  }
+
+  const deadBandRaw = intTuple2ToUInt16([payload[1]!, payload[2]!])
+  const deadBand = roundValue(slopeValueToValue(deadBandRaw, channelConfig), options.roundingDecimals)
+  const enableByte = payload[3]!
+
+  const lowThreshold = (enableByte & 0x80) !== 0
+  const highThreshold = (enableByte & 0x40) !== 0
+  const fallingSlope = (enableByte & 0x20) !== 0
+  const risingSlope = (enableByte & 0x10) !== 0
+  const lowThresholdWithDelay = (enableByte & 0x08) !== 0
+  const highThresholdWithDelay = (enableByte & 0x04) !== 0
+
+  const expectedLength = 4
+    + (lowThreshold ? 2 : 0)
+    + (highThreshold ? 2 : 0)
+    + (fallingSlope ? 2 : 0)
+    + (risingSlope ? 2 : 0)
+    + (lowThresholdWithDelay ? 4 : 0)
+    + (highThresholdWithDelay ? 4 : 0)
+
+  if (payload.length !== expectedLength) {
+    throw new Error(`Process alarm configuration payload contains an invalid length: ${payload.length}`)
+  }
+
+  let byteIndex = 4
+  let lowThresholdValue: number | undefined
+  let highThresholdValue: number | undefined
+  let fallingSlopeValue: number | undefined
+  let risingSlopeValue: number | undefined
+  let lowThresholdWithDelayValue: number | undefined
+  let lowThresholdWithDelayDelay: number | undefined
+  let highThresholdWithDelayValue: number | undefined
+  let highThresholdWithDelayDelay: number | undefined
+
+  if (lowThreshold) {
+    lowThresholdValue = roundValue(TULIPValueToValue(intTuple2ToUInt16([payload[byteIndex]!, payload[byteIndex + 1]!]), channelConfig), options.roundingDecimals)
+    byteIndex += 2
+  }
+  if (highThreshold) {
+    highThresholdValue = roundValue(TULIPValueToValue(intTuple2ToUInt16([payload[byteIndex]!, payload[byteIndex + 1]!]), channelConfig), options.roundingDecimals)
+    byteIndex += 2
+  }
+  if (fallingSlope) {
+    fallingSlopeValue = roundValue(slopeValueToValue(intTuple2ToUInt16([payload[byteIndex]!, payload[byteIndex + 1]!]), channelConfig), options.roundingDecimals)
+    byteIndex += 2
+  }
+  if (risingSlope) {
+    risingSlopeValue = roundValue(slopeValueToValue(intTuple2ToUInt16([payload[byteIndex]!, payload[byteIndex + 1]!]), channelConfig), options.roundingDecimals)
+    byteIndex += 2
+  }
+  if (lowThresholdWithDelay) {
+    lowThresholdWithDelayValue = roundValue(TULIPValueToValue(intTuple2ToUInt16([payload[byteIndex]!, payload[byteIndex + 1]!]), channelConfig), options.roundingDecimals)
+    byteIndex += 2
+    lowThresholdWithDelayDelay = intTuple2ToUInt16([payload[byteIndex]!, payload[byteIndex + 1]!])
+    byteIndex += 2
+  }
+  if (highThresholdWithDelay) {
+    highThresholdWithDelayValue = roundValue(TULIPValueToValue(intTuple2ToUInt16([payload[byteIndex]!, payload[byteIndex + 1]!]), channelConfig), options.roundingDecimals)
+    byteIndex += 2
+    highThresholdWithDelayDelay = intTuple2ToUInt16([payload[byteIndex]!, payload[byteIndex + 1]!])
+    byteIndex += 2
+  }
+
+  return {
+    channel,
+    channelName: channelConfig.name,
+    deadBand,
+    lowThreshold,
+    lowThresholdValue,
+    highThreshold,
+    highThresholdValue,
+    fallingSlope,
+    fallingSlopeValue,
+    risingSlope,
+    risingSlopeValue,
+    lowThresholdWithDelay,
+    lowThresholdWithDelayValue,
+    lowThresholdWithDelayDelay,
+    highThresholdWithDelay,
+    highThresholdWithDelayValue,
+    highThresholdWithDelayDelay,
+  }
+}
+
+/**
+ * Parse the raw channel property configuration payload.
+ *
+ * Expected payload bytes, without message header and configuration id:
+ * [channel(1), measurementOffset(2), reserved(1)]
+ */
+function parseChannelPropertyConfigurationData(payload: number[], options: Pick<TULIP2PEWDecodeOptions, 'channels'>): PEWTULIP2ChannelPropertyConfigurationData {
+  if (payload.length !== 4) {
+    throw new Error(`Channel property configuration payload requires 4 bytes, but received ${payload.length} bytes`)
+  }
+
+  const channel = payload[0]! as 0 | 1
+  const channelConfig = options.channels.find(c => c.channelId === channel)
+
+  if (!channelConfig) {
+    throw new Error(`Unknown channel ${channel} in channel property configuration message`)
+  }
+
+  const rawOffset = intTuple2ToUInt16([payload[1]!, payload[2]!])
+  const measurementOffset = rawOffset > 0x7FFF ? rawOffset - 0x10000 : rawOffset
+
+  return {
+    channel,
+    channelName: channelConfig.name,
+    measurementOffset,
+  }
+}
+
+const handleConfigurationStatusMessage: Handler<TULIP2PEWChannels, PEWTULIP2ConfigurationStatusUplinkOutput> = (input, options) => {
+  if (input.bytes.length < 3) {
+    throw new Error(`Configuration status message (0x06) requires at least 3 bytes, but received ${input.bytes.length} bytes`)
+  }
+
+  const configurationId = input.bytes[1]!
+  const statusByte = input.bytes[2]!
+  const rawConfigStatus = (statusByte >> 4) & 0x0F
+  const configStatusName = CONFIG_STATUS_NAMES_BY_VALUE[rawConfigStatus as keyof typeof CONFIG_STATUS_NAMES_BY_VALUE]
+
+  if (!configStatusName) {
+    throw new Error(`Unknown configuration status value ${rawConfigStatus} in configuration status message`)
+  }
+
+  const configStatus = rawConfigStatus as keyof typeof CONFIG_STATUS_NAMES_BY_VALUE
+
+  type CommandResponse = PEWTULIP2ConfigurationStatusUplinkOutput['data']['commandResponse']
+  let commandResponse: CommandResponse
+
+  if (input.bytes.length > 3) {
+    const commandTypeByte = input.bytes[3]!
+
+    if (commandTypeByte === CONFIG_STATUS_COMMAND_TYPES['get main configuration']) {
+      if (input.bytes.length < 19) {
+        throw new Error(`Get main configuration response requires 19 bytes total, but received ${input.bytes.length}`)
+      }
+
+      const commandStatus = input.bytes[4]! as 0
+      const mainConfiguration = parseMainConfigurationData(input.bytes.slice(5, 19))
+
+      commandResponse = {
+        commandType: CONFIG_STATUS_COMMAND_TYPES['get main configuration'],
+        commandTypeName: 'get main configuration',
+        commandStatus,
+        ...mainConfiguration,
+      }
+    }
+    else if (commandTypeByte === CONFIG_STATUS_COMMAND_TYPES['reset battery indicator']) {
+      if (input.bytes.length < 5) {
+        throw new Error(`Reset battery indicator response requires 5 bytes total, but received ${input.bytes.length}`)
+      }
+
+      const commandStatus = input.bytes[4]! as 0 | 1
+
+      commandResponse = {
+        commandType: CONFIG_STATUS_COMMAND_TYPES['reset battery indicator'],
+        commandTypeName: 'reset battery indicator',
+        commandStatus,
+        resetSuccess: commandStatus === 0,
+      }
+    }
+    else if (
+      commandTypeByte === CONFIG_STATUS_COMMAND_TYPES['get process alarm configuration pressure']
+      || commandTypeByte === CONFIG_STATUS_COMMAND_TYPES['get process alarm configuration temperature']
+    ) {
+      if (input.bytes.length < 9) {
+        throw new Error(`Process alarm configuration response requires at least 9 bytes total, but received ${input.bytes.length}`)
+      }
+
+      const commandTypeName = (commandTypeByte === 0x50
+        ? 'get process alarm configuration pressure'
+        : 'get process alarm configuration temperature') as
+        | 'get process alarm configuration pressure'
+        | 'get process alarm configuration temperature'
+      const commandStatus = input.bytes[4]! as 0
+      const processAlarmConfiguration = parseProcessAlarmConfigurationData(input.bytes.slice(5), options)
+
+      commandResponse = {
+        commandType: commandTypeByte as 0x50 | 0x51,
+        commandTypeName,
+        commandStatus,
+        ...processAlarmConfiguration,
+      }
+    }
+    else if (
+      commandTypeByte === CONFIG_STATUS_COMMAND_TYPES['get channel property configuration pressure']
+      || commandTypeByte === CONFIG_STATUS_COMMAND_TYPES['get channel property configuration temperature']
+    ) {
+      if (input.bytes.length < 9) {
+        throw new Error(`Channel property configuration response requires 9 bytes total, but received ${input.bytes.length}`)
+      }
+
+      const commandTypeName = (commandTypeByte === 0x60
+        ? 'get channel property configuration pressure'
+        : 'get channel property configuration temperature') as
+        | 'get channel property configuration pressure'
+        | 'get channel property configuration temperature'
+      const commandStatus = input.bytes[4]! as 0
+      const channelPropertyConfiguration = parseChannelPropertyConfigurationData(input.bytes.slice(5), options)
+
+      commandResponse = {
+        commandType: commandTypeByte as 0x60 | 0x61,
+        commandTypeName,
+        commandStatus,
+        ...channelPropertyConfiguration,
+      }
+    }
+    else {
+      throw new Error(`Unknown command type 0x${commandTypeByte.toString(16).padStart(2, '0')} in configuration status message`)
+    }
+  }
+
+  return {
+    data: {
+      messageType: 0x06 as const,
+      configurationId,
+      configStatus,
+      configStatusName: configStatusName as typeof CONFIG_STATUS_NAMES_BY_VALUE[keyof typeof CONFIG_STATUS_NAMES_BY_VALUE],
+      commandResponse,
+    },
+  }
+}
+
+const handleMainConfigurationMessage: Handler<TULIP2PEWChannels, PEWTULIP2MainConfigurationUplinkOutput> = (input) => {
+  if (input.bytes.length !== 16) {
+    throw new Error(`Main configuration message (0x0B) requires 16 bytes, but received ${input.bytes.length} bytes`)
+  }
+
+  return {
+    data: {
+      messageType: 0x0B as const,
+      configurationId: input.bytes[1]!,
+      mainConfiguration: parseMainConfigurationData(input.bytes.slice(2)),
+    },
+  }
+}
+
+const handleProcessAlarmConfigurationMessage: Handler<TULIP2PEWChannels, PEWTULIP2ProcessAlarmConfigurationUplinkOutput> = (input, options) => {
+  if (input.bytes.length < 6) {
+    throw new Error(`Process alarm configuration message (0x0C) requires at least 6 bytes, but received ${input.bytes.length} bytes`)
+  }
+
+  return {
+    data: {
+      messageType: 0x0C as const,
+      configurationId: input.bytes[1]!,
+      processAlarmConfiguration: parseProcessAlarmConfigurationData(input.bytes.slice(2), options),
+    },
+  }
+}
+
+const handleChannelPropertyConfigurationMessage: Handler<TULIP2PEWChannels, PEWTULIP2ChannelPropertyConfigurationUplinkOutput> = (input, options) => {
+  if (input.bytes.length !== 6) {
+    throw new Error(`Channel property configuration message (0x0D) requires 6 bytes, but received ${input.bytes.length} bytes`)
+  }
+
+  return {
+    data: {
+      messageType: 0x0D as const,
+      configurationId: input.bytes[1]!,
+      channelPropertyConfiguration: parseChannelPropertyConfigurationData(input.bytes.slice(2), options),
+    },
+  }
+}
+
 const handleDeviceIdentificationMessage: Handler<TULIP2PEWChannels, PEWTULIP2DeviceInformationUplinkOutput> = (input) => {
   // validate if 8 or 38 bytes are present
   if (input.bytes.length !== 8 && input.bytes.length !== 38) {
@@ -379,8 +697,12 @@ export function createTULIP2PEWCodec() {
       0x03: handleProcessAlarmMessage,
       0x04: handleTechnicalAlarmMessage,
       0x05: handleDeviceAlarmMessage,
+      0x06: handleConfigurationStatusMessage,
       0x07: handleDeviceIdentificationMessage,
       0x08: handleKeepAliveMessage,
+      0x0B: handleMainConfigurationMessage,
+      0x0C: handleProcessAlarmConfigurationMessage,
+      0x0D: handleChannelPropertyConfigurationMessage,
     },
     encoderFactory: pewEncoderFactory,
     multipleEncodeFactory: pewMultipleEncodeFactory,

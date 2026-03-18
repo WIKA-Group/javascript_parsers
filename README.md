@@ -63,8 +63,15 @@ Distributed under the [MIT License](./LICENSE).
 
 ## Release Notes
 
+4.9.0
+  - fix: add missing PEW TULIP2 configuration status (0x06) decoder support
+  - test: add PEW TULIP2 configuration status success and bad-case examples
+  - feat: add PEW mioty configuration frame decoding for 0x0B, 0x0C, and 0x0D
+  - test: add PEW mioty configuration success and bad-case examples
+  - test: verify PEW mioty reserved bytes are ignored and add temperature-channel examples
+
 4.8.3
-  - fix!: process alarm type parsing for TULIP2 in **NETRIS1**, **NETRISF**, **PEW** and **TRW**
+  - fix: process alarm type parsing for TULIP2 in **NETRIS1**, **NETRISF**, **PEW** and **TRW**
 
 4.8.2
   - fix: align NETRIS2 TULIP3 to have 2 sensors and 1 channel
