@@ -53,14 +53,14 @@ Depending on the device and feature maturity, a parser instance may expose some 
 - `encodeDownlink(input)`: (If supported) Builds a downlink frame.
 - `decodeHexString(fPort, hex)` / `decodeBase64String(fPort, b64)`: Convenience helpers for raw payload strings.
 - `adjustRoundingDecimals(n)`: (If available) Adjusts rounding of numeric outputs.
-- `setMeasurementRanges(start, end)`: (If the device has configurable measurement ranges).
+- `adjustMeasuringRange(start, end)`: (If the device has configurable measurement ranges).
 
 Refer to the specific device documentation for which of these apply. If a method isn’t listed there, treat it as unsupported for that device.
 
 > API Variability (Important): The exact set of helpers and even subtle input expectations can differ significantly between devices right now because parsers originate from different generation waves. For example:
 > - Some legacy devices expose only `decodeUplink` and `decodeHexUplink` while newer ones also provide `decodeBase64Uplink` or `encodeDownlink`.
 > - A few older helpers may expect slightly different input object shapes or omit convenience wrappers available on newer devices.
-> - Optional configuration setters (`adjustRoundingDecimals`, `setMeasurementRanges`, etc.) are not universally present.
+> - Optional configuration setters (`adjustRoundingDecimals`, `adjustMeasuringRange`, etc.) are not universally present.
 >
 > A consolidation effort is underway to align all devices behind a uniform API surface; until that ships, ALWAYS confirm the currently supported functions and accepted input forms on the device’s own page in the devices overview (`/devices/`). If something is not documented there, plan as if it is not supported for that device.
 >
@@ -104,7 +104,7 @@ let parser = global.get('wika_netris2_parser')
 if (!parser) {
    parser = NETRIS2Parser()
    // Optional device-specific adjustments, only if documented:
-   // parser.setMeasurementRanges(0, 100)
+   // parser.adjustMeasuringRange(0, 100)
    global.set('wika_netris2_parser', parser)
 }
 

@@ -2,7 +2,7 @@
 
 ## Parser API
 
-All functions are pure (no global mutation) except `setMeasurementRanges` which updates internal range configuration for subsequent decodes.
+All functions are pure (no global mutation) except `adjustMeasuringRange` which updates internal range configuration for subsequent decodes.
 
 ### Types:
 
@@ -62,10 +62,10 @@ function decodeHexString(hexInput: HexUplinkInput): DecodeResult
 ```
 `bytes` must have even length; case-insensitive.
 
-### `setMeasurementRanges(channel, range)`
+### `adjustMeasuringRange(channel, range)`
 ```ts
 // Will throw on invalid channel name or if the channel disallows range updates
-function setMeasurementRanges(
+function adjustMeasuringRange(
   channelName: AdjustableChannelName,
   range: {
     start: number
@@ -223,5 +223,5 @@ For devices using TULIP2 protocol, identification messages (message type `6`/`0x
 
 ```ts
 // Replace values with your device's actual measurement range from specifications or identification frames
-setMeasurementRanges('measurement', { start: -40, end: 85 })
+adjustMeasuringRange('measurement', { start: -40, end: 85 })
 ```
