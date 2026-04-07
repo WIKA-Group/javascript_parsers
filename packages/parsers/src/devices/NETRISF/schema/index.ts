@@ -5,9 +5,11 @@ import { createDownlinkResetBatteryIndicatorSchema, createTULIP2DownlinkSchema }
 import { createParserDownlinkInputSchema } from '../../../schemas/utilts'
 import { createNetrisFTULIP2Channels, NETRISF_DOWNLINK_FEATURE_FLAGS } from '../parser/tulip2/constants'
 import { createNetrisFTULIP2GetConfigurationSchema, createNetrisFTULIP2UplinkOutputSchema } from './tulip2'
+import { createNETRISFTULIP3DownlinkInputSchema, createNETRISFTULIP3UplinkOutputSchema } from './tulip3'
 
 export function createNetrisFUplinkOutputSchema() {
   return v.union([
+    createNETRISFTULIP3UplinkOutputSchema(),
     createNetrisFTULIP2UplinkOutputSchema(),
     createUplinkOutputFailureSchema(),
   ])
@@ -24,6 +26,10 @@ function DownlinkInputSchema() {
         NETRISF_DOWNLINK_FEATURE_FLAGS,
         [createDownlinkResetBatteryIndicatorSchema(NETRISF_DOWNLINK_FEATURE_FLAGS), createNetrisFTULIP2GetConfigurationSchema()],
       ),
+    },
+    {
+      protocol: 'TULIP3',
+      schema: createNETRISFTULIP3DownlinkInputSchema(),
     },
   ])
 }

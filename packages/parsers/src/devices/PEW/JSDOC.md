@@ -43,6 +43,14 @@ Channels that support adjusting the measurement range:
 type AdjustableChannelName = 'pressure'
 ```
 
+**Important note:** PEW `TULIP2` delivers battery voltage as part of the decoded measurement output, but that does not make it a real formal parser channel.
+
+- Only `pressure` and `device temperature` are formal parser channels
+- In `TULIP2`, battery voltage is delivered as measurement telemetry in decoded uplink output
+- That battery voltage value is still not a real configurable or adjustable channel
+- Battery voltage is not a configurable channel and must not appear as a `channel2` configuration target
+- `adjustMeasuringRange('pressure', ...)` only applies to the real configurable pressure channel
+
 **Channel Configuration:**
 
 | Channel Name | Default Min | Default Max | Unit | Configurable |

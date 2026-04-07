@@ -60,7 +60,7 @@ export function checkCodecsValidity(codecs: AnyCodec[]): Record<string, boolean>
   // first check codec names
   codecs.forEach((codec, index) => {
     const otherCodecs = codecs.filter((_, i) => i !== index)
-    if (otherCodecs.find(c => c.name === codec.name)) {
+    if (otherCodecs.some(c => c.name === codec.name)) {
       throw new Error(`Codec names must be unique. Duplicate found: ${codec.name}`)
     }
   })

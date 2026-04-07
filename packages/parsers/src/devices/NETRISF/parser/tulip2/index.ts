@@ -21,7 +21,7 @@ import { defineTULIP2Codec } from '../../../../codecs/tulip2'
 import { createDownlinkResetBatteryIndicatorSchema, validateTULIP2DownlinkInput } from '../../../../schemas/tulip2/downlink'
 import { DEFAULT_ROUNDING_DECIMALS, intTuple4ToFloat32WithThreshold, roundValue, slopeValueToValue, TULIPValueToValue } from '../../../../utils'
 import { createNetrisFTULIP2GetConfigurationSchema } from '../../schema/tulip2'
-import { createNetrisFTULIP2Channels, NETRISF_BATTERY_VOLTAGE_CHANNEL, NETRISF_DEVICE_TEMPERATURE_CHANNEL, NETRISF_STRAIN_CHANNEL } from './channels'
+import { createNetrisFTULIP2Channels, NETRISF_BATTERY_VOLTAGE_CHANNEL, NETRISF_DEVICE_TEMPERATURE_CHANNEL, NETRISF_MEASUREMENT_CHANNEL } from './channels'
 import { NETRISF_DOWNLINK_FEATURE_FLAGS } from './constants'
 import { NETRISFTULIP2EncodeHandler } from './encode'
 import {
@@ -55,14 +55,14 @@ const handleDataMessage: Handler<NetrisFChannels, NetrisFTULIP2DataMessageUplink
   const rawStrain = (input.bytes[3]! << 8) | input.bytes[4]!
   const rawTemperature = (input.bytes[5]! << 8) | input.bytes[6]!
 
-  const strainChannel = options.channels.find((candidate): candidate is NetrisFChannels[number] => candidate.channelId === NETRISF_STRAIN_CHANNEL.channelId)
+  const measurementChannel = options.channels.find((candidate): candidate is NetrisFChannels[number] => candidate.channelId === NETRISF_MEASUREMENT_CHANNEL.channelId)
   const temperatureChannel = options.channels.find((candidate): candidate is NetrisFChannels[number] => candidate.channelId === NETRISF_DEVICE_TEMPERATURE_CHANNEL.channelId)
 
-  if (!strainChannel || !temperatureChannel) {
-    throw new Error('Channel configuration missing for strain or temperature channel')
+  if (!measurementChannel || !temperatureChannel) {
+    throw new Error('Channel configuration missing for measurement or temperature channel')
   }
 
-  const strainValue = roundValue(TULIPValueToValue(rawStrain, strainChannel), options.roundingDecimals)
+  const measurementValue = roundValue(TULIPValueToValue(rawStrain, measurementChannel), options.roundingDecimals)
   const temperatureValue = roundValue(TULIPValueToValue(rawTemperature, temperatureChannel), options.roundingDecimals)
 
   return {
@@ -72,9 +72,9 @@ const handleDataMessage: Handler<NetrisFChannels, NetrisFTULIP2DataMessageUplink
       measurement: {
         channels: [
           {
-            channelId: strainChannel.channelId,
-            channelName: strainChannel.name,
-            value: strainValue,
+            channelId: measurementChannel.channelId,
+            channelName: measurementChannel.name,
+            value: measurementValue,
           },
           {
             channelId: temperatureChannel.channelId,
@@ -406,7 +406,7 @@ const handleConfigurationStatusMessage: Handler<NetrisFChannels, NetrisFTULIP2Co
         commandTypeName,
         commandStatus,
         channel,
-        channelName: channelName as 'strain' | 'device temperature',
+        channelName: channelName as 'measurement' | 'device temperature',
         deadBand,
         lowThreshold,
         lowThresholdValue,
@@ -452,7 +452,7 @@ const handleConfigurationStatusMessage: Handler<NetrisFChannels, NetrisFTULIP2Co
         commandTypeName,
         commandStatus,
         channel,
-        channelName: channelName as 'strain' | 'device temperature',
+        channelName: channelName as 'measurement' | 'device temperature',
         measurementOffset,
       }
     }

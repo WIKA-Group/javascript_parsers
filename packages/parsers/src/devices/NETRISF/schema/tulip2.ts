@@ -4,7 +4,7 @@ import type { NetrisFTulip2Channels, NetrisFTulip2FeatureFlags } from '../parser
 import * as v from 'valibot'
 import { createTULIP2DownlinkActionSchemaFactory } from '../../../schemas/tulip2/downlink'
 import { createUplinkOutputSchemaFactory } from '../../../schemas/tulip2/uplink'
-import { NETRISF_BATTERY_VOLTAGE_CHANNEL, NETRISF_DEVICE_TEMPERATURE_CHANNEL, NETRISF_STRAIN_CHANNEL } from '../parser/tulip2/channels'
+import { NETRISF_BATTERY_VOLTAGE_CHANNEL, NETRISF_DEVICE_TEMPERATURE_CHANNEL, NETRISF_MEASUREMENT_CHANNEL } from '../parser/tulip2/channels'
 import {
   ALARM_EVENTS,
   CONFIG_STATUS_NAMES_BY_VALUE,
@@ -40,12 +40,12 @@ function createDataMessageUplinkOutputSchema() {
       measurement: v.object({
         channels: v.array(v.object({
           channelId: v.picklist([
-            NETRISF_STRAIN_CHANNEL.channelId,
+            NETRISF_MEASUREMENT_CHANNEL.channelId,
             NETRISF_DEVICE_TEMPERATURE_CHANNEL.channelId,
             NETRISF_BATTERY_VOLTAGE_CHANNEL.channelId,
           ] as const),
           channelName: v.picklist([
-            NETRISF_STRAIN_CHANNEL.name,
+            NETRISF_MEASUREMENT_CHANNEL.name,
             NETRISF_DEVICE_TEMPERATURE_CHANNEL.name,
             NETRISF_BATTERY_VOLTAGE_CHANNEL.name,
           ] as const),

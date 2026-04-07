@@ -63,6 +63,10 @@ Distributed under the [MIT License](./LICENSE).
 
 ## Release Notes
 
+4.10.0
+  - feat: add NETRIS_F TULIP3 support
+  - BREAKING: rename NETRIS_F primary parser channel from `strain` to `measurement` to cover strain, force, and mass configurations
+
 4.9.0
   - fix: add missing PEW TULIP2 configuration status (0x06) decoder support
   - test: add PEW TULIP2 configuration status success and bad-case examples

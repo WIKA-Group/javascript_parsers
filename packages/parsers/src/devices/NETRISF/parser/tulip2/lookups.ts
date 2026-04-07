@@ -25,7 +25,7 @@ export const PROCESS_ALARM_TYPES = {
 } as const
 
 export const PROCESS_ALARM_CHANNEL_NAMES_BY_ID = {
-  0: 'strain',
+  0: 'measurement',
   1: 'device temperature',
 } as const
 

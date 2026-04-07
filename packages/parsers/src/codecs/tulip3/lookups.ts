@@ -106,6 +106,7 @@ export const measurandLookup = {
   26: 'Humidity (relative)',
   27: 'Humidity (absolute)', // Density units
   28: 'Angle of rotation / inclination',
+  29: 'Strain',
   // RFU (device-specific)
 /*   60: 'RFU (device-specific)',
   61: 'RFU (device-specific)',
@@ -250,6 +251,9 @@ export const unitsLookup = {
   // Acceleration
   180: 'm/s²', // metre per second squared
   181: 'ft/s²', // foot per second squared
+
+  // Strain
+  185: 'µeps',
 
   // RFU (device-specific)
 /*   250: 'RFU', // RFU (device-specific)

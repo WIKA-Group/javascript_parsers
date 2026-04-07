@@ -1,7 +1,7 @@
 import type { TULIP2Channel } from '../../../../codecs/tulip2'
 
-export const NETRISF_STRAIN_CHANNEL = {
-  name: 'strain' as const,
+export const NETRISF_MEASUREMENT_CHANNEL = {
+  name: 'measurement' as const,
   channelId: 0 as const,
   start: -312.5 as number,
   end: 312.5 as number,
@@ -23,25 +23,16 @@ export const NETRISF_BATTERY_VOLTAGE_CHANNEL = {
 export function createNetrisFTULIP2Channels() {
   return [
     {
-      channelId: NETRISF_STRAIN_CHANNEL.channelId,
-      name: NETRISF_STRAIN_CHANNEL.name,
-      start: NETRISF_STRAIN_CHANNEL.start,
-      end: NETRISF_STRAIN_CHANNEL.end,
+      channelId: NETRISF_MEASUREMENT_CHANNEL.channelId,
+      name: NETRISF_MEASUREMENT_CHANNEL.name,
+      start: NETRISF_MEASUREMENT_CHANNEL.start,
+      end: NETRISF_MEASUREMENT_CHANNEL.end,
     },
     {
       channelId: NETRISF_DEVICE_TEMPERATURE_CHANNEL.channelId,
       name: NETRISF_DEVICE_TEMPERATURE_CHANNEL.name,
       start: NETRISF_DEVICE_TEMPERATURE_CHANNEL.start,
       end: NETRISF_DEVICE_TEMPERATURE_CHANNEL.end,
-      adjustMeasurementRangeDisallowed: true,
-    },
-    {
-      channelId: NETRISF_BATTERY_VOLTAGE_CHANNEL.channelId,
-      name: NETRISF_BATTERY_VOLTAGE_CHANNEL.name,
-      // never actually used
-      start: 0,
-      // never actually used
-      end: 5,
       adjustMeasurementRangeDisallowed: true,
     },
   ] as const satisfies TULIP2Channel[]
