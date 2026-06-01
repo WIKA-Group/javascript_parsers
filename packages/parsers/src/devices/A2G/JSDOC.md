@@ -11,13 +11,13 @@ Input types:
 interface UplinkInput {
   fPort: number // LoRaWAN FPort
   bytes: number[] // Raw payload as array of unsigned bytes (0-255)
-  recvTime?: string // Optional ISO timestamp from your LNS
+  recvTime?: Date // Optional Date from your LNS
 }
 
 interface HexUplinkInput {
   fPort: number // LoRaWAN FPort
   bytes: string // Hex-encoded payload (case-insensitive, even length)
-  recvTime?: string // Optional ISO timestamp from your LNS
+  recvTime?: Date // Optional Date from your LNS
 }
 ```
 
@@ -83,4 +83,18 @@ Applies to future decodes only.
 ## Quick Start
 
 1. No measurement range configuration needed (all channels have fixed ranges)
-2. Add wrapper function if your network server is non-compliant: `function decode(input) { return decodeUplink(input) }`
+2. If your LNS (LoRaWAN Network Server) is compatible you need to wrap the code in a global function:
+```javascript
+function decodeUplink(input) {
+  // Replace the placeholder with the corresponding code from the artifact
+  var __commonJSMin=(e,t)=>()=>(t||(e((t={exports:{}}).exports,t),e=null),t.exports)
+
+  return decodeUplink(input)
+}
+
+function encodeDonwlink(input) {
+  // the corresponding code from the artifact
+  return encodeDonwlink(input)
+}
+```
+3. Add wrapper function if your network server is non-compliant: `function decode(input) { return decodeUplink(input) }`

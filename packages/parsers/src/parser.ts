@@ -2,7 +2,7 @@
 import type { AnyCodec, Codec } from './codecs/codec'
 import type { HexUplinkInput, UplinkInput } from './schemas'
 import type { DownlinkOutput, GenericUplinkOutput, GenericUplinkOutputFailure, MultipleDownlinkOutput } from './types'
-import { safeParse } from 'valibot'
+import { safeParse, summarize } from 'valibot'
 import { checkCodecsValidity } from './codecs/utils'
 import { createHexUplinkInputSchema, createUplinkInputSchema } from './schemas'
 import { getRoundingDecimals, hexStringToIntArray } from './utils'
@@ -12,16 +12,18 @@ type ChannelNamesFromCodec<TCodecs extends AnyCodec> = {
 }[TCodecs['name']]
 
 type EncodeInput<TCodecs extends AnyCodec> = TCodecs extends { encode: infer THandler extends (input: any) => any }
-  ? THandler extends (input: infer TInput) => any ? {
+  ? THandler extends (input: infer TInput) => any ? { data: {
     protocol: TCodecs['protocol']
     input: TInput
-  }
+  } }
     : never : never
 
 type EncodeMultipleInput<TCodecs extends AnyCodec> = TCodecs extends { encodeMultiple: infer THandler extends (input: any) => any }
   ? THandler extends (input: infer TInput) => any ? {
-    protocol: TCodecs['protocol']
-    input: TInput
+    data: {
+      protocol: TCodecs['protocol']
+      input: TInput
+    }
   }
     : never : never
 
@@ -97,6 +99,16 @@ export function defineParser<const TParserOptions extends ParserOptions>(options
     return `${parserName} (JS): ${message}`
   }
 
+  function parseReceiveTime<T extends number[] | string>(input: { bytes: T, fPort?: number, recvTime?: Date }) {
+    if (input.recvTime && !(input.recvTime instanceof Date)) {
+      const parsedDate = new Date(input.recvTime)
+      if (!Number.isNaN(parsedDate.getTime())) {
+        input = { ...input, recvTime: parsedDate }
+      }
+    }
+    return input
+  }
+
   function decode(input: UplinkInput) {
     // go through the codecs and see if they can decode it
     let c: AnyCodec | undefined
@@ -121,11 +133,13 @@ export function defineParser<const TParserOptions extends ParserOptions>(options
   }
 
   function decodeUplink(input: UplinkInput) {
+    input = parseReceiveTime(input)
+
     // for validating input
     try {
       const validatedInput = safeParse(createUplinkInputSchema(), input)
       if (!validatedInput.success) {
-        throw new Error(`Input is not a valid for decoding. Check your input data.`)
+        throw new Error(`Input is not valid for decoding. ${summarize(validatedInput.issues)}`)
       }
       const result = decode(validatedInput.output)
       // if there are warning, we add the prefix to the messages
@@ -143,9 +157,11 @@ export function defineParser<const TParserOptions extends ParserOptions>(options
   }
 
   function decodeHexUplink(input: HexUplinkInput) {
+    input = parseReceiveTime(input)
+
     const validatedInput = safeParse(createHexUplinkInputSchema(), input)
     if (!validatedInput.success) {
-      return createError(`Input is not a valid for decoding. Check your input data.`)
+      return createError(`Input is not valid for decoding. ${summarize(validatedInput.issues)}`)
     }
     const intArray = hexStringToIntArray(validatedInput.output.bytes)
     if (!intArray) {
@@ -161,14 +177,15 @@ export function defineParser<const TParserOptions extends ParserOptions>(options
 
   function encodeDownlink(input: EncodeInput<TParserOptions['codecs'][number]>): DownlinkOutput {
     try {
-      const codec = codecs.find(c => c.protocol === input.protocol)
+      const payload = 'data' in input ? input.data : input
+      const codec = codecs.find(c => c.protocol === payload.protocol)
       if (!codec) {
-        throw new Error(`Codec with protocol ${input.protocol} not found in parser. Available protocols: ${codecs.map(c => c.protocol).join(', ')}`)
+        throw new Error(`Codec with protocol ${payload.protocol} not found in parser. Available protocols: ${codecs.map(c => c.protocol).join(', ')}`)
       }
       if (!('encode' in codec)) {
-        throw new Error(`Codec with protocol ${input.protocol} does not support encoding. Input could not be encoded.`)
+        throw new Error(`Codec with protocol ${payload.protocol} does not support encoding. Input could not be encoded.`)
       }
-      return codec.encode!(input.input)
+      return codec.encode!(payload.input)
     }
     catch (error) {
       if (error instanceof Error) {
@@ -180,14 +197,15 @@ export function defineParser<const TParserOptions extends ParserOptions>(options
 
   function encodeMultipleDownlinks(input: EncodeMultipleInput<TParserOptions['codecs'][number]>): MultipleDownlinkOutput {
     try {
-      const codec = codecs.find(c => c.protocol === input.protocol)
+      const payload = 'data' in input ? input.data : input
+      const codec = codecs.find(c => c.protocol === payload.protocol)
       if (!codec) {
-        throw new Error(`Codec with protocol ${input.protocol} not found in parser. Available protocols: ${codecs.map(c => c.protocol).join(', ')}`)
+        throw new Error(`Codec with protocol ${payload.protocol} not found in parser. Available protocols: ${codecs.map(c => c.protocol).join(', ')}`)
       }
       if (!('encodeMultiple' in codec)) {
-        throw new Error(`Codec with protocol ${input.protocol} does not support multiple encoding. Input could not be encoded.`)
+        throw new Error(`Codec with protocol ${payload.protocol} does not support multiple encoding. Input could not be encoded.`)
       }
-      return codec.encodeMultiple!(input.input)
+      return codec.encodeMultiple!(payload.input)
     }
     catch (error) {
       if (error instanceof Error) {

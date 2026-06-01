@@ -1,446 +1,748 @@
 {
-  "oneOf": [
-    {
-      "type": "object",
-      "properties": {
-        "protocol": {
-          "const": "TULIP2"
-        },
-        "input": {
-          "oneOf": [
-            {
-              "type": "object",
-              "properties": {
-                "deviceAction": {
-                  "const": "resetToFactory"
-                }
-              },
-              "required": [
-                "deviceAction"
-              ]
+  "type": "object",
+  "properties": {
+    "data": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "protocol": {
+              "const": "TULIP2"
             },
-            {
-              "type": "object",
-              "properties": {
-                "deviceAction": {
-                  "const": "configuration"
-                },
-                "configurationId": {
-                  "type": "integer",
-                  "minimum": 1,
-                  "maximum": 31
-                },
-                "byteLimit": {
-                  "type": "integer",
-                  "minimum": 0
-                },
-                "mainConfiguration": {
+            "input": {
+              "oneOf": [
+                {
                   "type": "object",
                   "properties": {
-                    "publicationFactorWhenAlarm": {
-                      "type": "integer",
-                      "minimum": 1,
-                      "maximum": 2880
-                    },
-                    "publicationFactorWhenNoAlarm": {
-                      "type": "integer",
-                      "minimum": 1,
-                      "maximum": 2880
-                    },
-                    "isBLEEnabled": {
-                      "type": "boolean"
-                    },
-                    "measuringRateWhenNoAlarm": {
-                      "type": "integer",
-                      "minimum": 60,
-                      "maximum": 86400
-                    },
-                    "measuringRateWhenAlarm": {
-                      "type": "integer",
-                      "minimum": 60,
-                      "maximum": 86400
+                    "deviceAction": {
+                      "const": "resetToFactory"
                     }
                   },
                   "required": [
-                    "publicationFactorWhenAlarm",
-                    "publicationFactorWhenNoAlarm",
-                    "isBLEEnabled",
-                    "measuringRateWhenNoAlarm",
-                    "measuringRateWhenAlarm"
+                    "deviceAction"
                   ]
                 },
-                "channel0": {
-                  "anyOf": [
-                    {
-                      "const": false
-                    },
-                    {
-                      "const": true
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "alarms": {
-                          "type": "object",
-                          "properties": {
-                            "deadBand": {
-                              "type": "number",
-                              "minimum": 0,
-                              "maximum": 625
-                            },
-                            "lowThreshold": {
-                              "type": "number",
-                              "minimum": -312.5,
-                              "maximum": 312.5
-                            },
-                            "highThreshold": {
-                              "type": "number",
-                              "minimum": -312.5,
-                              "maximum": 312.5
-                            },
-                            "lowThresholdWithDelay": {
-                              "type": "object",
-                              "properties": {
-                                "value": {
-                                  "type": "number",
-                                  "minimum": -312.5,
-                                  "maximum": 312.5
-                                },
-                                "delay": {
-                                  "type": "integer",
-                                  "minimum": 0,
-                                  "maximum": 65535
-                                }
-                              },
-                              "required": [
-                                "value",
-                                "delay"
-                              ]
-                            },
-                            "highThresholdWithDelay": {
-                              "type": "object",
-                              "properties": {
-                                "value": {
-                                  "type": "number",
-                                  "minimum": -312.5,
-                                  "maximum": 312.5
-                                },
-                                "delay": {
-                                  "type": "integer",
-                                  "minimum": 0,
-                                  "maximum": 65535
-                                }
-                              },
-                              "required": [
-                                "value",
-                                "delay"
-                              ]
-                            },
-                            "risingSlope": {
-                              "type": "number",
-                              "minimum": 0,
-                              "maximum": 625
-                            },
-                            "fallingSlope": {
-                              "type": "number",
-                              "minimum": 0,
-                              "maximum": 625
-                            }
-                          },
-                          "required": [
-                            "deadBand"
-                          ]
-                        },
-                        "measureOffset": {
-                          "type": "number",
-                          "minimum": -625,
-                          "maximum": 625
-                        }
-                      },
-                      "required": []
-                    }
-                  ]
-                },
-                "channel1": {
-                  "anyOf": [
-                    {
-                      "const": false
-                    },
-                    {
-                      "const": true
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "alarms": {
-                          "type": "object",
-                          "properties": {
-                            "deadBand": {
-                              "type": "number",
-                              "minimum": 0,
-                              "maximum": 155
-                            },
-                            "lowThreshold": {
-                              "type": "number",
-                              "minimum": -45,
-                              "maximum": 110
-                            },
-                            "highThreshold": {
-                              "type": "number",
-                              "minimum": -45,
-                              "maximum": 110
-                            },
-                            "lowThresholdWithDelay": {
-                              "type": "object",
-                              "properties": {
-                                "value": {
-                                  "type": "number",
-                                  "minimum": -45,
-                                  "maximum": 110
-                                },
-                                "delay": {
-                                  "type": "integer",
-                                  "minimum": 0,
-                                  "maximum": 65535
-                                }
-                              },
-                              "required": [
-                                "value",
-                                "delay"
-                              ]
-                            },
-                            "highThresholdWithDelay": {
-                              "type": "object",
-                              "properties": {
-                                "value": {
-                                  "type": "number",
-                                  "minimum": -45,
-                                  "maximum": 110
-                                },
-                                "delay": {
-                                  "type": "integer",
-                                  "minimum": 0,
-                                  "maximum": 65535
-                                }
-                              },
-                              "required": [
-                                "value",
-                                "delay"
-                              ]
-                            },
-                            "risingSlope": {
-                              "type": "number",
-                              "minimum": 0,
-                              "maximum": 155
-                            },
-                            "fallingSlope": {
-                              "type": "number",
-                              "minimum": 0,
-                              "maximum": 155
-                            }
-                          },
-                          "required": [
-                            "deadBand"
-                          ]
-                        },
-                        "measureOffset": {
-                          "type": "number",
-                          "minimum": -155,
-                          "maximum": 155
-                        }
-                      },
-                      "required": []
-                    }
-                  ]
-                }
-              },
-              "required": [
-                "deviceAction"
-              ]
-            },
-            {
-              "type": "object",
-              "properties": {
-                "deviceAction": {
-                  "const": "resetBatteryIndicator"
-                },
-                "configurationId": {
-                  "type": "integer",
-                  "minimum": 1,
-                  "maximum": 31
-                }
-              },
-              "required": [
-                "deviceAction"
-              ]
-            },
-            {
-              "type": "object",
-              "properties": {
-                "deviceAction": {
-                  "const": "getConfiguration"
-                },
-                "configurationId": {
-                  "type": "integer",
-                  "minimum": 1,
-                  "maximum": 31
-                },
-                "byteLimit": {
-                  "type": "integer",
-                  "minimum": 0
-                },
-                "mainConfiguration": {
-                  "const": true
-                },
-                "channel0": {
-                  "anyOf": [
-                    {
-                      "const": true
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "alarms": {
-                          "const": true
-                        },
-                        "measureOffset": {
-                          "const": true
-                        }
-                      },
-                      "required": []
-                    }
-                  ]
-                },
-                "channel1": {
-                  "anyOf": [
-                    {
-                      "const": true
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "alarms": {
-                          "const": true
-                        },
-                        "measureOffset": {
-                          "const": true
-                        }
-                      },
-                      "required": []
-                    }
-                  ]
-                }
-              },
-              "required": [
-                "deviceAction"
-              ]
-            }
-          ]
-        }
-      },
-      "required": [
-        "protocol",
-        "input"
-      ]
-    },
-    {
-      "type": "object",
-      "properties": {
-        "protocol": {
-          "const": "TULIP3"
-        },
-        "input": {
-          "oneOf": [
-            {
-              "type": "object",
-              "properties": {
-                "action": {
-                  "const": "readRegisters"
-                },
-                "metadata": {
+                {
                   "type": "object",
                   "properties": {
-                    "byteLimit": {
-                      "type": "integer",
-                      "minimum": 11
+                    "deviceAction": {
+                      "const": "configuration"
                     },
-                    "startingFrameCounter": {
+                    "configurationId": {
                       "type": "integer",
-                      "minimum": 0,
+                      "minimum": 1,
                       "maximum": 31
                     },
-                    "autoApplyConfig": {
-                      "type": "boolean"
-                    }
-                  },
-                  "required": []
-                },
-                "input": {
-                  "type": "object",
-                  "properties": {
-                    "communicationModule": {
+                    "byteLimit": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "mainConfiguration": {
+                      "type": "object",
+                      "properties": {
+                        "publicationFactorWhenAlarm": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 2880
+                        },
+                        "publicationFactorWhenNoAlarm": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 2880
+                        },
+                        "isBLEEnabled": {
+                          "type": "boolean"
+                        },
+                        "measuringRateWhenNoAlarm": {
+                          "type": "integer",
+                          "minimum": 60,
+                          "maximum": 86400
+                        },
+                        "measuringRateWhenAlarm": {
+                          "type": "integer",
+                          "minimum": 60,
+                          "maximum": 86400
+                        }
+                      },
+                      "required": [
+                        "publicationFactorWhenAlarm",
+                        "publicationFactorWhenNoAlarm",
+                        "isBLEEnabled",
+                        "measuringRateWhenNoAlarm",
+                        "measuringRateWhenAlarm"
+                      ]
+                    },
+                    "channel0": {
                       "anyOf": [
+                        {
+                          "const": false
+                        },
+                        {
+                          "const": true
+                        },
                         {
                           "type": "object",
                           "properties": {
-                            "identification": {
+                            "alarms": {
                               "type": "object",
                               "properties": {
-                                "productId": {
-                                  "type": "boolean"
+                                "deadBand": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 625
                                 },
-                                "productSubId": {
-                                  "type": "boolean"
+                                "lowThreshold": {
+                                  "type": "number",
+                                  "minimum": -312.5,
+                                  "maximum": 312.5
                                 },
-                                "channelPlan": {
-                                  "type": "boolean"
+                                "highThreshold": {
+                                  "type": "number",
+                                  "minimum": -312.5,
+                                  "maximum": 312.5
                                 },
-                                "connectedSensors": {
-                                  "type": "boolean"
+                                "lowThresholdWithDelay": {
+                                  "type": "object",
+                                  "properties": {
+                                    "value": {
+                                      "type": "number",
+                                      "minimum": -312.5,
+                                      "maximum": 312.5
+                                    },
+                                    "delay": {
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "maximum": 65535
+                                    }
+                                  },
+                                  "required": [
+                                    "value",
+                                    "delay"
+                                  ]
                                 },
-                                "firmwareVersion": {
-                                  "type": "boolean"
+                                "highThresholdWithDelay": {
+                                  "type": "object",
+                                  "properties": {
+                                    "value": {
+                                      "type": "number",
+                                      "minimum": -312.5,
+                                      "maximum": 312.5
+                                    },
+                                    "delay": {
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "maximum": 65535
+                                    }
+                                  },
+                                  "required": [
+                                    "value",
+                                    "delay"
+                                  ]
                                 },
-                                "hardwareVersion": {
-                                  "type": "boolean"
+                                "risingSlope": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 625
                                 },
-                                "productionDate": {
-                                  "type": "boolean"
+                                "fallingSlope": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 625
+                                }
+                              },
+                              "required": [
+                                "deadBand"
+                              ]
+                            },
+                            "measureOffset": {
+                              "type": "number",
+                              "minimum": -625,
+                              "maximum": 625
+                            }
+                          },
+                          "required": []
+                        }
+                      ]
+                    },
+                    "channel1": {
+                      "anyOf": [
+                        {
+                          "const": false
+                        },
+                        {
+                          "const": true
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "alarms": {
+                              "type": "object",
+                              "properties": {
+                                "deadBand": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 155
                                 },
-                                "serialNumberPart1": {
-                                  "type": "boolean"
+                                "lowThreshold": {
+                                  "type": "number",
+                                  "minimum": -45,
+                                  "maximum": 110
                                 },
-                                "serialNumberPart2": {
-                                  "type": "boolean"
+                                "highThreshold": {
+                                  "type": "number",
+                                  "minimum": -45,
+                                  "maximum": 110
+                                },
+                                "lowThresholdWithDelay": {
+                                  "type": "object",
+                                  "properties": {
+                                    "value": {
+                                      "type": "number",
+                                      "minimum": -45,
+                                      "maximum": 110
+                                    },
+                                    "delay": {
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "maximum": 65535
+                                    }
+                                  },
+                                  "required": [
+                                    "value",
+                                    "delay"
+                                  ]
+                                },
+                                "highThresholdWithDelay": {
+                                  "type": "object",
+                                  "properties": {
+                                    "value": {
+                                      "type": "number",
+                                      "minimum": -45,
+                                      "maximum": 110
+                                    },
+                                    "delay": {
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "maximum": 65535
+                                    }
+                                  },
+                                  "required": [
+                                    "value",
+                                    "delay"
+                                  ]
+                                },
+                                "risingSlope": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 155
+                                },
+                                "fallingSlope": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 155
+                                }
+                              },
+                              "required": [
+                                "deadBand"
+                              ]
+                            },
+                            "measureOffset": {
+                              "type": "number",
+                              "minimum": -155,
+                              "maximum": 155
+                            }
+                          },
+                          "required": []
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "deviceAction"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "deviceAction": {
+                      "const": "resetBatteryIndicator"
+                    },
+                    "configurationId": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 31
+                    }
+                  },
+                  "required": [
+                    "deviceAction"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "deviceAction": {
+                      "const": "getConfiguration"
+                    },
+                    "configurationId": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 31
+                    },
+                    "byteLimit": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "mainConfiguration": {
+                      "const": true
+                    },
+                    "channel0": {
+                      "anyOf": [
+                        {
+                          "const": true
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "alarms": {
+                              "const": true
+                            },
+                            "measureOffset": {
+                              "const": true
+                            }
+                          },
+                          "required": []
+                        }
+                      ]
+                    },
+                    "channel1": {
+                      "anyOf": [
+                        {
+                          "const": true
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "alarms": {
+                              "const": true
+                            },
+                            "measureOffset": {
+                              "const": true
+                            }
+                          },
+                          "required": []
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "deviceAction"
+                  ]
+                }
+              ]
+            }
+          },
+          "required": [
+            "protocol",
+            "input"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "protocol": {
+              "const": "TULIP3"
+            },
+            "input": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "action": {
+                      "const": "readRegisters"
+                    },
+                    "metadata": {
+                      "type": "object",
+                      "properties": {
+                        "byteLimit": {
+                          "type": "integer",
+                          "minimum": 11
+                        },
+                        "startingFrameCounter": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 31
+                        },
+                        "autoApplyConfig": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": []
+                    },
+                    "input": {
+                      "type": "object",
+                      "properties": {
+                        "communicationModule": {
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "identification": {
+                                  "type": "object",
+                                  "properties": {
+                                    "productId": {
+                                      "type": "boolean"
+                                    },
+                                    "productSubId": {
+                                      "type": "boolean"
+                                    },
+                                    "channelPlan": {
+                                      "type": "boolean"
+                                    },
+                                    "connectedSensors": {
+                                      "type": "boolean"
+                                    },
+                                    "firmwareVersion": {
+                                      "type": "boolean"
+                                    },
+                                    "hardwareVersion": {
+                                      "type": "boolean"
+                                    },
+                                    "productionDate": {
+                                      "type": "boolean"
+                                    },
+                                    "serialNumberPart1": {
+                                      "type": "boolean"
+                                    },
+                                    "serialNumberPart2": {
+                                      "type": "boolean"
+                                    }
+                                  },
+                                  "required": []
+                                }
+                              },
+                              "required": [
+                                "identification"
+                              ]
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "configuration": {
+                                  "type": "object",
+                                  "properties": {
+                                    "measuringPeriodAlarmOff": {
+                                      "type": "boolean"
+                                    },
+                                    "measuringPeriodAlarmOn": {
+                                      "type": "boolean"
+                                    },
+                                    "transmissionRateAlarmOff": {
+                                      "type": "boolean"
+                                    },
+                                    "transmissionRateAlarmOn": {
+                                      "type": "boolean"
+                                    },
+                                    "underVoltageThreshold": {
+                                      "type": "boolean"
+                                    },
+                                    "enableBleAdvertising": {
+                                      "type": "boolean"
+                                    }
+                                  },
+                                  "required": []
+                                }
+                              },
+                              "required": [
+                                "configuration"
+                              ]
+                            }
+                          ]
+                        },
+                        "sensor1": {
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "identification": {
+                                  "type": "object",
+                                  "properties": {
+                                    "sensorType": {
+                                      "type": "boolean"
+                                    },
+                                    "existingChannels": {
+                                      "type": "boolean"
+                                    },
+                                    "firmwareVersion": {
+                                      "type": "boolean"
+                                    },
+                                    "hardwareVersion": {
+                                      "type": "boolean"
+                                    },
+                                    "productionDate": {
+                                      "type": "boolean"
+                                    },
+                                    "serialNumberPart1": {
+                                      "type": "boolean"
+                                    },
+                                    "serialNumberPart2": {
+                                      "type": "boolean"
+                                    }
+                                  },
+                                  "required": []
+                                },
+                                "channel1": {
+                                  "type": "object",
+                                  "properties": {
+                                    "identification": {
+                                      "type": "object",
+                                      "properties": {
+                                        "measurand": {
+                                          "type": "boolean"
+                                        },
+                                        "unit": {
+                                          "type": "boolean"
+                                        },
+                                        "minMeasureRange": {
+                                          "type": "boolean"
+                                        },
+                                        "maxMeasureRange": {
+                                          "type": "boolean"
+                                        },
+                                        "minPhysicalLimit": {
+                                          "type": "boolean"
+                                        },
+                                        "maxPhysicalLimit": {
+                                          "type": "boolean"
+                                        },
+                                        "accuracy": {
+                                          "type": "boolean"
+                                        },
+                                        "offset": {
+                                          "type": "boolean"
+                                        },
+                                        "gain": {
+                                          "type": "boolean"
+                                        },
+                                        "calibrationDate": {
+                                          "type": "boolean"
+                                        }
+                                      },
+                                      "required": []
+                                    }
+                                  },
+                                  "required": [
+                                    "identification"
+                                  ]
+                                },
+                                "channel2": {
+                                  "type": "object",
+                                  "properties": {
+                                    "identification": {
+                                      "type": "object",
+                                      "properties": {
+                                        "measurand": {
+                                          "type": "boolean"
+                                        },
+                                        "unit": {
+                                          "type": "boolean"
+                                        },
+                                        "minMeasureRange": {
+                                          "type": "boolean"
+                                        },
+                                        "maxMeasureRange": {
+                                          "type": "boolean"
+                                        },
+                                        "minPhysicalLimit": {
+                                          "type": "boolean"
+                                        },
+                                        "maxPhysicalLimit": {
+                                          "type": "boolean"
+                                        },
+                                        "accuracy": {
+                                          "type": "boolean"
+                                        },
+                                        "offset": {
+                                          "type": "boolean"
+                                        },
+                                        "gain": {
+                                          "type": "boolean"
+                                        },
+                                        "calibrationDate": {
+                                          "type": "boolean"
+                                        }
+                                      },
+                                      "required": []
+                                    }
+                                  },
+                                  "required": [
+                                    "identification"
+                                  ]
+                                }
+                              },
+                              "required": []
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "configuration": {
+                                  "type": "object",
+                                  "properties": {
+                                    "samplingChannels": {
+                                      "type": "boolean"
+                                    }
+                                  },
+                                  "required": []
+                                },
+                                "channel1": {
+                                  "type": "object",
+                                  "properties": {
+                                    "configuration": {
+                                      "type": "object",
+                                      "properties": {
+                                        "processAlarmEnabled": {
+                                          "type": "boolean"
+                                        },
+                                        "processAlarmDeadBand": {
+                                          "type": "boolean"
+                                        },
+                                        "lowThresholdAlarmValue": {
+                                          "type": "boolean"
+                                        },
+                                        "highThresholdAlarmValue": {
+                                          "type": "boolean"
+                                        },
+                                        "fallingSlopeAlarmValue": {
+                                          "type": "boolean"
+                                        },
+                                        "risingSlopeAlarmValue": {
+                                          "type": "boolean"
+                                        },
+                                        "lowThresholdWithDelayAlarmValue": {
+                                          "type": "boolean"
+                                        },
+                                        "lowThresholdWithDelayAlarmDelay": {
+                                          "type": "boolean"
+                                        },
+                                        "highThresholdWithDelayAlarmValue": {
+                                          "type": "boolean"
+                                        },
+                                        "highThresholdWithDelayAlarmDelay": {
+                                          "type": "boolean"
+                                        }
+                                      },
+                                      "required": []
+                                    }
+                                  },
+                                  "required": [
+                                    "configuration"
+                                  ]
+                                },
+                                "channel2": {
+                                  "type": "object",
+                                  "properties": {
+                                    "configuration": {
+                                      "type": "object",
+                                      "properties": {
+                                        "processAlarmEnabled": {
+                                          "type": "boolean"
+                                        },
+                                        "processAlarmDeadBand": {
+                                          "type": "boolean"
+                                        },
+                                        "lowThresholdAlarmValue": {
+                                          "type": "boolean"
+                                        },
+                                        "highThresholdAlarmValue": {
+                                          "type": "boolean"
+                                        },
+                                        "fallingSlopeAlarmValue": {
+                                          "type": "boolean"
+                                        },
+                                        "risingSlopeAlarmValue": {
+                                          "type": "boolean"
+                                        },
+                                        "lowThresholdWithDelayAlarmValue": {
+                                          "type": "boolean"
+                                        },
+                                        "lowThresholdWithDelayAlarmDelay": {
+                                          "type": "boolean"
+                                        },
+                                        "highThresholdWithDelayAlarmValue": {
+                                          "type": "boolean"
+                                        },
+                                        "highThresholdWithDelayAlarmDelay": {
+                                          "type": "boolean"
+                                        }
+                                      },
+                                      "required": []
+                                    }
+                                  },
+                                  "required": [
+                                    "configuration"
+                                  ]
                                 }
                               },
                               "required": []
                             }
-                          },
-                          "required": [
-                            "identification"
                           ]
+                        }
+                      },
+                      "required": []
+                    }
+                  },
+                  "required": [
+                    "action",
+                    "input"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "action": {
+                      "const": "writeRegisters"
+                    },
+                    "metadata": {
+                      "type": "object",
+                      "properties": {
+                        "byteLimit": {
+                          "type": "integer",
+                          "minimum": 11
                         },
-                        {
+                        "startingFrameCounter": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 31
+                        },
+                        "autoApplyConfig": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": []
+                    },
+                    "input": {
+                      "type": "object",
+                      "properties": {
+                        "communicationModule": {
                           "type": "object",
                           "properties": {
                             "configuration": {
                               "type": "object",
                               "properties": {
                                 "measuringPeriodAlarmOff": {
-                                  "type": "boolean"
+                                  "type": "integer",
+                                  "minimum": 0
                                 },
                                 "measuringPeriodAlarmOn": {
-                                  "type": "boolean"
+                                  "type": "integer",
+                                  "minimum": 0
                                 },
                                 "transmissionRateAlarmOff": {
-                                  "type": "boolean"
+                                  "type": "integer",
+                                  "minimum": 0
                                 },
                                 "transmissionRateAlarmOn": {
-                                  "type": "boolean"
-                                },
-                                "underVoltageThreshold": {
-                                  "type": "boolean"
+                                  "type": "integer",
+                                  "minimum": 0
                                 },
                                 "enableBleAdvertising": {
                                   "type": "boolean"
@@ -452,713 +754,417 @@
                           "required": [
                             "configuration"
                           ]
-                        }
-                      ]
-                    },
-                    "sensor1": {
-                      "anyOf": [
-                        {
-                          "type": "object",
-                          "properties": {
-                            "identification": {
-                              "type": "object",
-                              "properties": {
-                                "sensorType": {
-                                  "type": "boolean"
-                                },
-                                "existingChannels": {
-                                  "type": "boolean"
-                                },
-                                "firmwareVersion": {
-                                  "type": "boolean"
-                                },
-                                "hardwareVersion": {
-                                  "type": "boolean"
-                                },
-                                "productionDate": {
-                                  "type": "boolean"
-                                },
-                                "serialNumberPart1": {
-                                  "type": "boolean"
-                                },
-                                "serialNumberPart2": {
-                                  "type": "boolean"
-                                }
-                              },
-                              "required": []
-                            },
-                            "channel1": {
-                              "type": "object",
-                              "properties": {
-                                "identification": {
-                                  "type": "object",
-                                  "properties": {
-                                    "measurand": {
-                                      "type": "boolean"
-                                    },
-                                    "unit": {
-                                      "type": "boolean"
-                                    },
-                                    "minMeasureRange": {
-                                      "type": "boolean"
-                                    },
-                                    "maxMeasureRange": {
-                                      "type": "boolean"
-                                    },
-                                    "minPhysicalLimit": {
-                                      "type": "boolean"
-                                    },
-                                    "maxPhysicalLimit": {
-                                      "type": "boolean"
-                                    },
-                                    "accuracy": {
-                                      "type": "boolean"
-                                    },
-                                    "offset": {
-                                      "type": "boolean"
-                                    },
-                                    "gain": {
-                                      "type": "boolean"
-                                    },
-                                    "calibrationDate": {
-                                      "type": "boolean"
-                                    }
-                                  },
-                                  "required": []
-                                }
-                              },
-                              "required": [
-                                "identification"
-                              ]
-                            },
-                            "channel2": {
-                              "type": "object",
-                              "properties": {
-                                "identification": {
-                                  "type": "object",
-                                  "properties": {
-                                    "measurand": {
-                                      "type": "boolean"
-                                    },
-                                    "unit": {
-                                      "type": "boolean"
-                                    },
-                                    "minMeasureRange": {
-                                      "type": "boolean"
-                                    },
-                                    "maxMeasureRange": {
-                                      "type": "boolean"
-                                    },
-                                    "minPhysicalLimit": {
-                                      "type": "boolean"
-                                    },
-                                    "maxPhysicalLimit": {
-                                      "type": "boolean"
-                                    },
-                                    "accuracy": {
-                                      "type": "boolean"
-                                    },
-                                    "offset": {
-                                      "type": "boolean"
-                                    },
-                                    "gain": {
-                                      "type": "boolean"
-                                    },
-                                    "calibrationDate": {
-                                      "type": "boolean"
-                                    }
-                                  },
-                                  "required": []
-                                }
-                              },
-                              "required": [
-                                "identification"
-                              ]
-                            }
-                          },
-                          "required": []
                         },
-                        {
-                          "type": "object",
-                          "properties": {
-                            "configuration": {
+                        "sensor1": {
+                          "anyOf": [
+                            {
                               "type": "object",
                               "properties": {
-                                "samplingChannels": {
-                                  "type": "boolean"
-                                }
-                              },
-                              "required": []
-                            },
-                            "channel1": {
-                              "type": "object",
-                              "properties": {
-                                "configuration": {
+                                "channel1": {
                                   "type": "object",
                                   "properties": {
-                                    "processAlarmEnabled": {
-                                      "type": "boolean"
-                                    },
-                                    "processAlarmDeadBand": {
-                                      "type": "boolean"
-                                    },
-                                    "lowThresholdAlarmValue": {
-                                      "type": "boolean"
-                                    },
-                                    "highThresholdAlarmValue": {
-                                      "type": "boolean"
-                                    },
-                                    "fallingSlopeAlarmValue": {
-                                      "type": "boolean"
-                                    },
-                                    "risingSlopeAlarmValue": {
-                                      "type": "boolean"
-                                    },
-                                    "lowThresholdWithDelayAlarmValue": {
-                                      "type": "boolean"
-                                    },
-                                    "lowThresholdWithDelayAlarmDelay": {
-                                      "type": "boolean"
-                                    },
-                                    "highThresholdWithDelayAlarmValue": {
-                                      "type": "boolean"
-                                    },
-                                    "highThresholdWithDelayAlarmDelay": {
-                                      "type": "boolean"
-                                    }
-                                  },
-                                  "required": []
-                                }
-                              },
-                              "required": [
-                                "configuration"
-                              ]
-                            },
-                            "channel2": {
-                              "type": "object",
-                              "properties": {
-                                "configuration": {
-                                  "type": "object",
-                                  "properties": {
-                                    "processAlarmEnabled": {
-                                      "type": "boolean"
-                                    },
-                                    "processAlarmDeadBand": {
-                                      "type": "boolean"
-                                    },
-                                    "lowThresholdAlarmValue": {
-                                      "type": "boolean"
-                                    },
-                                    "highThresholdAlarmValue": {
-                                      "type": "boolean"
-                                    },
-                                    "fallingSlopeAlarmValue": {
-                                      "type": "boolean"
-                                    },
-                                    "risingSlopeAlarmValue": {
-                                      "type": "boolean"
-                                    },
-                                    "lowThresholdWithDelayAlarmValue": {
-                                      "type": "boolean"
-                                    },
-                                    "lowThresholdWithDelayAlarmDelay": {
-                                      "type": "boolean"
-                                    },
-                                    "highThresholdWithDelayAlarmValue": {
-                                      "type": "boolean"
-                                    },
-                                    "highThresholdWithDelayAlarmDelay": {
-                                      "type": "boolean"
-                                    }
-                                  },
-                                  "required": []
-                                }
-                              },
-                              "required": [
-                                "configuration"
-                              ]
-                            }
-                          },
-                          "required": []
-                        }
-                      ]
-                    }
-                  },
-                  "required": []
-                }
-              },
-              "required": [
-                "action",
-                "input"
-              ]
-            },
-            {
-              "type": "object",
-              "properties": {
-                "action": {
-                  "const": "writeRegisters"
-                },
-                "metadata": {
-                  "type": "object",
-                  "properties": {
-                    "byteLimit": {
-                      "type": "integer",
-                      "minimum": 11
-                    },
-                    "startingFrameCounter": {
-                      "type": "integer",
-                      "minimum": 0,
-                      "maximum": 31
-                    },
-                    "autoApplyConfig": {
-                      "type": "boolean"
-                    }
-                  },
-                  "required": []
-                },
-                "input": {
-                  "type": "object",
-                  "properties": {
-                    "communicationModule": {
-                      "type": "object",
-                      "properties": {
-                        "configuration": {
-                          "type": "object",
-                          "properties": {
-                            "measuringPeriodAlarmOff": {
-                              "type": "integer",
-                              "minimum": 0
-                            },
-                            "measuringPeriodAlarmOn": {
-                              "type": "integer",
-                              "minimum": 0
-                            },
-                            "transmissionRateAlarmOff": {
-                              "type": "integer",
-                              "minimum": 0
-                            },
-                            "transmissionRateAlarmOn": {
-                              "type": "integer",
-                              "minimum": 0
-                            },
-                            "enableBleAdvertising": {
-                              "type": "boolean"
-                            }
-                          },
-                          "required": []
-                        }
-                      },
-                      "required": [
-                        "configuration"
-                      ]
-                    },
-                    "sensor1": {
-                      "anyOf": [
-                        {
-                          "type": "object",
-                          "properties": {
-                            "channel1": {
-                              "type": "object",
-                              "properties": {
-                                "identification": {
-                                  "type": "object",
-                                  "properties": {
-                                    "unit": {
-                                      "enum": [
-                                        "N",
-                                        "daN",
-                                        "kN",
-                                        "MN",
-                                        "kp",
-                                        "lbf",
-                                        "ozf",
-                                        "dyn",
-                                        "kg",
-                                        "g",
-                                        "mg",
-                                        "lb",
-                                        "µeps"
-                                      ]
-                                    },
-                                    "offset": {
-                                      "type": "number"
-                                    },
-                                    "gain": {
-                                      "type": "number"
-                                    }
-                                  },
-                                  "required": []
-                                }
-                              },
-                              "required": [
-                                "identification"
-                              ]
-                            },
-                            "channel2": {
-                              "type": "object",
-                              "properties": {
-                                "identification": {
-                                  "type": "object",
-                                  "properties": {
-                                    "unit": {
-                                      "enum": [
-                                        "°C"
-                                      ]
-                                    },
-                                    "offset": {
-                                      "type": "number"
-                                    },
-                                    "gain": {
-                                      "type": "number"
-                                    }
-                                  },
-                                  "required": []
-                                }
-                              },
-                              "required": [
-                                "identification"
-                              ]
-                            }
-                          },
-                          "required": []
-                        },
-                        {
-                          "type": "object",
-                          "properties": {
-                            "configuration": {
-                              "type": "object",
-                              "properties": {
-                                "samplingChannels": {
-                                  "type": "object",
-                                  "properties": {
-                                    "channel1": {
-                                      "type": "boolean"
-                                    },
-                                    "channel2": {
-                                      "type": "boolean"
+                                    "identification": {
+                                      "type": "object",
+                                      "properties": {
+                                        "unit": {
+                                          "enum": [
+                                            "N",
+                                            "daN",
+                                            "kN",
+                                            "MN",
+                                            "kp",
+                                            "lbf",
+                                            "ozf",
+                                            "dyn",
+                                            "kg",
+                                            "g",
+                                            "mg",
+                                            "lb",
+                                            "µeps"
+                                          ]
+                                        },
+                                        "offset": {
+                                          "type": "number"
+                                        },
+                                        "gain": {
+                                          "type": "number"
+                                        }
+                                      },
+                                      "required": []
                                     }
                                   },
                                   "required": [
-                                    "channel1",
-                                    "channel2"
+                                    "identification"
+                                  ]
+                                },
+                                "channel2": {
+                                  "type": "object",
+                                  "properties": {
+                                    "identification": {
+                                      "type": "object",
+                                      "properties": {
+                                        "unit": {
+                                          "enum": [
+                                            "°C"
+                                          ]
+                                        },
+                                        "offset": {
+                                          "type": "number"
+                                        },
+                                        "gain": {
+                                          "type": "number"
+                                        }
+                                      },
+                                      "required": []
+                                    }
+                                  },
+                                  "required": [
+                                    "identification"
                                   ]
                                 }
                               },
                               "required": []
                             },
-                            "channel1": {
+                            {
                               "type": "object",
                               "properties": {
                                 "configuration": {
                                   "type": "object",
                                   "properties": {
-                                    "processAlarmEnabled": {
+                                    "samplingChannels": {
                                       "type": "object",
                                       "properties": {
-                                        "lowThreshold": {
+                                        "channel1": {
                                           "type": "boolean"
                                         },
-                                        "highThreshold": {
-                                          "type": "boolean"
-                                        },
-                                        "fallingSlope": {
-                                          "type": "boolean"
-                                        },
-                                        "risingSlope": {
-                                          "type": "boolean"
-                                        },
-                                        "lowThresholdWithDelay": {
-                                          "type": "boolean"
-                                        },
-                                        "highThresholdWithDelay": {
+                                        "channel2": {
                                           "type": "boolean"
                                         }
                                       },
-                                      "required": []
-                                    },
-                                    "processAlarmDeadBand": {
-                                      "type": "number",
-                                      "minimum": 0,
-                                      "maximum": 625
-                                    },
-                                    "lowThresholdAlarmValue": {
-                                      "type": "number",
-                                      "minimum": -312.5,
-                                      "maximum": 312.5
-                                    },
-                                    "highThresholdAlarmValue": {
-                                      "type": "number",
-                                      "minimum": -312.5,
-                                      "maximum": 312.5
-                                    },
-                                    "fallingSlopeAlarmValue": {
-                                      "type": "number",
-                                      "minimum": 0,
-                                      "maximum": 625
-                                    },
-                                    "risingSlopeAlarmValue": {
-                                      "type": "number",
-                                      "minimum": 0,
-                                      "maximum": 625
-                                    },
-                                    "lowThresholdWithDelayAlarmValue": {
-                                      "type": "number",
-                                      "minimum": -312.5,
-                                      "maximum": 312.5
-                                    },
-                                    "lowThresholdWithDelayAlarmDelay": {
-                                      "type": "integer",
-                                      "minimum": 0
-                                    },
-                                    "highThresholdWithDelayAlarmValue": {
-                                      "type": "number",
-                                      "minimum": -312.5,
-                                      "maximum": 312.5
-                                    },
-                                    "highThresholdWithDelayAlarmDelay": {
-                                      "type": "integer",
-                                      "minimum": 0
+                                      "required": [
+                                        "channel1",
+                                        "channel2"
+                                      ]
                                     }
                                   },
                                   "required": []
-                                }
-                              },
-                              "required": [
-                                "configuration"
-                              ]
-                            },
-                            "channel2": {
-                              "type": "object",
-                              "properties": {
-                                "configuration": {
+                                },
+                                "channel1": {
                                   "type": "object",
                                   "properties": {
-                                    "processAlarmEnabled": {
+                                    "configuration": {
                                       "type": "object",
                                       "properties": {
-                                        "lowThreshold": {
-                                          "type": "boolean"
+                                        "processAlarmEnabled": {
+                                          "type": "object",
+                                          "properties": {
+                                            "lowThreshold": {
+                                              "type": "boolean"
+                                            },
+                                            "highThreshold": {
+                                              "type": "boolean"
+                                            },
+                                            "fallingSlope": {
+                                              "type": "boolean"
+                                            },
+                                            "risingSlope": {
+                                              "type": "boolean"
+                                            },
+                                            "lowThresholdWithDelay": {
+                                              "type": "boolean"
+                                            },
+                                            "highThresholdWithDelay": {
+                                              "type": "boolean"
+                                            }
+                                          },
+                                          "required": []
                                         },
-                                        "highThreshold": {
-                                          "type": "boolean"
+                                        "processAlarmDeadBand": {
+                                          "type": "number",
+                                          "minimum": 0,
+                                          "maximum": 625
                                         },
-                                        "fallingSlope": {
-                                          "type": "boolean"
+                                        "lowThresholdAlarmValue": {
+                                          "type": "number",
+                                          "minimum": -312.5,
+                                          "maximum": 312.5
                                         },
-                                        "risingSlope": {
-                                          "type": "boolean"
+                                        "highThresholdAlarmValue": {
+                                          "type": "number",
+                                          "minimum": -312.5,
+                                          "maximum": 312.5
                                         },
-                                        "lowThresholdWithDelay": {
-                                          "type": "boolean"
+                                        "fallingSlopeAlarmValue": {
+                                          "type": "number",
+                                          "minimum": 0,
+                                          "maximum": 625
                                         },
-                                        "highThresholdWithDelay": {
-                                          "type": "boolean"
+                                        "risingSlopeAlarmValue": {
+                                          "type": "number",
+                                          "minimum": 0,
+                                          "maximum": 625
+                                        },
+                                        "lowThresholdWithDelayAlarmValue": {
+                                          "type": "number",
+                                          "minimum": -312.5,
+                                          "maximum": 312.5
+                                        },
+                                        "lowThresholdWithDelayAlarmDelay": {
+                                          "type": "integer",
+                                          "minimum": 0
+                                        },
+                                        "highThresholdWithDelayAlarmValue": {
+                                          "type": "number",
+                                          "minimum": -312.5,
+                                          "maximum": 312.5
+                                        },
+                                        "highThresholdWithDelayAlarmDelay": {
+                                          "type": "integer",
+                                          "minimum": 0
                                         }
                                       },
                                       "required": []
-                                    },
-                                    "processAlarmDeadBand": {
-                                      "type": "number",
-                                      "minimum": 0,
-                                      "maximum": 155
-                                    },
-                                    "lowThresholdAlarmValue": {
-                                      "type": "number",
-                                      "minimum": -45,
-                                      "maximum": 110
-                                    },
-                                    "highThresholdAlarmValue": {
-                                      "type": "number",
-                                      "minimum": -45,
-                                      "maximum": 110
-                                    },
-                                    "fallingSlopeAlarmValue": {
-                                      "type": "number",
-                                      "minimum": 0,
-                                      "maximum": 155
-                                    },
-                                    "risingSlopeAlarmValue": {
-                                      "type": "number",
-                                      "minimum": 0,
-                                      "maximum": 155
-                                    },
-                                    "lowThresholdWithDelayAlarmValue": {
-                                      "type": "number",
-                                      "minimum": -45,
-                                      "maximum": 110
-                                    },
-                                    "lowThresholdWithDelayAlarmDelay": {
-                                      "type": "integer",
-                                      "minimum": 0
-                                    },
-                                    "highThresholdWithDelayAlarmValue": {
-                                      "type": "number",
-                                      "minimum": -45,
-                                      "maximum": 110
-                                    },
-                                    "highThresholdWithDelayAlarmDelay": {
-                                      "type": "integer",
-                                      "minimum": 0
                                     }
                                   },
-                                  "required": []
+                                  "required": [
+                                    "configuration"
+                                  ]
+                                },
+                                "channel2": {
+                                  "type": "object",
+                                  "properties": {
+                                    "configuration": {
+                                      "type": "object",
+                                      "properties": {
+                                        "processAlarmEnabled": {
+                                          "type": "object",
+                                          "properties": {
+                                            "lowThreshold": {
+                                              "type": "boolean"
+                                            },
+                                            "highThreshold": {
+                                              "type": "boolean"
+                                            },
+                                            "fallingSlope": {
+                                              "type": "boolean"
+                                            },
+                                            "risingSlope": {
+                                              "type": "boolean"
+                                            },
+                                            "lowThresholdWithDelay": {
+                                              "type": "boolean"
+                                            },
+                                            "highThresholdWithDelay": {
+                                              "type": "boolean"
+                                            }
+                                          },
+                                          "required": []
+                                        },
+                                        "processAlarmDeadBand": {
+                                          "type": "number",
+                                          "minimum": 0,
+                                          "maximum": 155
+                                        },
+                                        "lowThresholdAlarmValue": {
+                                          "type": "number",
+                                          "minimum": -45,
+                                          "maximum": 110
+                                        },
+                                        "highThresholdAlarmValue": {
+                                          "type": "number",
+                                          "minimum": -45,
+                                          "maximum": 110
+                                        },
+                                        "fallingSlopeAlarmValue": {
+                                          "type": "number",
+                                          "minimum": 0,
+                                          "maximum": 155
+                                        },
+                                        "risingSlopeAlarmValue": {
+                                          "type": "number",
+                                          "minimum": 0,
+                                          "maximum": 155
+                                        },
+                                        "lowThresholdWithDelayAlarmValue": {
+                                          "type": "number",
+                                          "minimum": -45,
+                                          "maximum": 110
+                                        },
+                                        "lowThresholdWithDelayAlarmDelay": {
+                                          "type": "integer",
+                                          "minimum": 0
+                                        },
+                                        "highThresholdWithDelayAlarmValue": {
+                                          "type": "number",
+                                          "minimum": -45,
+                                          "maximum": 110
+                                        },
+                                        "highThresholdWithDelayAlarmDelay": {
+                                          "type": "integer",
+                                          "minimum": 0
+                                        }
+                                      },
+                                      "required": []
+                                    }
+                                  },
+                                  "required": [
+                                    "configuration"
+                                  ]
                                 }
                               },
-                              "required": [
-                                "configuration"
-                              ]
+                              "required": []
                             }
-                          },
-                          "required": []
+                          ]
                         }
-                      ]
+                      },
+                      "required": []
                     }
                   },
-                  "required": []
-                }
-              },
-              "required": [
-                "action",
-                "input"
-              ]
-            },
-            {
-              "type": "object",
-              "properties": {
-                "action": {
-                  "const": "forceCloseSession"
+                  "required": [
+                    "action",
+                    "input"
+                  ]
                 },
-                "metadata": {
+                {
                   "type": "object",
                   "properties": {
-                    "byteLimit": {
-                      "type": "integer",
-                      "minimum": 11
+                    "action": {
+                      "const": "forceCloseSession"
                     },
-                    "startingFrameCounter": {
-                      "type": "integer",
-                      "minimum": 0,
-                      "maximum": 31
-                    },
-                    "autoApplyConfig": {
-                      "type": "boolean"
-                    }
-                  },
-                  "required": []
-                }
-              },
-              "required": [
-                "action"
-              ]
-            },
-            {
-              "type": "object",
-              "properties": {
-                "action": {
-                  "const": "restoreDefaultConfiguration"
-                },
-                "metadata": {
-                  "type": "object",
-                  "properties": {
-                    "byteLimit": {
-                      "type": "integer",
-                      "minimum": 11
-                    },
-                    "startingFrameCounter": {
-                      "type": "integer",
-                      "minimum": 0,
-                      "maximum": 31
-                    },
-                    "autoApplyConfig": {
-                      "type": "boolean"
-                    }
-                  },
-                  "required": []
-                }
-              },
-              "required": [
-                "action"
-              ]
-            },
-            {
-              "type": "object",
-              "properties": {
-                "action": {
-                  "const": "newBatteryInserted"
-                },
-                "metadata": {
-                  "type": "object",
-                  "properties": {
-                    "byteLimit": {
-                      "type": "integer",
-                      "minimum": 11
-                    },
-                    "startingFrameCounter": {
-                      "type": "integer",
-                      "minimum": 0,
-                      "maximum": 31
-                    },
-                    "autoApplyConfig": {
-                      "type": "boolean"
-                    }
-                  },
-                  "required": []
-                }
-              },
-              "required": [
-                "action"
-              ]
-            },
-            {
-              "type": "object",
-              "properties": {
-                "action": {
-                  "const": "getAlarmStatus"
-                },
-                "metadata": {
-                  "type": "object",
-                  "properties": {
-                    "byteLimit": {
-                      "type": "integer",
-                      "minimum": 11
-                    },
-                    "startingFrameCounter": {
-                      "type": "integer",
-                      "minimum": 0,
-                      "maximum": 31
-                    },
-                    "autoApplyConfig": {
-                      "type": "boolean"
-                    }
-                  },
-                  "required": []
-                },
-                "input": {
-                  "type": "object",
-                  "properties": {
-                    "processAlarmRequested": {
-                      "type": "boolean"
-                    },
-                    "cmAlarmRequested": {
-                      "type": "boolean"
-                    },
-                    "sensorAlarmRequested": {
-                      "type": "boolean"
-                    },
-                    "channelAlarmRequested": {
-                      "type": "boolean"
-                    },
-                    "targets": {
+                    "metadata": {
                       "type": "object",
                       "properties": {
-                        "sensor1": {
+                        "byteLimit": {
+                          "type": "integer",
+                          "minimum": 11
+                        },
+                        "startingFrameCounter": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 31
+                        },
+                        "autoApplyConfig": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": []
+                    }
+                  },
+                  "required": [
+                    "action"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "action": {
+                      "const": "restoreDefaultConfiguration"
+                    },
+                    "metadata": {
+                      "type": "object",
+                      "properties": {
+                        "byteLimit": {
+                          "type": "integer",
+                          "minimum": 11
+                        },
+                        "startingFrameCounter": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 31
+                        },
+                        "autoApplyConfig": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": []
+                    }
+                  },
+                  "required": [
+                    "action"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "action": {
+                      "const": "newBatteryInserted"
+                    },
+                    "metadata": {
+                      "type": "object",
+                      "properties": {
+                        "byteLimit": {
+                          "type": "integer",
+                          "minimum": 11
+                        },
+                        "startingFrameCounter": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 31
+                        },
+                        "autoApplyConfig": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": []
+                    }
+                  },
+                  "required": [
+                    "action"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "action": {
+                      "const": "getAlarmStatus"
+                    },
+                    "metadata": {
+                      "type": "object",
+                      "properties": {
+                        "byteLimit": {
+                          "type": "integer",
+                          "minimum": 11
+                        },
+                        "startingFrameCounter": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 31
+                        },
+                        "autoApplyConfig": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": []
+                    },
+                    "input": {
+                      "type": "object",
+                      "properties": {
+                        "processAlarmRequested": {
+                          "type": "boolean"
+                        },
+                        "cmAlarmRequested": {
+                          "type": "boolean"
+                        },
+                        "sensorAlarmRequested": {
+                          "type": "boolean"
+                        },
+                        "channelAlarmRequested": {
+                          "type": "boolean"
+                        },
+                        "targets": {
                           "type": "object",
                           "properties": {
-                            "channel1": {
-                              "type": "boolean"
-                            },
-                            "channel2": {
-                              "type": "boolean"
+                            "sensor1": {
+                              "type": "object",
+                              "properties": {
+                                "channel1": {
+                                  "type": "boolean"
+                                },
+                                "channel2": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "required": []
                             }
                           },
                           "required": []
@@ -1167,22 +1173,24 @@
                       "required": []
                     }
                   },
-                  "required": []
+                  "required": [
+                    "action",
+                    "input"
+                  ]
                 }
-              },
-              "required": [
-                "action",
-                "input"
               ]
             }
+          },
+          "required": [
+            "protocol",
+            "input"
           ]
         }
-      },
-      "required": [
-        "protocol",
-        "input"
       ]
     }
+  },
+  "required": [
+    "data"
   ],
   "$schema": "http://json-schema.org/draft-07/schema#"
 }

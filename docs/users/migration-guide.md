@@ -4,6 +4,65 @@
 
 This guide walks you through upgrading the prebuilt JavaScript parsers that are typically embedded in LoRaWAN network servers. The focus is on the practical steps required when moving from the legacy `2.x.x` bundles to the modular `4.x.x` architecture, plus the smaller hop from `3.x.x` to `4.x.x`.
 
+## Breaking Changes in 4.11
+::: warning BREAKING CHANGE - Version 4.11
+
+### Decode Uplink
+
+Affected function:
+```javascript
+function decodeUplink (input) {
+  ...
+  return output;
+}
+```
+
+The data structure of the input object changed, where ``input`` is of type UplinkInput:
+
+```diff
+interface UplinkInput {
+   fPort: number // LoRaWAN FPort
+   bytes: number[] // Raw payload as array of unsigned bytes (0-255)
+-  recvTime?: string // Optional ISO timestamp (if your LNS provides it)
++  recvTime?: Date// Optional Date (if your LNS provides it)
+ }
+
+```
+
+```diff
+ interface HexUplinkInput {
+   fPort: number // LoRaWAN FPort
+   bytes: string // Raw payload as hex-encoded string (case-insensitive, even length)
+-  recvTime?: string // Optional ISO timestamp (if your LNS provides it)
++  recvTime?: Date// Optional Date (if your LNS provides it)
+ }
+```
+
+### Encode Downlink
+
+Affected function:
+```javascript
+function encodeDownlink (input) {
+  ...
+  return output;
+}
+```
+
+The data structure of the input object changed by adding a property `data`, where ``input`` is of type UplinkInput:
+
+```diff
+type DownlinkInput = {
+-  protocol: 'TULIP2' | 'TULIP3'
+-  input: { ... }
++  data: {
++    protocol: string
++    input: { ... }
++  }
+ }
+```
+
+:::
+
 ## Breaking Changes in 4.8.2
 
 ::: warning BREAKING CHANGE - Version 4.8.2

@@ -11,13 +11,13 @@ Input types:
 interface UplinkInput {
   fPort: number // LoRaWAN FPort
   bytes: number[] // Raw payload as array of unsigned bytes (0-255)
-  recvTime?: string // Optional ISO timestamp (if your LNS provides it)
+  recvTime?: Date // Optional Date (if your LNS provides it)
 }
 
 interface HexUplinkInput {
   fPort: number // LoRaWAN FPort
   bytes: string // Raw payload as hex-encoded string (case-insensitive, even length)
-  recvTime?: string // Optional ISO timestamp (if your LNS provides it)
+  recvTime?: Date // Optional Date (if your LNS provides it)
 }
 ```
 
@@ -86,38 +86,40 @@ Applies to future decodes only.
 
 ### `encodeDownlink(input)`
 ```ts
-type DownlinkInput = {
-  protocol: 'TULIP2'
-  input: {
-    deviceAction: 'configuration'
-    // Configuration fields...
+interface DownlinkInput {
+  data: {
+    protocol: 'TULIP2'
+    input: {
+      deviceAction: 'configuration'
+      // Configuration fields...
+    } | {
+      deviceAction: 'resetToFactory'
+    } | {
+      deviceAction: 'resetBatteryIndicator'
+      configurationId?: number
+    } | {
+      deviceAction: 'getConfiguration'
+      mainConfiguration?: true
+      processAlarmConfiguration?: true
+    }
   } | {
-    deviceAction: 'resetToFactory'
-  } | {
-    deviceAction: 'resetBatteryIndicator'
-    configurationId?: number
-  } | {
-    deviceAction: 'getConfiguration'
-    mainConfiguration?: true
-    processAlarmConfiguration?: true
-  }
-} | {
-  protocol: 'TULIP3'
-  input: {
-    action: 'readRegisters'
-    // Read register fields...
-  } | {
-    action: 'writeRegisters'
-    // Write register fields...
-  } | {
-    action: 'forceCloseSession'
-  } | {
-    action: 'restoreDefaultConfiguration'
-  } | {
-    action: 'newBatteryInserted'
-  } | {
-    action: 'getAlarmStatus'
-    // Alarm status fields...
+    protocol: 'TULIP3'
+    input: {
+      action: 'readRegisters'
+      // Read register fields...
+    } | {
+      action: 'writeRegisters'
+      // Write register fields...
+    } | {
+      action: 'forceCloseSession'
+    } | {
+      action: 'restoreDefaultConfiguration'
+    } | {
+      action: 'newBatteryInserted'
+    } | {
+      action: 'getAlarmStatus'
+      // Alarm status fields...
+    }
   }
 }
 
@@ -212,12 +214,26 @@ For devices using TULIP2 protocol, identification messages (message type `7`/`0x
 ## Quick Start
 
 1. Check your device's actual measurement range and unit from purchase configuration, device specifications, or identification frames (see above)
-2. Add configuration code below at the bottom of your parser file
+2. If your LNS (LoRaWAN Network Server) is compatible you need to wrap the code in a global function:
+```javascript
+function decodeUplink(input) {
+  // Replace the placeholder with the corresponding code from the artifact
+  var __commonJSMin=(e,t)=>()=>(t||(e((t={exports:{}}).exports,t),e=null),t.exports)
+
+  // Replace values with your device's actual measurement range from specifications or identification frames
+  adjustMeasuringRange('temperature', { start: -40, end: 85 })
+
+  return decodeUplink(input)
+}
+
+function encodeDonwlink(input) {
+  // Replace the placeholder with the corresponding code from the artifact
+  var __commonJSMin=(e,t)=>()=>(t||(e((t={exports:{}}).exports,t),e=null),t.exports)
+
+  // Replace values with your device's actual measurement range from specifications or identification frames
+  return encodeDonwlink(input)
+}
+```
 3. Add wrapper function if your network server is non-compliant: `function decode(input) { return decodeUplink(input) }`
 
 **Configuration code** (add at bottom of parser file):
-
-```ts
-// Replace values with your device's actual measurement range from specifications or identification frames
-adjustMeasuringRange('temperature', { start: -40, end: 85 })
-```

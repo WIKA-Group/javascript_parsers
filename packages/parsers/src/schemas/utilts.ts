@@ -16,7 +16,12 @@ export function createGenericChannelSchema<TChannelAmount extends number, TSchem
 export function createParserDownlinkInputSchema(encodeEntries: {
   protocol: string
   schema: ObjectSchema<any, any> | v.VariantSchema<any, any, any>
-}[]): v.VariantSchema<'protocol', any, any> {
+}[]): ObjectSchema<{
+  readonly data: v.VariantSchema<'protocol', ObjectSchema<{
+    readonly protocol: v.LiteralSchema<string, undefined>
+    readonly input: ObjectSchema<any, any> | v.VariantSchema<any, any, any>
+  }, undefined>[], undefined>
+}, undefined> {
   // verify that protocol values are unique
   const protocolSet = new Set<string>()
   for (const entry of encodeEntries) {
@@ -31,5 +36,5 @@ export function createParserDownlinkInputSchema(encodeEntries: {
     input: e.schema,
   }))
 
-  return v.variant('protocol', inputSchemas)
+  return v.object({ data: v.variant('protocol', inputSchemas) })
 }

@@ -209,7 +209,6 @@
         67,
         21,
         253
-
       ],
       "fPort": 1,
       "recvTime": "1992-12-22T17:00:00+01:00"
@@ -1450,32 +1449,31 @@
       "fPort": 1,
       "recvTime": "1992-12-22T17:00:00+01:00"
     },
-    "output":
-     {
-       "data": {
-         "messageSubType": 1,
-         "messageType": 21,
-         "configuration": {
-           "communicationModule": {
-             "measuringPeriodAlarmOff": 18000,
-             "transmissionRateAlarmOff": 0
-           },
-           "sensor1": {
-             "channel2": {
-               "channelName": "device temperature",
-               "processAlarmEnabled": {
-                 "fallingSlope": false,
-                 "highThreshold": false,
-                 "highThresholdWithDelay": false,
-                 "lowThreshold": false,
-                 "lowThresholdWithDelay": false,
-                 "risingSlope": false
-               }
-             }
-           }
-         }
-       }
-     }
+    "output": {
+      "data": {
+        "messageSubType": 1,
+        "messageType": 21,
+        "configuration": {
+          "communicationModule": {
+            "measuringPeriodAlarmOff": 18000,
+            "transmissionRateAlarmOff": 0
+          },
+          "sensor1": {
+            "channel2": {
+              "channelName": "device temperature",
+              "processAlarmEnabled": {
+                "fallingSlope": false,
+                "highThreshold": false,
+                "highThresholdWithDelay": false,
+                "lowThreshold": false,
+                "lowThresholdWithDelay": false,
+                "risingSlope": false
+              }
+            }
+          }
+        }
+      }
+    }
   },
   {
     "type": "uplink",
@@ -1485,30 +1483,29 @@
       "fPort": 1,
       "recvTime": "1992-12-22T17:00:00+01:00"
     },
-    "output":
-     {
-       "data": {
-         "messageSubType": 2,
-         "messageType": 21,
-         "configuration": {
-           "sensor1": {
-             "channel1": {
-               "channelName": "pressure",
-               "lowThresholdAlarmValue": 0.3,
-               "processAlarmDeadBand": 0.166,
-               "processAlarmEnabled": {
-                 "fallingSlope": false,
-                 "highThreshold": false,
-                 "highThresholdWithDelay": false,
-                 "lowThreshold": true,
-                 "lowThresholdWithDelay": false,
-                 "risingSlope": false
-               }
-             }
-           }
-         }
-       }
-     }
+    "output": {
+      "data": {
+        "messageSubType": 2,
+        "messageType": 21,
+        "configuration": {
+          "sensor1": {
+            "channel1": {
+              "channelName": "pressure",
+              "lowThresholdAlarmValue": 0.3,
+              "processAlarmDeadBand": 0.166,
+              "processAlarmEnabled": {
+                "fallingSlope": false,
+                "highThreshold": false,
+                "highThresholdWithDelay": false,
+                "lowThreshold": true,
+                "lowThresholdWithDelay": false,
+                "risingSlope": false
+              }
+            }
+          }
+        }
+      }
+    }
   },
   {
     "type": "uplink",
@@ -1518,23 +1515,22 @@
       "fPort": 1,
       "recvTime": "1992-12-22T17:00:00+01:00"
     },
-    "output":
-     {
-       "data": {
-         "messageSubType": 2,
-         "messageType": 21,
-         "configuration": {
-           "sensor1": {
-             "channel1": {
-               "channelName": "pressure",
-               "fallingSlopeAlarmValue": 0,
-               "highThresholdAlarmValue": 12.98,
-               "risingSlopeAlarmValue": 0.079
-             }
-           }
-         }
-       }
-     }
+    "output": {
+      "data": {
+        "messageSubType": 2,
+        "messageType": 21,
+        "configuration": {
+          "sensor1": {
+            "channel1": {
+              "channelName": "pressure",
+              "fallingSlopeAlarmValue": 0,
+              "highThresholdAlarmValue": 12.98,
+              "risingSlopeAlarmValue": 0.079
+            }
+          }
+        }
+      }
+    }
   },
   {
     "type": "uplink",
@@ -1544,21 +1540,20 @@
       "fPort": 1,
       "recvTime": "1992-12-22T17:00:00+01:00"
     },
-    "output":
-     {
-       "data": {
-         "messageSubType": 3,
-         "messageType": 21,
-         "configuration": {
-           "frames": [
-             {
-               "frameNumber": 0,
-               "status": "Configuration received but not applied"
-             }
-           ]
-         }
-       }
-     }
+    "output": {
+      "data": {
+        "messageSubType": 3,
+        "messageType": 21,
+        "configuration": {
+          "frames": [
+            {
+              "frameNumber": 0,
+              "status": "Configuration received but not applied"
+            }
+          ]
+        }
+      }
+    }
   },
   {
     "type": "uplink",
@@ -1568,21 +1563,20 @@
       "fPort": 1,
       "recvTime": "1992-12-22T17:00:00+01:00"
     },
-    "output":
-     {
-       "data": {
-         "messageSubType": 3,
-         "messageType": 21,
-         "configuration": {
-           "frames": [
-             {
-               "frameNumber": 1,
-               "status": "Configuration received but not applied"
-             }
-           ]
-         }
-       }
-     }
+    "output": {
+      "data": {
+        "messageSubType": 3,
+        "messageType": 21,
+        "configuration": {
+          "frames": [
+            {
+              "frameNumber": 1,
+              "status": "Configuration received but not applied"
+            }
+          ]
+        }
+      }
+    }
   },
   {
     "type": "uplink",
@@ -1592,23 +1586,22 @@
       "fPort": 1,
       "recvTime": "1992-12-22T17:00:00+01:00"
     },
-    "output":
-     {
-       "data": {
-         "messageSubType": 3,
-         "messageType": 21,
-         "configuration": {
-           "frames": [
-             {
-               "frameNumber": 2,
-               "status": "Configuration received and applied with success"
-             }
-           ],
-           "revisionCounter": 10,
-           "totalWrongFrames": 0
-         }
-       }
-     }
+    "output": {
+      "data": {
+        "messageSubType": 3,
+        "messageType": 21,
+        "configuration": {
+          "frames": [
+            {
+              "frameNumber": 2,
+              "status": "Configuration received and applied with success"
+            }
+          ],
+          "revisionCounter": 10,
+          "totalWrongFrames": 0
+        }
+      }
+    }
   },
   {
     "type": "uplink",
@@ -1618,23 +1611,21 @@
       "fPort": 1,
       "recvTime": "1992-12-22T17:00:00+01:00"
     },
-    "output":
-     {
-       "data": {
-         "messageSubType": 1,
-         "messageType": 22,
-         "keepAliveData": {
-           "batteryLevel": 100,
-           "revisionCounter": 2,
-           "status": {
-             "ableToComputeBatteryLevel": true,
-             "hasCommunicationModuleRestarted": true,
-             "mainPowered": false
-           }
-         }
-
-       }
-     }
+    "output": {
+      "data": {
+        "messageSubType": 1,
+        "messageType": 22,
+        "keepAliveData": {
+          "batteryLevel": 100,
+          "revisionCounter": 2,
+          "status": {
+            "ableToComputeBatteryLevel": true,
+            "hasCommunicationModuleRestarted": true,
+            "mainPowered": false
+          }
+        }
+      }
+    }
   },
   {
     "type": "uplink",
@@ -1702,10 +1693,12 @@
     "type": "downlink",
     "description": "GoodCase downlink message: Reset battery indicator",
     "input": {
-      "protocol": "TULIP2",
-      "input": {
-        "deviceAction": "resetBatteryIndicator",
-        "configurationId": 25
+      "data": {
+        "protocol": "TULIP2",
+        "input": {
+          "deviceAction": "resetBatteryIndicator",
+          "configurationId": 25
+        }
       }
     },
     "output": {
@@ -1717,16 +1710,18 @@
     "type": "downlink",
     "description": "GoodCase downlink message: Setting simple main configuration with BLE enabled",
     "input": {
-      "protocol": "TULIP2",
-      "input": {
-        "deviceAction": "configuration",
-        "configurationId": 18,
-        "mainConfiguration": {
-          "measuringRateWhenNoAlarm": 3600,
-          "publicationFactorWhenNoAlarm": 2,
-          "measuringRateWhenAlarm": 600,
-          "publicationFactorWhenAlarm": 12,
-          "isBLEEnabled": true
+      "data": {
+        "protocol": "TULIP2",
+        "input": {
+          "deviceAction": "configuration",
+          "configurationId": 18,
+          "mainConfiguration": {
+            "measuringRateWhenNoAlarm": 3600,
+            "publicationFactorWhenNoAlarm": 2,
+            "measuringRateWhenAlarm": 600,
+            "publicationFactorWhenAlarm": 12,
+            "isBLEEnabled": true
+          }
         }
       }
     },
@@ -1739,16 +1734,18 @@
     "type": "downlink",
     "description": "GoodCase downlink message: Setting main configuration with BLE advertising disabled",
     "input": {
-      "protocol": "TULIP2",
-      "input": {
-        "deviceAction": "configuration",
-        "configurationId": 1,
-        "mainConfiguration": {
-          "measuringRateWhenNoAlarm": 3600,
-          "publicationFactorWhenNoAlarm": 2,
-          "measuringRateWhenAlarm": 600,
-          "publicationFactorWhenAlarm": 12,
-          "isBLEEnabled": false
+      "data": {
+        "protocol": "TULIP2",
+        "input": {
+          "deviceAction": "configuration",
+          "configurationId": 1,
+          "mainConfiguration": {
+            "measuringRateWhenNoAlarm": 3600,
+            "publicationFactorWhenNoAlarm": 2,
+            "measuringRateWhenAlarm": 600,
+            "publicationFactorWhenAlarm": 12,
+            "isBLEEnabled": false
+          }
         }
       }
     },
@@ -1761,11 +1758,13 @@
     "type": "downlink",
     "description": "GoodCase downlink message: Disable temperature channel",
     "input": {
-      "protocol": "TULIP2",
-      "input": {
-        "deviceAction": "configuration",
-        "configurationId": 11,
-        "channel1": false
+      "data": {
+        "protocol": "TULIP2",
+        "input": {
+          "deviceAction": "configuration",
+          "configurationId": 11,
+          "channel1": false
+        }
       }
     },
     "output": {
@@ -1777,12 +1776,14 @@
     "type": "downlink",
     "description": "GoodCase downlink message: Disable pressure channel and enable temperature channel with no alarms",
     "input": {
-      "protocol": "TULIP2",
-      "input": {
-        "deviceAction": "configuration",
-        "configurationId": 6,
-        "channel0": false,
-        "channel1": true
+      "data": {
+        "protocol": "TULIP2",
+        "input": {
+          "deviceAction": "configuration",
+          "configurationId": 6,
+          "channel0": false,
+          "channel1": true
+        }
       }
     },
     "output": {
@@ -1794,14 +1795,16 @@
     "type": "downlink",
     "description": "GoodCase downlink message: Set process alarms for pressure channel (low threshold at 2.5bar, deadband 0.1bar)",
     "input": {
-      "protocol": "TULIP2",
-      "input": {
-        "deviceAction": "configuration",
-        "configurationId": 24,
-        "channel0": {
-          "alarms": {
-            "deadBand": 0.1,
-            "lowThreshold": 2.5
+      "data": {
+        "protocol": "TULIP2",
+        "input": {
+          "deviceAction": "configuration",
+          "configurationId": 24,
+          "channel0": {
+            "alarms": {
+              "deadBand": 0.1,
+              "lowThreshold": 2.5
+            }
           }
         }
       }
@@ -1815,24 +1818,26 @@
     "type": "downlink",
     "description": "GoodCase downlink message: Set process alarms for pressure channel 0 and temperature channel 1",
     "input": {
-      "protocol": "TULIP2",
-      "input": {
-        "deviceAction": "configuration",
-        "configurationId": 15,
-        "channel0": {
-          "alarms": {
-            "deadBand": 0,
-            "highThreshold": 9.5,
-            "fallingSlope": 0.5,
-            "risingSlope": 0.1
-          }
-        },
-        "channel1": {
-          "alarms": {
-            "deadBand": 1.55,
-            "lowThresholdWithDelay": {
-              "value": -20,
-              "delay": 1800
+      "data": {
+        "protocol": "TULIP2",
+        "input": {
+          "deviceAction": "configuration",
+          "configurationId": 15,
+          "channel0": {
+            "alarms": {
+              "deadBand": 0,
+              "highThreshold": 9.5,
+              "fallingSlope": 0.5,
+              "risingSlope": 0.1
+            }
+          },
+          "channel1": {
+            "alarms": {
+              "deadBand": 1.55,
+              "lowThresholdWithDelay": {
+                "value": -20,
+                "delay": 1800
+              }
             }
           }
         }
@@ -1847,15 +1852,17 @@
     "type": "downlink",
     "description": "GoodCase downlink message: Set pressure channel offset to -0.5bar and temperature channel offset to 0",
     "input": {
-      "protocol": "TULIP2",
-      "input": {
-        "deviceAction": "configuration",
-        "configurationId": 4,
-        "channel0": {
-          "measureOffset": -0.5
-        },
-        "channel1": {
-          "measureOffset": 0
+      "data": {
+        "protocol": "TULIP2",
+        "input": {
+          "deviceAction": "configuration",
+          "configurationId": 4,
+          "channel0": {
+            "measureOffset": -0.5
+          },
+          "channel1": {
+            "measureOffset": 0
+          }
         }
       }
     },
@@ -1868,12 +1875,14 @@
     "type": "downlink",
     "description": "GoodCase downlink message: Set pressure channel offset to -0.1bar",
     "input": {
-      "protocol": "TULIP2",
-      "input": {
-        "deviceAction": "configuration",
-        "configurationId": 2,
-        "channel0": {
-          "measureOffset": -1.2
+      "data": {
+        "protocol": "TULIP2",
+        "input": {
+          "deviceAction": "configuration",
+          "configurationId": 2,
+          "channel0": {
+            "measureOffset": -1.2
+          }
         }
       }
     },
@@ -1886,25 +1895,27 @@
     "type": "downlinkMultiple",
     "description": "GoodCase downlink multiple message: Split process alarms across frames for pressure and temperature channels",
     "input": {
-      "protocol": "TULIP2",
-      "input": {
-        "deviceAction": "configuration",
-        "configurationId": 15,
-        "byteLimit": 14,
-        "channel0": {
-          "alarms": {
-            "deadBand": 0,
-            "highThreshold": 9.5,
-            "fallingSlope": 0.5,
-            "risingSlope": 0.1
-          }
-        },
-        "channel1": {
-          "alarms": {
-            "deadBand": 1.55,
-            "lowThresholdWithDelay": {
-              "value": -20,
-              "delay": 1800
+      "data": {
+        "protocol": "TULIP2",
+        "input": {
+          "deviceAction": "configuration",
+          "configurationId": 15,
+          "byteLimit": 14,
+          "channel0": {
+            "alarms": {
+              "deadBand": 0,
+              "highThreshold": 9.5,
+              "fallingSlope": 0.5,
+              "risingSlope": 0.1
+            }
+          },
+          "channel1": {
+            "alarms": {
+              "deadBand": 1.55,
+              "lowThresholdWithDelay": {
+                "value": -20,
+                "delay": 1800
+              }
             }
           }
         }
@@ -1922,24 +1933,26 @@
     "type": "downlink",
     "description": "Badcase downlink message: byte limit too small to fit full configuration data",
     "input": {
-      "protocol": "TULIP2",
-      "input": {
-        "deviceAction": "configuration",
-        "configurationId": 14,
-        "byteLimit": 14,
-        "mainConfiguration": {
-          "measuringRateWhenNoAlarm": 3600,
-          "publicationFactorWhenNoAlarm": 2,
-          "measuringRateWhenAlarm": 600,
-          "publicationFactorWhenAlarm": 12,
-          "isBLEEnabled": true
-        },
-        "channel0": {
-          "alarms": {
-            "deadBand": 0,
-            "highThreshold": 9.5,
-            "fallingSlope": 0.5,
-            "risingSlope": 0.1
+      "data": {
+        "protocol": "TULIP2",
+        "input": {
+          "deviceAction": "configuration",
+          "configurationId": 14,
+          "byteLimit": 14,
+          "mainConfiguration": {
+            "measuringRateWhenNoAlarm": 3600,
+            "publicationFactorWhenNoAlarm": 2,
+            "measuringRateWhenAlarm": 600,
+            "publicationFactorWhenAlarm": 12,
+            "isBLEEnabled": true
+          },
+          "channel0": {
+            "alarms": {
+              "deadBand": 0,
+              "highThreshold": 9.5,
+              "fallingSlope": 0.5,
+              "risingSlope": 0.1
+            }
           }
         }
       }
@@ -1954,10 +1967,12 @@
     "type": "downlink",
     "description": "GoodCase downlink message: Drop configuration (discard on-air config)",
     "input": {
-      "protocol": "TULIP2",
-      "input": {
-        "deviceAction": "dropConfiguration",
-        "configurationId": 5
+      "data": {
+        "protocol": "TULIP2",
+        "input": {
+          "deviceAction": "dropConfiguration",
+          "configurationId": 5
+        }
       }
     },
     "output": {
@@ -1969,10 +1984,12 @@
     "type": "downlink",
     "description": "GoodCase downlink message: Get main configuration",
     "input": {
-      "protocol": "TULIP2",
-      "input": {
-        "deviceAction": "getConfiguration",
-        "mainConfiguration": true
+      "data": {
+        "protocol": "TULIP2",
+        "input": {
+          "deviceAction": "getConfiguration",
+          "mainConfiguration": true
+        }
       }
     },
     "output": {
@@ -1984,14 +2001,16 @@
     "type": "downlink",
     "description": "GoodCase downlink message: Get alarm configuration for both channels",
     "input": {
-      "protocol": "TULIP2",
-      "input": {
-        "deviceAction": "getConfiguration",
-        "channel0": {
-          "alarms": true
-        },
-        "channel1": {
-          "alarms": true
+      "data": {
+        "protocol": "TULIP2",
+        "input": {
+          "deviceAction": "getConfiguration",
+          "channel0": {
+            "alarms": true
+          },
+          "channel1": {
+            "alarms": true
+          }
         }
       }
     },
@@ -2004,11 +2023,13 @@
     "type": "downlink",
     "description": "GoodCase downlink message: Get pressure channel property (offset)",
     "input": {
-      "protocol": "TULIP2",
-      "input": {
-        "deviceAction": "getConfiguration",
-        "channel0": {
-          "measureOffset": true
+      "data": {
+        "protocol": "TULIP2",
+        "input": {
+          "deviceAction": "getConfiguration",
+          "channel0": {
+            "measureOffset": true
+          }
         }
       }
     },
@@ -2021,15 +2042,17 @@
     "type": "downlink",
     "description": "GoodCase downlink message: Combined get main config, alarm config ch0, and property ch1",
     "input": {
-      "protocol": "TULIP2",
-      "input": {
-        "deviceAction": "getConfiguration",
-        "mainConfiguration": true,
-        "channel0": {
-          "alarms": true
-        },
-        "channel1": {
-          "measureOffset": true
+      "data": {
+        "protocol": "TULIP2",
+        "input": {
+          "deviceAction": "getConfiguration",
+          "mainConfiguration": true,
+          "channel0": {
+            "alarms": true
+          },
+          "channel1": {
+            "measureOffset": true
+          }
         }
       }
     },
@@ -2042,15 +2065,17 @@
     "type": "downlink",
     "description": "Badcase downlink message: byte limit too small to fit full configuration data",
     "input": {
-      "protocol": "TULIP2",
-      "input": {
-        "deviceAction": "configuration",
-        "mainConfiguration": {
-          "measuringRateWhenNoAlarm": 60,
-          "publicationFactorWhenNoAlarm": 3,
-          "measuringRateWhenAlarm": 60,
-          "publicationFactorWhenAlarm": 3,
-          "isBLEEnabled": false
+      "data": {
+        "protocol": "TULIP2",
+        "input": {
+          "deviceAction": "configuration",
+          "mainConfiguration": {
+            "measuringRateWhenNoAlarm": 60,
+            "publicationFactorWhenNoAlarm": 3,
+            "measuringRateWhenAlarm": 60,
+            "publicationFactorWhenAlarm": 3,
+            "isBLEEnabled": false
+          }
         }
       }
     },
@@ -2081,14 +2106,16 @@
     "type": "downlink",
     "description": "GoodCase downlink message: Set process alarms for pressure channel (low threshold at 2.5bar, deadband 0.1bar)",
     "input": {
-      "protocol": "TULIP2",
-      "input": {
-        "deviceAction": "configuration",
-        "configurationId": 4,
-        "channel0": {
-          "alarms": {
-            "deadBand": 0.1,
-            "lowThreshold": 2.5
+      "data": {
+        "protocol": "TULIP2",
+        "input": {
+          "deviceAction": "configuration",
+          "configurationId": 4,
+          "channel0": {
+            "alarms": {
+              "deadBand": 0.1,
+              "lowThreshold": 2.5
+            }
           }
         }
       }
@@ -2111,20 +2138,22 @@
     "type": "downlink",
     "description": "GoodCase downlink message: Set process alarms for pressure channel (low threshold at 2.5bar, deadband 0.1bar)",
     "input": {
-      "protocol": "TULIP2",
-      "input": {
-        "deviceAction": "configuration",
-        "configurationId": 7,
-        "channel0": {
-          "alarms": {
-            "deadBand": 0.1,
-            "lowThresholdWithDelay": {
-              "value": 2.048,
-              "delay": 6
-            },
-            "highThresholdWithDelay": {
-              "value": 4.096,
-              "delay": 6
+      "data": {
+        "protocol": "TULIP2",
+        "input": {
+          "deviceAction": "configuration",
+          "configurationId": 7,
+          "channel0": {
+            "alarms": {
+              "deadBand": 0.1,
+              "lowThresholdWithDelay": {
+                "value": 2.048,
+                "delay": 6
+              },
+              "highThresholdWithDelay": {
+                "value": 4.096,
+                "delay": 6
+              }
             }
           }
         }
@@ -2154,24 +2183,26 @@
     "type": "downlink",
     "description": "GoodCase downlink message: Set process alarms for pressure channel (low threshold at 2.5bar, deadband 0.1bar)",
     "input": {
-      "protocol": "TULIP2",
-      "input": {
-        "deviceAction": "configuration",
-        "configurationId": 6,
-        "channel0": {
-          "alarms": {
-            "deadBand": 0.1,
-            "highThreshold": 4.096,
-            "lowThreshold": 2.048,
-            "fallingSlope": 0.1,
-            "risingSlope": 0.2,
-            "lowThresholdWithDelay": {
-              "value": 4,
-              "delay": 4
-            },
-            "highThresholdWithDelay": {
-              "value": 2,
-              "delay": 6
+      "data": {
+        "protocol": "TULIP2",
+        "input": {
+          "deviceAction": "configuration",
+          "configurationId": 6,
+          "channel0": {
+            "alarms": {
+              "deadBand": 0.1,
+              "highThreshold": 4.096,
+              "lowThreshold": 2.048,
+              "fallingSlope": 0.1,
+              "risingSlope": 0.2,
+              "lowThresholdWithDelay": {
+                "value": 4,
+                "delay": 4
+              },
+              "highThresholdWithDelay": {
+                "value": 2,
+                "delay": 6
+              }
             }
           }
         }
@@ -2209,14 +2240,16 @@
     "type": "downlink",
     "description": "GoodCase TULIP3 downstream message: Read identification registers (serial number)",
     "input": {
-      "protocol": "TULIP3",
-      "input": {
-        "action": "readRegisters",
+      "data": {
+        "protocol": "TULIP3",
         "input": {
-          "communicationModule": {
-            "identification": {
-              "serialNumberPart1": true,
-              "serialNumberPart2": true
+          "action": "readRegisters",
+          "input": {
+            "communicationModule": {
+              "identification": {
+                "serialNumberPart1": true,
+                "serialNumberPart2": true
+              }
             }
           }
         }
@@ -2236,20 +2269,22 @@
     "type": "downlink",
     "description": "GoodCase TULIP3 downstream message: Write identification registers",
     "input": {
-      "protocol": "TULIP3",
-      "input": {
-        "action": "writeRegisters",
+      "data": {
+        "protocol": "TULIP3",
         "input": {
-          "sensor1": {
-            "channel1": {
-              "identification": {
-                "unit": "psi"
-              }
-            },
-            "channel2": {
-              "identification": {
-                "offset": 0.05,
-                "gain": 1.001
+          "action": "writeRegisters",
+          "input": {
+            "sensor1": {
+              "channel1": {
+                "identification": {
+                  "unit": "psi"
+                }
+              },
+              "channel2": {
+                "identification": {
+                  "offset": 0.05,
+                  "gain": 1.001
+                }
               }
             }
           }
@@ -2282,19 +2317,21 @@
     "type": "downlink",
     "description": "GoodCase TULIP3 downstream message: Read configuration registers",
     "input": {
-      "protocol": "TULIP3",
-      "input": {
-        "action": "readRegisters",
+      "data": {
+        "protocol": "TULIP3",
         "input": {
-          "sensor1": {
-            "channel1": {
-              "configuration": {
-                "processAlarmEnabled": true,
-                "processAlarmDeadBand": true,
-                "lowThresholdAlarmValue": true,
-                "highThresholdAlarmValue": true,
-                "fallingSlopeAlarmValue": true,
-                "risingSlopeAlarmValue": true
+          "action": "readRegisters",
+          "input": {
+            "sensor1": {
+              "channel1": {
+                "configuration": {
+                  "processAlarmEnabled": true,
+                  "processAlarmDeadBand": true,
+                  "lowThresholdAlarmValue": true,
+                  "highThresholdAlarmValue": true,
+                  "fallingSlopeAlarmValue": true,
+                  "risingSlopeAlarmValue": true
+                }
               }
             }
           }
@@ -2315,19 +2352,21 @@
     "type": "downlink",
     "description": "GoodCase TULIP3 downstream message: Single read configuration on channel without sensor configuration placeholder",
     "input": {
-      "protocol": "TULIP3",
-      "input": {
-        "action": "readRegisters",
+      "data": {
+        "protocol": "TULIP3",
         "input": {
-          "sensor1": {
-            "channel1": {
-              "configuration": {
-                "processAlarmEnabled": true,
-                "processAlarmDeadBand": true,
-                "lowThresholdAlarmValue": true,
-                "highThresholdAlarmValue": true,
-                "fallingSlopeAlarmValue": true,
-                "risingSlopeAlarmValue": true
+          "action": "readRegisters",
+          "input": {
+            "sensor1": {
+              "channel1": {
+                "configuration": {
+                  "processAlarmEnabled": true,
+                  "processAlarmDeadBand": true,
+                  "lowThresholdAlarmValue": true,
+                  "highThresholdAlarmValue": true,
+                  "fallingSlopeAlarmValue": true,
+                  "risingSlopeAlarmValue": true
+                }
               }
             }
           }
@@ -2348,20 +2387,22 @@
     "type": "downlink",
     "description": "GoodCase TULIP3 downstream message: Single write identification on channel without sensor configuration placeholder",
     "input": {
-      "protocol": "TULIP3",
-      "input": {
-        "action": "writeRegisters",
+      "data": {
+        "protocol": "TULIP3",
         "input": {
-          "sensor1": {
-            "channel1": {
-              "identification": {
-                "unit": "psi"
-              }
-            },
-            "channel2": {
-              "identification": {
-                "offset": 0.05,
-                "gain": 1.001
+          "action": "writeRegisters",
+          "input": {
+            "sensor1": {
+              "channel1": {
+                "identification": {
+                  "unit": "psi"
+                }
+              },
+              "channel2": {
+                "identification": {
+                  "offset": 0.05,
+                  "gain": 1.001
+                }
               }
             }
           }
@@ -2394,16 +2435,18 @@
     "type": "downlink",
     "description": "Badcase TULIP3 downstream message: Single encode cannot combine read identification and configuration registers",
     "input": {
-      "protocol": "TULIP3",
-      "input": {
-        "action": "readRegisters",
+      "data": {
+        "protocol": "TULIP3",
         "input": {
-          "communicationModule": {
-            "identification": {
-              "serialNumberPart1": true
-            },
-            "configuration": {
-              "measuringPeriodAlarmOff": true
+          "action": "readRegisters",
+          "input": {
+            "communicationModule": {
+              "identification": {
+                "serialNumberPart1": true
+              },
+              "configuration": {
+                "measuringPeriodAlarmOff": true
+              }
             }
           }
         }
@@ -2419,17 +2462,19 @@
     "type": "downlink",
     "description": "Badcase TULIP3 downstream message: Single encode cannot combine read identification and configuration registers on sensor level",
     "input": {
-      "protocol": "TULIP3",
-      "input": {
-        "action": "readRegisters",
+      "data": {
+        "protocol": "TULIP3",
         "input": {
-          "sensor1": {
-            "identification": {
-              "existingChannels": true
-            },
-            "channel1": {
-              "configuration": {
-                "processAlarmEnabled": true
+          "action": "readRegisters",
+          "input": {
+            "sensor1": {
+              "identification": {
+                "existingChannels": true
+              },
+              "channel1": {
+                "configuration": {
+                  "processAlarmEnabled": true
+                }
               }
             }
           }
@@ -2446,17 +2491,19 @@
     "type": "downlink",
     "description": "Badcase TULIP3 downstream message: Single encode cannot combine read identification and configuration registers on channel level",
     "input": {
-      "protocol": "TULIP3",
-      "input": {
-        "action": "readRegisters",
+      "data": {
+        "protocol": "TULIP3",
         "input": {
-          "sensor1": {
-            "channel1": {
-              "identification": {
-                "unit": true
-              },
-              "configuration": {
-                "processAlarmEnabled": true
+          "action": "readRegisters",
+          "input": {
+            "sensor1": {
+              "channel1": {
+                "identification": {
+                  "unit": true
+                },
+                "configuration": {
+                  "processAlarmEnabled": true
+                }
               }
             }
           }
@@ -2473,19 +2520,21 @@
     "type": "downlink",
     "description": "Badcase TULIP3 downstream message: Single encode cannot combine write identification and configuration registers",
     "input": {
-      "protocol": "TULIP3",
-      "input": {
-        "action": "writeRegisters",
+      "data": {
+        "protocol": "TULIP3",
         "input": {
-          "communicationModule": {
-            "configuration": {
-              "measuringPeriodAlarmOff": 1800
-            }
-          },
-          "sensor1": {
-            "channel1": {
-              "identification": {
-                "unit": "bar"
+          "action": "writeRegisters",
+          "input": {
+            "communicationModule": {
+              "configuration": {
+                "measuringPeriodAlarmOff": 1800
+              }
+            },
+            "sensor1": {
+              "channel1": {
+                "identification": {
+                  "unit": "bar"
+                }
               }
             }
           }
@@ -2502,23 +2551,25 @@
     "type": "downlink",
     "description": "Badcase TULIP3 downstream message: Single encode cannot combine write identification and configuration registers on channel level",
     "input": {
-      "protocol": "TULIP3",
-      "input": {
-        "action": "writeRegisters",
+      "data": {
+        "protocol": "TULIP3",
         "input": {
-          "sensor1": {
-            "channel1": {
-              "identification": {
-                "unit": "bar"
-              },
-              "configuration": {
-                "processAlarmEnabled": {
-                  "lowThreshold": true,
-                  "highThreshold": false,
-                  "fallingSlope": false,
-                  "risingSlope": false,
-                  "lowThresholdWithDelay": false,
-                  "highThresholdWithDelay": false
+          "action": "writeRegisters",
+          "input": {
+            "sensor1": {
+              "channel1": {
+                "identification": {
+                  "unit": "bar"
+                },
+                "configuration": {
+                  "processAlarmEnabled": {
+                    "lowThreshold": true,
+                    "highThreshold": false,
+                    "fallingSlope": false,
+                    "risingSlope": false,
+                    "lowThresholdWithDelay": false,
+                    "highThresholdWithDelay": false
+                  }
                 }
               }
             }
@@ -2536,10 +2587,12 @@
     "type": "downlink",
     "description": "Badcase TULIP3 downstream message: Empty single read register selection should error",
     "input": {
-      "protocol": "TULIP3",
-      "input": {
-        "action": "readRegisters",
-        "input": {}
+      "data": {
+        "protocol": "TULIP3",
+        "input": {
+          "action": "readRegisters",
+          "input": {}
+        }
       }
     },
     "output": {
@@ -2552,10 +2605,12 @@
     "type": "downlink",
     "description": "Badcase TULIP3 downstream message: Empty single write register selection should error",
     "input": {
-      "protocol": "TULIP3",
-      "input": {
-        "action": "writeRegisters",
-        "input": {}
+      "data": {
+        "protocol": "TULIP3",
+        "input": {
+          "action": "writeRegisters",
+          "input": {}
+        }
       }
     },
     "output": {
@@ -2568,10 +2623,12 @@
     "type": "downlinkMultiple",
     "description": "Badcase TULIP3 downstream message: Empty multiple read register selection should error",
     "input": {
-      "protocol": "TULIP3",
-      "input": {
-        "action": "readRegisters",
-        "input": {}
+      "data": {
+        "protocol": "TULIP3",
+        "input": {
+          "action": "readRegisters",
+          "input": {}
+        }
       }
     },
     "output": {
@@ -2584,10 +2641,12 @@
     "type": "downlinkMultiple",
     "description": "Badcase TULIP3 downstream message: Empty multiple write register selection should error",
     "input": {
-      "protocol": "TULIP3",
-      "input": {
-        "action": "writeRegisters",
-        "input": {}
+      "data": {
+        "protocol": "TULIP3",
+        "input": {
+          "action": "writeRegisters",
+          "input": {}
+        }
       }
     },
     "output": {
@@ -2600,19 +2659,21 @@
     "type": "downlinkMultiple",
     "description": "GoodCase TULIP3 downstream message: Write configuration registers split over multiple frames",
     "input": {
-      "protocol": "TULIP3",
-      "input": {
-        "action": "writeRegisters",
-        "metadata": {
-          "byteLimit": 11
-        },
+      "data": {
+        "protocol": "TULIP3",
         "input": {
-          "communicationModule": {
-            "configuration": {
-              "measuringPeriodAlarmOff": 1800,
-              "measuringPeriodAlarmOn": 1800,
-              "transmissionRateAlarmOff": 6,
-              "transmissionRateAlarmOn": 2
+          "action": "writeRegisters",
+          "metadata": {
+            "byteLimit": 11
+          },
+          "input": {
+            "communicationModule": {
+              "configuration": {
+                "measuringPeriodAlarmOff": 1800,
+                "measuringPeriodAlarmOn": 1800,
+                "transmissionRateAlarmOff": 6,
+                "transmissionRateAlarmOn": 2
+              }
             }
           }
         }
@@ -2661,18 +2722,20 @@
     "type": "downlink",
     "description": "GoodCase TULIP3 downstream message: Write configuration single frame with frame counter 1 (no apply)",
     "input": {
-      "protocol": "TULIP3",
-      "input": {
-        "action": "writeRegisters",
-        "metadata": {
-          "startingFrameCounter": 1,
-          "autoApplyConfig": false
-        },
+      "data": {
+        "protocol": "TULIP3",
         "input": {
-          "communicationModule": {
-            "configuration": {
-              "measuringPeriodAlarmOn": 1800,
-              "transmissionRateAlarmOff": 6
+          "action": "writeRegisters",
+          "metadata": {
+            "startingFrameCounter": 1,
+            "autoApplyConfig": false
+          },
+          "input": {
+            "communicationModule": {
+              "configuration": {
+                "measuringPeriodAlarmOn": 1800,
+                "transmissionRateAlarmOff": 6
+              }
             }
           }
         }
@@ -2699,16 +2762,18 @@
     "type": "downlink",
     "description": "GoodCase TULIP3 downstream message: Write configuration single frame with frame counter 2 (apply)",
     "input": {
-      "protocol": "TULIP3",
-      "input": {
-        "action": "writeRegisters",
-        "metadata": {
-          "startingFrameCounter": 2
-        },
+      "data": {
+        "protocol": "TULIP3",
         "input": {
-          "communicationModule": {
-            "configuration": {
-              "transmissionRateAlarmOn": 2
+          "action": "writeRegisters",
+          "metadata": {
+            "startingFrameCounter": 2
+          },
+          "input": {
+            "communicationModule": {
+              "configuration": {
+                "transmissionRateAlarmOn": 2
+              }
             }
           }
         }
@@ -2731,19 +2796,21 @@
     "type": "downlinkMultiple",
     "description": "GoodCase TULIP3 downstream message: Write configuration multiple frames with frame counter 1 then apply on frame counter 2",
     "input": {
-      "protocol": "TULIP3",
-      "input": {
-        "action": "writeRegisters",
-        "metadata": {
-          "byteLimit": 11,
-          "startingFrameCounter": 1
-        },
+      "data": {
+        "protocol": "TULIP3",
         "input": {
-          "communicationModule": {
-            "configuration": {
-              "measuringPeriodAlarmOn": 1800,
-              "transmissionRateAlarmOff": 6,
-              "transmissionRateAlarmOn": 2
+          "action": "writeRegisters",
+          "metadata": {
+            "byteLimit": 11,
+            "startingFrameCounter": 1
+          },
+          "input": {
+            "communicationModule": {
+              "configuration": {
+                "measuringPeriodAlarmOn": 1800,
+                "transmissionRateAlarmOff": 6,
+                "transmissionRateAlarmOn": 2
+              }
             }
           }
         }
@@ -2781,9 +2848,11 @@
     "type": "downlink",
     "description": "GoodCase TULIP3 downstream message: Force close session",
     "input": {
-      "protocol": "TULIP3",
-      "input": {
-        "action": "forceCloseSession"
+      "data": {
+        "protocol": "TULIP3",
+        "input": {
+          "action": "forceCloseSession"
+        }
       }
     },
     "output": {
@@ -2798,9 +2867,11 @@
     "type": "downlink",
     "description": "GoodCase TULIP3 downstream message: Restore default configuration",
     "input": {
-      "protocol": "TULIP3",
-      "input": {
-        "action": "restoreDefaultConfiguration"
+      "data": {
+        "protocol": "TULIP3",
+        "input": {
+          "action": "restoreDefaultConfiguration"
+        }
       }
     },
     "output": {
@@ -2815,9 +2886,11 @@
     "type": "downlink",
     "description": "GoodCase TULIP3 downstream message: New battery inserted",
     "input": {
-      "protocol": "TULIP3",
-      "input": {
-        "action": "newBatteryInserted"
+      "data": {
+        "protocol": "TULIP3",
+        "input": {
+          "action": "newBatteryInserted"
+        }
       }
     },
     "output": {
@@ -2832,12 +2905,14 @@
     "type": "downlink",
     "description": "GoodCase TULIP3 downstream message: Get alarm status (communication module + process)",
     "input": {
-      "protocol": "TULIP3",
-      "input": {
-        "action": "getAlarmStatus",
+      "data": {
+        "protocol": "TULIP3",
         "input": {
-          "processAlarmRequested": true,
-          "cmAlarmRequested": true
+          "action": "getAlarmStatus",
+          "input": {
+            "processAlarmRequested": true,
+            "cmAlarmRequested": true
+          }
         }
       }
     },

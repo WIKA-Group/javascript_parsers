@@ -1,6 +1,6 @@
 import * as v from 'valibot'
 import { describe, expect, it } from 'vitest'
-import examples from './examples.json' assert { type: 'json' }
+import examples from './examples.json' with { type: 'json' }
 import { useParser } from './parser'
 import { createPEUUplinkOutputSchema } from './schema'
 
@@ -79,24 +79,26 @@ describe('pEU+NETRIS3 parser range lifecycle', () => {
     const tulip2DecodeAt10 = decodeUplink({
       bytes: [1, 0, 35, 9, 185, 26, 240],
       fPort: 1,
-      recvTime: '1992-12-22T17:00:00+01:00',
+      recvTime: new Date('1992-12-22T17:00:00+01:00'),
     })
 
     const tulip3DecodeAt10 = decodeUplink({
       bytes: [16, 1, 6, 46, 151, 14, 21, 47],
       fPort: 1,
-      recvTime: '1992-12-22T17:00:00+01:00',
+      recvTime: new Date('1992-12-22T17:00:00+01:00'),
     })
 
     const tulip3EncodeAt10 = encodeDownlink({
-      protocol: 'TULIP3',
-      input: {
-        action: 'writeRegisters',
+      data: {
+        protocol: 'TULIP3',
         input: {
-          sensor1: {
-            channel1: {
-              configuration: {
-                lowThresholdAlarmValue: 2.5,
+          action: 'writeRegisters',
+          input: {
+            sensor1: {
+              channel1: {
+                configuration: {
+                  lowThresholdAlarmValue: 2.5,
+                },
               },
             },
           },
@@ -109,24 +111,26 @@ describe('pEU+NETRIS3 parser range lifecycle', () => {
     const tulip2DecodeAt16 = decodeUplink({
       bytes: [1, 0, 35, 9, 185, 26, 240],
       fPort: 1,
-      recvTime: '1992-12-22T17:00:00+01:00',
+      recvTime: new Date('1992-12-22T17:00:00+01:00'),
     })
 
     const tulip3DecodeAt16 = decodeUplink({
       bytes: [16, 1, 6, 46, 151, 14, 21, 47],
       fPort: 1,
-      recvTime: '1992-12-22T17:00:00+01:00',
+      recvTime: new Date('1992-12-22T17:00:00+01:00'),
     })
 
     const tulip3EncodeAt16 = encodeDownlink({
-      protocol: 'TULIP3',
-      input: {
-        action: 'writeRegisters',
+      data: {
+        protocol: 'TULIP3',
         input: {
-          sensor1: {
-            channel1: {
-              configuration: {
-                lowThresholdAlarmValue: 4,
+          action: 'writeRegisters',
+          input: {
+            sensor1: {
+              channel1: {
+                configuration: {
+                  lowThresholdAlarmValue: 4,
+                },
               },
             },
           },

@@ -64,21 +64,25 @@ Structure your integration to:
 3. Enqueue `bytes` or iterate `frames` depending on which function you used.
 
 ```typescript
-const result = parser.encodeMultipleDownlinks({
-  protocol: 'TULIP2',
-  input: {
-    deviceAction: 'downlinkConfiguration',
-    spreadingFactor: 'SF10',
-    configuration: {
-      mainConfiguration: {
-        measuringRateWhenAlarm: 300,
-        measuringRateWhenNoAlarm: 3600,
-        publicationFactorWhenAlarm: 1,
-        publicationFactorWhenNoAlarm: 1,
+const result = parser.encodeMultipleDownlinks(
+  {
+    data: {
+      protocol: 'TULIP2',
+      input: {
+        deviceAction: 'downlinkConfiguration',
+        spreadingFactor: 'SF10',
+        configuration: {
+          mainConfiguration: {
+            measuringRateWhenAlarm: 300,
+            measuringRateWhenNoAlarm: 3600,
+            publicationFactorWhenAlarm: 1,
+            publicationFactorWhenNoAlarm: 1,
+          },
+        },
       },
-    },
-  },
-})
+    }
+  }
+)
 
 if ('errors' in result) {
   log.warn('Encoding failed', result.errors)

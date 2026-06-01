@@ -63,6 +63,13 @@ Distributed under the [MIT License](./LICENSE).
 
 ## Release Notes
 
+4.11.0
+
+- BREAKING: ``recvTime`` in the input object of the function ``decodeUplink`` is no longer a ``string`` but a ``Date`` type, in order to be compliant with LoRa
+- BREAKING: The input of the function ``encodeDownlink`` is no longer a pure JSON object but a JSON object with a data property, in order to be compliant with LoRa
+
+>Note: More information in the [Migration Guide](https://wika-group.github.io/javascript_parsers/users/migration-guide.html)
+
 4.10.0
   - feat: add NETRIS_F TULIP3 support
   - BREAKING: rename NETRIS_F primary parser channel from `strain` to `measurement` to cover strain, force, and mass configurations

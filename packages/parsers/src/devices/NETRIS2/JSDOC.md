@@ -11,13 +11,13 @@ Input types:
 interface UplinkInput {
   fPort: number // LoRaWAN FPort
   bytes: number[] // Raw payload as array of unsigned bytes (0-255)
-  recvTime?: string // Optional ISO timestamp (if your LNS provides it)
+  recvTime?: Date // Optional Date (if your LNS provides it)
 }
 
 interface HexUplinkInput {
   fPort: number // LoRaWAN FPort
   bytes: string // Raw payload as hex-encoded string (case-insensitive, even length)
-  recvTime?: string // Optional ISO timestamp (if your LNS provides it)
+  recvTime?: Date // Optional Date (if your LNS provides it)
 }
 ```
 
@@ -91,32 +91,34 @@ Applies to future decodes only.
 
 ### `encodeDownlink(input)`
 ```ts
-type DownlinkInput = {
-  protocol: 'TULIP2'
-  input: {
-    deviceAction: 'configuration'
-    // Configuration fields...
+interface DownlinkInput {
+  data: {
+    protocol: 'TULIP2'
+    input: {
+      deviceAction: 'configuration'
+      // Configuration fields...
+    } | {
+      deviceAction: 'resetBatteryIndicator'
+      configurationId?: number
+    }
   } | {
-    deviceAction: 'resetBatteryIndicator'
-    configurationId?: number
-  }
-} | {
-  protocol: 'TULIP3'
-  input: {
-    action: 'readRegisters'
-    // Read register fields...
-  } | {
-    action: 'writeRegisters'
-    // Write register fields...
-  } | {
-    action: 'forceCloseSession'
-  } | {
-    action: 'restoreDefaultConfiguration'
-  } | {
-    action: 'newBatteryInserted'
-  } | {
-    action: 'getAlarmStatus'
-    // Alarm status fields...
+    protocol: 'TULIP3'
+    input: {
+      action: 'readRegisters'
+      // Read register fields...
+    } | {
+      action: 'writeRegisters'
+      // Write register fields...
+    } | {
+      action: 'forceCloseSession'
+    } | {
+      action: 'restoreDefaultConfiguration'
+    } | {
+      action: 'newBatteryInserted'
+    } | {
+      action: 'getAlarmStatus'
+      // Alarm status fields...
+    }
   }
 }
 
@@ -224,6 +226,23 @@ Identification messages (message type `6`/`0x06`) confirm the configured channel
 ## Quick Start
 
 1. No measurement range configuration is needed because both channels are fixed to 4-20 mA.
-2. Add a wrapper function if your network server is non-compliant: `function decode(input) { return decodeUplink(input) }`
-3. Use `protocol: 'TULIP2'` or `protocol: 'TULIP3'` when encoding downlinks.
-4. Refer to the schema and examples for the exact downlink structure.
+2. If your LNS (LoRaWAN Network Server) is compatible you need to wrap the code in a global function:
+```javascript
+function decodeUplink(input) {
+  // Replace the placeholder with the corresponding code from the artifact
+  var __commonJSMin=(e,t)=>()=>(t||(e((t={exports:{}}).exports,t),e=null),t.exports)
+
+  return decodeUplink(input)
+}
+
+function encodeDonwlink(input) {
+  // Replace the placeholder with the corresponding code from the artifact
+  var __commonJSMin=(e,t)=>()=>(t||(e((t={exports:{}}).exports,t),e=null),t.exports)
+
+  // Replace values with your device's actual measurement range from specifications or identification frames
+  return encodeDonwlink(input)
+}
+```
+3. Add a wrapper function if your network server is non-compliant: `function decode(input) { return decodeUplink(input) }`
+4. Use `protocol: 'TULIP2'` or `protocol: 'TULIP3'` when encoding downlinks.
+5. Refer to the schema and examples for the exact downlink structure.

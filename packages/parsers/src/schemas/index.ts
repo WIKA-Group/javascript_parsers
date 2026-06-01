@@ -18,7 +18,7 @@ function createFPortSchema() {
 }
 
 function createRecvTimeSchema() {
-  return v.optional(v.string())
+  return v.optional(v.date())
 }
 
 export function createUplinkInputSchema() {
@@ -34,7 +34,7 @@ export function createUplinkInputSchema() {
     /**
      * ISO 8601 string representation of the time the message was received by the network server.
      */
-    recvTime: v.optional(v.string()),
+    recvTime: v.optional(v.date()),
   }, 'Uplink input should be an object with `bytes` and optional `fPort` and `recvTime` properties.')
 }
 

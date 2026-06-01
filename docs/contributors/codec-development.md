@@ -209,9 +209,9 @@ The generics are intentionally strict today to guarantee type safety in the publ
      protocol: TULIP3_PROTOCOL
 
      // Consumers can then use
-     parser.encodeDownlink({ protocol: TULIP3_PROTOCOL, input: { /* ... */ } })
+     parser.encodeDownlink({ data: { protocol: TULIP3_PROTOCOL, input: { /* ... */ } } })
      ```
-   - Parser callers will use this `protocol` value in `encodeDownlink({ protocol: TULIP3_PROTOCOL, input: {...} })` to select the correct codec with full type safety and autocomplete.
+   - Parser callers will use this `protocol` value in `encodeDownlink({ data: { protocol: TULIP3_PROTOCOL, input: {...} } })` to select the correct codec with full type safety and autocomplete.
    - Protect the encoder with validation so parser callers receive actionable errors.
 
 5. **Write fixtures and tests**

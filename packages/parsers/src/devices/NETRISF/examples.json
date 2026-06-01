@@ -327,7 +327,6 @@
         67,
         21,
         253
-
       ],
       "fPort": 1,
       "recvTime": "1992-12-22T17:00:00+01:00"
@@ -1505,9 +1504,11 @@
     "type": "downlink",
     "description": "GoodCase downlink message: Reset to factory configuration",
     "input": {
-      "protocol": "TULIP2",
-      "input": {
-        "deviceAction": "resetToFactory"
+      "data": {
+        "protocol": "TULIP2",
+        "input": {
+          "deviceAction": "resetToFactory"
+        }
       }
     },
     "output": {
@@ -1519,10 +1520,12 @@
     "type": "downlink",
     "description": "GoodCase downlink message: Reset battery indicator (configId=25)",
     "input": {
-      "protocol": "TULIP2",
-      "input": {
-        "deviceAction": "resetBatteryIndicator",
-        "configurationId": 25
+      "data": {
+        "protocol": "TULIP2",
+        "input": {
+          "deviceAction": "resetBatteryIndicator",
+          "configurationId": 25
+        }
       }
     },
     "output": {
@@ -1534,11 +1537,13 @@
     "type": "downlink",
     "description": "GoodCase downlink message: Get main configuration",
     "input": {
-      "protocol": "TULIP2",
-      "input": {
-        "deviceAction": "getConfiguration",
-        "configurationId": 1,
-        "mainConfiguration": true
+      "data": {
+        "protocol": "TULIP2",
+        "input": {
+          "deviceAction": "getConfiguration",
+          "configurationId": 1,
+          "mainConfiguration": true
+        }
       }
     },
     "output": {
@@ -1550,13 +1555,15 @@
     "type": "downlink",
     "description": "GoodCase downlink message: Get all channel configurations (configId=5)",
     "input": {
-      "protocol": "TULIP2",
-      "input": {
-        "deviceAction": "getConfiguration",
-        "configurationId": 5,
-        "mainConfiguration": true,
-        "channel0": true,
-        "channel1": true
+      "data": {
+        "protocol": "TULIP2",
+        "input": {
+          "deviceAction": "getConfiguration",
+          "configurationId": 5,
+          "mainConfiguration": true,
+          "channel0": true,
+          "channel1": true
+        }
       }
     },
     "output": {
@@ -1568,11 +1575,13 @@
     "type": "downlink",
     "description": "GoodCase downlink message: Get strain channel alarm and property configs",
     "input": {
-      "protocol": "TULIP2",
-      "input": {
-        "deviceAction": "getConfiguration",
-        "configurationId": 1,
-        "channel0": true
+      "data": {
+        "protocol": "TULIP2",
+        "input": {
+          "deviceAction": "getConfiguration",
+          "configurationId": 1,
+          "channel0": true
+        }
       }
     },
     "output": {
@@ -1584,12 +1593,14 @@
     "type": "downlink",
     "description": "GoodCase downlink message: Get temperature alarm config only",
     "input": {
-      "protocol": "TULIP2",
-      "input": {
-        "deviceAction": "getConfiguration",
-        "configurationId": 1,
-        "channel1": {
-          "alarms": true
+      "data": {
+        "protocol": "TULIP2",
+        "input": {
+          "deviceAction": "getConfiguration",
+          "configurationId": 1,
+          "channel1": {
+            "alarms": true
+          }
         }
       }
     },
@@ -1602,16 +1613,18 @@
     "type": "downlink",
     "description": "GoodCase downlink message: Set main configuration with BLE enabled (spec example: configId=7, 180s/5, 60s/3)",
     "input": {
-      "protocol": "TULIP2",
-      "input": {
-        "deviceAction": "configuration",
-        "configurationId": 7,
-        "mainConfiguration": {
-          "measuringRateWhenNoAlarm": 180,
-          "publicationFactorWhenNoAlarm": 5,
-          "measuringRateWhenAlarm": 60,
-          "publicationFactorWhenAlarm": 3,
-          "isBLEEnabled": true
+      "data": {
+        "protocol": "TULIP2",
+        "input": {
+          "deviceAction": "configuration",
+          "configurationId": 7,
+          "mainConfiguration": {
+            "measuringRateWhenNoAlarm": 180,
+            "publicationFactorWhenNoAlarm": 5,
+            "measuringRateWhenAlarm": 60,
+            "publicationFactorWhenAlarm": 3,
+            "isBLEEnabled": true
+          }
         }
       }
     },
@@ -1624,16 +1637,18 @@
     "type": "downlink",
     "description": "GoodCase downlink message: Set main configuration with BLE advertising disabled (configId=1, 3600s/2, 600s/12)",
     "input": {
-      "protocol": "TULIP2",
-      "input": {
-        "deviceAction": "configuration",
-        "configurationId": 1,
-        "mainConfiguration": {
-          "measuringRateWhenNoAlarm": 3600,
-          "publicationFactorWhenNoAlarm": 2,
-          "measuringRateWhenAlarm": 600,
-          "publicationFactorWhenAlarm": 12,
-          "isBLEEnabled": false
+      "data": {
+        "protocol": "TULIP2",
+        "input": {
+          "deviceAction": "configuration",
+          "configurationId": 1,
+          "mainConfiguration": {
+            "measuringRateWhenNoAlarm": 3600,
+            "publicationFactorWhenNoAlarm": 2,
+            "measuringRateWhenAlarm": 600,
+            "publicationFactorWhenAlarm": 12,
+            "isBLEEnabled": false
+          }
         }
       }
     },
@@ -1646,14 +1661,16 @@
     "type": "downlink",
     "description": "GoodCase downlink message: Set strain process alarm - high threshold (spec example: configId=1, deadBand=62.5, highThreshold=250)",
     "input": {
-      "protocol": "TULIP2",
-      "input": {
-        "deviceAction": "configuration",
-        "configurationId": 1,
-        "channel0": {
-          "alarms": {
-            "deadBand": 62.5,
-            "highThreshold": 250
+      "data": {
+        "protocol": "TULIP2",
+        "input": {
+          "deviceAction": "configuration",
+          "configurationId": 1,
+          "channel0": {
+            "alarms": {
+              "deadBand": 62.5,
+              "highThreshold": 250
+            }
           }
         }
       }
@@ -1667,14 +1684,16 @@
     "type": "downlink",
     "description": "GoodCase downlink message: Set temperature process alarm - low threshold (configId=1, deadBand=0, lowThreshold=3)",
     "input": {
-      "protocol": "TULIP2",
-      "input": {
-        "deviceAction": "configuration",
-        "configurationId": 1,
-        "channel1": {
-          "alarms": {
-            "deadBand": 0,
-            "lowThreshold": 3
+      "data": {
+        "protocol": "TULIP2",
+        "input": {
+          "deviceAction": "configuration",
+          "configurationId": 1,
+          "channel1": {
+            "alarms": {
+              "deadBand": 0,
+              "lowThreshold": 3
+            }
           }
         }
       }
@@ -1688,12 +1707,14 @@
     "type": "downlink",
     "description": "GoodCase downlink message: Set strain channel measurement offset to zero",
     "input": {
-      "protocol": "TULIP2",
-      "input": {
-        "deviceAction": "configuration",
-        "configurationId": 1,
-        "channel0": {
-          "measureOffset": 0
+      "data": {
+        "protocol": "TULIP2",
+        "input": {
+          "deviceAction": "configuration",
+          "configurationId": 1,
+          "channel0": {
+            "measureOffset": 0
+          }
         }
       }
     },
@@ -1706,12 +1727,14 @@
     "type": "downlink",
     "description": "GoodCase downlink message: Set temperature channel measurement offset to 52",
     "input": {
-      "protocol": "TULIP2",
-      "input": {
-        "deviceAction": "configuration",
-        "configurationId": 1,
-        "channel1": {
-          "measureOffset": 52
+      "data": {
+        "protocol": "TULIP2",
+        "input": {
+          "deviceAction": "configuration",
+          "configurationId": 1,
+          "channel1": {
+            "measureOffset": 52
+          }
         }
       }
     },
@@ -1724,10 +1747,12 @@
     "type": "downlink",
     "description": "Badcase downlink message: Configuration without any commands",
     "input": {
-      "protocol": "TULIP2",
-      "input": {
-        "deviceAction": "configuration",
-        "configurationId": 1
+      "data": {
+        "protocol": "TULIP2",
+        "input": {
+          "deviceAction": "configuration",
+          "configurationId": 1
+        }
       }
     },
     "output": {
@@ -1740,10 +1765,12 @@
     "type": "downlink",
     "description": "Badcase downlink message: getConfiguration without any requested items",
     "input": {
-      "protocol": "TULIP2",
-      "input": {
-        "deviceAction": "getConfiguration",
-        "configurationId": 1
+      "data": {
+        "protocol": "TULIP2",
+        "input": {
+          "deviceAction": "getConfiguration",
+          "configurationId": 1
+        }
       }
     },
     "output": {
@@ -1756,9 +1783,11 @@
     "type": "downlinkMultiple",
     "description": "GoodCase multiple downlink message: Reset to factory configuration",
     "input": {
-      "protocol": "TULIP2",
-      "input": {
-        "deviceAction": "resetToFactory"
+      "data": {
+        "protocol": "TULIP2",
+        "input": {
+          "deviceAction": "resetToFactory"
+        }
       }
     },
     "output": {
@@ -1772,21 +1801,23 @@
     "type": "downlinkMultiple",
     "description": "GoodCase multiple downlink message: Set main configuration and strain process alarm in one frame (configId=7)",
     "input": {
-      "protocol": "TULIP2",
-      "input": {
-        "deviceAction": "configuration",
-        "configurationId": 7,
-        "mainConfiguration": {
-          "measuringRateWhenNoAlarm": 180,
-          "publicationFactorWhenNoAlarm": 5,
-          "measuringRateWhenAlarm": 60,
-          "publicationFactorWhenAlarm": 3,
-          "isBLEEnabled": true
-        },
-        "channel0": {
-          "alarms": {
-            "deadBand": 52,
-            "highThreshold": 236
+      "data": {
+        "protocol": "TULIP2",
+        "input": {
+          "deviceAction": "configuration",
+          "configurationId": 7,
+          "mainConfiguration": {
+            "measuringRateWhenNoAlarm": 180,
+            "publicationFactorWhenNoAlarm": 5,
+            "measuringRateWhenAlarm": 60,
+            "publicationFactorWhenAlarm": 3,
+            "isBLEEnabled": true
+          },
+          "channel0": {
+            "alarms": {
+              "deadBand": 52,
+              "highThreshold": 236
+            }
           }
         }
       }
@@ -1802,14 +1833,16 @@
     "type": "downlink",
     "description": "GoodCase TULIP3 downstream message: Read identification registers (serial number)",
     "input": {
-      "protocol": "TULIP3",
-      "input": {
-        "action": "readRegisters",
+      "data": {
+        "protocol": "TULIP3",
         "input": {
-          "communicationModule": {
-            "identification": {
-              "serialNumberPart1": true,
-              "serialNumberPart2": true
+          "action": "readRegisters",
+          "input": {
+            "communicationModule": {
+              "identification": {
+                "serialNumberPart1": true,
+                "serialNumberPart2": true
+              }
             }
           }
         }
@@ -1824,9 +1857,11 @@
     "type": "downlink",
     "description": "GoodCase TULIP3 downstream message: Force close session",
     "input": {
-      "protocol": "TULIP3",
-      "input": {
-        "action": "forceCloseSession"
+      "data": {
+        "protocol": "TULIP3",
+        "input": {
+          "action": "forceCloseSession"
+        }
       }
     },
     "output": {
@@ -1838,9 +1873,11 @@
     "type": "downlink",
     "description": "GoodCase TULIP3 downstream message: Restore default configuration",
     "input": {
-      "protocol": "TULIP3",
-      "input": {
-        "action": "restoreDefaultConfiguration"
+      "data": {
+        "protocol": "TULIP3",
+        "input": {
+          "action": "restoreDefaultConfiguration"
+        }
       }
     },
     "output": {
@@ -1852,9 +1889,11 @@
     "type": "downlink",
     "description": "GoodCase TULIP3 downstream message: New battery inserted",
     "input": {
-      "protocol": "TULIP3",
-      "input": {
-        "action": "newBatteryInserted"
+      "data": {
+        "protocol": "TULIP3",
+        "input": {
+          "action": "newBatteryInserted"
+        }
       }
     },
     "output": {
@@ -1866,12 +1905,14 @@
     "type": "downlink",
     "description": "GoodCase TULIP3 downstream message: Get alarm status (communication module + process)",
     "input": {
-      "protocol": "TULIP3",
-      "input": {
-        "action": "getAlarmStatus",
+      "data": {
+        "protocol": "TULIP3",
         "input": {
-          "processAlarmRequested": true,
-          "cmAlarmRequested": true
+          "action": "getAlarmStatus",
+          "input": {
+            "processAlarmRequested": true,
+            "cmAlarmRequested": true
+          }
         }
       }
     },

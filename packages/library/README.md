@@ -29,14 +29,16 @@ const data = parser.decodeUplink({/** ... */})
 
 // encodes a PEW downlink message
 const downlink = pewParser.encodeDownlink({
-  protocol: 'TULIP3',
-  input: {
-    action: 'getAlarmStatus',
+  data: {
+    protocol: 'TULIP3',
     input: {
-      processAlarmRequested: true,
-      cmAlarmRequested: true,
+      action: 'getAlarmStatus',
+      input: {
+        processAlarmRequested: true,
+        cmAlarmRequested: true,
+      },
     },
-  },
+  }
 })
 ```
 ## Included devices

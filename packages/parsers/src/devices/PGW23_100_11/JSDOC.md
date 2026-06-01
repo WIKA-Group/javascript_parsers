@@ -11,13 +11,13 @@ Input types:
 interface UplinkInput {
   fPort: number // LoRaWAN FPort
   bytes: number[] // Raw payload as array of unsigned bytes (0-255)
-  recvTime?: string // Optional ISO timestamp (if your LNS provides it)
+  recvTime?: Date // Optional Date (if your LNS provides it)
 }
 
 interface HexUplinkInput {
   fPort: number // LoRaWAN FPort
   bytes: string // Raw payload as hex-encoded string (case-insensitive, even length)
-  recvTime?: string // Optional ISO timestamp (if your LNS provides it)
+  recvTime?: Date // Optional Date (if your LNS provides it)
 }
 ```
 
@@ -89,33 +89,35 @@ Applies to future decodes only.
 ### `encodeDownlink(input)`
 ```ts
 interface DownlinkInput {
-  protocol: 'TULIP2'
-  input: {
-    deviceAction: 'configuration'
-    configurationId?: number
-    byteLimit?: number
-    mainConfiguration?: {
-      measuringRate: number
-      publicationFactorWhenNoAlarm: number
-      publicationFactorWhenAlarm: number
-    }
-    channel0?: false | true | {
-      alarms?: {
-        deadBand: number
-        lowThreshold?: number
-        highThreshold?: number
-        lowThresholdWithDelay?: { value: number, delay: number }
-        highThresholdWithDelay?: { value: number, delay: number }
-        risingSlope?: number
-        fallingSlope?: number
+  data: {
+    protocol: 'TULIP2'
+    input: {
+      deviceAction: 'configuration'
+      configurationId?: number
+      byteLimit?: number
+      mainConfiguration?: {
+        measuringRate: number
+        publicationFactorWhenNoAlarm: number
+        publicationFactorWhenAlarm: number
       }
+      channel0?: false | true | {
+        alarms?: {
+          deadBand: number
+          lowThreshold?: number
+          highThreshold?: number
+          lowThresholdWithDelay?: { value: number, delay: number }
+          highThresholdWithDelay?: { value: number, delay: number }
+          risingSlope?: number
+          fallingSlope?: number
+        }
+      }
+      channel1?: false | true
+    } | {
+      deviceAction: 'resetToFactory'
+    } | {
+      deviceAction: 'resetBatteryIndicator'
+      configurationId?: number
     }
-    channel1?: false | true
-  } | {
-    deviceAction: 'resetToFactory'
-  } | {
-    deviceAction: 'resetBatteryIndicator'
-    configurationId?: number
   }
 }
 
@@ -190,12 +192,24 @@ Use the pressure range values to configure the parser before decoding and encodi
 ## Quick Start
 
 1. Check your device's actual pressure range from purchase configuration, device specifications, or identification frames (see above)
-2. Add configuration code below at the bottom of your parser file
-3. Add wrapper function if your network server is non-compliant: e.g. `function decode(input) { return decodeUplink(input) }`
+2. Add configuration code below at the bottom of your parser file2. If your LNS (LoRaWAN Network Server) is compatible you need to wrap the code in a global function:
+```javascript
+function decodeUplink(input) {
+  // Replace the placeholder with the corresponding code from the artifact
+  var __commonJSMin=(e,t)=>()=>(t||(e((t={exports:{}}).exports,t),e=null),t.exports)
 
-**Configuration code** (add at bottom of parser file):
+  // Replace 0 and 10 with your device's actual pressure range
+  adjustMeasuringRange('pressure', { start: 0, end: 10 })
 
-```ts
-// Replace 0 and 10 with your device's actual pressure range
-adjustMeasuringRange('pressure', { start: 0, end: 10 })
+  return decodeUplink(input)
+}
+
+function encodeDonwlink(input) {
+  // Replace the placeholder with the corresponding code from the artifact
+  var __commonJSMin=(e,t)=>()=>(t||(e((t={exports:{}}).exports,t),e=null),t.exports)
+
+  // Replace values with your device's actual measurement range from specifications or identification frames
+  return encodeDonwlink(input)
+}
 ```
+3. Add wrapper function if your network server is non-compliant: e.g. `function decode(input) { return decodeUplink(input) }`

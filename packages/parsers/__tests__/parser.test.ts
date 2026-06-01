@@ -94,7 +94,7 @@ describe('defineParser', () => {
     const parser = defineParser({ parserName: 'TestParser', codecs: [codec] })
     // missing bytes
     const result = parser.decodeUplink({ fPort: 1 } as any)
-    expect(result.errors![0]).toMatch(/Input is not a valid/)
+    expect(result.errors![0]).toMatch(/Input is not valid/)
   })
 
   it('should decodeHexUplink and call decodeUplink', () => {
@@ -115,14 +115,14 @@ describe('defineParser', () => {
   it('should encodeDownlink with correct codec', () => {
     const codec = new MockCodec({ name: 'codec1', protocol: 'protocol1', channels: validChannels, encodeResult: [9, 8, 7] })
     const parser = defineParser({ parserName: 'TestParser', codecs: [codec] })
-    const result = parser.encodeDownlink({ protocol: 'protocol1', input: { foo: 1 } })
+    const result = parser.encodeDownlink({ data: { protocol: 'protocol1', input: { foo: 1 } } })
     expect(result).toEqual([9, 8, 7])
   })
 
   it('should throw error if encodeDownlink codec not found', () => {
     const codec = new MockCodec({ name: 'codec1', protocol: 'protocol1', channels: validChannels })
     const parser = defineParser({ parserName: 'TestParser', codecs: [codec] })
-    const res = parser.encodeDownlink({ protocol: 'notfound', input: {} })
+    const res = parser.encodeDownlink({ data: { protocol: 'notfound', input: {} } })
     // here the res.errors should have one entry about codec not found
     expect(res.errors![0]).toMatch(/Codec with protocol notfound not found in parser/)
   })
@@ -178,7 +178,7 @@ describe('defineParser', () => {
     const parser = defineParser({ parserName: 'TestParser', codecs: [codec] })
     // missing bytes property, so input is invalid for createHexUplinkInputSchema
     const result = parser.decodeHexUplink({ fPort: 1 } as any)
-    expect(result.errors![0]).toMatch(/Input is not a valid/)
+    expect(result.errors![0]).toMatch(/Input is not valid/)
   })
 
   describe('adjustMeasuringRange validation', () => {

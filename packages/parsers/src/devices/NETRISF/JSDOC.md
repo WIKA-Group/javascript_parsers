@@ -11,13 +11,13 @@ Input types:
 interface UplinkInput {
   fPort: number // LoRaWAN FPort
   bytes: number[] // Raw payload as array of unsigned bytes (0-255)
-  recvTime?: string // Optional ISO timestamp (if your LNS provides it)
+  recvTime?: Date // Optional Date (if your LNS provides it)
 }
 
 interface HexUplinkInput {
   fPort: number // LoRaWAN FPort
   bytes: string // Raw payload as hex-encoded string (case-insensitive, even length)
-  recvTime?: string // Optional ISO timestamp (if your LNS provides it)
+  recvTime?: Date // Optional Date (if your LNS provides it)
 }
 ```
 
@@ -154,12 +154,24 @@ Identification messages (message type `7`/`0x07`) confirm the configured ranges:
 ## Quick Start
 
 1. Check your device's actual measurement range from device specifications or identification frames (see above)
-2. Add configuration code below at the bottom of your parser file
-3. Add wrapper function if your network server is non-compliant: `function decode(input) { return decodeUplink(input) }`
+2. If your LNS (LoRaWAN Network Server) is compatible you need to wrap the code in a global function:
+```javascript
+function decodeUplink(input) {
+  // Replace the placeholder with the corresponding code from the artifact
+  var __commonJSMin=(e,t)=>()=>(t||(e((t={exports:{}}).exports,t),e=null),t.exports)
 
-**Configuration code** (add at bottom of parser file):
+  // Replace values with your device's actual measurement range from specifications or identification frames
+  adjustMeasuringRange('measurement', { start: -312.5, end: 312.5 })
 
-```ts
-// Replace values with your device's actual measurement range from specifications or identification frames
-adjustMeasuringRange('measurement', { start: -312.5, end: 312.5 })
+  return decodeUplink(input)
+}
+
+function encodeDonwlink(input) {
+  // Replace the placeholder with the corresponding code from the artifact
+  var __commonJSMin=(e,t)=>()=>(t||(e((t={exports:{}}).exports,t),e=null),t.exports)
+
+  // Replace values with your device's actual measurement range from specifications or identification frames
+  return encodeDonwlink(input)
+}
 ```
+3. Add wrapper function if your network server is non-compliant: `function decode(input) { return decodeUplink(input) }`
