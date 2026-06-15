@@ -99,7 +99,10 @@ export function defineParser<const TParserOptions extends ParserOptions>(options
     return `${parserName} (JS): ${message}`
   }
 
-  function parseReceiveTime<T extends number[] | string>(input: { bytes: T, fPort?: number, recvTime?: Date }) {
+  // You may be wondering why we need this function because the data type is always Date.
+  // The reason is that with the JSON coming from the tests, it is a string and we want to parse it to a Date object if that's the case.
+  // If it's a Date object just as it should be, we can just return it as is.
+  function parseReceiveTime<T extends number[] | string>(input: { bytes: T, fPort: number, recvTime: Date }) {
     if (input.recvTime && !(input.recvTime instanceof Date)) {
       const parsedDate = new Date(input.recvTime)
       if (!Number.isNaN(parsedDate.getTime())) {

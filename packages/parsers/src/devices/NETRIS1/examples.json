@@ -383,6 +383,133 @@
   },
   {
     "type": "uplink - voltage",
+    "description": "GoodCase data message: Uplink example for Device Alarm Message (duty cycle)",
+    "input": {
+      "bytes": [
+        5,
+        0,
+        0,
+        4
+      ],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 5,
+        "configurationId": 0,
+        "deviceAlarm": {
+          "alarmType": 4,
+          "alarmTypeNames": [
+            "duty cycle alarm"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink - voltage",
+    "description": "GoodCase data message: Uplink example for Device Alarm Message (configuration error)",
+    "input": {
+      "bytes": [
+        5,
+        0,
+        0,
+        8
+      ],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 5,
+        "configurationId": 0,
+        "deviceAlarm": {
+          "alarmType": 8,
+          "alarmTypeNames": [
+            "configuration error"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink - voltage",
+    "description": "GoodCase configuration status message: Device confirms configuration transaction 3 was accepted and applied (0x06 0x03 0x20)",
+    "input": {
+      "bytes": [
+        6,
+        3,
+        32
+      ],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 6,
+        "configurationId": 3,
+        "configurationStatus":
+        {
+          "status": 2,
+          "statusDescription": "configuration applied"
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase uplink - Configuration status message: Command success for get process alarm configuration with falling slope, rising slope, and low threshold with delay enabled",
+    "input": {
+      "bytes": [
+        6,
+        3,
+        96,
+        64,
+        0,
+        0,
+        100,
+        56,
+        0,
+        0,
+        0,
+        0,
+        9,
+        196,
+        0,
+        1
+      ],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 6,
+        "configurationId": 3,
+        "configurationStatus": {
+          "status": 6,
+          "statusDescription": "command success",
+          "commandType": 64,
+          "commandTypeName": "get process alarm configuration",
+          "channel": 0,
+          "channelName": "measurement",
+          "deadBand": 0.1,
+          "lowThreshold": false,
+          "highThreshold": false,
+          "fallingSlope": true,
+          "fallingSlopeValue": 0,
+          "risingSlope": true,
+          "risingSlopeValue": 0,
+          "lowThresholdWithDelay": true,
+          "lowThresholdWithDelayValue": 0,
+          "lowThresholdWithDelayDelay": 1,
+          "highThresholdWithDelay": false
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink - voltage",
     "description": "GoodCase data message: Uplink example for Keep-Alive Alarm Message",
     "input": {
       "bytes": [

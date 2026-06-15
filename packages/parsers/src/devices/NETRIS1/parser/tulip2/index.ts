@@ -1,4 +1,5 @@
 import type { EncoderFactory, Handler, MultipleEncoderFactory } from '../../../../codecs/tulip2'
+import type { TULIP2ConfigurationStatusUplinkOutput } from '../../../../schemas/tulip2/types'
 import type {
   NETRIS1TULIP2ChannelFailureAlarmData,
   NETRIS1TULIP2ChannelFailureAlarmUplinkOutput,
@@ -17,6 +18,8 @@ import type {
 import type { NETRIS1Tulip2Channels, NETRIS1Tulip2DownlinkInput } from './constants'
 import { NETRIS1_NAME } from '..'
 import { defineTULIP2Codec } from '../../../../codecs/tulip2'
+import { decodeConfigurationResponse } from '../../../../codecs/tulip2/configurationCodec'
+import { CONFIGURATION_BASE_STATUS_TYPES } from '../../../../lookups'
 import { validateTULIP2DownlinkInput } from '../../../../schemas/tulip2/downlink'
 import { DEFAULT_ROUNDING_DECIMALS, intTuple4ToFloat32WithThreshold, roundValue, slopeValueToValue, TULIPValueToValue } from '../../../../utils'
 import { createNETRIS1TULIP2GetConfigurationSchema, createNETRIS1TULIP2ResetBatterySchema } from '../../schema/tulip2'
@@ -187,6 +190,17 @@ const handleDeviceAlarmMessage: Handler<TULIP2NETRIS1Channels, NETRIS1TULIP2Devi
   }
 }
 
+const handleConfigurationStatusMessage: Handler<TULIP2NETRIS1Channels, TULIP2ConfigurationStatusUplinkOutput> = (input, options) => {
+  const response = decodeConfigurationResponse(input.bytes, options, CONFIGURATION_BASE_STATUS_TYPES)
+
+  return {
+    data: {
+      messageType: 0x06 as const,
+      ...response,
+    },
+  }
+}
+
 const handleDeviceIdentificationMessage: Handler<TULIP2NETRIS1Channels, NETRIS1TULIP2DeviceInformationUplinkOutput> = (input) => {
   // According to our schema we require extended identification (>= 29 bytes)
   if (input.bytes.length < 29) {
@@ -333,6 +347,7 @@ export function createTULIP2NETRIS1Codec() {
       0x03: handleProcessAlarmMessage,
       0x04: handleTechnicalAlarmMessage,
       0x05: handleDeviceAlarmMessage,
+      0x06: handleConfigurationStatusMessage,
       0x07: handleDeviceIdentificationMessage,
       0x08: handleKeepAliveMessage,
       0x0A: handleChannelFailureAlarmMessage,

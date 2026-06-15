@@ -2,22 +2,22 @@
 
 ## Parser API
 
-All functions are pure (no global mutation) except `adjustMeasuringRange`, which updates internal range configuration for subsequent decodes.
+All functions are pure (no global mutation) except `adjustRoundingDecimals`, which updates internal rounding configuration for subsequent decodes.
 
 ### Types
 
 Input types:
 ```ts
 interface UplinkInput {
-  fPort: number // LoRaWAN FPort
   bytes: number[] // Raw payload as array of unsigned bytes (0-255)
-  recvTime?: Date // Optional Date from your LNS
+  fPort: number // LoRaWAN FPort
+  recvTime: Date
 }
 
 interface HexUplinkInput {
-  fPort: number // LoRaWAN FPort
   bytes: string // Hex-encoded payload (case-insensitive, even length)
-  recvTime?: Date // Optional Date from your LNS
+  fPort: number // LoRaWAN FPort
+  recvTime: Date
 }
 ```
 

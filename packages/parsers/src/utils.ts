@@ -300,3 +300,7 @@ export function intTuple4ToFloat32WithThreshold(
   const value = intTuple4ToFloat32(data)
   return Number.parseFloat(nstr(value, { threshold }))
 }
+
+export function isDefinedArray(arr: (number | undefined | null)[]): arr is number[] {
+  return arr.every(byte => byte !== undefined && byte !== null)
+}

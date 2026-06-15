@@ -15,6 +15,7 @@ import type {
 import type { GD20WTulip2DownlinkInput } from './constants'
 import { GD20W_NAME } from '..'
 import { defineTULIP2Codec } from '../../../../codecs/tulip2'
+import { decodeMainConfigurationResponse } from '../../../../codecs/tulip2/configurationCodec'
 import { createDownlinkResetBatteryIndicatorSchema, validateTULIP2DownlinkInput } from '../../../../schemas/tulip2/downlink'
 import { intTuple4ToFloat32WithThreshold, roundValue, slopeValueToValue, TULIPValueToValue } from '../../../../utils'
 import { createGD20WTULIP2GetConfigurationSchema } from '../../schema/tulip2'
@@ -26,7 +27,7 @@ import {
 import { GD20WTULIP2EncodeHandler } from './encode'
 import {
   ALARM_EVENTS,
-  CONFIGURATION_STATUS_BY_ID,
+  CONFIGURATION_STATUS_GD20W,
   DEVICE_ALARM_VALID_BITS,
   DEVICE_ALARMS_BY_ID,
   MEASURANDS_BY_ID,
@@ -245,12 +246,7 @@ const handleDeviceAlarmMessage: Handler<GD20WTULIP2Channels, GD20WTULIP2DeviceAl
 }
 
 const handleConfigurationStatusMessage: Handler<GD20WTULIP2Channels, GD20WTULIP2ConfigurationStatusUplinkOutput> = (input) => {
-  const configurationId = input.bytes[1]!
-  const status = input.bytes[2]! >> 4
-
-  if (!(status in CONFIGURATION_STATUS_BY_ID)) {
-    throw new Error(`Unknown status ${status} in configuration status message`)
-  }
+  const { configurationId, statusDescription, status } = decodeMainConfigurationResponse(input.bytes, CONFIGURATION_STATUS_GD20W)
 
   const commandType = input.bytes[3]!
   if (commandType !== 0x04 && commandType < 0x40) {
@@ -278,8 +274,6 @@ const handleConfigurationStatusMessage: Handler<GD20WTULIP2Channels, GD20WTULIP2
       warnings.push(`Configuration status message for channel configuration contains more than ${channelConfigMaxLength} bytes. Data might have been decoded incorrectly. Contains ${input.bytes.length} bytes.`)
     }
   }
-
-  const statusDescription = CONFIGURATION_STATUS_BY_ID[status as keyof typeof CONFIGURATION_STATUS_BY_ID]
 
   const resultData = commandType === 0x04
     ? {
@@ -580,7 +574,7 @@ function getProcessAlarmEventName(event: number): keyof typeof ALARM_EVENTS {
   return entry[0] as keyof typeof ALARM_EVENTS
 }
 
-function parseMainConfigurationData(input: { bytes: number[] }, warnings: string[]): GD20WTULIP2MainConfigurationData {
+function parseMainConfigurationData(input: { bytes: number[] }, warnings: string[]): GD20WTULIP2MainConfigurationData['mainConfiguration'] {
   const acquisitionTimeAlarmsOffValue = (input.bytes[4]! << 24) | (input.bytes[5]! << 16) | (input.bytes[6]! << 8) | input.bytes[7]!
   const publicationTimeFactorAlarmsOffValue = (input.bytes[8]! << 8) | input.bytes[9]!
   const acquisitionTimeAlarmsOnValue = (input.bytes[10]! << 24) | (input.bytes[11]! << 16) | (input.bytes[12]! << 8) | input.bytes[13]!
@@ -601,7 +595,7 @@ function parseMainConfigurationData(input: { bytes: number[] }, warnings: string
   }
 }
 
-function parseChannelConfigurationData(input: { bytes: number[] }, warnings: string[]): GD20WTULIP2ChannelConfigurationData {
+function parseChannelConfigurationData(input: { bytes: number[] }, warnings: string[]): GD20WTULIP2ChannelConfigurationData['channelConfiguration'] {
   const sensorOrChannelId = input.bytes[4]!
   if (![0, 1, 2, 3, 4, 5].includes(sensorOrChannelId)) {
     warnings.push('Invalid sensor or channel id')
@@ -630,7 +624,7 @@ function parseChannelConfigurationData(input: { bytes: number[] }, warnings: str
 
   let alarmIndex = 0
 
-  const channelConfiguration: GD20WTULIP2ChannelConfigurationData = {
+  const channelConfiguration: GD20WTULIP2ChannelConfigurationData['channelConfiguration'] = {
     sensorOrChannelId,
     deadBand,
   }

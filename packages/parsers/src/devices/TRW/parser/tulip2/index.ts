@@ -1,4 +1,5 @@
 import type { EncoderFactory, Handler, MultipleEncoderFactory } from '../../../../codecs/tulip2'
+import type { TULIP2ConfigurationStatusUplinkOutput } from '../../../../schemas/tulip2/types'
 import type {
   TRWTULIP2ChannelFailureAlarmData,
   TRWTULIP2ChannelFailureAlarmUplinkOutput,
@@ -16,6 +17,8 @@ import type {
 } from '../../schema/tulip2'
 import type { TRWTulip2Channels, TRWTulip2DownlinkInput } from './constants'
 import { defineTULIP2Codec } from '../../../../codecs/tulip2'
+import { decodeConfigurationResponse } from '../../../../codecs/tulip2/configurationCodec'
+import { CONFIGURATION_BASE_STATUS_TYPES } from '../../../../lookups'
 import { validateTULIP2DownlinkInput } from '../../../../schemas/tulip2/downlink'
 import { DEFAULT_ROUNDING_DECIMALS, intTuple4ToFloat32WithThreshold, roundValue, slopeValueToValue, TULIPValueToValue } from '../../../../utils'
 import { createTRWTULIP2GetConfigurationSchema, createTRWTULIP2ResetBatterySchema } from '../../schema/tulip2'
@@ -195,6 +198,17 @@ const handleDeviceAlarmMessage: Handler<TULIP2TRWChannels, TRWTULIP2DeviceAlarms
   }
 }
 
+const handleConfigurationStatusMessage: Handler<TULIP2TRWChannels, TULIP2ConfigurationStatusUplinkOutput> = (input, options) => {
+  const response = decodeConfigurationResponse(input.bytes, options, CONFIGURATION_BASE_STATUS_TYPES)
+
+  return {
+    data: {
+      messageType: 0x06 as const,
+      ...response,
+    },
+  }
+}
+
 const handleDeviceIdentificationMessage: Handler<TULIP2TRWChannels, TRWTULIP2DeviceInformationUplinkOutput> = (input) => {
   // According to our schema we require extended identification (>= 29 bytes)
   if (input.bytes.length < 29) {
@@ -351,6 +365,7 @@ export function createTULIP2TRWCodec() {
       0x03: handleProcessAlarmMessage,
       0x04: handleTechnicalAlarmMessage,
       0x05: handleDeviceAlarmMessage,
+      0x06: handleConfigurationStatusMessage,
       0x07: handleDeviceIdentificationMessage,
       0x08: handleKeepAliveMessage,
       0x09: handleChannelFailureAlarmMessage,

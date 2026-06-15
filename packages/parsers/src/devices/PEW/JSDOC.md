@@ -9,15 +9,15 @@ All functions are pure (no global mutation) except `adjustMeasuringRange` which 
 Input types:
 ```ts
 interface UplinkInput {
-  fPort: number // LoRaWAN FPort
   bytes: number[] // Raw payload as array of unsigned bytes (0-255)
-  recvTime?: Date // Optional Date (if your LNS provides it)
+  fPort: number // LoRaWAN FPort
+  recvTime: Date
 }
 
 interface HexUplinkInput {
-  fPort: number // LoRaWAN FPort
   bytes: string // Raw payload as hex-encoded string (case-insensitive, even length)
-  recvTime?: Date // Optional Date (if your LNS provides it)
+  fPort: number // LoRaWAN FPort
+  recvTime: Date
 }
 ```
 
@@ -213,18 +213,27 @@ For devices using TULIP2 protocol, identification messages (message type `6`/`0x
 ```json
 {
   "data": {
-    "messageType": 6,
-    "configurationId": 1,
-    "productIdName": "PEW",
-    "channels": [
-      {
-        "channelId": 0,
-        "channelName": "pressure",
-        "pressureType": "gauge",
-        "measurementRangeStart": 0,
-        "measurementRangeEnd": 100
-      }
-    ]
+    "messageType": 1,
+    "configurationId": 0,
+    "measurement": {
+      "channels": [
+        {
+          "channelId": 0,
+          "channelName": "pressure",
+          "value": -0.011
+        },
+        {
+          "channelId": 1,
+          "channelName": "device temperature",
+          "value": 23.138
+        },
+        {
+          "channelId": 2,
+          "channelName": "battery voltage",
+          "value": 3.5
+        }
+      ]
+    }
   }
 }
 ```

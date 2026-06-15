@@ -29,9 +29,9 @@ The parser is built on the codec abstraction layer and can host multiple codecs 
 
 > **Breaking Change in 4.4.0**: The `encodeDownlink` and `encodeMultipleDownlinks` functions now use `protocol` instead of `codec` to select the encoder. Update your code from `{ codec: 'name', input: ... }` to `{ data: { protocol: 'TULIP3', input: ... } }`. Codecs export protocol constants (e.g., `TULIP3_PROTOCOL`) to prevent typos and provide IDE autocomplete.
 
-- **`decodeUplink(input: { bytes: number[], fPort: number, recvTime?: Date })`**:<br>
+- **`decodeUplink(input: { bytes: number[], fPort: number, recvTime: Date })`**:<br>
     Validates `bytes`, `fPort`, and optional `recvTime` before selecting the matching codec and decoding measurements or status messages. Returns a typed `data` payload for the chosen codec or an `errors` array when decoding fails.
-- **`decodeHexUplink(input: { bytes: string; fPort: number; recvTime?: Date })`**:<br>
+- **`decodeHexUplink(input: { bytes: string; fPort: number; recvTime: Date })`**:<br>
     Accepts hexadecimal payloads, converts them to integer arrays, and delegates to `decodeUplink`. Useful when integrations provide the payload as hex rather than raw byte arrays.
 - **`encodeDownlink(input: { data: { protocol: string; input: unknown } })`**:<br>
     Looks up the codec matching the requested `protocol` (e.g., `'TULIP2'`, `'TULIP3'`) and runs its encoder. On success it returns the downlink frame as an array of 8-bit integers. If no codec with that protocol is found or encoding is unsupported, an error with detailed information is returned in the `errors` field. Only outputs a single frame.
@@ -48,9 +48,9 @@ The parser is built on the codec abstraction layer and can host multiple codecs 
 
 The parser was written in TypeScript and shipped as a function that returned the helpers below.
 
-- **`decodeUplink(input: { bytes: number[], fPort: number, recvTime?: Date })`**:<br>
+- **`decodeUplink(input: { bytes: number[], fPort: number, recvTime: Date })`**:<br>
     Performed schema validation on the uplink structure, inspected the message type byte, and decoded measurements, process alarms, technical alarms, configuration status, identification, or keep-alive frames.
-- **`decodeHexUplink(input: { bytes: string; fPort: number; recvTime?: Date })`**:<br>
+- **`decodeHexUplink(input: { bytes: string; fPort: number; recvTime: Date })`**:<br>
    Ensured the `bytes` field was a valid hexadecimal string, converted it to an integer array, and forwarded the request to `decodeUplink`.
 - **`encodeDownlink(input: DownlinkInput): number[]`**:<br>
     Accepted one of the typed `NETRIS2` actions (factory reset, battery reset, channel disable, main configuration update, process alarm configuration, measurement offset, or start-up time). Returned the downlink frame as an array of 8-bit integers on success or threw an exception when validation failed.
@@ -63,7 +63,7 @@ The parser was written in TypeScript and shipped as a function that returned the
 
 The parser was delivered as a single JavaScript file that manipulated global measurement ranges. Before the decoding helpers could be used you had to edit the top-level variables (for example `FORCE_RANGE_START`, `FORCE_RANGE_END`, `DEVICE_TEMPERATURE_RANGE_START`, `DEVICE_TEMPERATURE_RANGE_END`) so they reflected the sensor-specific measuring span published in the device documentation.
 
-- **`decodeUplink(input: { bytes: number[]; fPort: number; recvTime?: Date })`**:<br>
+- **`decodeUplink(input: { bytes: number[]; fPort: number; recvTime: Date })`**:<br>
     Decodes strain, device temperature, and battery voltage readings when the measurement ranges are defined. Populates the `data` object with the scaled values or records parsing errors in `errors`.
 - **`decodeHexString(fPort: number, hexEncodedString: string)`**:<br>
     Converts a hex string to bytes and then runs `decodeUplink`.

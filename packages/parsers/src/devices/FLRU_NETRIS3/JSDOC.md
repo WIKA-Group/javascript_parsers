@@ -11,13 +11,13 @@ Input types:
 interface UplinkInput {
   fPort: number // LoRaWAN FPort
   bytes: number[] // Raw payload as array of unsigned bytes (0-255)
-  recvTime?: Date // Optional Date (if your LNS provides it)
+  recvTime: Date
 }
 
 interface HexUplinkInput {
-  fPort: number // LoRaWAN FPort
   bytes: string // Raw payload as hex-encoded string (case-insensitive, even length)
-  recvTime?: Date // Optional Date (if your LNS provides it)
+  fPort: number // LoRaWAN FPort
+  recvTime: Date
 }
 ```
 

@@ -3,13 +3,13 @@ import type { createDownlinkResetBatteryIndicatorSchema, TULIP2ConfigurationActi
 import type { GD20WTulip2Channels, GD20WTulip2FeatureFlags } from '../parser/tulip2/constants'
 import * as v from 'valibot'
 import { createTULIP2DownlinkActionSchemaFactory } from '../../../schemas/tulip2/downlink'
-import { createUplinkOutputSchemaFactory } from '../../../schemas/tulip2/uplink'
+import { createConfigurationStatusSchema, createUplinkOutputSchemaFactory } from '../../../schemas/tulip2/uplink'
 import {
   createGD20WTULIP2Channels,
 } from '../parser/tulip2/channels'
 import {
   ALARM_EVENTS,
-  CONFIGURATION_STATUS_BY_ID,
+  CONFIGURATION_STATUS_GD20W,
   DEVICE_ALARM_VALID_BITS,
   DEVICE_ALARMS_BY_ID,
   MEASURANDS_BY_ID,
@@ -42,8 +42,8 @@ const SENSOR_ALARM_TYPE_VALUES = SENSOR_TECHNICAL_ALARM_VALID_BITS
 const SENSOR_ALARM_DESCRIPTIONS = Object.values(SENSOR_TECHNICAL_ALARMS_BY_ID) as string[]
 const DEVICE_ALARM_VALUES = DEVICE_ALARM_VALID_BITS
 const DEVICE_ALARM_DESCRIPTIONS = Object.values(DEVICE_ALARMS_BY_ID) as string[]
-const CONFIGURATION_STATUS_VALUES = Object.keys(CONFIGURATION_STATUS_BY_ID).map(Number)
-const CONFIGURATION_STATUS_DESCRIPTIONS = Object.values(CONFIGURATION_STATUS_BY_ID)
+const CONFIGURATION_STATUS_VALUES = Object.keys(CONFIGURATION_STATUS_GD20W).map(Number)
+const CONFIGURATION_STATUS_DESCRIPTIONS = Object.values(CONFIGURATION_STATUS_GD20W)
 
 const CHANNEL_IDS = createGD20WTULIP2Channels().map(channel => channel.channelId) as ReturnType<typeof createGD20WTULIP2Channels>[number]['channelId'][]
 const ChANNEL_NAMES = createGD20WTULIP2Channels().map(channel => channel.name) as ReturnType<typeof createGD20WTULIP2Channels>[number]['name'][]
@@ -96,43 +96,30 @@ function createDeviceAlarmsSchema() {
 
 function createMainConfigurationSchema() {
   return v.object({
-    acquisitionTimeAlarmsOff: v.union([v.literal('unauthorized'), v.number()]),
-    publicationTimeFactorAlarmsOff: v.union([v.literal('unauthorized'), v.number()]),
-    acquisitionTimeAlarmsOn: v.union([v.literal('unauthorized'), v.number()]),
-    publicationTimeFactorAlarmsOn: v.union([v.literal('unauthorized'), v.number()]),
+    mainConfiguration: v.object({
+      acquisitionTimeAlarmsOff: v.union([v.literal('unauthorized'), v.number()]),
+      publicationTimeFactorAlarmsOff: v.union([v.literal('unauthorized'), v.number()]),
+      acquisitionTimeAlarmsOn: v.union([v.literal('unauthorized'), v.number()]),
+      publicationTimeFactorAlarmsOn: v.union([v.literal('unauthorized'), v.number()]),
+    }),
   })
 }
 
 function createChannelConfigurationSchema() {
   return v.object({
-    sensorOrChannelId: v.pipe(v.number(), v.minValue(0), v.maxValue(5), v.integer()),
-    deadBand: v.pipe(v.number(), v.minValue(0), v.integer()),
-    alarm1Threshold: v.optional(v.number()),
-    alarm2Threshold: v.optional(v.number()),
-    alarm3Slope: v.optional(v.number()),
-    alarm4Slope: v.optional(v.number()),
-    alarm5Threshold: v.optional(v.number()),
-    alarm5Period: v.optional(v.number()),
-    alarm6Threshold: v.optional(v.number()),
-    alarm6Period: v.optional(v.number()),
+    channelConfiguration: v.object({
+      sensorOrChannelId: v.pipe(v.number(), v.minValue(0), v.maxValue(5), v.integer()),
+      deadBand: v.pipe(v.number(), v.minValue(0), v.integer()),
+      alarm1Threshold: v.optional(v.number()),
+      alarm2Threshold: v.optional(v.number()),
+      alarm3Slope: v.optional(v.number()),
+      alarm4Slope: v.optional(v.number()),
+      alarm5Threshold: v.optional(v.number()),
+      alarm5Period: v.optional(v.number()),
+      alarm6Threshold: v.optional(v.number()),
+      alarm6Period: v.optional(v.number()),
+    }),
   })
-}
-
-function createConfigurationStatusSchema() {
-  return v.union([
-    v.object({
-      status: v.picklist(CONFIGURATION_STATUS_VALUES),
-      statusDescription: v.picklist(CONFIGURATION_STATUS_DESCRIPTIONS),
-      commandType: v.literal(0x04),
-      mainConfiguration: createMainConfigurationSchema(),
-    }),
-    v.object({
-      status: v.picklist(CONFIGURATION_STATUS_VALUES),
-      statusDescription: v.picklist(CONFIGURATION_STATUS_DESCRIPTIONS),
-      commandType: v.pipe(v.number(), v.minValue(0), v.maxValue(255), v.integer()),
-      channelConfiguration: createChannelConfigurationSchema(),
-    }),
-  ])
 }
 
 function createGasMixturesSchema() {
@@ -245,7 +232,7 @@ function createConfigurationStatusUplinkOutputSchema() {
   return createUplinkSchema({
     messageType: [0x06],
     extension: {
-      configurationStatus: createConfigurationStatusSchema(),
+      configurationStatus: createConfigurationStatusSchema(CONFIGURATION_STATUS_VALUES, CONFIGURATION_STATUS_DESCRIPTIONS, createMainConfigurationSchema(), createChannelConfigurationSchema()),
     },
   })
 }

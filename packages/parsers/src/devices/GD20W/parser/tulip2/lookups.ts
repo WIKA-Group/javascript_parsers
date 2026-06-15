@@ -1,3 +1,5 @@
+import { CONFIGURATION_BASE_STATUS_TYPES } from '../../../../lookups'
+
 export const ALARM_EVENTS = {
   triggered: 0,
   disappeared: 1,
@@ -41,12 +43,12 @@ export const DEVICE_ALARMS_BY_ID = {
 
 export const DEVICE_ALARM_VALID_BITS = [0, 2, 3, 8, 9, 10, 11, 12, 13, 14, 15] as const
 
-export const CONFIGURATION_STATUS_BY_ID = {
-  0x02: 'configuration successful',
-  0x03: 'configuration rejected',
-  0x04: 'configuration discarded',
-  0x06: 'command success',
-  0x07: 'command failed',
+export const CONFIGURATION_STATUS_GD20W = {
+  ...CONFIGURATION_BASE_STATUS_TYPES,
+  // override the base types in order not to introduce a breaking change
+  2: 'configuration successful',
+  4: 'configuration discarded',
+
 } as const
 
 export const UNITS_BY_ID = {

@@ -62,14 +62,14 @@ describe('defineParser', () => {
   it('should create a parser and decodeUplink with a matching codec', () => {
     const codec = new MockCodec({ name: 'codec1', channels: validChannels })
     const parser = defineParser({ parserName: 'TestParser', codecs: [codec] })
-    const result = parser.decodeUplink({ bytes: [1, 2], fPort: 1 })
+    const result = parser.decodeUplink({ bytes: [1, 2], fPort: 1, recvTime: new Date() })
     expect(result).toEqual({ data: 'codec1' })
   })
 
   it('should throw error if no codec matches in decodeUplink', () => {
     const codec = new MockCodec({ name: 'codec1', channels: validChannels, canTryDecode: false })
     const parser = defineParser({ parserName: 'TestParser', codecs: [codec] })
-    const result = parser.decodeUplink({ bytes: [1, 2], fPort: 1 })
+    const result = parser.decodeUplink({ bytes: [1, 2], fPort: 1, recvTime: new Date() })
     expect(result.errors![0]).toMatch(/No codec matched/)
   })
 
@@ -77,7 +77,7 @@ describe('defineParser', () => {
     const codec1 = new MockCodec({ name: 'codec1', channels: validChannels, canTryDecode: () => true })
     const codec2 = new MockCodec({ name: 'codec2', channels: validChannels, canTryDecode: () => true })
     const parser = defineParser({ parserName: 'TestParser', codecs: [codec1, codec2], throwOnMultipleDecode: true })
-    const result = parser.decodeUplink({ bytes: [1, 2], fPort: 1 })
+    const result = parser.decodeUplink({ bytes: [1, 2], fPort: 1, recvTime: new Date() })
     expect(result.errors![0]).toMatch(/Multiple codecs matched/)
   })
 
@@ -85,7 +85,7 @@ describe('defineParser', () => {
     const codec1 = new MockCodec({ name: 'codec1', channels: validChannels, decodeResult: { data: 'first' }, canTryDecode: () => true })
     const codec2 = new MockCodec({ name: 'codec2', channels: validChannels, decodeResult: { data: 'second' }, canTryDecode: () => true })
     const parser = defineParser({ parserName: 'TestParser', codecs: [codec1, codec2], throwOnMultipleDecode: false })
-    const result = parser.decodeUplink({ bytes: [1, 2], fPort: 1 })
+    const result = parser.decodeUplink({ bytes: [1, 2], fPort: 1, recvTime: new Date() })
     expect(result).toEqual({ data: 'first' })
   })
 
@@ -93,7 +93,7 @@ describe('defineParser', () => {
     const codec = new MockCodec({ name: 'codec1', channels: validChannels })
     const parser = defineParser({ parserName: 'TestParser', codecs: [codec] })
     // missing bytes
-    const result = parser.decodeUplink({ fPort: 1 } as any)
+    const result = parser.decodeUplink({ fPort: 1, recvTime: new Date() } as any)
     expect(result.errors![0]).toMatch(/Input is not valid/)
   })
 
@@ -101,14 +101,14 @@ describe('defineParser', () => {
     const codec = new MockCodec({ name: 'codec1', channels: validChannels })
     const parser = defineParser({ parserName: 'TestParser', codecs: [codec] })
     // bytes: '0102' => [1,2]
-    const result = parser.decodeHexUplink({ bytes: '0102', fPort: 1 })
+    const result = parser.decodeHexUplink({ bytes: '0102', fPort: 1, recvTime: new Date() })
     expect(result).toEqual({ data: 'codec1' })
   })
 
   it('should return error for invalid hex string in decodeHexUplink', () => {
     const codec = new MockCodec({ name: 'codec1', channels: validChannels })
     const parser = defineParser({ parserName: 'TestParser', codecs: [codec] })
-    const result = parser.decodeHexUplink({ bytes: 'ZZZZ', fPort: 1 })
+    const result = parser.decodeHexUplink({ bytes: 'ZZZZ', fPort: 1, recvTime: new Date() })
     expect(result.errors![0]).toMatch(/not a valid hexadecimal/)
   })
 
@@ -158,7 +158,7 @@ describe('defineParser', () => {
       throw new Error('fail!')
     }
     const parser = defineParser({ parserName: 'TestParser', codecs: [codec] })
-    const result = parser.decodeUplink({ bytes: [1, 2], fPort: 1 })
+    const result = parser.decodeUplink({ bytes: [1, 2], fPort: 1, recvTime: new Date() })
     expect(result.errors![0]).toMatch(/fail!/)
   })
 
@@ -169,7 +169,7 @@ describe('defineParser', () => {
       throw 123
     }
     const parser = defineParser({ parserName: 'TestParser', codecs: [codec] })
-    const result = parser.decodeUplink({ bytes: [1, 2], fPort: 1 })
+    const result = parser.decodeUplink({ bytes: [1, 2], fPort: 1, recvTime: new Date() })
     expect(result.errors![0]).toMatch(/Unknown error/)
   })
 

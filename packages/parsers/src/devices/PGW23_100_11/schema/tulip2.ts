@@ -3,9 +3,10 @@ import type { createDownlinkResetBatteryIndicatorSchema, TULIP2ConfigurationActi
 import type { PGWTulip2Channels } from '../parser/tulip2/constants'
 import * as v from 'valibot'
 import { createSemVerSchema } from '../../../schemas'
-import { createUplinkOutputSchemaFactory } from '../../../schemas/tulip2/uplink'
+import { createConfigurationStatusSchema, createUplinkOutputSchemaFactory } from '../../../schemas/tulip2/uplink'
 import {
   ALARM_EVENTS,
+  CONFIGURATION_STATUS_TYPES_PGW23_100,
   DEVICE_ALARM_CAUSE_OF_FAILURE,
   DEVICE_ALARM_TYPES,
   MEASUREMENT_CHANNELS,
@@ -50,6 +51,8 @@ const PRESSURE_UNIT_NAME_LIST = Object.keys(PRESSURE_UNITS) as PressureUnitName[
 const PRESSURE_UNIT_VALUES = Object.values(PRESSURE_UNITS) as PressureUnitValues[]
 const TEMPERATURE_UNIT_NAME_LIST = Object.keys(TEMPERATURE_UNITS) as TemperatureUnitName[]
 const TEMPERATURE_UNIT_VALUES = Object.values(TEMPERATURE_UNITS) as TemperatureUnitValues[]
+const CONFIGURATION_STATUS_VALUES = Object.keys(CONFIGURATION_STATUS_TYPES_PGW23_100).map(Number)
+const CONFIGURATION_STATUS_DESCRIPTIONS = Object.values(CONFIGURATION_STATUS_TYPES_PGW23_100)
 
 function createChannelMeasurement<TName extends keyof typeof MEASUREMENT_CHANNELS>(name: TName) {
   return v.object({
@@ -144,6 +147,15 @@ function createTechnicalAlarmsUplinkOutputSchema() {
   })
 }
 
+function createConfigurationStatusUplinkOutputSchema() {
+  return createUplinkSchema({
+    messageType: [0x06],
+    extension: {
+      configurationStatus: createConfigurationStatusSchema(CONFIGURATION_STATUS_VALUES, CONFIGURATION_STATUS_DESCRIPTIONS),
+    },
+  })
+}
+
 function createDeviceAlarmsDataSchema() {
   const schemas: v.ObjectSchema<any, any>[] = []
 
@@ -222,6 +234,7 @@ export function createPGW23_100_11TULIP2UplinkOutputSchema() {
     createDataMessageUplinkOutputSchema(),
     createProcessAlarmsUplinkOutputSchema(),
     createTechnicalAlarmsUplinkOutputSchema(),
+    createConfigurationStatusUplinkOutputSchema(),
     createDeviceAlarmsUplinkOutputSchema(),
     createDeviceInformationUplinkOutputSchema(),
     createDeviceStatisticsUplinkOutputSchema(),
@@ -236,6 +249,8 @@ export type PGW23_100_11TULIP2ProcessAlarmsUplinkOutput = v.InferOutput<ReturnTy
 
 export type PGW23_100_11TULIP2TechnicalAlarmsData = v.InferOutput<ReturnType<typeof createTechnicalAlarmsUplinkOutputSchema>>['data']['technicalAlarms']
 export type PGW23_100_11TULIP2TechnicalAlarmsUplinkOutput = v.InferOutput<ReturnType<typeof createTechnicalAlarmsUplinkOutputSchema>>
+
+export type PGW23_100_11Tulip2ConfigurationStatusUplinkOutput = v.InferOutput<ReturnType<typeof createConfigurationStatusUplinkOutputSchema>>
 
 export type PGW23_100_11TULIP2DeviceAlarmsData = v.InferOutput<ReturnType<typeof createDeviceAlarmsUplinkOutputSchema>>['data']['deviceAlarm']
 export type PGW23_100_11TULIP2DeviceAlarmsUplinkOutput = v.InferOutput<ReturnType<typeof createDeviceAlarmsUplinkOutputSchema>>

@@ -41,13 +41,13 @@ describe('defineTULIP3Codec (non-decode methods)', () => {
 
   it('canTryDecode returns true for valid prefix', () => {
     for (let prefix = 0x10; prefix <= 0x17; ++prefix) {
-      expect(codec.canTryDecode({ bytes: [prefix, 0x00] })).toBe(true)
+      expect(codec.canTryDecode({ bytes: [prefix, 0x00], fPort: 1, recvTime: new Date() })).toBe(true)
     }
   })
 
   it('canTryDecode returns false for invalid prefix', () => {
-    expect(codec.canTryDecode({ bytes: [0x09] })).toBe(false)
-    expect(codec.canTryDecode({ bytes: [] })).toBe(false)
+    expect(codec.canTryDecode({ bytes: [0x09], fPort: 1, recvTime: new Date() })).toBe(false)
+    expect(codec.canTryDecode({ bytes: [], fPort: 1, recvTime: new Date() })).toBe(false)
   })
 
   it('getChannels returns all channels with correct info', () => {

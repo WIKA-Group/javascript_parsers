@@ -586,6 +586,103 @@
   },
   {
     "type": "uplink",
+    "description": "GoodCase configuration status message: Uplink example for configuration rejected",
+    "input": {
+      "bytes": [
+        6,
+        8,
+        48
+      ],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 6,
+        "configurationId": 8,
+        "configStatus": 3,
+        "configStatusName": "configuration rejected"
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase configuration status message: TODO",
+    "input": {
+      "bytes": [
+        6,
+        1,
+        96,
+        97,
+        0,
+        1,
+        0,
+        0,
+        0
+      ],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 6,
+        "configurationId": 1,
+        "configStatus": 6,
+        "configStatusName": "command success",
+        "commandResponse": {
+          "channel": 1,
+          "channelName": "device temperature",
+          "commandType": 97,
+          "commandTypeName": "get channel property configuration temperature",
+          "commandStatus": 0,
+          "measurementOffset": 0
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase configuration status message: TODO",
+    "input": {
+      "bytes": [
+        6,
+        1,
+        96,
+        81,
+        0,
+        1,
+        1,
+        244,
+        0
+      ],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 6,
+        "configurationId": 1,
+        "configStatus": 6,
+        "configStatusName": "command success",
+        "commandResponse": {
+          "channel": 1,
+          "channelName": "device temperature",
+          "commandType": 81,
+          "commandTypeName": "get process alarm configuration temperature",
+          "commandStatus": 0,
+          "deadBand": 7.75,
+          "fallingSlope": false,
+          "highThreshold": false,
+          "highThresholdWithDelay": false,
+          "lowThreshold": false,
+          "lowThresholdWithDelay": false,
+          "risingSlope": false
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink",
     "description": "GoodCase mioty main configuration message",
     "input": {
       "bytes": [

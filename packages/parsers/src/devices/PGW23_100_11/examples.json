@@ -278,6 +278,54 @@
     "input": {
       "bytes": [
         6,
+        1,
+        0
+      ],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 6,
+        "configurationId": 1,
+        "configurationStatus": {
+          "status": 0,
+          "statusDescription": "packet received",
+          "lastPacketIndexReceived": 0
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase configuration status message: Uplink example for configuration successful",
+    "input": {
+      "bytes": [
+        6,
+        1,
+        2
+      ],
+      "fPort": 1,
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 6,
+        "configurationId": 1,
+        "configurationStatus": {
+          "status": 0,
+          "statusDescription": "packet received",
+          "lastPacketIndexReceived": 2
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink",
+    "description": "GoodCase configuration status message: Uplink example for configuration successful",
+    "input": {
+      "bytes": [
+        6,
         15,
         32
       ],
@@ -285,9 +333,15 @@
       "recvTime": "1992-12-22T17:00:00+01:00"
     },
     "output": {
-      "errors": [
-        "PGW23.100.11 (JS): Message could not be decoded. No codec matched the input."
-      ]
+      "data": {
+        "messageType": 6,
+        "configurationId": 15,
+        "configurationStatus": {
+          "status": 2,
+          "statusDescription": "configuration applied",
+          "lastPacketIndexReceived": 0
+        }
+      }
     }
   },
   {

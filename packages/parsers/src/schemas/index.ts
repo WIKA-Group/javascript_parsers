@@ -18,7 +18,7 @@ function createFPortSchema() {
 }
 
 function createRecvTimeSchema() {
-  return v.optional(v.date())
+  return v.date()
 }
 
 export function createUplinkInputSchema() {
@@ -30,29 +30,20 @@ export function createUplinkInputSchema() {
     /**
      * The uplink message LoRaWAN `fPort`
      */
-    fPort: v.optional(v.pipe(v.number(), v.minValue(1), v.maxValue(224), v.integer())),
+    fPort: (v.pipe(v.number(), v.minValue(1), v.maxValue(224), v.integer())),
     /**
-     * ISO 8601 string representation of the time the message was received by the network server.
+     * The uplink message timestamp recorded by the LoRaWAN network server as a JavaScript Date object.
      */
-    recvTime: v.optional(v.date()),
+    recvTime: v.date(),
   }, 'Uplink input should be an object with `bytes` and optional `fPort` and `recvTime` properties.')
 }
 
 export function createHexUplinkInputSchema() {
   return v.pipe(
-    v.union([
-      v.object({
-        bytes: v.pipe(v.string()),
-        fPort: v.optional(createFPortSchema()),
-        recvTime: createRecvTimeSchema(),
-      }),
-      v.string(),
-    ]),
-    v.transform((input) => {
-      if (typeof input === 'string') {
-        return { bytes: input }
-      }
-      return input
+    v.object({
+      bytes: v.pipe(v.string()),
+      fPort: createFPortSchema(),
+      recvTime: createRecvTimeSchema(),
     }),
   )
 }

@@ -1,5 +1,6 @@
 import type { EncoderFactory, Handler, MultipleEncoderFactory } from '../../../../codecs/tulip2'
 import type {
+  PGW23_100_11Tulip2ConfigurationStatusUplinkOutput,
   PGW23_100_11TULIP2DataMessageUplinkOutput,
   PGW23_100_11TULIP2DeviceAlarmsUplinkOutput,
   PGW23_100_11TULIP2DeviceInformationUplinkOutput,
@@ -15,12 +16,14 @@ import type {
 import type { PGWTulip2BaseDownlinkInput } from './constants'
 import { PGW23_100_11_NAME } from '..'
 import { defineTULIP2Codec } from '../../../../codecs/tulip2'
+import { decodeMainConfigurationResponse } from '../../../../codecs/tulip2/configurationCodec'
 import { createDownlinkResetBatteryIndicatorSchema, validateTULIP2DownlinkInput } from '../../../../schemas/tulip2/downlink'
 import { DEFAULT_ROUNDING_DECIMALS, intTuple4ToFloat32WithThreshold, roundValue, slopeValueToValue, TULIPValueToValue } from '../../../../utils'
 import { createTULIP2PGWChannels, PGW_DOWNLINK_FEATURE_FLAGS } from './constants'
 import { PGWTULIP2EncodeHandler } from './encode'
 import {
   ALARM_EVENTS,
+  CONFIGURATION_STATUS_TYPES_PGW23_100,
   DEVICE_ALARM_CAUSE_OF_FAILURE,
   DEVICE_ALARM_TYPES,
   MEASUREMENT_CHANNELS,
@@ -233,6 +236,25 @@ const handleDeviceAlarmMessage: Handler<TULIP2PGWChannels, PGW23_100_11TULIP2Dev
   }
 }
 
+const handleConfigurationStatusMessage: Handler<TULIP2PGWChannels, PGW23_100_11Tulip2ConfigurationStatusUplinkOutput> = (input) => {
+  const { configurationId, statusDescription: status, status: statusId } = decodeMainConfigurationResponse(input.bytes, CONFIGURATION_STATUS_TYPES_PGW23_100)
+
+  // input.bytes[2] is checked in decodeConfigurationAndCommandStatusMessage to be non-zero, so we can safely read the last packet index from the lower nibble
+  const lastPacketIndexReceived = input.bytes[2]! & 0x0F
+
+  return {
+    data: {
+      messageType: 0x06,
+      configurationId,
+      configurationStatus: {
+        status: statusId,
+        statusDescription: status,
+        lastPacketIndexReceived,
+      },
+    },
+  }
+}
+
 const handleDeviceIdentificationMessage: Handler<TULIP2PGWChannels, PGW23_100_11TULIP2DeviceInformationUplinkOutput> = (input) => {
   if (input.bytes.length < 41) {
     throw new Error(`Device identification message (0x07) requires at least 41 bytes, but received ${input.bytes.length} bytes`)
@@ -365,6 +387,7 @@ export function createTULIP2PGWCodec() {
       0x03: handleProcessAlarmMessage,
       0x04: handleTechnicalAlarmMessage,
       0x05: handleDeviceAlarmMessage,
+      0x06: handleConfigurationStatusMessage,
       0x07: handleDeviceIdentificationMessage,
       0x08: handleKeepAliveMessage,
     },

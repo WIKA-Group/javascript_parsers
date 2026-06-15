@@ -5,7 +5,7 @@ import * as v from 'valibot'
 import { createSemVerSchema } from '../../../schemas'
 import { createTULIP2DownlinkActionSchemaFactory } from '../../../schemas/tulip2/downlink'
 import { createUplinkOutputSchemaFactory } from '../../../schemas/tulip2/uplink'
-import { ALARM_EVENTS, CONFIG_STATUS_COMMAND_TYPES, CONFIG_STATUS_NAMES_BY_VALUE, DEVICE_ALARM_CAUSE_OF_FAILURE, DEVICE_ALARM_TYPES, MEASUREMENT_CHANNELS, PRESSURE_TYPES, PRESSURE_UNITS, PROCESS_ALARM_CHANNEL_NAMES, PROCESS_ALARM_TYPES, TECHNICAL_ALARM_TYPES } from '../parser/tulip2/lookups'
+import { ALARM_EVENTS, CONFIG_STATUS_COMMAND_TYPES, CONFIGURATION_STATUS_TYPES_PEW, DEVICE_ALARM_CAUSE_OF_FAILURE, DEVICE_ALARM_TYPES, MEASUREMENT_CHANNELS, PRESSURE_TYPES, PRESSURE_UNITS, PROCESS_ALARM_CHANNEL_NAMES, PROCESS_ALARM_TYPES, TECHNICAL_ALARM_TYPES } from '../parser/tulip2/lookups'
 
 const createUplinkSchema = createUplinkOutputSchemaFactory(31)
 
@@ -263,12 +263,15 @@ function createConfigStatusChannelPropertyResponseSchema() {
   })
 }
 
+const CONFIGURATION_STATUS_VALUES = Object.keys(CONFIGURATION_STATUS_TYPES_PEW).map(Number) as (keyof typeof CONFIGURATION_STATUS_TYPES_PEW)[]
+const CONFIGURATION_STATUS_DESCRIPTIONS = Object.values(CONFIGURATION_STATUS_TYPES_PEW) as (typeof CONFIGURATION_STATUS_TYPES_PEW)[keyof typeof CONFIGURATION_STATUS_TYPES_PEW][]
+
 function createConfigurationStatusUplinkOutputSchema() {
   return createUplinkSchema({
     messageType: [0x06 as const],
     extension: {
-      configStatus: v.picklist(Object.keys(CONFIG_STATUS_NAMES_BY_VALUE).map(Number) as (keyof typeof CONFIG_STATUS_NAMES_BY_VALUE)[]),
-      configStatusName: v.picklist(Object.values(CONFIG_STATUS_NAMES_BY_VALUE) as (typeof CONFIG_STATUS_NAMES_BY_VALUE)[keyof typeof CONFIG_STATUS_NAMES_BY_VALUE][]),
+      configStatus: v.picklist(CONFIGURATION_STATUS_VALUES),
+      configStatusName: v.picklist(CONFIGURATION_STATUS_DESCRIPTIONS),
       commandResponse: v.optional(v.union([
         createConfigStatusMainConfigResponseSchema(),
         createConfigStatusResetBatteryResponseSchema(),

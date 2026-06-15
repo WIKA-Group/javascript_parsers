@@ -179,6 +179,50 @@
   },
   {
     "type": "uplink",
+    "description": "Good case uplink - Configuration status message with main configuration",
+    "input": {
+      "fPort": 1,
+      "bytes": [
+        6,
+        0,
+        96,
+        4,
+        0,
+        0,
+        14,
+        16,
+        0,
+        4,
+        0,
+        0,
+        14,
+        16,
+        0,
+        4,
+        0
+      ],
+      "recvTime": "1992-12-22T17:00:00+01:00"
+    },
+    "output": {
+      "data": {
+        "messageType": 6,
+        "configurationId": 0,
+        "configurationStatus": {
+          "status": 6,
+          "statusDescription": "command success",
+          "commandType": 4,
+          "mainConfiguration": {
+            "acquisitionTimeAlarmsOff": 3600,
+            "publicationTimeFactorAlarmsOff": 4,
+            "acquisitionTimeAlarmsOn": 3600,
+            "publicationTimeFactorAlarmsOn": 4
+          }
+        }
+      }
+    }
+  },
+  {
+    "type": "uplink",
     "description": "Good case uplink - Device identification message",
     "input": {
       "fPort": 1,

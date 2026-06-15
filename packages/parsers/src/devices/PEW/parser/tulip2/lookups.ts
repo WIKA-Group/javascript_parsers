@@ -1,3 +1,5 @@
+import { CONFIGURATION_BASE_STATUS_TYPES, CONFIGURATION_STATUS_DISCARDED_FORCE } from '../../../../lookups'
+
 export const MESSAGE_TYPES = {
   1: 'DATA_MESSAGE_1',
   2: 'DATA_MESSAGE_2',
@@ -56,12 +58,9 @@ export const DEVICE_ALARM_CAUSE_OF_FAILURE = {
   'device dependent': 1,
 } as const
 
-export const CONFIG_STATUS_NAMES_BY_VALUE = {
-  2: 'configuration applied',
-  3: 'configuration rejected',
-  5: 'configuration discarded',
-  6: 'command success',
-  7: 'command failed',
+export const CONFIGURATION_STATUS_TYPES_PEW = {
+  ...CONFIGURATION_BASE_STATUS_TYPES,
+  ...CONFIGURATION_STATUS_DISCARDED_FORCE,
 } as const
 
 export const CONFIG_STATUS_COMMAND_TYPES = {

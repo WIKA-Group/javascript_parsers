@@ -3,13 +3,14 @@ import type { PEWTULIP2ChannelPropertyConfigurationUplinkOutput, PEWTULIP2Config
 import type { PewTulip2Channels, PewTulip2DownlinkInput } from './constants'
 import { PEW_NAME } from '..'
 import { defineTULIP2Codec } from '../../../../codecs/tulip2'
+import { decodeMainConfigurationResponse } from '../../../../codecs/tulip2/configurationCodec'
 import { intTuple2ToUInt16 } from '../../../../codecs/tulip3/registers'
 import { createDownlinkResetBatteryIndicatorSchema, validateTULIP2DownlinkInput } from '../../../../schemas/tulip2/downlink'
 import { DEFAULT_ROUNDING_DECIMALS, intTuple4ToFloat32WithThreshold, roundValue, slopeValueToValue, TULIPValueToValue } from '../../../../utils'
 import { createPEWTULIP2DropConfigurationSchema, createPEWTULIP2GetConfigurationSchema } from '../../schema/tulip2'
 import { createTULIP2PEWChannels, PEW_DOWNLINK_FEATURE_FLAGS } from './constants'
 import { PEWTULIP2EncodeHandler } from './encode'
-import { ALARM_EVENTS, CONFIG_STATUS_COMMAND_TYPES, CONFIG_STATUS_NAMES_BY_VALUE, DEVICE_ALARM_CAUSE_OF_FAILURE, DEVICE_ALARM_TYPES, PRESSURE_TYPES, PRESSURE_UNITS, PROCESS_ALARM_TYPES, TECHNICAL_ALARM_TYPES } from './lookups'
+import { ALARM_EVENTS, CONFIG_STATUS_COMMAND_TYPES, CONFIGURATION_STATUS_TYPES_PEW, DEVICE_ALARM_CAUSE_OF_FAILURE, DEVICE_ALARM_TYPES, PRESSURE_TYPES, PRESSURE_UNITS, PROCESS_ALARM_TYPES, TECHNICAL_ALARM_TYPES } from './lookups'
 
 const ERROR_VALUE = 0xFFFF
 
@@ -383,20 +384,7 @@ function parseChannelPropertyConfigurationData(payload: number[], options: Pick<
 }
 
 const handleConfigurationStatusMessage: Handler<TULIP2PEWChannels, PEWTULIP2ConfigurationStatusUplinkOutput> = (input, options) => {
-  if (input.bytes.length < 3) {
-    throw new Error(`Configuration status message (0x06) requires at least 3 bytes, but received ${input.bytes.length} bytes`)
-  }
-
-  const configurationId = input.bytes[1]!
-  const statusByte = input.bytes[2]!
-  const rawConfigStatus = (statusByte >> 4) & 0x0F
-  const configStatusName = CONFIG_STATUS_NAMES_BY_VALUE[rawConfigStatus as keyof typeof CONFIG_STATUS_NAMES_BY_VALUE]
-
-  if (!configStatusName) {
-    throw new Error(`Unknown configuration status value ${rawConfigStatus} in configuration status message`)
-  }
-
-  const configStatus = rawConfigStatus as keyof typeof CONFIG_STATUS_NAMES_BY_VALUE
+  const { configurationId, statusDescription: configStatusName, status: configStatus } = decodeMainConfigurationResponse(input.bytes, CONFIGURATION_STATUS_TYPES_PEW)
 
   type CommandResponse = PEWTULIP2ConfigurationStatusUplinkOutput['data']['commandResponse']
   let commandResponse: CommandResponse
@@ -404,83 +392,80 @@ const handleConfigurationStatusMessage: Handler<TULIP2PEWChannels, PEWTULIP2Conf
   if (input.bytes.length > 3) {
     const commandTypeByte = input.bytes[3]!
 
-    if (commandTypeByte === CONFIG_STATUS_COMMAND_TYPES['get main configuration']) {
-      if (input.bytes.length < 19) {
-        throw new Error(`Get main configuration response requires 19 bytes total, but received ${input.bytes.length}`)
-      }
-
-      const commandStatus = input.bytes[4]! as 0
-      const mainConfiguration = parseMainConfigurationData(input.bytes.slice(5, 19))
-
-      commandResponse = {
-        commandType: CONFIG_STATUS_COMMAND_TYPES['get main configuration'],
-        commandTypeName: 'get main configuration',
-        commandStatus,
-        ...mainConfiguration,
-      }
-    }
-    else if (commandTypeByte === CONFIG_STATUS_COMMAND_TYPES['reset battery indicator']) {
-      if (input.bytes.length < 5) {
-        throw new Error(`Reset battery indicator response requires 5 bytes total, but received ${input.bytes.length}`)
-      }
-
-      const commandStatus = input.bytes[4]! as 0 | 1
-
-      commandResponse = {
-        commandType: CONFIG_STATUS_COMMAND_TYPES['reset battery indicator'],
-        commandTypeName: 'reset battery indicator',
-        commandStatus,
-        resetSuccess: commandStatus === 0,
-      }
-    }
-    else if (
-      commandTypeByte === CONFIG_STATUS_COMMAND_TYPES['get process alarm configuration pressure']
-      || commandTypeByte === CONFIG_STATUS_COMMAND_TYPES['get process alarm configuration temperature']
-    ) {
-      if (input.bytes.length < 9) {
-        throw new Error(`Process alarm configuration response requires at least 9 bytes total, but received ${input.bytes.length}`)
-      }
-
-      const commandTypeName = (commandTypeByte === 0x50
-        ? 'get process alarm configuration pressure'
-        : 'get process alarm configuration temperature') as
-        | 'get process alarm configuration pressure'
-        | 'get process alarm configuration temperature'
-      const commandStatus = input.bytes[4]! as 0
-      const processAlarmConfiguration = parseProcessAlarmConfigurationData(input.bytes.slice(5), options)
-
-      commandResponse = {
-        commandType: commandTypeByte as 0x50 | 0x51,
-        commandTypeName,
-        commandStatus,
-        ...processAlarmConfiguration,
-      }
-    }
-    else if (
-      commandTypeByte === CONFIG_STATUS_COMMAND_TYPES['get channel property configuration pressure']
-      || commandTypeByte === CONFIG_STATUS_COMMAND_TYPES['get channel property configuration temperature']
-    ) {
-      if (input.bytes.length < 9) {
-        throw new Error(`Channel property configuration response requires 9 bytes total, but received ${input.bytes.length}`)
-      }
-
-      const commandTypeName = (commandTypeByte === 0x60
-        ? 'get channel property configuration pressure'
-        : 'get channel property configuration temperature') as
-        | 'get channel property configuration pressure'
-        | 'get channel property configuration temperature'
-      const commandStatus = input.bytes[4]! as 0
-      const channelPropertyConfiguration = parseChannelPropertyConfigurationData(input.bytes.slice(5), options)
-
-      commandResponse = {
-        commandType: commandTypeByte as 0x60 | 0x61,
-        commandTypeName,
-        commandStatus,
-        ...channelPropertyConfiguration,
-      }
-    }
-    else {
-      throw new Error(`Unknown command type 0x${commandTypeByte.toString(16).padStart(2, '0')} in configuration status message`)
+    switch (commandTypeByte) {
+      case CONFIG_STATUS_COMMAND_TYPES['get main configuration']:
+        if (input.bytes.length < 19) {
+          throw new Error(`Get main configuration response requires 19 bytes total, but received ${input.bytes.length}`)
+        }
+        {
+          const commandStatus = input.bytes[4]! as 0
+          const mainConfiguration = parseMainConfigurationData(input.bytes.slice(5, 19))
+          commandResponse = {
+            commandType: CONFIG_STATUS_COMMAND_TYPES['get main configuration'],
+            commandTypeName: 'get main configuration',
+            commandStatus,
+            ...mainConfiguration,
+          }
+        }
+        break
+      case CONFIG_STATUS_COMMAND_TYPES['reset battery indicator']:
+        if (input.bytes.length < 5) {
+          throw new Error(`Reset battery indicator response requires 5 bytes total, but received ${input.bytes.length}`)
+        }
+        {
+          const commandStatus = input.bytes[4]! as 0 | 1
+          commandResponse = {
+            commandType: CONFIG_STATUS_COMMAND_TYPES['reset battery indicator'],
+            commandTypeName: 'reset battery indicator',
+            commandStatus,
+            resetSuccess: commandStatus === 0,
+          }
+        }
+        break
+      case CONFIG_STATUS_COMMAND_TYPES['get process alarm configuration pressure']:
+      case CONFIG_STATUS_COMMAND_TYPES['get process alarm configuration temperature']:
+        if (input.bytes.length < 9) {
+          throw new Error(`Process alarm configuration response requires at least 9 bytes total, but received ${input.bytes.length}`)
+        }
+        {
+          const commandTypeName = (commandTypeByte === 0x50
+            ? 'get process alarm configuration pressure'
+            : 'get process alarm configuration temperature') as
+            | 'get process alarm configuration pressure'
+            | 'get process alarm configuration temperature'
+          const commandStatus = input.bytes[4]! as 0
+          const processAlarmConfiguration = parseProcessAlarmConfigurationData(input.bytes.slice(5), options)
+          commandResponse = {
+            commandType: commandTypeByte as 0x50 | 0x51,
+            commandTypeName,
+            commandStatus,
+            ...processAlarmConfiguration,
+          }
+        }
+        break
+      case CONFIG_STATUS_COMMAND_TYPES['get channel property configuration pressure']:
+      case CONFIG_STATUS_COMMAND_TYPES['get channel property configuration temperature']:
+        if (input.bytes.length < 9) {
+          throw new Error(`Channel property configuration response requires 9 bytes total, but received ${input.bytes.length}`)
+        }
+        {
+          const commandTypeName = (commandTypeByte === 0x60
+            ? 'get channel property configuration pressure'
+            : 'get channel property configuration temperature') as
+            | 'get channel property configuration pressure'
+            | 'get channel property configuration temperature'
+          const commandStatus = input.bytes[4]! as 0
+          const channelPropertyConfiguration = parseChannelPropertyConfigurationData(input.bytes.slice(5), options)
+          commandResponse = {
+            commandType: commandTypeByte as 0x60 | 0x61,
+            commandTypeName,
+            commandStatus,
+            ...channelPropertyConfiguration,
+          }
+        }
+        break
+      default:
+        throw new Error(`Unknown command type 0x${commandTypeByte.toString(16).padStart(2, '0')} in configuration status message`)
     }
   }
 
@@ -489,7 +474,7 @@ const handleConfigurationStatusMessage: Handler<TULIP2PEWChannels, PEWTULIP2Conf
       messageType: 0x06 as const,
       configurationId,
       configStatus,
-      configStatusName: configStatusName as typeof CONFIG_STATUS_NAMES_BY_VALUE[keyof typeof CONFIG_STATUS_NAMES_BY_VALUE],
+      configStatusName,
       commandResponse,
     },
   }

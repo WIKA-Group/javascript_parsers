@@ -4,7 +4,7 @@ import type { TRWTulip2Channels, TRWTulip2FeatureFlags } from '../parser/tulip2/
 import * as v from 'valibot'
 import { createSemVerSchema } from '../../../schemas'
 import { createTULIP2DownlinkActionSchemaFactory } from '../../../schemas/tulip2/downlink'
-import { createUplinkOutputSchemaFactory } from '../../../schemas/tulip2/uplink'
+import { createConfigurationStatusUplinkOutputSchema, createUplinkOutputSchemaFactory } from '../../../schemas/tulip2/uplink'
 import { ALARM_EVENTS, DEVICE_ALARM_TYPES, LPP_MEASURANDS_BY_ID, LPP_UNITS_BY_ID, MEASUREMENT_ALARM_TYPES, PROCESS_ALARM_TYPES, TECHNICAL_ALARM_TYPES } from '../parser/tulip2/lookups'
 
 // TRW supports configurationId 0..31 (align with NETRIS1 unless specified otherwise)
@@ -175,6 +175,7 @@ export function createTRWTULIP2UplinkOutputSchema() {
     createProcessAlarmsUplinkOutputSchema(),
     createTechnicalAlarmsUplinkOutputSchema(),
     createDeviceAlarmsUplinkOutputSchema(),
+    createConfigurationStatusUplinkOutputSchema(),
     createDeviceStatisticsUplinkOutputSchema(),
     createDeviceInformationUplinkOutputSchema(),
     createChannelFailureAlarmUplinkOutputSchema(),
