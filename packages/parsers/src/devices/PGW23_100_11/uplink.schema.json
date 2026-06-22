@@ -1323,6 +1323,117 @@
                 },
                 "messageType": {
                   "enum": [
+                    6
+                  ]
+                },
+                "configurationStatus": {
+                  "anyOf": [
+                    {
+                      "allOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "status": {
+                              "enum": [
+                                0,
+                                1,
+                                2,
+                                3,
+                                4,
+                                5,
+                                6,
+                                7
+                              ]
+                            },
+                            "statusDescription": {
+                              "enum": [
+                                "packet received",
+                                "no packet received",
+                                "configuration applied",
+                                "configuration rejected",
+                                "configuration discarded - Never received all packets",
+                                "configuration discarded",
+                                "command success",
+                                "command failed"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "status",
+                            "statusDescription"
+                          ]
+                        },
+                        {
+                          "anyOf": []
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "enum": [
+                            0,
+                            1,
+                            2,
+                            3,
+                            4,
+                            5,
+                            6,
+                            7
+                          ]
+                        },
+                        "statusDescription": {
+                          "enum": [
+                            "packet received",
+                            "no packet received",
+                            "configuration applied",
+                            "configuration rejected",
+                            "configuration discarded - Never received all packets",
+                            "configuration discarded",
+                            "command success",
+                            "command failed"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "statusDescription"
+                      ]
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "configurationId",
+                "messageType",
+                "configurationStatus"
+              ]
+            },
+            "warnings": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "data"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "configurationId": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 31
+                },
+                "messageType": {
+                  "enum": [
                     5
                   ]
                 },

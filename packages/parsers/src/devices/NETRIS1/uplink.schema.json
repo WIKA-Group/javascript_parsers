@@ -3766,6 +3766,229 @@
                 },
                 "messageType": {
                   "enum": [
+                    6
+                  ]
+                },
+                "configurationStatus": {
+                  "anyOf": [
+                    {
+                      "allOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "status": {
+                              "enum": [
+                                2,
+                                3,
+                                6,
+                                7
+                              ]
+                            },
+                            "statusDescription": {
+                              "enum": [
+                                "configuration applied",
+                                "configuration rejected",
+                                "command success",
+                                "command failed"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "status",
+                            "statusDescription"
+                          ]
+                        },
+                        {
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "commandType": {
+                                  "const": 4
+                                },
+                                "commandTypeName": {
+                                  "const": "get main configuration"
+                                },
+                                "measurementPeriodNoAlarm": {
+                                  "type": "integer",
+                                  "minimum": 0
+                                },
+                                "transmissionMultiplierNoAlarm": {
+                                  "type": "integer",
+                                  "minimum": 0
+                                },
+                                "measurementPeriodWithAlarm": {
+                                  "type": "integer",
+                                  "minimum": 0
+                                },
+                                "transmissionMultiplierWithAlarm": {
+                                  "type": "integer",
+                                  "minimum": 0
+                                }
+                              },
+                              "required": [
+                                "commandType",
+                                "commandTypeName",
+                                "measurementPeriodNoAlarm",
+                                "transmissionMultiplierNoAlarm",
+                                "measurementPeriodWithAlarm",
+                                "transmissionMultiplierWithAlarm"
+                              ]
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "commandType": {
+                                  "const": 5
+                                },
+                                "commandTypeName": {
+                                  "const": "reset battery indicator"
+                                }
+                              },
+                              "required": [
+                                "commandType",
+                                "commandTypeName"
+                              ]
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "commandType": {
+                                  "const": 64
+                                },
+                                "commandTypeName": {
+                                  "const": "get process alarm configuration"
+                                },
+                                "channel": {
+                                  "const": 0
+                                },
+                                "channelName": {
+                                  "const": "measurement"
+                                },
+                                "deadBand": {
+                                  "type": "number"
+                                },
+                                "lowThreshold": {
+                                  "type": "boolean"
+                                },
+                                "lowThresholdValue": {
+                                  "type": "number"
+                                },
+                                "highThreshold": {
+                                  "type": "boolean"
+                                },
+                                "highThresholdValue": {
+                                  "type": "number"
+                                },
+                                "fallingSlope": {
+                                  "type": "boolean"
+                                },
+                                "fallingSlopeValue": {
+                                  "type": "number"
+                                },
+                                "risingSlope": {
+                                  "type": "boolean"
+                                },
+                                "risingSlopeValue": {
+                                  "type": "number"
+                                },
+                                "lowThresholdWithDelay": {
+                                  "type": "boolean"
+                                },
+                                "lowThresholdWithDelayValue": {
+                                  "type": "number"
+                                },
+                                "lowThresholdWithDelayDelay": {
+                                  "type": "integer",
+                                  "minimum": 0
+                                },
+                                "highThresholdWithDelay": {
+                                  "type": "boolean"
+                                },
+                                "highThresholdWithDelayValue": {
+                                  "type": "number"
+                                },
+                                "highThresholdWithDelayDelay": {
+                                  "type": "integer",
+                                  "minimum": 0
+                                }
+                              },
+                              "required": [
+                                "commandType",
+                                "commandTypeName",
+                                "channel",
+                                "channelName",
+                                "deadBand",
+                                "lowThreshold",
+                                "highThreshold",
+                                "fallingSlope",
+                                "risingSlope",
+                                "lowThresholdWithDelay",
+                                "highThresholdWithDelay"
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "enum": [
+                            2,
+                            3,
+                            6,
+                            7
+                          ]
+                        },
+                        "statusDescription": {
+                          "enum": [
+                            "configuration applied",
+                            "configuration rejected",
+                            "command success",
+                            "command failed"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "statusDescription"
+                      ]
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "configurationId",
+                "messageType",
+                "configurationStatus"
+              ]
+            },
+            "warnings": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "data"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "configurationId": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 31
+                },
+                "messageType": {
+                  "enum": [
                     8
                   ]
                 },
