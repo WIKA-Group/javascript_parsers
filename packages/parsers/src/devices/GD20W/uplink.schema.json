@@ -374,147 +374,86 @@
                 "configurationStatus": {
                   "anyOf": [
                     {
-                      "allOf": [
-                        {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "enum": [
+                            2,
+                            3,
+                            4,
+                            6,
+                            7
+                          ]
+                        },
+                        "statusDescription": {
+                          "enum": [
+                            "configuration successful",
+                            "configuration rejected",
+                            "configuration discarded",
+                            "command success",
+                            "command failed"
+                          ]
+                        },
+                        "commandType": {
+                          "const": 4
+                        },
+                        "mainConfiguration": {
                           "type": "object",
                           "properties": {
-                            "status": {
-                              "enum": [
-                                2,
-                                3,
-                                4,
-                                6,
-                                7
+                            "acquisitionTimeAlarmsOff": {
+                              "anyOf": [
+                                {
+                                  "const": "unauthorized"
+                                },
+                                {
+                                  "type": "number"
+                                }
                               ]
                             },
-                            "statusDescription": {
-                              "enum": [
-                                "configuration successful",
-                                "configuration rejected",
-                                "configuration discarded",
-                                "command success",
-                                "command failed"
+                            "publicationTimeFactorAlarmsOff": {
+                              "anyOf": [
+                                {
+                                  "const": "unauthorized"
+                                },
+                                {
+                                  "type": "number"
+                                }
+                              ]
+                            },
+                            "acquisitionTimeAlarmsOn": {
+                              "anyOf": [
+                                {
+                                  "const": "unauthorized"
+                                },
+                                {
+                                  "type": "number"
+                                }
+                              ]
+                            },
+                            "publicationTimeFactorAlarmsOn": {
+                              "anyOf": [
+                                {
+                                  "const": "unauthorized"
+                                },
+                                {
+                                  "type": "number"
+                                }
                               ]
                             }
                           },
                           "required": [
-                            "status",
-                            "statusDescription"
-                          ]
-                        },
-                        {
-                          "anyOf": [
-                            {
-                              "type": "object",
-                              "properties": {
-                                "mainConfiguration": {
-                                  "type": "object",
-                                  "properties": {
-                                    "acquisitionTimeAlarmsOff": {
-                                      "anyOf": [
-                                        {
-                                          "const": "unauthorized"
-                                        },
-                                        {
-                                          "type": "number"
-                                        }
-                                      ]
-                                    },
-                                    "publicationTimeFactorAlarmsOff": {
-                                      "anyOf": [
-                                        {
-                                          "const": "unauthorized"
-                                        },
-                                        {
-                                          "type": "number"
-                                        }
-                                      ]
-                                    },
-                                    "acquisitionTimeAlarmsOn": {
-                                      "anyOf": [
-                                        {
-                                          "const": "unauthorized"
-                                        },
-                                        {
-                                          "type": "number"
-                                        }
-                                      ]
-                                    },
-                                    "publicationTimeFactorAlarmsOn": {
-                                      "anyOf": [
-                                        {
-                                          "const": "unauthorized"
-                                        },
-                                        {
-                                          "type": "number"
-                                        }
-                                      ]
-                                    }
-                                  },
-                                  "required": [
-                                    "acquisitionTimeAlarmsOff",
-                                    "publicationTimeFactorAlarmsOff",
-                                    "acquisitionTimeAlarmsOn",
-                                    "publicationTimeFactorAlarmsOn"
-                                  ]
-                                }
-                              },
-                              "required": [
-                                "mainConfiguration"
-                              ]
-                            },
-                            {
-                              "type": "object",
-                              "properties": {
-                                "channelConfiguration": {
-                                  "type": "object",
-                                  "properties": {
-                                    "sensorOrChannelId": {
-                                      "type": "integer",
-                                      "minimum": 0,
-                                      "maximum": 5
-                                    },
-                                    "deadBand": {
-                                      "type": "integer",
-                                      "minimum": 0
-                                    },
-                                    "alarm1Threshold": {
-                                      "type": "number"
-                                    },
-                                    "alarm2Threshold": {
-                                      "type": "number"
-                                    },
-                                    "alarm3Slope": {
-                                      "type": "number"
-                                    },
-                                    "alarm4Slope": {
-                                      "type": "number"
-                                    },
-                                    "alarm5Threshold": {
-                                      "type": "number"
-                                    },
-                                    "alarm5Period": {
-                                      "type": "number"
-                                    },
-                                    "alarm6Threshold": {
-                                      "type": "number"
-                                    },
-                                    "alarm6Period": {
-                                      "type": "number"
-                                    }
-                                  },
-                                  "required": [
-                                    "sensorOrChannelId",
-                                    "deadBand"
-                                  ]
-                                }
-                              },
-                              "required": [
-                                "channelConfiguration"
-                              ]
-                            }
+                            "acquisitionTimeAlarmsOff",
+                            "publicationTimeFactorAlarmsOff",
+                            "acquisitionTimeAlarmsOn",
+                            "publicationTimeFactorAlarmsOn"
                           ]
                         }
+                      },
+                      "required": [
+                        "status",
+                        "statusDescription",
+                        "commandType",
+                        "mainConfiguration"
                       ]
                     },
                     {
@@ -537,11 +476,60 @@
                             "command success",
                             "command failed"
                           ]
+                        },
+                        "commandType": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 255
+                        },
+                        "channelConfiguration": {
+                          "type": "object",
+                          "properties": {
+                            "sensorOrChannelId": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 5
+                            },
+                            "deadBand": {
+                              "type": "integer",
+                              "minimum": 0
+                            },
+                            "alarm1Threshold": {
+                              "type": "number"
+                            },
+                            "alarm2Threshold": {
+                              "type": "number"
+                            },
+                            "alarm3Slope": {
+                              "type": "number"
+                            },
+                            "alarm4Slope": {
+                              "type": "number"
+                            },
+                            "alarm5Threshold": {
+                              "type": "number"
+                            },
+                            "alarm5Period": {
+                              "type": "number"
+                            },
+                            "alarm6Threshold": {
+                              "type": "number"
+                            },
+                            "alarm6Period": {
+                              "type": "number"
+                            }
+                          },
+                          "required": [
+                            "sensorOrChannelId",
+                            "deadBand"
+                          ]
                         }
                       },
                       "required": [
                         "status",
-                        "statusDescription"
+                        "statusDescription",
+                        "commandType",
+                        "channelConfiguration"
                       ]
                     }
                   ]
