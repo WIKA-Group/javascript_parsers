@@ -63,6 +63,9 @@ Distributed under the [MIT License](./LICENSE).
 
 ## Release Notes
 
+4.12.1
+- fix: update product ID for NETRIS_F to 18 in device identification and examples
+
 4.12.0
 - BREAKING: ``recvTime`` and ``fPort`` in the input object of the function ``decodeUplink`` are now required, in order to be compliant with LoRaWAN® Payload Codec API Specification TS013-1.0.0
 - feat: add configuration message uplink handling for TULIP2 for following devices:

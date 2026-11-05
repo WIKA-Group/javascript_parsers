@@ -123,7 +123,7 @@ function createDeviceInformationUplinkOutputSchema() {
     messageType: [0x07],
     extension: {
       deviceInformation: v.object({
-        productId: v.literal(11),
+        productId: v.literal(18),
         productIdName:
           v.literal('NETRIS_F'),
         productSubId: v.literal(0x00),

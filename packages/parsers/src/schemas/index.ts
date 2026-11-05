@@ -35,7 +35,7 @@ export function createUplinkInputSchema() {
      * The uplink message timestamp recorded by the LoRaWAN network server as a JavaScript Date object.
      */
     recvTime: v.date(),
-  }, 'Uplink input should be an object with `bytes` and optional `fPort` and `recvTime` properties.')
+  }, 'Uplink input should be an object with `bytes`, `fPort` and `recvTime` properties.')
 }
 
 export function createHexUplinkInputSchema() {

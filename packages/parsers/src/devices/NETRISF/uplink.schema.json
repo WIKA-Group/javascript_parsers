@@ -3829,7 +3829,7 @@
                   "type": "object",
                   "properties": {
                     "productId": {
-                      "const": 11
+                      "const": 18
                     },
                     "productIdName": {
                       "const": "NETRIS_F"

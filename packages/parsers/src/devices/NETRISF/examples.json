@@ -696,7 +696,7 @@
       "bytes": [
         7,
         65,
-        11,
+        18,
         0,
         2,
         0,
@@ -742,7 +742,7 @@
         "configurationId": 65,
         "deviceInformation": {
           "productIdName": "NETRIS_F",
-          "productId": 11,
+          "productId": 18,
           "productSubId": 0,
           "productSubIdName": "LoRaWAN",
           "wirelessModuleFirmwareVersion": "0.2.0",

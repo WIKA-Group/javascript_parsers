@@ -1,6 +1,6 @@
 import * as v from 'valibot'
 import { describe, expect, it } from 'vitest'
-import examples from './examples.json' assert { type: 'json' }
+import examples from './examples.json' with { type: 'json' }
 import { useParser } from './parser'
 import { createNetrisFUplinkOutputSchema, DownlinkInputSchema } from './schema'
 
@@ -49,6 +49,36 @@ describe('netrisF parser', () => {
     if (!res.success) {
       throwSchemaError(`Hex uplink output schema validation failed: ${example.description}`, res.issues)
     }
+  })
+
+  it('should decode NETRIS_F device identification with product ID 18', () => {
+    const output = decodeHexUplink({
+      bytes: '074512001105103c314130325a4f5051314a4802c39c4000439c4000c234000042dc0000b920',
+      fPort: 1,
+      recvTime: new Date('1992-12-22T17:00:00+01:00'),
+    })
+
+    expect(output).toMatchObject({
+      data: {
+        messageType: 0x07,
+        deviceInformation: {
+          productId: 18,
+          productIdName: 'NETRIS_F',
+        },
+      },
+    })
+  })
+
+  it('should reject NETRIS_F device identification with legacy product ID 11', () => {
+    const output = decodeHexUplink({
+      bytes: '07450b001105103c314130325a4f5051314a4802c39c4000439c4000c234000042dc0000b920',
+      fPort: 1,
+      recvTime: new Date('1992-12-22T17:00:00+01:00'),
+    })
+
+    expect(output).toEqual({
+      errors: ['NETRIS_F (JS): Invalid productId 11 in device identification message. Expected 18 (NETRIS_F).'],
+    })
   })
 
   it.each(downlinkGoodCases)(`should encode downlink example: $description`, (example) => {

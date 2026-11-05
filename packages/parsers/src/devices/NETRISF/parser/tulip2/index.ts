@@ -483,8 +483,8 @@ const handleDeviceIdentificationMessage: Handler<NetrisFChannels, NetrisFTULIP2D
 
   const configurationId = input.bytes[1]!
   const productId = input.bytes[2]!
-  if (productId !== 11) {
-    throw new Error(`Invalid productId ${productId} in device identification message. Expected 11 (NETRIS_F).`)
+  if (productId !== 18) {
+    throw new Error(`Invalid productId ${productId} in device identification message. Expected 18 (NETRIS_F).`)
   }
   const productIdName = 'NETRIS_F'
   const productSubId = input.bytes[3]!
