@@ -16,7 +16,9 @@ export function FLRUTULIP2EncodeHandler(formattedInput: FLRUTulip2DownlinkInput,
   switch (formattedInput.deviceAction) {
     case 'resetToFactory': {
       const frame = encodeResetToFactory()
-      return allowMultiple ? formatMultipleDownlinkOutput([frame]) : formatDownlinkOutput(frame)
+      return allowMultiple
+        ? formatMultipleDownlinkOutput([frame])
+        : formatDownlinkOutput(frame)
     }
 
     case 'configuration':

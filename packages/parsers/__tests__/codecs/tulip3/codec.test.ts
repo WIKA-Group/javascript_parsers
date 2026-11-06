@@ -9,14 +9,41 @@ const deviceProfile = defineTULIP3DeviceProfile({
   sensorChannelConfig: {
     sensor1: {
       alarmFlags: {},
-      channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'ch1', alarmFlags: {}, registerConfig: emptyChannelRegisterConfig(), availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
-      channel2: { start: 10, end: 200, measurementTypes: [], channelName: 'ch2', alarmFlags: {}, registerConfig: emptyChannelRegisterConfig(), availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
+      channel1: {
+        start: 0,
+        end: 100,
+        measurementTypes: [],
+        channelName: 'ch1',
+        alarmFlags: {},
+        registerConfig: emptyChannelRegisterConfig(),
+        availableUnits: ['°C'],
+        availableMeasurands: ['Temperature'],
+      },
+      channel2: {
+        start: 10,
+        end: 200,
+        measurementTypes: [],
+        channelName: 'ch2',
+        alarmFlags: {},
+        registerConfig: emptyChannelRegisterConfig(),
+        availableUnits: ['°C'],
+        availableMeasurands: ['Temperature'],
+      },
       registerConfig: emptySensorRegisterConfig(),
     },
     sensor2: {
       alarmFlags: {},
       registerConfig: emptySensorRegisterConfig(),
-      channel1: { start: -50, end: 50, measurementTypes: [], channelName: 'ch3', alarmFlags: {}, registerConfig: emptyChannelRegisterConfig(), availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
+      channel1: {
+        start: -50,
+        end: 50,
+        measurementTypes: [],
+        channelName: 'ch3',
+        alarmFlags: {},
+        registerConfig: emptyChannelRegisterConfig(),
+        availableUnits: ['°C'],
+        availableMeasurands: ['Temperature'],
+      },
     },
     alarmFlags: {},
     registerConfig: emptyCommunicationModuleRegisterConfig(),
@@ -41,13 +68,25 @@ describe('defineTULIP3Codec (non-decode methods)', () => {
 
   it('canTryDecode returns true for valid prefix', () => {
     for (let prefix = 0x10; prefix <= 0x17; ++prefix) {
-      expect(codec.canTryDecode({ bytes: [prefix, 0x00], fPort: 1, recvTime: new Date() })).toBe(true)
+      expect(codec.canTryDecode({
+        bytes: [prefix, 0x00],
+        fPort: 1,
+        recvTime: new Date(),
+      })).toBe(true)
     }
   })
 
   it('canTryDecode returns false for invalid prefix', () => {
-    expect(codec.canTryDecode({ bytes: [0x09], fPort: 1, recvTime: new Date() })).toBe(false)
-    expect(codec.canTryDecode({ bytes: [], fPort: 1, recvTime: new Date() })).toBe(false)
+    expect(codec.canTryDecode({
+      bytes: [0x09],
+      fPort: 1,
+      recvTime: new Date(),
+    })).toBe(false)
+    expect(codec.canTryDecode({
+      bytes: [],
+      fPort: 1,
+      recvTime: new Date(),
+    })).toBe(false)
   })
 
   it('getChannels returns all channels with correct info', () => {
@@ -83,7 +122,16 @@ describe('defineTULIP3Codec (validations)', () => {
         sensor1: {
           alarmFlags: {},
           registerConfig: emptySensorRegisterConfig(),
-          channel1: { start: 10, end: 10, measurementTypes: [], channelName: 'bch1', alarmFlags: {}, registerConfig: emptyChannelRegisterConfig(), availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
+          channel1: {
+            start: 10,
+            end: 10,
+            measurementTypes: [],
+            channelName: 'bch1',
+            alarmFlags: {},
+            registerConfig: emptyChannelRegisterConfig(),
+            availableUnits: ['°C'],
+            availableMeasurands: ['Temperature'],
+          },
         },
       },
       deviceAlarmConfig: {
@@ -106,12 +154,30 @@ describe('defineTULIP3Codec (validations)', () => {
         sensor1: {
           alarmFlags: {},
           registerConfig: emptySensorRegisterConfig(),
-          channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'dup', alarmFlags: {}, registerConfig: emptyChannelRegisterConfig(), availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
+          channel1: {
+            start: 0,
+            end: 100,
+            measurementTypes: [],
+            channelName: 'dup',
+            alarmFlags: {},
+            registerConfig: emptyChannelRegisterConfig(),
+            availableUnits: ['°C'],
+            availableMeasurands: ['Temperature'],
+          },
         },
         sensor2: {
           alarmFlags: {},
           registerConfig: emptySensorRegisterConfig(),
-          channel1: { start: 0, end: 50, measurementTypes: [], channelName: 'dup', alarmFlags: {}, registerConfig: emptyChannelRegisterConfig(), availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
+          channel1: {
+            start: 0,
+            end: 50,
+            measurementTypes: [],
+            channelName: 'dup',
+            alarmFlags: {},
+            registerConfig: emptyChannelRegisterConfig(),
+            availableUnits: ['°C'],
+            availableMeasurands: ['Temperature'],
+          },
         },
       },
       deviceAlarmConfig: {
@@ -134,7 +200,16 @@ describe('defineTULIP3Codec (validations)', () => {
         sensor1: {
           alarmFlags: {},
           registerConfig: emptySensorRegisterConfig(),
-          channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'chA', alarmFlags: {}, registerConfig: emptyChannelRegisterConfig(), availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
+          channel1: {
+            start: 0,
+            end: 100,
+            measurementTypes: [],
+            channelName: 'chA',
+            alarmFlags: {},
+            registerConfig: emptyChannelRegisterConfig(),
+            availableUnits: ['°C'],
+            availableMeasurands: ['Temperature'],
+          },
         },
       },
       deviceAlarmConfig: {

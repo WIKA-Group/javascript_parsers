@@ -13,6 +13,24 @@ describe('numberToIntArray', () => {
 
 describe('numbersToIntArray', () => {
   it('should convert an array of numbers to an array of bytes', () => {
-    expect(numbersToIntArray([{ value: 7200, bytes: 4 }, { value: 1, bytes: 2 }, { value: 7200, bytes: 4 }, { value: 1, bytes: 2 }])).toEqual([0x00, 0x00, 0x1C, 0x20, 0x00, 0x01, 0x00, 0x00, 0x1C, 0x20, 0x00, 0x01])
+    expect(numbersToIntArray([
+      { value: 7200, bytes: 4 },
+      { value: 1, bytes: 2 },
+      { value: 7200, bytes: 4 },
+      { value: 1, bytes: 2 },
+    ])).toEqual([
+      0x00,
+      0x00,
+      0x1C,
+      0x20,
+      0x00,
+      0x01,
+      0x00,
+      0x00,
+      0x1C,
+      0x20,
+      0x00,
+      0x01,
+    ])
   })
 })

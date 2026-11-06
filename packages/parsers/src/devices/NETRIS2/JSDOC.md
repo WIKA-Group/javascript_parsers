@@ -1,5 +1,3 @@
-# NETRIS2 Parser Quick Start
-
 ## Parser API
 
 All functions are pure. NETRIS2 does not support changing measuring ranges because both channels are fixed to 4-20 mA.

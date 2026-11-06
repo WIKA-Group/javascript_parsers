@@ -8,7 +8,10 @@ export const TRU_NETRIS3_NAME = 'TRU+NETRIS3'
 export function useParser() {
   return defineParser({
     parserName: TRU_NETRIS3_NAME,
-    codecs: [createTRUTULIP2Codec(), createTULIP3TRUCodec()],
+    codecs: [
+      createTRUTULIP2Codec(),
+      createTULIP3TRUCodec(),
+    ],
   })
 }
 

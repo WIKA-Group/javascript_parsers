@@ -86,7 +86,9 @@ export function createMultipleEncoderFactory<TDeviceConfig extends TULIP3DeviceC
 
       case 'readRegisters':
       case 'writeRegisters': {
-        const mode = validatedInput.action === 'readRegisters' ? 'read' : 'write'
+        const mode = validatedInput.action === 'readRegisters'
+          ? 'read'
+          : 'write'
         return encodeReadWritePipeline(
           mode,
           validatedInput.input as any,

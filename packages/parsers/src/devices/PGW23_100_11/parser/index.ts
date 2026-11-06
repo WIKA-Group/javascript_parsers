@@ -7,7 +7,9 @@ export const PGW23_100_11_NAME = 'PGW23.100.11'
 export function useParser() {
   return defineParser({
     parserName: PGW23_100_11_NAME,
-    codecs: [createTULIP2PGWCodec()],
+    codecs: [
+      createTULIP2PGWCodec(),
+    ],
   })
 }
 

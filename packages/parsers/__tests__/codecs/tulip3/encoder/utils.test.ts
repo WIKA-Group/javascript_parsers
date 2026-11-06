@@ -21,8 +21,16 @@ describe('encoder/utils', () => {
 
     it('should pass for valid write commands', () => {
       const commands: WriteRegisterCommand[] = [
-        { address: 0, size: 4, value: [1, 2, 3, 4] },
-        { address: 10, size: 2, value: [5, 6] },
+        {
+          address: 0,
+          size: 4,
+          value: [1, 2, 3, 4],
+        },
+        {
+          address: 10,
+          size: 2,
+          value: [5, 6],
+        },
       ]
       expect(() => validateCommands('write', commands)).not.toThrow()
     })
@@ -37,7 +45,11 @@ describe('encoder/utils', () => {
 
     it('should throw when write command size does not match value length', () => {
       const commands: WriteRegisterCommand[] = [
-        { address: 0, size: 4, value: [1, 2, 3] }, // size 4 but only 3 values
+        {
+          address: 0,
+          size: 4,
+          value: [1, 2, 3],
+        }, // size 4 but only 3 values
       ]
       expect(() => validateCommands('write', commands)).toThrow('Size mismatch')
     })
@@ -61,9 +73,13 @@ describe('encoder/utils', () => {
     })
 
     it('should return single block for single command', () => {
-      const commands: ReadRegisterCommand[] = [{ address: 0, size: 4 }]
+      const commands: ReadRegisterCommand[] = [
+        { address: 0, size: 4 },
+      ]
       const result = consolidateCommands('read', commands)
-      expect(result).toEqual([{ address: 0, size: 4 }])
+      expect(result).toEqual([
+        { address: 0, size: 4 },
+      ])
     })
 
     it('should consolidate two contiguous read commands', () => {
@@ -72,16 +88,32 @@ describe('encoder/utils', () => {
         { address: 4, size: 4 },
       ]
       const result = consolidateCommands('read', commands)
-      expect(result).toEqual([{ address: 0, size: 8 }])
+      expect(result).toEqual([
+        { address: 0, size: 8 },
+      ])
     })
 
     it('should consolidate two contiguous write commands with values', () => {
       const commands: WriteRegisterCommand[] = [
-        { address: 0, size: 4, value: [1, 2, 3, 4] },
-        { address: 4, size: 4, value: [5, 6, 7, 8] },
+        {
+          address: 0,
+          size: 4,
+          value: [1, 2, 3, 4],
+        },
+        {
+          address: 4,
+          size: 4,
+          value: [5, 6, 7, 8],
+        },
       ]
       const result = consolidateCommands('write', commands)
-      expect(result).toEqual([{ address: 0, size: 8, value: [1, 2, 3, 4, 5, 6, 7, 8] }])
+      expect(result).toEqual([
+        {
+          address: 0,
+          size: 8,
+          value: [1, 2, 3, 4, 5, 6, 7, 8],
+        },
+      ])
     })
 
     it('should not consolidate non-contiguous commands', () => {
@@ -103,7 +135,9 @@ describe('encoder/utils', () => {
         { address: 4, size: 4 },
       ]
       const result = consolidateCommands('read', commands)
-      expect(result).toEqual([{ address: 0, size: 12 }])
+      expect(result).toEqual([
+        { address: 0, size: 12 },
+      ])
     })
 
     it('should respect maxDataSize of 31', () => {
@@ -124,19 +158,37 @@ describe('encoder/utils', () => {
         { address: 16, size: 15 }, // Total 31 - exactly at limit
       ]
       const result = consolidateCommands('read', commands)
-      expect(result).toEqual([{ address: 0, size: 31 }])
+      expect(result).toEqual([
+        { address: 0, size: 31 },
+      ])
     })
 
     it('should respect custom maxDataSize for write mode', () => {
       // maxDataSize only applies to WRITE mode
       const commands: WriteRegisterCommand[] = [
-        { address: 0, size: 10, value: Array.from({ length: 10 }).fill(1) as number[] },
-        { address: 10, size: 10, value: Array.from({ length: 10 }).fill(2) as number[] }, // Would exceed 15 if combined
+        {
+          address: 0,
+          size: 10,
+          value: Array.from({ length: 10 }).fill(1) as number[],
+        },
+        {
+          address: 10,
+          size: 10,
+          value: Array.from({ length: 10 }).fill(2) as number[],
+        }, // Would exceed 15 if combined
       ]
       const result = consolidateCommands('write', commands, 15)
       expect(result).toEqual([
-        { address: 0, size: 10, value: Array.from({ length: 10 }).fill(1) },
-        { address: 10, size: 10, value: Array.from({ length: 10 }).fill(2) },
+        {
+          address: 0,
+          size: 10,
+          value: Array.from({ length: 10 }).fill(1),
+        },
+        {
+          address: 10,
+          size: 10,
+          value: Array.from({ length: 10 }).fill(2),
+        },
       ])
     })
 
@@ -148,29 +200,85 @@ describe('encoder/utils', () => {
         { address: 10, size: 10 },
       ]
       const result = consolidateCommands('read', commands)
-      expect(result).toEqual([{ address: 0, size: 20 }])
+      expect(result).toEqual([
+        { address: 0, size: 20 },
+      ])
     })
 
     it('should consolidate write commands up to custom maxDataSize', () => {
       const commands: WriteRegisterCommand[] = [
-        { address: 0, size: 8, value: [1, 2, 3, 4, 5, 6, 7, 8] },
-        { address: 8, size: 7, value: [9, 10, 11, 12, 13, 14, 15] }, // Total 15 - exactly at custom limit
+        {
+          address: 0,
+          size: 8,
+          value: [1, 2, 3, 4, 5, 6, 7, 8],
+        },
+        {
+          address: 8,
+          size: 7,
+          value: [9, 10, 11, 12, 13, 14, 15],
+        }, // Total 15 - exactly at custom limit
       ]
       const result = consolidateCommands('write', commands, 15)
-      expect(result).toEqual([{ address: 0, size: 15, value: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15] }])
+      expect(result).toEqual([
+        {
+          address: 0,
+          size: 15,
+          value: [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+          ],
+        },
+      ])
     })
 
     it('should handle multiple separate blocks', () => {
       const commands: WriteRegisterCommand[] = [
-        { address: 0, size: 4, value: [1, 2, 3, 4] },
-        { address: 4, size: 4, value: [5, 6, 7, 8] },
-        { address: 100, size: 2, value: [9, 10] },
-        { address: 102, size: 2, value: [11, 12] },
+        {
+          address: 0,
+          size: 4,
+          value: [1, 2, 3, 4],
+        },
+        {
+          address: 4,
+          size: 4,
+          value: [5, 6, 7, 8],
+        },
+        {
+          address: 100,
+          size: 2,
+          value: [9, 10],
+        },
+        {
+          address: 102,
+          size: 2,
+          value: [11, 12],
+        },
       ]
       const result = consolidateCommands('write', commands)
       expect(result).toEqual([
-        { address: 0, size: 8, value: [1, 2, 3, 4, 5, 6, 7, 8] },
-        { address: 100, size: 4, value: [9, 10, 11, 12] },
+        {
+          address: 0,
+          size: 8,
+          value: [1, 2, 3, 4, 5, 6, 7, 8],
+        },
+        {
+          address: 100,
+          size: 4,
+          value: [9, 10, 11, 12],
+        },
       ])
     })
   })
@@ -192,7 +300,11 @@ describe('encoder/utils', () => {
     })
 
     it('should convert write block to header + value', () => {
-      const block = { address: 512, size: 4, value: [1, 2, 3, 4] }
+      const block = {
+        address: 512,
+        size: 4,
+        value: [1, 2, 3, 4],
+      }
       const result = blockToBytes('write', block)
       expect(result).toEqual([0x40, 0x04, 1, 2, 3, 4])
       expect(result.length).toBe(HEADER_SIZE + 4)
@@ -229,8 +341,16 @@ describe('encoder/utils', () => {
 
     it('should convert multiple write blocks to packets', () => {
       const blocks = [
-        { address: 0, size: 2, value: [1, 2] },
-        { address: 100, size: 2, value: [3, 4] },
+        {
+          address: 0,
+          size: 2,
+          value: [1, 2],
+        },
+        {
+          address: 100,
+          size: 2,
+          value: [3, 4],
+        },
       ]
       const result = blocksToPackets('write', blocks)
       expect(result).toEqual([
@@ -250,7 +370,9 @@ describe('encoder/utils', () => {
     })
 
     it('should pack single command into single entry', () => {
-      const commands: ReadRegisterCommand[] = [{ address: 0, size: 4 }]
+      const commands: ReadRegisterCommand[] = [
+        { address: 0, size: 4 },
+      ]
       const result = packCommands('read', commands, 50)
       expect(result.length).toBe(1)
       expect(result[0]).toEqual([0x00, 0x04])
@@ -258,8 +380,16 @@ describe('encoder/utils', () => {
 
     it('should pack contiguous commands as consolidated block', () => {
       const commands: WriteRegisterCommand[] = [
-        { address: 0, size: 4, value: [1, 2, 3, 4] },
-        { address: 4, size: 4, value: [5, 6, 7, 8] },
+        {
+          address: 0,
+          size: 4,
+          value: [1, 2, 3, 4],
+        },
+        {
+          address: 4,
+          size: 4,
+          value: [5, 6, 7, 8],
+        },
       ]
       const result = packCommands('write', commands, 50)
       expect(result.length).toBe(1)
@@ -325,9 +455,21 @@ describe('encoder/utils', () => {
 
     it('should use FFD to pack multiple blocks into entries', () => {
       const commands: WriteRegisterCommand[] = [
-        { address: 0, size: 30, value: Array.from({ length: 30 }).fill(1) as number[] }, // wireSize: 32
-        { address: 100, size: 10, value: Array.from({ length: 10 }).fill(2) as number[] }, // wireSize: 12
-        { address: 200, size: 5, value: Array.from({ length: 5 }).fill(3) as number[] }, // wireSize: 7
+        {
+          address: 0,
+          size: 30,
+          value: Array.from({ length: 30 }).fill(1) as number[],
+        }, // wireSize: 32
+        {
+          address: 100,
+          size: 10,
+          value: Array.from({ length: 10 }).fill(2) as number[],
+        }, // wireSize: 12
+        {
+          address: 200,
+          size: 5,
+          value: Array.from({ length: 5 }).fill(3) as number[],
+        }, // wireSize: 7
       ]
       const result = packCommands('write', commands, 50)
       // FFD should try to pack efficiently
@@ -342,12 +484,20 @@ describe('encoder/utils', () => {
     })
 
     it('should throw if payloadSize is too small for write', () => {
-      const commands: WriteRegisterCommand[] = [{ address: 0, size: 4, value: [1, 2, 3, 4] }]
+      const commands: WriteRegisterCommand[] = [
+        {
+          address: 0,
+          size: 4,
+          value: [1, 2, 3, 4],
+        },
+      ]
       expect(() => packCommands('write', commands, 2)).toThrow('Payload size 2 is too small')
     })
 
     it('should throw if payloadSize is too small for read', () => {
-      const commands: ReadRegisterCommand[] = [{ address: 0, size: 4 }]
+      const commands: ReadRegisterCommand[] = [
+        { address: 0, size: 4 },
+      ]
       expect(() => packCommands('read', commands, 1)).toThrow('Payload size 1 is too small')
     })
 
@@ -361,7 +511,11 @@ describe('encoder/utils', () => {
 
     it('should throw on write size mismatch', () => {
       const commands: WriteRegisterCommand[] = [
-        { address: 0, size: 4, value: [1, 2, 3] },
+        {
+          address: 0,
+          size: 4,
+          value: [1, 2, 3],
+        },
       ]
       expect(() => packCommands('write', commands, 50)).toThrow('Size mismatch')
     })
@@ -370,8 +524,16 @@ describe('encoder/utils', () => {
       // payloadSize 10 means maxDataSize = 10 - 2 = 8
       // For WRITE mode, wireSize = 2 (header) + size (data)
       const commands: WriteRegisterCommand[] = [
-        { address: 0, size: 5, value: [1, 2, 3, 4, 5] }, // wireSize: 7
-        { address: 5, size: 5, value: [6, 7, 8, 9, 10] }, // wireSize: 7, would be 10 data bytes if consolidated (>8 max)
+        {
+          address: 0,
+          size: 5,
+          value: [1, 2, 3, 4, 5],
+        }, // wireSize: 7
+        {
+          address: 5,
+          size: 5,
+          value: [6, 7, 8, 9, 10],
+        }, // wireSize: 7, would be 10 data bytes if consolidated (>8 max)
       ]
       const result = packCommands('write', commands, 10)
       // Cannot consolidate beyond 8 bytes data, so stays as 2 blocks
@@ -389,8 +551,16 @@ describe('encoder/utils', () => {
         { address: 10, size: 10 },
       ]
       const writeCommands: WriteRegisterCommand[] = [
-        { address: 0, size: 10, value: Array.from({ length: 10 }).fill(1) as number[] },
-        { address: 10, size: 10, value: Array.from({ length: 10 }).fill(2) as number[] },
+        {
+          address: 0,
+          size: 10,
+          value: Array.from({ length: 10 }).fill(1) as number[],
+        },
+        {
+          address: 10,
+          size: 10,
+          value: Array.from({ length: 10 }).fill(2) as number[],
+        },
       ]
 
       // Both consolidate to size 20
@@ -419,9 +589,21 @@ describe('encoder/utils', () => {
       // Entry 1: A(12), remaining 8. Can fit B(8)? Yes. Entry 1: A+B = 20
       // Entry 2: C(6)
       const commands: WriteRegisterCommand[] = [
-        { address: 0, size: 10, value: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1] },
-        { address: 100, size: 6, value: [2, 2, 2, 2, 2, 2] },
-        { address: 200, size: 4, value: [3, 3, 3, 3] },
+        {
+          address: 0,
+          size: 10,
+          value: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        },
+        {
+          address: 100,
+          size: 6,
+          value: [2, 2, 2, 2, 2, 2],
+        },
+        {
+          address: 200,
+          size: 4,
+          value: [3, 3, 3, 3],
+        },
       ]
       const result = packCommands('write', commands, 20)
 
@@ -435,8 +617,16 @@ describe('encoder/utils', () => {
     it('should verify actual byte content after FFD packing', () => {
       // Two non-contiguous write blocks that fit in one entry
       const commands: WriteRegisterCommand[] = [
-        { address: 0, size: 2, value: [0xAA, 0xBB] }, // wireSize: 4
-        { address: 100, size: 2, value: [0xCC, 0xDD] }, // wireSize: 4
+        {
+          address: 0,
+          size: 2,
+          value: [0xAA, 0xBB],
+        }, // wireSize: 4
+        {
+          address: 100,
+          size: 2,
+          value: [0xCC, 0xDD],
+        }, // wireSize: 4
       ]
       const result = packCommands('write', commands, 10)
 
@@ -479,7 +669,11 @@ describe('encoder/utils', () => {
     it('should exactly fill payload with no wasted space', () => {
       // Payload 10, one block of exactly 10 bytes
       const commands: WriteRegisterCommand[] = [
-        { address: 0, size: 8, value: [1, 2, 3, 4, 5, 6, 7, 8] }, // wireSize: 2 + 8 = 10
+        {
+          address: 0,
+          size: 8,
+          value: [1, 2, 3, 4, 5, 6, 7, 8],
+        }, // wireSize: 2 + 8 = 10
       ]
       const result = packCommands('write', commands, 10)
 
@@ -491,11 +685,31 @@ describe('encoder/utils', () => {
       // Payload: 30 bytes
       // Blocks (sorted by size for FFD): 15, 12, 10, 8, 5
       const commands: WriteRegisterCommand[] = [
-        { address: 0, size: 13, value: Array.from({ length: 13 }).fill(1) as number[] }, // wireSize: 15
-        { address: 100, size: 10, value: Array.from({ length: 10 }).fill(2) as number[] }, // wireSize: 12
-        { address: 200, size: 8, value: Array.from({ length: 8 }).fill(3) as number[] }, // wireSize: 10
-        { address: 300, size: 6, value: Array.from({ length: 6 }).fill(4) as number[] }, // wireSize: 8
-        { address: 400, size: 3, value: Array.from({ length: 3 }).fill(5) as number[] }, // wireSize: 5
+        {
+          address: 0,
+          size: 13,
+          value: Array.from({ length: 13 }).fill(1) as number[],
+        }, // wireSize: 15
+        {
+          address: 100,
+          size: 10,
+          value: Array.from({ length: 10 }).fill(2) as number[],
+        }, // wireSize: 12
+        {
+          address: 200,
+          size: 8,
+          value: Array.from({ length: 8 }).fill(3) as number[],
+        }, // wireSize: 10
+        {
+          address: 300,
+          size: 6,
+          value: Array.from({ length: 6 }).fill(4) as number[],
+        }, // wireSize: 8
+        {
+          address: 400,
+          size: 3,
+          value: Array.from({ length: 3 }).fill(5) as number[],
+        }, // wireSize: 5
       ]
       const result = packCommands('write', commands, 30)
 
@@ -516,10 +730,26 @@ describe('encoder/utils', () => {
       // Contiguous blocks C, D at addresses 100-108
       // All should consolidate into 2 blocks, then pack
       const commands: WriteRegisterCommand[] = [
-        { address: 0, size: 4, value: [1, 2, 3, 4] },
-        { address: 4, size: 4, value: [5, 6, 7, 8] },
-        { address: 100, size: 4, value: [9, 10, 11, 12] },
-        { address: 104, size: 4, value: [13, 14, 15, 16] },
+        {
+          address: 0,
+          size: 4,
+          value: [1, 2, 3, 4],
+        },
+        {
+          address: 4,
+          size: 4,
+          value: [5, 6, 7, 8],
+        },
+        {
+          address: 100,
+          size: 4,
+          value: [9, 10, 11, 12],
+        },
+        {
+          address: 104,
+          size: 4,
+          value: [13, 14, 15, 16],
+        },
       ]
       const result = packCommands('write', commands, 50)
 
@@ -570,11 +800,31 @@ describe('encoder/utils', () => {
       // Entry 3: 6.
       // Result: 3 entries
       const commands: WriteRegisterCommand[] = [
-        { address: 0, size: 4, value: [1, 2, 3, 4] },
-        { address: 4, size: 4, value: [5, 6, 7, 8] },
-        { address: 8, size: 4, value: [9, 10, 11, 12] },
-        { address: 12, size: 4, value: [13, 14, 15, 16] },
-        { address: 16, size: 4, value: [17, 18, 19, 20] },
+        {
+          address: 0,
+          size: 4,
+          value: [1, 2, 3, 4],
+        },
+        {
+          address: 4,
+          size: 4,
+          value: [5, 6, 7, 8],
+        },
+        {
+          address: 8,
+          size: 4,
+          value: [9, 10, 11, 12],
+        },
+        {
+          address: 12,
+          size: 4,
+          value: [13, 14, 15, 16],
+        },
+        {
+          address: 16,
+          size: 4,
+          value: [17, 18, 19, 20],
+        },
       ]
       const result = packCommands('write', commands, 12)
 
@@ -585,7 +835,18 @@ describe('encoder/utils', () => {
 
       // Verify content
       expect(result[0]).toEqual([0x00, 0x08, 1, 2, 3, 4, 5, 6, 7, 8])
-      expect(result[1]).toEqual([0x01, 0x08, 9, 10, 11, 12, 13, 14, 15, 16]) // addr 8 << 5 | 8 = 0x108
+      expect(result[1]).toEqual([
+        0x01,
+        0x08,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+      ]) // addr 8 << 5 | 8 = 0x108
       expect(result[2]).toEqual([0x02, 0x04, 17, 18, 19, 20]) // addr 16 << 5 | 4 = 0x204
     })
 
@@ -613,14 +874,42 @@ describe('encoder/utils', () => {
       //   Entry 3: leftovers mixed (A2 size 3 + B2 size 4)
       const commands: WriteRegisterCommand[] = [
         // Group A: 4 contiguous commands
-        { address: 0, size: 3, value: [1, 2, 3] },
-        { address: 3, size: 3, value: [4, 5, 6] },
-        { address: 6, size: 3, value: [7, 8, 9] },
-        { address: 9, size: 3, value: [10, 11, 12] },
+        {
+          address: 0,
+          size: 3,
+          value: [1, 2, 3],
+        },
+        {
+          address: 3,
+          size: 3,
+          value: [4, 5, 6],
+        },
+        {
+          address: 6,
+          size: 3,
+          value: [7, 8, 9],
+        },
+        {
+          address: 9,
+          size: 3,
+          value: [10, 11, 12],
+        },
         // Group B: 3 contiguous commands
-        { address: 100, size: 4, value: [21, 22, 23, 24] },
-        { address: 104, size: 4, value: [25, 26, 27, 28] },
-        { address: 108, size: 4, value: [29, 30, 31, 32] },
+        {
+          address: 100,
+          size: 4,
+          value: [21, 22, 23, 24],
+        },
+        {
+          address: 104,
+          size: 4,
+          value: [25, 26, 27, 28],
+        },
+        {
+          address: 108,
+          size: 4,
+          value: [29, 30, 31, 32],
+        },
       ]
       const result = packCommands('write', commands, 12)
 
@@ -632,7 +921,18 @@ describe('encoder/utils', () => {
 
       // Entry 2: Block B1 (addr 100, size 8) - wireSize 10
       expect(result[1]!.length).toBe(10)
-      expect(result[1]).toEqual([0x0C, 0x88, 21, 22, 23, 24, 25, 26, 27, 28]) // 100 << 5 | 8 = 0xC88
+      expect(result[1]).toEqual([
+        0x0C,
+        0x88,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+      ]) // 100 << 5 | 8 = 0xC88
 
       // Entry 3: Mixed leftovers - B2 (addr 108, size 4) + A2 (addr 9, size 3)
       // FFD places larger first: B2(6) then A2(5)
@@ -697,9 +997,21 @@ describe('encoder/utils', () => {
       // So we get 3 blocks, each wireSize 14
       // FFD with payload 15: each block fits alone
       const commands: WriteRegisterCommand[] = [
-        { address: 0, size: 12, value: Array.from({ length: 12 }).fill(1) as number[] },
-        { address: 12, size: 12, value: Array.from({ length: 12 }).fill(2) as number[] },
-        { address: 24, size: 12, value: Array.from({ length: 12 }).fill(3) as number[] },
+        {
+          address: 0,
+          size: 12,
+          value: Array.from({ length: 12 }).fill(1) as number[],
+        },
+        {
+          address: 12,
+          size: 12,
+          value: Array.from({ length: 12 }).fill(2) as number[],
+        },
+        {
+          address: 24,
+          size: 12,
+          value: Array.from({ length: 12 }).fill(3) as number[],
+        },
       ]
       const result = packCommands('write', commands, 15)
 
@@ -725,9 +1037,21 @@ describe('encoder/utils', () => {
       // Key assertion: The 3rd isolated block (C) gets packed into the gap
       // left by the 1st block (A), even though they're from different address spaces.
       const commands: WriteRegisterCommand[] = [
-        { address: 0, size: 16, value: Array.from({ length: 16 }).fill(0xAA) as number[] }, // wireSize: 18
-        { address: 100, size: 13, value: Array.from({ length: 13 }).fill(0xBB) as number[] }, // wireSize: 15
-        { address: 200, size: 7, value: Array.from({ length: 7 }).fill(0xCC) as number[] }, // wireSize: 9
+        {
+          address: 0,
+          size: 16,
+          value: Array.from({ length: 16 }).fill(0xAA) as number[],
+        }, // wireSize: 18
+        {
+          address: 100,
+          size: 13,
+          value: Array.from({ length: 13 }).fill(0xBB) as number[],
+        }, // wireSize: 15
+        {
+          address: 200,
+          size: 7,
+          value: Array.from({ length: 7 }).fill(0xCC) as number[],
+        }, // wireSize: 9
       ]
       const result = packCommands('write', commands, 30)
 
@@ -798,11 +1122,27 @@ describe('encoder/utils', () => {
       //
       // TODO: When "smart consolidation" optimization is implemented, change expect to 2
       const commands: WriteRegisterCommand[] = [
-        { address: 0, size: 10, value: Array.from({ length: 10 }).fill(0xAA) as number[] }, // wireSize: 12
-        { address: 100, size: 10, value: Array.from({ length: 10 }).fill(0xBB) as number[] }, // wireSize: 12
+        {
+          address: 0,
+          size: 10,
+          value: Array.from({ length: 10 }).fill(0xAA) as number[],
+        }, // wireSize: 12
+        {
+          address: 100,
+          size: 10,
+          value: Array.from({ length: 10 }).fill(0xBB) as number[],
+        }, // wireSize: 12
         // Two contiguous commands that will be consolidated into one block
-        { address: 200, size: 4, value: [0xC1, 0xC1, 0xC1, 0xC1] }, // wireSize: 6 if kept separate
-        { address: 204, size: 4, value: [0xC2, 0xC2, 0xC2, 0xC2] }, // wireSize: 6 if kept separate
+        {
+          address: 200,
+          size: 4,
+          value: [0xC1, 0xC1, 0xC1, 0xC1],
+        }, // wireSize: 6 if kept separate
+        {
+          address: 204,
+          size: 4,
+          value: [0xC2, 0xC2, 0xC2, 0xC2],
+        }, // wireSize: 6 if kept separate
       ]
       const result = packCommands('write', commands, 20)
 
@@ -815,7 +1155,18 @@ describe('encoder/utils', () => {
       expect(result[1]!.length).toBe(12)
       // Entry 3: Consolidated Block C (10 bytes) - addr 200, size 8
       expect(result[2]!.length).toBe(10)
-      expect(result[2]).toEqual([0x19, 0x08, 0xC1, 0xC1, 0xC1, 0xC1, 0xC2, 0xC2, 0xC2, 0xC2])
+      expect(result[2]).toEqual([
+        0x19,
+        0x08,
+        0xC1,
+        0xC1,
+        0xC1,
+        0xC1,
+        0xC2,
+        0xC2,
+        0xC2,
+        0xC2,
+      ])
 
       // Verify total bytes = 34 (would be 36 with smart non-consolidation, but only 2 entries)
       const totalBytes = result.reduce((sum, entry) => sum + entry.length, 0)

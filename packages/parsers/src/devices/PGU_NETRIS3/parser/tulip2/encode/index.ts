@@ -16,7 +16,9 @@ export function PGUTULIP2EncodeHandler(formattedInput: PGUTulip2DownlinkInput, a
   switch (formattedInput.deviceAction) {
     case 'resetToFactory': {
       const frame = encodeResetToFactory()
-      return allowMultiple ? formatMultipleDownlinkOutput([frame]) : formatDownlinkOutput(frame)
+      return allowMultiple
+        ? formatMultipleDownlinkOutput([frame])
+        : formatDownlinkOutput(frame)
     }
 
     case 'configuration':

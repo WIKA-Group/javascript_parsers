@@ -167,12 +167,14 @@ const handleTechnicalAlarmMessage: Handler<TULIP2PEWChannels, PEWTULIP2Technical
     data: {
       messageType: 0x04,
       configurationId,
-      technicalAlarms: [{
-        event,
-        eventName,
-        alarmType,
-        alarmTypeNames,
-      }] as PEWTULIP2TechnicalAlarmsData,
+      technicalAlarms: [
+        {
+          event,
+          eventName,
+          alarmType,
+          alarmTypeNames,
+        },
+      ] as PEWTULIP2TechnicalAlarmsData,
     },
   }
 
@@ -374,7 +376,9 @@ function parseChannelPropertyConfigurationData(payload: number[], options: Pick<
   }
 
   const rawOffset = intTuple2ToUInt16([payload[1]!, payload[2]!])
-  const measurementOffset = rawOffset > 0x7FFF ? rawOffset - 0x10000 : rawOffset
+  const measurementOffset = rawOffset > 0x7FFF
+    ? rawOffset - 0x10000
+    : rawOffset
 
   return {
     channel,
@@ -577,13 +581,33 @@ const handleDeviceIdentificationMessage: Handler<TULIP2PEWChannels, PEWTULIP2Dev
 
   const pressureType = Object.keys(PRESSURE_TYPES).find(typeName => (PRESSURE_TYPES)[typeName as keyof typeof PRESSURE_TYPES] === pressureTypeId)! as keyof typeof PRESSURE_TYPES
 
-  const measurementRangeStartPressure = intTuple4ToFloat32WithThreshold([input.bytes[20]!, input.bytes[21]!, input.bytes[22]!, input.bytes[23]!])
+  const measurementRangeStartPressure = intTuple4ToFloat32WithThreshold([
+    input.bytes[20]!,
+    input.bytes[21]!,
+    input.bytes[22]!,
+    input.bytes[23]!,
+  ])
 
-  const measurementRangeEndPressure = intTuple4ToFloat32WithThreshold([input.bytes[24]!, input.bytes[25]!, input.bytes[26]!, input.bytes[27]!])
+  const measurementRangeEndPressure = intTuple4ToFloat32WithThreshold([
+    input.bytes[24]!,
+    input.bytes[25]!,
+    input.bytes[26]!,
+    input.bytes[27]!,
+  ])
 
-  const measurementRangeStartDeviceTemperature = intTuple4ToFloat32WithThreshold([input.bytes[28]!, input.bytes[29]!, input.bytes[30]!, input.bytes[31]!])
+  const measurementRangeStartDeviceTemperature = intTuple4ToFloat32WithThreshold([
+    input.bytes[28]!,
+    input.bytes[29]!,
+    input.bytes[30]!,
+    input.bytes[31]!,
+  ])
 
-  const measurementRangeEndDeviceTemperature = intTuple4ToFloat32WithThreshold([input.bytes[32]!, input.bytes[33]!, input.bytes[34]!, input.bytes[35]!])
+  const measurementRangeEndDeviceTemperature = intTuple4ToFloat32WithThreshold([
+    input.bytes[32]!,
+    input.bytes[33]!,
+    input.bytes[34]!,
+    input.bytes[35]!,
+  ])
 
   const pressureUnit = input.bytes[36]!
 
@@ -656,7 +680,11 @@ const pewEncoderFactory: EncoderFactory<PewTulip2DownlinkInput> = (options) => {
   const featureFlags = PEW_DOWNLINK_FEATURE_FLAGS
   return (input: PewTulip2DownlinkInput) => {
     const channels = options.getChannels()
-    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, [createDownlinkResetBatteryIndicatorSchema(featureFlags), createPEWTULIP2DropConfigurationSchema(), createPEWTULIP2GetConfigurationSchema()])
+    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, [
+      createDownlinkResetBatteryIndicatorSchema(featureFlags),
+      createPEWTULIP2DropConfigurationSchema(),
+      createPEWTULIP2GetConfigurationSchema(),
+    ])
     return PEWTULIP2EncodeHandler(validated as PewTulip2DownlinkInput)
   }
 }
@@ -665,7 +693,11 @@ const pewMultipleEncodeFactory: MultipleEncoderFactory<PewTulip2DownlinkInput> =
   const featureFlags = PEW_DOWNLINK_FEATURE_FLAGS
   return (input: PewTulip2DownlinkInput) => {
     const channels = options.getChannels()
-    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, [createDownlinkResetBatteryIndicatorSchema(featureFlags), createPEWTULIP2DropConfigurationSchema(), createPEWTULIP2GetConfigurationSchema()])
+    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, [
+      createDownlinkResetBatteryIndicatorSchema(featureFlags),
+      createPEWTULIP2DropConfigurationSchema(),
+      createPEWTULIP2GetConfigurationSchema(),
+    ])
     return PEWTULIP2EncodeHandler(validated as PewTulip2DownlinkInput, true)
   }
 }

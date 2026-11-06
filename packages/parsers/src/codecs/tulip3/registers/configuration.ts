@@ -47,8 +47,22 @@ export type ConfigurationRegisterLookup = Branded<AnyRegisterLookup, Configurati
  * @returns Complete configuration register lookup table
  */
 export function createConfigurationRegisterLookup<TTULIP3DeviceConfig extends TULIP3DeviceConfig>(deviceConfig: TTULIP3DeviceConfig): ConfigurationRegisterLookup {
-  const sensors = ['sensor1', 'sensor2', 'sensor3', 'sensor4'] as const
-  const channels = ['channel1', 'channel2', 'channel3', 'channel4', 'channel5', 'channel6', 'channel7', 'channel8'] as const
+  const sensors = [
+    'sensor1',
+    'sensor2',
+    'sensor3',
+    'sensor4',
+  ] as const
+  const channels = [
+    'channel1',
+    'channel2',
+    'channel3',
+    'channel4',
+    'channel5',
+    'channel6',
+    'channel7',
+    'channel8',
+  ] as const
 
   const lookup: AnyRegisterLookup = {}
 

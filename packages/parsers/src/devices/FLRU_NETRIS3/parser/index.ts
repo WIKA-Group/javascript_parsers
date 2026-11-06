@@ -8,7 +8,10 @@ export const FLRU_NETRIS3_NAME = 'FLRU+NETRIS3'
 export function useParser() {
   return defineParser({
     parserName: FLRU_NETRIS3_NAME,
-    codecs: [createFLRUTULIP2Codec(), createTULIP3FLRUCodec()],
+    codecs: [
+      createFLRUTULIP2Codec(),
+      createTULIP3FLRUCodec(),
+    ],
   })
 }
 

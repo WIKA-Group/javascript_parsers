@@ -103,7 +103,9 @@ const handleProcessAlarmMessage: Handler<TULIP2TRWChannels, TRWTULIP2ProcessAlar
 
     const isSlope = alarmFlags.risingSlope || alarmFlags.fallingSlope
     const raw = (input.bytes[byteIndex + 1]! << 8) | input.bytes[byteIndex + 2]!
-    const value = isSlope ? slopeValueToValue(raw, options.channels[0]) : TULIPValueToValue(raw, options.channels[0])
+    const value = isSlope
+      ? slopeValueToValue(raw, options.channels[0])
+      : TULIPValueToValue(raw, options.channels[0])
 
     processAlarms.push({
       sensorId: 0,
@@ -161,11 +163,13 @@ const handleTechnicalAlarmMessage: Handler<TULIP2TRWChannels, TRWTULIP2Technical
     data: {
       messageType: 0x04,
       configurationId,
-      technicalAlarms: [{
-        sensorId: 0,
-        alarmType,
-        alarmTypeNames,
-      }] as TRWTULIP2TechnicalAlarmsData,
+      technicalAlarms: [
+        {
+          sensorId: 0,
+          alarmType,
+          alarmTypeNames,
+        },
+      ] as TRWTULIP2TechnicalAlarmsData,
     },
   }
 }
@@ -252,8 +256,12 @@ const handleDeviceIdentificationMessage: Handler<TULIP2TRWChannels, TRWTULIP2Dev
   const unit = input.bytes[28] || 0
 
   // Determine names based on IDs
-  const productIdName = productId === 16 ? 'NETRIS©1 BLE+LPWAN' : `Unknown Product (ID: ${productId})`
-  const productSubIdName = productSubId === 66 ? 'LoRa TRW' : `Unknown Sub-Product (ID: ${productSubId})`
+  const productIdName = productId === 16
+    ? 'NETRIS©1 BLE+LPWAN'
+    : `Unknown Product (ID: ${productId})`
+  const productSubIdName = productSubId === 66
+    ? 'LoRa TRW'
+    : `Unknown Sub-Product (ID: ${productSubId})`
   const measurandName = (LPP_MEASURANDS_BY_ID as Record<number, string>)[measurand] ?? 'Unknown'
   const unitName = LPP_UNITS_BY_ID[unit as keyof typeof LPP_UNITS_BY_ID] || 'Unknown'
 
@@ -339,7 +347,10 @@ const trwEncoderFactory: EncoderFactory<TRWTulip2DownlinkInput> = (options) => {
   const featureFlags = TRW_DOWNLINK_FEATURE_FLAGS
   return (input: TRWTulip2DownlinkInput) => {
     const channels = options.getChannels()
-    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, [createTRWTULIP2GetConfigurationSchema(), createTRWTULIP2ResetBatterySchema()])
+    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, [
+      createTRWTULIP2GetConfigurationSchema(),
+      createTRWTULIP2ResetBatterySchema(),
+    ])
     return TRWTULIP2EncodeHandler(validated as TRWTulip2DownlinkInput)
   }
 }
@@ -348,7 +359,10 @@ const trwMultipleEncodeFactory: MultipleEncoderFactory<TRWTulip2DownlinkInput> =
   const featureFlags = TRW_DOWNLINK_FEATURE_FLAGS
   return (input: TRWTulip2DownlinkInput) => {
     const channels = options.getChannels()
-    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, [createTRWTULIP2GetConfigurationSchema(), createTRWTULIP2ResetBatterySchema()])
+    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, [
+      createTRWTULIP2GetConfigurationSchema(),
+      createTRWTULIP2ResetBatterySchema(),
+    ])
     return TRWTULIP2EncodeHandler(validated as TRWTulip2DownlinkInput, true)
   }
 }

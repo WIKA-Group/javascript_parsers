@@ -22,7 +22,9 @@ function DownlinkInputSchema() {
       schema: createTULIP2DownlinkSchema(
         createTULIP2PGWChannels(),
         PGW_DOWNLINK_FEATURE_FLAGS,
-        [createDownlinkResetBatteryIndicatorSchema(PGW_DOWNLINK_FEATURE_FLAGS)],
+        [
+          createDownlinkResetBatteryIndicatorSchema(PGW_DOWNLINK_FEATURE_FLAGS),
+        ],
       ),
     },
     // {

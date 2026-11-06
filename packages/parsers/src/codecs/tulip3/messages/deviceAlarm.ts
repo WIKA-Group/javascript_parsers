@@ -53,7 +53,10 @@ export function defineAlarmFlags<const TAlarmFlags extends AlarmFlags, const TMe
   flagsConfig: TAlarmFlags,
   merge?: TMergeFlags,
 ): (MergedFlags<TAlarmFlags, TMergeFlags>) | TAlarmFlags {
-  return { ...merge ?? {}, ...flagsConfig }
+  return {
+    ...merge ?? {},
+    ...flagsConfig,
+  }
 }
 
 type OmitAlarmFlags<TAlarmFlags extends AlarmFlags, TOmitKeys extends keyof TAlarmFlags> = {

@@ -46,7 +46,9 @@ describe('fLRU+NETRIS3 parser', () => {
     const output = encodeDownlink(example.input as any)
     expect(output).toEqual(example.output)
     expect(output).toMatchObject({
-      errors: [expect.stringContaining('(JS):')],
+      errors: [
+        expect.stringContaining('(JS):'),
+      ],
     })
   })
 
@@ -140,8 +142,14 @@ describe('pEU+NETRIS3 parser range lifecycle', () => {
 
     expect(tulip2DecodeAt16).not.toEqual(tulip2DecodeAt10)
     expect(tulip3DecodeAt16).not.toEqual(tulip3DecodeAt10)
-    expect(tulip3EncodeAt10).toMatchObject({ fPort: 1, bytes: expect.any(Array) })
-    expect(tulip3EncodeAt16).toMatchObject({ fPort: 1, bytes: expect.any(Array) })
+    expect(tulip3EncodeAt10).toMatchObject({
+      fPort: 1,
+      bytes: expect.any(Array),
+    })
+    expect(tulip3EncodeAt16).toMatchObject({
+      fPort: 1,
+      bytes: expect.any(Array),
+    })
     expect((tulip3EncodeAt16 as any).bytes).not.toEqual((tulip3EncodeAt10 as any).bytes)
   })
 })

@@ -1,6 +1,6 @@
 import * as v from 'valibot'
 import { describe, expect, it } from 'vitest'
-import examples from './examples.json' assert { type: 'json' }
+import examples from './examples.json' with { type: 'json' }
 import { useParser } from './parser'
 import { createNETRIS1UplinkOutputSchema, DownlinkInputSchema } from './schema'
 
@@ -51,7 +51,9 @@ describe('netris1 parser', () => {
     const output = encodeDownlink(example.input as any)
     expect(output).toEqual(example.output)
     expect(output).toMatchObject({
-      errors: [expect.stringContaining('NETRIS1 (JS):')],
+      errors: [
+        expect.stringContaining('NETRIS1 (JS):'),
+      ],
     })
   })
 
@@ -69,7 +71,9 @@ describe('netris1 parser', () => {
     const output = encodeMultipleDownlinks(example.input as any)
     expect(output).toEqual(example.output)
     expect(output).toMatchObject({
-      errors: [expect.stringContaining('NETRIS1 (JS):')],
+      errors: [
+        expect.stringContaining('NETRIS1 (JS):'),
+      ],
     })
   })
 })
@@ -126,8 +130,17 @@ describe('netris1 parser range lifecycle', () => {
       },
     } as any)
 
-    expect(tulip2DecodeAt0to10).toMatchObject({ data: { measurement: { channels: expect.any(Array) } } })
-    expect(tulip2EncodeAt0to10).toMatchObject({ fPort: 1, bytes: expect.any(Array) })
+    expect(tulip2DecodeAt0to10).toMatchObject({
+      data: {
+        measurement: {
+          channels: expect.any(Array),
+        },
+      },
+    })
+    expect(tulip2EncodeAt0to10).toMatchObject({
+      fPort: 1,
+      bytes: expect.any(Array),
+    })
 
     adjustMeasuringRange('measurement', { start: 5, end: 15 })
 
@@ -173,12 +186,35 @@ describe('netris1 parser range lifecycle', () => {
       },
     } as any)
 
-    expect(tulip2DecodeAt5to15).toMatchObject({ data: { measurement: { channels: expect.any(Array) } } })
-    expect(tulip2EncodeAt5to15).toMatchObject({ fPort: 1, bytes: expect.any(Array) })
-    expect(tulip3DecodeAt0to10).toMatchObject({ data: { measurements: expect.any(Array) } })
-    expect(tulip3DecodeAt5to15).toMatchObject({ data: { measurements: expect.any(Array) } })
-    expect(tulip3EncodeAt0to10).toMatchObject({ fPort: 1, bytes: expect.any(Array) })
-    expect(tulip3EncodeAt5to15).toMatchObject({ fPort: 1, bytes: expect.any(Array) })
+    expect(tulip2DecodeAt5to15).toMatchObject({
+      data: {
+        measurement: {
+          channels: expect.any(Array),
+        },
+      },
+    })
+    expect(tulip2EncodeAt5to15).toMatchObject({
+      fPort: 1,
+      bytes: expect.any(Array),
+    })
+    expect(tulip3DecodeAt0to10).toMatchObject({
+      data: {
+        measurements: expect.any(Array),
+      },
+    })
+    expect(tulip3DecodeAt5to15).toMatchObject({
+      data: {
+        measurements: expect.any(Array),
+      },
+    })
+    expect(tulip3EncodeAt0to10).toMatchObject({
+      fPort: 1,
+      bytes: expect.any(Array),
+    })
+    expect(tulip3EncodeAt5to15).toMatchObject({
+      fPort: 1,
+      bytes: expect.any(Array),
+    })
 
     const t2ValueAt0to10 = (tulip2DecodeAt0to10 as any).data.measurement.channels.find((c: any) => c.channelName === 'measurement').value
     const t2ValueAt5to15 = (tulip2DecodeAt5to15 as any).data.measurement.channels.find((c: any) => c.channelName === 'measurement').value
@@ -231,7 +267,11 @@ describe('netris1 parser range lifecycle', () => {
       },
     } as any)
 
-    expect(tulip3EncodeAt5to55).toMatchObject({ errors: [expect.stringContaining('Validation failed')] })
+    expect(tulip3EncodeAt5to55).toMatchObject({
+      errors: [
+        expect.stringContaining('Validation failed'),
+      ],
+    })
     expect((tulip3EncodeAt5to55 as any).errors[0]).toContain('<= 5.5')
   })
 })

@@ -162,8 +162,14 @@ describe('netrisF parser range lifecycle', () => {
       },
     } as any)
 
-    expect(tulip2EncodeAt625).toMatchObject({ fPort: 1, bytes: expect.any(Array) })
-    expect(tulip3EncodeAt625).toMatchObject({ fPort: 1, bytes: expect.any(Array) })
+    expect(tulip2EncodeAt625).toMatchObject({
+      fPort: 1,
+      bytes: expect.any(Array),
+    })
+    expect(tulip3EncodeAt625).toMatchObject({
+      fPort: 1,
+      bytes: expect.any(Array),
+    })
 
     adjustMeasuringRange('measurement', { start: -500, end: 500 })
 
@@ -209,10 +215,30 @@ describe('netrisF parser range lifecycle', () => {
       },
     } as any)
 
-    expect(tulip2DecodeAt625).toMatchObject({ data: { measurement: { channels: expect.any(Array) } } })
-    expect(tulip2DecodeAt1000).toMatchObject({ data: { measurement: { channels: expect.any(Array) } } })
-    expect(tulip3DecodeAt625).toMatchObject({ data: { measurements: expect.any(Array) } })
-    expect(tulip3DecodeAt1000).toMatchObject({ data: { measurements: expect.any(Array) } })
+    expect(tulip2DecodeAt625).toMatchObject({
+      data: {
+        measurement: {
+          channels: expect.any(Array),
+        },
+      },
+    })
+    expect(tulip2DecodeAt1000).toMatchObject({
+      data: {
+        measurement: {
+          channels: expect.any(Array),
+        },
+      },
+    })
+    expect(tulip3DecodeAt625).toMatchObject({
+      data: {
+        measurements: expect.any(Array),
+      },
+    })
+    expect(tulip3DecodeAt1000).toMatchObject({
+      data: {
+        measurements: expect.any(Array),
+      },
+    })
 
     const t2StrainAt625 = (tulip2DecodeAt625 as any).data.measurement.channels.find((c: any) => c.channelName === 'measurement').value
     const t2StrainAt1000 = (tulip2DecodeAt1000 as any).data.measurement.channels.find((c: any) => c.channelName === 'measurement').value
@@ -227,8 +253,14 @@ describe('netrisF parser range lifecycle', () => {
     const t3BytesAt625 = (tulip3EncodeAt625 as any).bytes as number[]
     const t3BytesAt1000 = (tulip3EncodeAt1000 as any).bytes as number[]
 
-    expect(tulip2EncodeAt1000).toMatchObject({ fPort: 1, bytes: expect.any(Array) })
-    expect(tulip3EncodeAt1000).toMatchObject({ fPort: 1, bytes: expect.any(Array) })
+    expect(tulip2EncodeAt1000).toMatchObject({
+      fPort: 1,
+      bytes: expect.any(Array),
+    })
+    expect(tulip3EncodeAt1000).toMatchObject({
+      fPort: 1,
+      bytes: expect.any(Array),
+    })
 
     expect(tulip2DecodeAt1000).not.toEqual(tulip2DecodeAt625)
     expect(tulip3DecodeAt1000).not.toEqual(tulip3DecodeAt625)
@@ -266,7 +298,11 @@ describe('netrisF parser range lifecycle', () => {
       },
     } as any)
 
-    expect(tulip3EncodeAt100).toMatchObject({ errors: [expect.stringContaining('Validation failed')] })
+    expect(tulip3EncodeAt100).toMatchObject({
+      errors: [
+        expect.stringContaining('Validation failed'),
+      ],
+    })
     expect((tulip3EncodeAt100 as any).errors[0]).toContain('<= 50')
   })
 })

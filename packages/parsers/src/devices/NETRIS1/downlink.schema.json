@@ -552,7 +552,8 @@
                                             "V",
                                             "mA",
                                             "%"
-                                          ]
+                                          ],
+                                          "type": "string"
                                         },
                                         "offset": {
                                           "type": "number"

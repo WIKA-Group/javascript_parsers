@@ -157,13 +157,30 @@ describe('tULIP3 identification register generation', () => {
       })
 
       // All sensors should now be present with registers
-      const sensor1Range = { start: getSensorIdAddress(1, 0), end: getSensorIdAddress(1, 0) + 460 - 1 }
-      const sensor2Range = { start: getSensorIdAddress(2, 0), end: getSensorIdAddress(2, 0) + 460 - 1 }
-      const sensor3Range = { start: getSensorIdAddress(3, 0), end: getSensorIdAddress(3, 0) + 460 - 1 }
-      const sensor4Range = { start: getSensorIdAddress(4, 0), end: getSensorIdAddress(4, 0) + 460 - 1 }
+      const sensor1Range = {
+        start: getSensorIdAddress(1, 0),
+        end: getSensorIdAddress(1, 0) + 460 - 1,
+      }
+      const sensor2Range = {
+        start: getSensorIdAddress(2, 0),
+        end: getSensorIdAddress(2, 0) + 460 - 1,
+      }
+      const sensor3Range = {
+        start: getSensorIdAddress(3, 0),
+        end: getSensorIdAddress(3, 0) + 460 - 1,
+      }
+      const sensor4Range = {
+        start: getSensorIdAddress(4, 0),
+        end: getSensorIdAddress(4, 0) + 460 - 1,
+      }
 
       // Check that each sensor has at least some registers defined
-      ;[sensor1Range, sensor2Range, sensor3Range, sensor4Range].forEach(({ start }, index) => {
+      ;[
+        sensor1Range,
+        sensor2Range,
+        sensor3Range,
+        sensor4Range,
+      ].forEach(({ start }, index) => {
         const sensorNum = index + 1
         expect(lookup[start]).toBeDefined() // First register of each sensor should be present
         // @ts-expect-error - we assume its a registerEntry not a guard
@@ -258,20 +275,49 @@ describe('tULIP3 identification register generation', () => {
       const lookup = createIdentificationRegisterLookup(completeTULIP3DeviceConfig())
 
       // CM block should be continuous (except RFU)
-      const cmRegisters = [0x000, 0x001, 0x002, 0x003, 0x004, 0x007, 0x00A, 0x00D, 0x012]
+      const cmRegisters = [
+        0x000,
+        0x001,
+        0x002,
+        0x003,
+        0x004,
+        0x007,
+        0x00A,
+        0x00D,
+        0x012,
+      ]
       cmRegisters.forEach((addr) => {
         expect(lookup[addr]).toBeDefined()
       })
 
       // Sensor block should be continuous (except RFU)
       const sensor1BaseAddr = 0x03C
-      const sensorOffsets = [0x00, 0x02, 0x03, 0x06, 0x09, 0x0C, 0x11]
+      const sensorOffsets = [
+        0x00,
+        0x02,
+        0x03,
+        0x06,
+        0x09,
+        0x0C,
+        0x11,
+      ]
       sensorOffsets.forEach((offset) => {
         expect(lookup[sensor1BaseAddr + offset]).toBeDefined()
       })
 
       // Channel blocks should be continuous (except RFU)
-      const channelOffsets = [0x00, 0x01, 0x02, 0x06, 0x0A, 0x0E, 0x12, 0x14, 0x18, 0x1C];
+      const channelOffsets = [
+        0x00,
+        0x01,
+        0x02,
+        0x06,
+        0x0A,
+        0x0E,
+        0x12,
+        0x14,
+        0x18,
+        0x1C,
+      ];
       [1, 2].forEach((channelNum) => {
         const channelBaseAddr = getChannelIdAddress(1, channelNum, 0)
         channelOffsets.forEach((offset) => {
@@ -384,7 +430,16 @@ describe('tULIP3 identification register generation', () => {
       // Test with some flags enabled and some disabled
       const mixedConfig: TULIP3DeviceConfig = {
         sensor1: {
-          channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel1', registerConfig: completeChannelRegisterConfig(), alarmFlags: createDefaultChannelAlarmFlags(), availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
+          channel1: {
+            start: 0,
+            end: 100,
+            measurementTypes: [],
+            channelName: 'sensor1Channel1',
+            registerConfig: completeChannelRegisterConfig(),
+            alarmFlags: createDefaultChannelAlarmFlags(),
+            availableUnits: ['°C'],
+            availableMeasurands: ['Temperature'],
+          },
           alarmFlags: createDefaultSensorAlarmFlags(),
           registerConfig: completeSensorRegisterConfig(),
         },

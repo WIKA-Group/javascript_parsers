@@ -17,7 +17,8 @@
                   "enum": [
                     1,
                     2
-                  ]
+                  ],
+                  "type": "number"
                 },
                 "measurement": {
                   "type": "object",
@@ -122,7 +123,8 @@
                 "messageType": {
                   "enum": [
                     3
-                  ]
+                  ],
+                  "type": "number"
                 },
                 "processAlarms": {
                   "type": "array",
@@ -1003,7 +1005,8 @@
                 "messageType": {
                   "enum": [
                     4
-                  ]
+                  ],
+                  "type": "number"
                 },
                 "technicalAlarms": {
                   "type": "array",
@@ -1324,7 +1327,8 @@
                 "messageType": {
                   "enum": [
                     6
-                  ]
+                  ],
+                  "type": "number"
                 },
                 "configurationStatus": {
                   "anyOf": [
@@ -1343,7 +1347,8 @@
                                 5,
                                 6,
                                 7
-                              ]
+                              ],
+                              "type": "number"
                             },
                             "statusDescription": {
                               "enum": [
@@ -1355,7 +1360,8 @@
                                 "configuration discarded",
                                 "command success",
                                 "command failed"
-                              ]
+                              ],
+                              "type": "string"
                             }
                           },
                           "required": [
@@ -1381,7 +1387,8 @@
                             5,
                             6,
                             7
-                          ]
+                          ],
+                          "type": "number"
                         },
                         "statusDescription": {
                           "enum": [
@@ -1393,7 +1400,8 @@
                             "configuration discarded",
                             "command success",
                             "command failed"
-                          ]
+                          ],
+                          "type": "string"
                         }
                       },
                       "required": [
@@ -1435,7 +1443,8 @@
                 "messageType": {
                   "enum": [
                     5
-                  ]
+                  ],
+                  "type": "number"
                 },
                 "deviceAlarm": {
                   "anyOf": [
@@ -1613,7 +1622,8 @@
                 "messageType": {
                   "enum": [
                     7
-                  ]
+                  ],
+                  "type": "number"
                 },
                 "deviceInformation": {
                   "type": "object",
@@ -1649,7 +1659,8 @@
                         "absolute",
                         "relative",
                         "differential"
-                      ]
+                      ],
+                      "type": "string"
                     },
                     "measurementRangeStartPressure": {
                       "type": "number"
@@ -1694,7 +1705,8 @@
                         237,
                         238,
                         239
-                      ]
+                      ],
+                      "type": "number"
                     },
                     "pressureUnitName": {
                       "enum": [
@@ -1727,19 +1739,22 @@
                         "MPa",
                         "inH2O (4 °C)",
                         "mmH2O (4 °C)"
-                      ]
+                      ],
+                      "type": "string"
                     },
                     "deviceTemperatureUnit": {
                       "enum": [
                         32,
                         33
-                      ]
+                      ],
+                      "type": "number"
                     },
                     "deviceTemperatureUnitName": {
                       "enum": [
                         "°C",
                         "°F"
-                      ]
+                      ],
+                      "type": "string"
                     }
                   },
                   "required": [
@@ -1793,7 +1808,8 @@
                 "messageType": {
                   "enum": [
                     8
-                  ]
+                  ],
+                  "type": "number"
                 },
                 "deviceStatistic": {
                   "type": "object",

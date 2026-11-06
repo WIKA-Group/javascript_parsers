@@ -1,6 +1,6 @@
 import * as v from 'valibot'
 import { describe, expect, it } from 'vitest'
-import examples from './examples.json' assert { type: 'json' }
+import examples from './examples.json' with { type: 'json' }
 import { useParser } from './parser'
 import { createPGW23_100_11UplinkOutputSchema, DownlinkInputSchema } from './schema'
 
@@ -163,8 +163,20 @@ describe('pgw23.100.11 parser range lifecycle', () => {
     // const tulip3DecodeAt16 = decodeUplink({ ... })
     // const tulip3EncodeAt16 = encodeDownlink({ protocol: 'TULIP3', input: { ... } } as any)
 
-    expect(tulip2DecodeAt10).toMatchObject({ data: { measurement: { channels: expect.any(Array) } } })
-    expect(tulip2DecodeAt16).toMatchObject({ data: { measurement: { channels: expect.any(Array) } } })
+    expect(tulip2DecodeAt10).toMatchObject({
+      data: {
+        measurement: {
+          channels: expect.any(Array),
+        },
+      },
+    })
+    expect(tulip2DecodeAt16).toMatchObject({
+      data: {
+        measurement: {
+          channels: expect.any(Array),
+        },
+      },
+    })
 
     const t2PressureAt10 = (tulip2DecodeAt10 as any).data.measurement.channels.find((c: any) => c.channelName === 'pressure').value
     const t2PressureAt16 = (tulip2DecodeAt16 as any).data.measurement.channels.find((c: any) => c.channelName === 'pressure').value
@@ -175,7 +187,10 @@ describe('pgw23.100.11 parser range lifecycle', () => {
     const t2BytesAt10 = (tulip2EncodeAt10 as any).bytes as number[]
     const t2BytesAt16 = (tulip2EncodeAt16 as any).bytes as number[]
 
-    expect(tulip2EncodeAt16).toMatchObject({ fPort: 1, bytes: expect.any(Array) })
+    expect(tulip2EncodeAt16).toMatchObject({
+      fPort: 1,
+      bytes: expect.any(Array),
+    })
     expect(tulip2DecodeAt16).not.toEqual(tulip2DecodeAt10)
     expect(tulip2EncodeAt16).not.toEqual(tulip2EncodeAt10)
 
@@ -207,7 +222,11 @@ describe('pgw23.100.11 parser range lifecycle', () => {
       },
     } as any)
 
-    expect(tulip2EncodeAt2).toMatchObject({ errors: [expect.any(String)] })
+    expect(tulip2EncodeAt2).toMatchObject({
+      errors: [
+        expect.any(String),
+      ],
+    })
     expect((tulip2EncodeAt2 as any).errors[0]).toContain('channel0')
 
     // const tulip3EncodeAt2 = encodeDownlink({ protocol: 'TULIP3', input: { ... } } as any)

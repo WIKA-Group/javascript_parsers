@@ -114,7 +114,9 @@ function createTechnicalAlarmsDataSchema() {
       alarmTypeNames: v.array(v.picklist(Object.keys(TECHNICAL_ALARM_TYPES))),
     }) as TechnicalAlarmsPossibility)
   })
-  return v.tuple([v.union(pos)])
+  return v.tuple([
+    v.union(pos),
+  ])
 }
 
 function createTechnicalAlarmsUplinkOutputSchema() {
@@ -393,7 +395,8 @@ function createDeviceInformationDataSchema() {
       }) as any as DeviceInformationPossibility)
     })
   })
-  return v.union([...pos,
+  return v.union([
+    ...pos,
     // Schema for when only 8 bytes are present
     v.object({
       productIdName: v.literal('PEW'),
@@ -402,7 +405,8 @@ function createDeviceInformationDataSchema() {
       productSubIdName: v.literal('LoRaWAN'),
       wirelessModuleFirmwareVersion: createSemVerSchema(),
       wirelessModuleHardwareVersion: createSemVerSchema(),
-    })])
+    }),
+  ])
 }
 
 function createDeviceInformationUplinkOutputSchema() {
@@ -420,7 +424,10 @@ function createDeviceStatisticsUplinkOutputSchema() {
     extension: {
       deviceStatistic: v.object({
         batteryLevelNewEvent: v.boolean(),
-        batteryLevelPercent: v.union([v.pipe(v.number(), v.minValue(0), v.maxValue(100), v.integer()), v.literal(0x7F)]),
+        batteryLevelPercent: v.union([
+          v.pipe(v.number(), v.minValue(0), v.maxValue(100), v.integer()),
+          v.literal(0x7F),
+        ]),
       }),
     },
   })

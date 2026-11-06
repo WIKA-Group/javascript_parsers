@@ -260,7 +260,9 @@ const handleDeviceIdentificationMessage: Handler<TULIP2FLRUChannels, FLRUTULIP2D
   const messageType = 0x07
   const configurationId = input.bytes[1]!
   const productId = input.bytes[2]!
-  const productIdName = productId === 15 ? 'NETRIS3' : productId
+  const productIdName = productId === 15
+    ? 'NETRIS3'
+    : productId
   const productSubId = input.bytes[3]!
   const productSubIdName = resolveProductSubIdName(productSubId)
   const sensorDeviceTypeId = (input.bytes[4]! << 8) | input.bytes[5]!

@@ -18,11 +18,19 @@ export function buildGetMainConfigCommand(): DownlinkCommand {
 }
 
 export function buildGetAlarmConfigCommand(channelId: 0 | 1): DownlinkCommand {
-  return [channelId === 0 ? NETRISF_COMMANDS.GET_STRAIN_ALARM : NETRISF_COMMANDS.GET_TEMPERATURE_ALARM]
+  return [
+    channelId === 0
+      ? NETRISF_COMMANDS.GET_STRAIN_ALARM
+      : NETRISF_COMMANDS.GET_TEMPERATURE_ALARM,
+  ]
 }
 
 export function buildGetPropertyCommand(channelId: 0 | 1): DownlinkCommand {
-  return [channelId === 0 ? NETRISF_COMMANDS.GET_STRAIN_PROPERTY : NETRISF_COMMANDS.GET_TEMPERATURE_PROPERTY]
+  return [
+    channelId === 0
+      ? NETRISF_COMMANDS.GET_STRAIN_PROPERTY
+      : NETRISF_COMMANDS.GET_TEMPERATURE_PROPERTY,
+  ]
 }
 
 // ─── Main configuration command ──────────────────────────────────────────────
@@ -68,7 +76,9 @@ export function buildNetrisFMainConfigCommand(config: NetrisFMainConfiguration |
   bytes.push(0x00)
 
   // BLE advertising: isBLEEnabled=false → byte=1 (no data in advertising frame)
-  const bleAdvertisingFlag = config.isBLEEnabled === false ? 1 : 0
+  const bleAdvertisingFlag = config.isBLEEnabled === false
+    ? 1
+    : 0
   bytes.push(bleAdvertisingFlag)
 
   return [bytes]

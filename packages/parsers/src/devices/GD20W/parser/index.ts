@@ -7,7 +7,9 @@ export const GD20W_NAME = 'GD-20-W'
 export function useParser() {
   return defineParser({
     parserName: GD20W_NAME,
-    codecs: [createTULIP2GD20WCodec()],
+    codecs: [
+      createTULIP2GD20WCodec(),
+    ],
   })
 }
 

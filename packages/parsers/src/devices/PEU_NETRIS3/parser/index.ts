@@ -8,7 +8,10 @@ export const PEU_NETRIS3_NAME = 'PEU+NETRIS3'
 export function useParser() {
   return defineParser({
     parserName: PEU_NETRIS3_NAME,
-    codecs: [createPEUTULIP2Codec(), createTULIP3PEUCodec()],
+    codecs: [
+      createPEUTULIP2Codec(),
+      createTULIP3PEUCodec(),
+    ],
   })
 }
 

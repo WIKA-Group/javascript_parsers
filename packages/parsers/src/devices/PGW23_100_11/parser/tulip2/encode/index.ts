@@ -22,12 +22,16 @@ export function PGWTULIP2EncodeHandler(formattedInput: PGWTulip2DownlinkInput, a
   switch (formattedInput.deviceAction) {
     case 'resetToFactory': {
       const frame = encodeResetToFactory()
-      return allowMultiple ? formatMultipleDownlinkOutput([frame]) : formatDownlinkOutput(frame)
+      return allowMultiple
+        ? formatMultipleDownlinkOutput([frame])
+        : formatDownlinkOutput(frame)
     }
 
     case 'resetBatteryIndicator': {
       const frame = encodeResetBatteryIndicator(formattedInput)
-      return allowMultiple ? formatMultipleDownlinkOutput([frame]) : formatDownlinkOutput(frame)
+      return allowMultiple
+        ? formatMultipleDownlinkOutput([frame])
+        : formatDownlinkOutput(frame)
     }
 
     case 'configuration':

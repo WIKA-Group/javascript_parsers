@@ -31,7 +31,10 @@ npm install @w2a-iiot/parsers
 import { NETRIS2Parser } from '@w2a-iiot/parsers'
 
 const parser = NETRIS2Parser()
-const result = parser.decodeUplink({ bytes: [0x01, 0x00], fPort: 1 })
+const result = parser.decodeUplink({
+  bytes: [0x01, 0x00],
+  fPort: 1
+})
 
 console.log(result)
 ```

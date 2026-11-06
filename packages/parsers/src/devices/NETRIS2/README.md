@@ -2,7 +2,7 @@
 
 ![Netris2](../../../../../docs/public/Netris2.png)
 
-#### Description of the device
+## Description of the device
 
 The model NETRIS®2 IIoT-capable WIKA radio unit is used wherever centralised, web-based, remote monitoring of measuring instrument data is required.
 The Ex radio unit receives the data via the two intrinsically safe, analogue 4 ... 20 mA input signals. The fully encapsulated instrument with IP55 ingress protection transmits the received data continuously to a cloud via configurable data packets with LoRaWAN® (Long Range Wide Area Network).

@@ -255,7 +255,16 @@ describe('tULIP3 register parsing functions', () => {
       // Address 0x200 (512), 4 bytes of data: [0x01, 0x02, 0x03, 0x04]
       // Address field: 512 << 5 | 4 = 16384 + 4 = 16388 = 0x4004
       // Big-endian: [0x40, 0x04]
-      const data = [0x00, 0x00, 0x40, 0x04, 0x01, 0x02, 0x03, 0x04]
+      const data = [
+        0x00,
+        0x00,
+        0x40,
+        0x04,
+        0x01,
+        0x02,
+        0x03,
+        0x04,
+      ]
       const blocks = parseRegisterBlocks(data)
 
       expect(blocks).toHaveLength(1)
@@ -270,7 +279,17 @@ describe('tULIP3 register parsing functions', () => {
       // Address field: 256 << 5 | 2 = 8192 + 2 = 8194 = 0x2002
       // Second block: Address 0x200 (512), 1 byte: [0x03]
       // Address field: 512 << 5 | 1 = 16384 + 1 = 16385 = 0x4001
-      const data = [0x00, 0x00, 0x20, 0x02, 0x01, 0x02, 0x40, 0x01, 0x03]
+      const data = [
+        0x00,
+        0x00,
+        0x20,
+        0x02,
+        0x01,
+        0x02,
+        0x40,
+        0x01,
+        0x03,
+      ]
       const blocks = parseRegisterBlocks(data)
 
       expect(blocks).toHaveLength(2)
@@ -285,7 +304,17 @@ describe('tULIP3 register parsing functions', () => {
     })
 
     it('should handle custom start position', () => {
-      const data = [0xFF, 0xFF, 0xFF, 0x40, 0x04, 0x01, 0x02, 0x03, 0x04]
+      const data = [
+        0xFF,
+        0xFF,
+        0xFF,
+        0x40,
+        0x04,
+        0x01,
+        0x02,
+        0x03,
+        0x04,
+      ]
       const blocks = parseRegisterBlocks(data, { startPosition: 3 })
 
       expect(blocks).toHaveLength(1)
@@ -313,7 +342,13 @@ describe('tULIP3 register parsing functions', () => {
       // Address 0x300 (768), 31 bytes: 768 << 5 | 31 = 24576 + 31 = 24607 = 0x601F
       // Big-endian: [0x60, 0x1F]
       const registerData = Array.from({ length: 31 }, (_, i) => i + 1) // [1, 2, 3, ..., 31]
-      const data = [0x00, 0x00, 0x60, 0x1F, ...registerData]
+      const data = [
+        0x00,
+        0x00,
+        0x60,
+        0x1F,
+        ...registerData,
+      ]
       const blocks = parseRegisterBlocks(data)
 
       expect(blocks).toHaveLength(1)
@@ -332,7 +367,10 @@ describe('tULIP3 register parsing functions', () => {
       }
 
       const blocks = [
-        { startRegisterAddress: 0x1000, value: [0, 25, 87, 73, 75, 65] },
+        {
+          startRegisterAddress: 0x1000,
+          value: [0, 25, 87, 73, 75, 65],
+        },
       ]
 
       const result = evaluateRegisterBlocks(lookup, blocks)
@@ -347,7 +385,10 @@ describe('tULIP3 register parsing functions', () => {
     it('should throw error for unknown register address', () => {
       const lookup = {}
       const blocks = [
-        { startRegisterAddress: 0x1000, value: [25, 0] },
+        {
+          startRegisterAddress: 0x1000,
+          value: [25, 0],
+        },
       ]
 
       expect(() => evaluateRegisterBlocks(lookup, blocks)).toThrow('Unknown register address 0x1000')
@@ -358,7 +399,10 @@ describe('tULIP3 register parsing functions', () => {
         0x1000: createRegisterEntry('device.temperature', 4, intTuple4ToFloat32),
       }
       const blocks = [
-        { startRegisterAddress: 0x1000, value: [25, 0] }, // Only 2 bytes, need 4
+        {
+          startRegisterAddress: 0x1000,
+          value: [25, 0],
+        }, // Only 2 bytes, need 4
       ]
 
       expect(() => evaluateRegisterBlocks(lookup, blocks)).toThrow('Insufficient data for register 0x1000')
@@ -373,7 +417,10 @@ describe('tULIP3 register parsing functions', () => {
         0x1000: createRegisterEntry('device.test', 2, mockParser),
       }
       const blocks = [
-        { startRegisterAddress: 0x1000, value: [25, 0] },
+        {
+          startRegisterAddress: 0x1000,
+          value: [25, 0],
+        },
       ]
 
       expect(() => evaluateRegisterBlocks(lookup, blocks)).toThrow('Failed to parse register 0x1000')
@@ -486,7 +533,15 @@ describe('tULIP3 message parsing functions', () => {
 
     it('should parse apply config answer (7 bytes)', () => {
       // Apply config answer: [0, 0, frameNumberByte, statusByte, revisionHigh, revisionLow, totalWrongFrames]
-      const data = [0x00, 0x00, 0b00010000, 1, 0x01, 0x02, 5] // frame counter 4, revision 258, 5 wrong frames
+      const data = [
+        0x00,
+        0x00,
+        0b00010000,
+        1,
+        0x01,
+        0x02,
+        5,
+      ] // frame counter 4, revision 258, 5 wrong frames
       const result = parseFrameData(data)
 
       expect(result.frames).toHaveLength(1)
@@ -498,7 +553,19 @@ describe('tULIP3 message parsing functions', () => {
 
     it('should parse extended apply config answer with additional frames', () => {
       // Extended answer: [0, 0, frameNumberByte, statusByte, revisionHigh, revisionLow, totalWrongFrames, frame2Number, frame2Status, frame3Number, frame3Status]
-      const data = [0x00, 0x00, 0b00010000, 1, 0x01, 0x02, 5, 0b00100000, 2, 0b00110000, 3] // additional frames
+      const data = [
+        0x00,
+        0x00,
+        0b00010000,
+        1,
+        0x01,
+        0x02,
+        5,
+        0b00100000,
+        2,
+        0b00110000,
+        3,
+      ] // additional frames
       const result = parseFrameData(data)
 
       expect(result.frames).toHaveLength(3)
@@ -545,12 +612,52 @@ describe('tULIP3 message parsing functions', () => {
 
     it('should throw RangeError for even length extended messages', () => {
       // Invalid length: 8 bytes (even number, but additional frames come in pairs)
-      expect(() => parseFrameData([0x00, 0x00, 0x00, 1, 0x00, 0x00, 0, 0x00])).toThrow(RangeError)
-      expect(() => parseFrameData([0x00, 0x00, 0x00, 1, 0x00, 0x00, 0, 0x00])).toThrow('Invalid message length: expected odd number of bytes for apply config answer with additional frames, got 8')
+      expect(() => parseFrameData([
+        0x00,
+        0x00,
+        0x00,
+        1,
+        0x00,
+        0x00,
+        0,
+        0x00,
+      ])).toThrow(RangeError)
+      expect(() => parseFrameData([
+        0x00,
+        0x00,
+        0x00,
+        1,
+        0x00,
+        0x00,
+        0,
+        0x00,
+      ])).toThrow('Invalid message length: expected odd number of bytes for apply config answer with additional frames, got 8')
 
       // Invalid length: 10 bytes
-      expect(() => parseFrameData([0x00, 0x00, 0x00, 1, 0x00, 0x00, 0, 0x00, 0x00, 0x00])).toThrow(RangeError)
-      expect(() => parseFrameData([0x00, 0x00, 0x00, 1, 0x00, 0x00, 0, 0x00, 0x00, 0x00])).toThrow('Invalid message length: expected odd number of bytes for apply config answer with additional frames, got 10')
+      expect(() => parseFrameData([
+        0x00,
+        0x00,
+        0x00,
+        1,
+        0x00,
+        0x00,
+        0,
+        0x00,
+        0x00,
+        0x00,
+      ])).toThrow(RangeError)
+      expect(() => parseFrameData([
+        0x00,
+        0x00,
+        0x00,
+        1,
+        0x00,
+        0x00,
+        0,
+        0x00,
+        0x00,
+        0x00,
+      ])).toThrow('Invalid message length: expected odd number of bytes for apply config answer with additional frames, got 10')
     })
 
     it('should handle edge cases with minimum data', () => {

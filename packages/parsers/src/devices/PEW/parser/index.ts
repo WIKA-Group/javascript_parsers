@@ -8,7 +8,10 @@ export const PEW_NAME = 'PEW-1000'
 export function useParser() {
   return defineParser({
     parserName: PEW_NAME,
-    codecs: [createTULIP2PEWCodec(), createTULIP3PEWCodec()],
+    codecs: [
+      createTULIP2PEWCodec(),
+      createTULIP3PEWCodec(),
+    ],
   })
 }
 

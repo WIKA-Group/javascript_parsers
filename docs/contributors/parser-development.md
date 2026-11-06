@@ -43,7 +43,10 @@ Device parser development follows the same rhythm for every device:
       export function useParser() {
         return defineParser({
           parserName: PEW_NAME,
-          codecs: [createTULIP2PEWCodec(), createTULIP3PEWCodec()],
+          codecs: [
+            createTULIP2PEWCodec(),
+            createTULIP3PEWCodec()
+          ],
         })
       }
       ```

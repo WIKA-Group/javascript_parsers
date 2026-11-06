@@ -189,10 +189,13 @@ function createBase(CONFIGURATION_STATUS_VALUES: number [], CONFIGURATION_STATUS
 }
 
 export function createConfigurationStatusSchema<const TSchemas extends v.ObjectSchema<v.ObjectEntries, undefined>[]>(configurationStatusValues: number [], configurationStatusDescriptions: string[], ...objectSchema: TSchemas) {
-  return v.union([v.intersect([
+  return v.union([
+    v.intersect([
+      createBase(configurationStatusValues, configurationStatusDescriptions),
+      v.union(objectSchema),
+    ]),
     createBase(configurationStatusValues, configurationStatusDescriptions),
-    v.union(objectSchema),
-  ]), createBase(configurationStatusValues, configurationStatusDescriptions)])
+  ])
 }
 
 // Configuration status (0x06)

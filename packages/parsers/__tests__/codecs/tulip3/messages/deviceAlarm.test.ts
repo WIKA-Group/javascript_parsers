@@ -1493,12 +1493,54 @@ describe('tulip3 channel alarm message decoding (0x13/0x03)', () => {
   it('correctly interprets sensor and channel ID extraction from various bit patterns', () => {
     // Test various sensor/channel combinations
     const testCases = [
-      { byte: 0x00, expectedSensor: 'sensor1', expectedChannel: 'channel1', expectedSensorId: 0, expectedChannelId: 0, expectedChannelName: 'sensor1Channel1' },
-      { byte: 0x08, expectedSensor: 'sensor1', expectedChannel: 'channel2', expectedSensorId: 0, expectedChannelId: 1, expectedChannelName: 'sensor1Channel2' },
-      { byte: 0x40, expectedSensor: 'sensor2', expectedChannel: 'channel1', expectedSensorId: 1, expectedChannelId: 0, expectedChannelName: 'sensor2Channel1' },
-      { byte: 0x50, expectedSensor: 'sensor2', expectedChannel: 'channel3', expectedSensorId: 1, expectedChannelId: 2, expectedChannelName: 'sensor2Channel3' },
-      { byte: 0x80, expectedSensor: 'sensor3', expectedChannel: 'channel1', expectedSensorId: 2, expectedChannelId: 0, expectedChannelName: 'sensor3Channel1' },
-      { byte: 0xC0, expectedSensor: 'sensor4', expectedChannel: 'channel1', expectedSensorId: 3, expectedChannelId: 0, expectedChannelName: 'sensor4Channel1' },
+      {
+        byte: 0x00,
+        expectedSensor: 'sensor1',
+        expectedChannel: 'channel1',
+        expectedSensorId: 0,
+        expectedChannelId: 0,
+        expectedChannelName: 'sensor1Channel1',
+      },
+      {
+        byte: 0x08,
+        expectedSensor: 'sensor1',
+        expectedChannel: 'channel2',
+        expectedSensorId: 0,
+        expectedChannelId: 1,
+        expectedChannelName: 'sensor1Channel2',
+      },
+      {
+        byte: 0x40,
+        expectedSensor: 'sensor2',
+        expectedChannel: 'channel1',
+        expectedSensorId: 1,
+        expectedChannelId: 0,
+        expectedChannelName: 'sensor2Channel1',
+      },
+      {
+        byte: 0x50,
+        expectedSensor: 'sensor2',
+        expectedChannel: 'channel3',
+        expectedSensorId: 1,
+        expectedChannelId: 2,
+        expectedChannelName: 'sensor2Channel3',
+      },
+      {
+        byte: 0x80,
+        expectedSensor: 'sensor3',
+        expectedChannel: 'channel1',
+        expectedSensorId: 2,
+        expectedChannelId: 0,
+        expectedChannelName: 'sensor3Channel1',
+      },
+      {
+        byte: 0xC0,
+        expectedSensor: 'sensor4',
+        expectedChannel: 'channel1',
+        expectedSensorId: 3,
+        expectedChannelId: 0,
+        expectedChannelName: 'sensor4Channel1',
+      },
     ]
 
     testCases.forEach(({ byte, expectedSensor, expectedChannel, expectedSensorId, expectedChannelId, expectedChannelName }) => {
@@ -1631,7 +1673,10 @@ describe('generic alarm flags system - custom flag configurations', () => {
 
       // Test with batteryLow active (bit 15 = 0x8000)
       const bytes1 = [0x13, 0x01, 0x80, 0x00]
-      const out1 = decodeCommunicationModuleAlarmMessage(bytes1, { alarmFlags: customCommFlags, registerConfig: completeCommunicationModuleRegisterConfig() })
+      const out1 = decodeCommunicationModuleAlarmMessage(bytes1, {
+        alarmFlags: customCommFlags,
+        registerConfig: completeCommunicationModuleRegisterConfig(),
+      })
 
       expect(out1.data.communicationModuleAlarms.alarmFlags).toEqual({
         batteryLow: true,
@@ -1642,7 +1687,10 @@ describe('generic alarm flags system - custom flag configurations', () => {
 
       // Test with overheating active (bit 10 = 0x0400)
       const bytes2 = [0x13, 0x01, 0x04, 0x00]
-      const out2 = decodeCommunicationModuleAlarmMessage(bytes2, { alarmFlags: customCommFlags, registerConfig: completeCommunicationModuleRegisterConfig() })
+      const out2 = decodeCommunicationModuleAlarmMessage(bytes2, {
+        alarmFlags: customCommFlags,
+        registerConfig: completeCommunicationModuleRegisterConfig(),
+      })
 
       expect(out2.data.communicationModuleAlarms.alarmFlags).toEqual({
         batteryLow: false,
@@ -1653,7 +1701,10 @@ describe('generic alarm flags system - custom flag configurations', () => {
 
       // Test with multiple flags active (bits 15, 5, 0 = 0x8021)
       const bytes3 = [0x13, 0x01, 0x80, 0x21]
-      const out3 = decodeCommunicationModuleAlarmMessage(bytes3, { alarmFlags: customCommFlags, registerConfig: completeCommunicationModuleRegisterConfig() })
+      const out3 = decodeCommunicationModuleAlarmMessage(bytes3, {
+        alarmFlags: customCommFlags,
+        registerConfig: completeCommunicationModuleRegisterConfig(),
+      })
 
       expect(out3.data.communicationModuleAlarms.alarmFlags).toEqual({
         batteryLow: true,
@@ -1670,7 +1721,10 @@ describe('generic alarm flags system - custom flag configurations', () => {
 
       // Test with criticalError active (bit 7 = 0x0080)
       const bytes = [0x13, 0x01, 0x00, 0x80]
-      const out = decodeCommunicationModuleAlarmMessage(bytes, { alarmFlags: minimalFlags, registerConfig: completeCommunicationModuleRegisterConfig() })
+      const out = decodeCommunicationModuleAlarmMessage(bytes, {
+        alarmFlags: minimalFlags,
+        registerConfig: completeCommunicationModuleRegisterConfig(),
+      })
 
       expect(out.data.communicationModuleAlarms.alarmFlags).toEqual({
         criticalError: true,
@@ -1678,7 +1732,10 @@ describe('generic alarm flags system - custom flag configurations', () => {
 
       // Test with no flags active
       const bytes2 = [0x13, 0x01, 0x00, 0x00]
-      const out2 = decodeCommunicationModuleAlarmMessage(bytes2, { alarmFlags: minimalFlags, registerConfig: completeCommunicationModuleRegisterConfig() })
+      const out2 = decodeCommunicationModuleAlarmMessage(bytes2, {
+        alarmFlags: minimalFlags,
+        registerConfig: completeCommunicationModuleRegisterConfig(),
+      })
 
       expect(out2.data.communicationModuleAlarms.alarmFlags).toEqual({
         criticalError: false,
@@ -1707,7 +1764,10 @@ describe('generic alarm flags system - custom flag configurations', () => {
 
       // Test with all flags active (0xFFFF)
       const bytes = [0x13, 0x01, 0xFF, 0xFF]
-      const out = decodeCommunicationModuleAlarmMessage(bytes, { alarmFlags: manyFlags, registerConfig: completeCommunicationModuleRegisterConfig() })
+      const out = decodeCommunicationModuleAlarmMessage(bytes, {
+        alarmFlags: manyFlags,
+        registerConfig: completeCommunicationModuleRegisterConfig(),
+      })
 
       expect(out.data.communicationModuleAlarms.alarmFlags).toEqual({
         flag0: true,
@@ -1807,7 +1867,10 @@ describe('generic alarm flags system - custom flag configurations', () => {
         const lowByte = bitValue & 0xFF
 
         const bytes = [0x13, 0x01, highByte, lowByte]
-        const out = decodeCommunicationModuleAlarmMessage(bytes, { alarmFlags: customFlag, registerConfig: completeCommunicationModuleRegisterConfig() })
+        const out = decodeCommunicationModuleAlarmMessage(bytes, {
+          alarmFlags: customFlag,
+          registerConfig: completeCommunicationModuleRegisterConfig(),
+        })
 
         expect(out.data.communicationModuleAlarms.alarmFlags[`bit${bit}`]).toBe(true)
       }
@@ -1822,14 +1885,29 @@ describe('generic alarm flags system - custom flag configurations', () => {
 
       // Test each flag individually
       const testCases = [
-        { bytes: [0x13, 0x01, 0x00, 0x02], expected: { lowBit: true, midBit: false, highBit: false } }, // bit 1
-        { bytes: [0x13, 0x01, 0x01, 0x00], expected: { lowBit: false, midBit: true, highBit: false } }, // bit 8
-        { bytes: [0x13, 0x01, 0x40, 0x00], expected: { lowBit: false, midBit: false, highBit: true } }, // bit 14
-        { bytes: [0x13, 0x01, 0x41, 0x02], expected: { lowBit: true, midBit: true, highBit: true } }, // all bits
+        {
+          bytes: [0x13, 0x01, 0x00, 0x02],
+          expected: { lowBit: true, midBit: false, highBit: false },
+        }, // bit 1
+        {
+          bytes: [0x13, 0x01, 0x01, 0x00],
+          expected: { lowBit: false, midBit: true, highBit: false },
+        }, // bit 8
+        {
+          bytes: [0x13, 0x01, 0x40, 0x00],
+          expected: { lowBit: false, midBit: false, highBit: true },
+        }, // bit 14
+        {
+          bytes: [0x13, 0x01, 0x41, 0x02],
+          expected: { lowBit: true, midBit: true, highBit: true },
+        }, // all bits
       ]
 
       testCases.forEach(({ bytes, expected }) => {
-        const out = decodeCommunicationModuleAlarmMessage(bytes, { alarmFlags: mixedFlags, registerConfig: completeCommunicationModuleRegisterConfig() })
+        const out = decodeCommunicationModuleAlarmMessage(bytes, {
+          alarmFlags: mixedFlags,
+          registerConfig: completeCommunicationModuleRegisterConfig(),
+        })
         expect(out.data.communicationModuleAlarms.alarmFlags).toEqual(expected)
       })
     })
@@ -1843,7 +1921,10 @@ describe('generic alarm flags system - custom flag configurations', () => {
       } as const
 
       const bytes = [0x13, 0x01, 0x11, 0x11] // bits 0, 4, 8, 12 set
-      const out = decodeCommunicationModuleAlarmMessage(bytes, { alarmFlags: typedFlags, registerConfig: completeCommunicationModuleRegisterConfig() })
+      const out = decodeCommunicationModuleAlarmMessage(bytes, {
+        alarmFlags: typedFlags,
+        registerConfig: completeCommunicationModuleRegisterConfig(),
+      })
 
       // TypeScript should enforce these exact property names
       expect(out.data.communicationModuleAlarms.alarmFlags.networkConnectivity).toBe(true)

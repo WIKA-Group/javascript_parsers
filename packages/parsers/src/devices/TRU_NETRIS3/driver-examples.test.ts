@@ -1,6 +1,6 @@
 import * as v from 'valibot'
 import { describe, expect, it } from 'vitest'
-import examples from './examples.json' assert { type: 'json' }
+import examples from './examples.json' with { type: 'json' }
 import { useParser } from './parser'
 import { createTRUUplinkOutputSchema } from './schema'
 
@@ -46,7 +46,9 @@ describe('tRU+NETRIS3 parser', () => {
     const output = encodeDownlink(example.input as any)
     expect(output).toEqual(example.output)
     expect(output).toMatchObject({
-      errors: [expect.stringContaining('(JS):')],
+      errors: [
+        expect.stringContaining('(JS):'),
+      ],
     })
   })
 
@@ -136,8 +138,14 @@ describe('tRU+NETRIS3 parser range lifecycle', () => {
 
     expect(tulip2DecodeAt900).not.toEqual(tulip2DecodeAt600)
     expect(tulip3DecodeAt900).not.toEqual(tulip3DecodeAt600)
-    expect(tulip3EncodeAt600).toMatchObject({ fPort: 1, bytes: expect.any(Array) })
-    expect(tulip3EncodeAt900).toMatchObject({ fPort: 1, bytes: expect.any(Array) })
+    expect(tulip3EncodeAt600).toMatchObject({
+      fPort: 1,
+      bytes: expect.any(Array),
+    })
+    expect(tulip3EncodeAt900).toMatchObject({
+      fPort: 1,
+      bytes: expect.any(Array),
+    })
     expect((tulip3EncodeAt900 as any).bytes).not.toEqual((tulip3EncodeAt600 as any).bytes)
   })
 })

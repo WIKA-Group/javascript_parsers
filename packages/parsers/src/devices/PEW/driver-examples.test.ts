@@ -1,6 +1,6 @@
 import * as v from 'valibot'
 import { describe, expect, it } from 'vitest'
-import examples from './examples.json' assert { type: 'json' }
+import examples from './examples.json' with { type: 'json' }
 import { useParser } from './parser'
 import { createPEWUplinkOutputSchema, DownlinkInputSchema } from './schema'
 
@@ -146,7 +146,10 @@ describe('pEW Parser range lifecycle', () => {
       fPort: 1,
       bytes: [24, 0, 32, 0, 100, 128, 19, 136],
     })
-    expect(tulip3EncodeAt10).toMatchObject({ fPort: 1, bytes: expect.any(Array) })
+    expect(tulip3EncodeAt10).toMatchObject({
+      fPort: 1,
+      bytes: expect.any(Array),
+    })
 
     adjustMeasuringRange('pressure', { start: 0, end: 16 })
 
@@ -192,10 +195,30 @@ describe('pEW Parser range lifecycle', () => {
       },
     } as any)
 
-    expect(tulip2DecodeAt10).toMatchObject({ data: { measurement: { channels: expect.any(Array) } } })
-    expect(tulip2DecodeAt16).toMatchObject({ data: { measurement: { channels: expect.any(Array) } } })
-    expect(tulip3DecodeAt10).toMatchObject({ data: { measurements: expect.any(Array) } })
-    expect(tulip3DecodeAt16).toMatchObject({ data: { measurements: expect.any(Array) } })
+    expect(tulip2DecodeAt10).toMatchObject({
+      data: {
+        measurement: {
+          channels: expect.any(Array),
+        },
+      },
+    })
+    expect(tulip2DecodeAt16).toMatchObject({
+      data: {
+        measurement: {
+          channels: expect.any(Array),
+        },
+      },
+    })
+    expect(tulip3DecodeAt10).toMatchObject({
+      data: {
+        measurements: expect.any(Array),
+      },
+    })
+    expect(tulip3DecodeAt16).toMatchObject({
+      data: {
+        measurements: expect.any(Array),
+      },
+    })
 
     const t2PressureAt10 = (tulip2DecodeAt10 as any).data.measurement.channels.find((c: any) => c.channelName === 'pressure').value
     const t2PressureAt16 = (tulip2DecodeAt16 as any).data.measurement.channels.find((c: any) => c.channelName === 'pressure').value
@@ -212,8 +235,14 @@ describe('pEW Parser range lifecycle', () => {
     const t3BytesAt10 = (tulip3EncodeAt10 as any).bytes as number[]
     const t3BytesAt16 = (tulip3EncodeAt16 as any).bytes as number[]
 
-    expect(tulip2EncodeAt16).toMatchObject({ fPort: 1, bytes: expect.any(Array) })
-    expect(tulip3EncodeAt16).toMatchObject({ fPort: 1, bytes: expect.any(Array) })
+    expect(tulip2EncodeAt16).toMatchObject({
+      fPort: 1,
+      bytes: expect.any(Array),
+    })
+    expect(tulip3EncodeAt16).toMatchObject({
+      fPort: 1,
+      bytes: expect.any(Array),
+    })
 
     expect(tulip2DecodeAt16).not.toEqual(tulip2DecodeAt10)
     expect(tulip3DecodeAt16).not.toEqual(tulip3DecodeAt10)
@@ -251,7 +280,11 @@ describe('pEW Parser range lifecycle', () => {
       },
     } as any)
 
-    expect(tulip3EncodeAt2).toMatchObject({ errors: [expect.stringContaining('Validation failed')] })
+    expect(tulip3EncodeAt2).toMatchObject({
+      errors: [
+        expect.stringContaining('Validation failed'),
+      ],
+    })
     expect((tulip3EncodeAt2 as any).errors[0]).toContain('<= 2')
   })
 })

@@ -123,7 +123,12 @@ const handleDataMessage: Handler<TULIP2A2GChannels, A2GTULIP2DataMessageUplinkOu
 
   const [messageType, configurationId] = [input.bytes[0]! as 1, input.bytes[1]!]
   if (input.bytes.length === 6) {
-    const tuple = [input.bytes[2]!, input.bytes[3]!, input.bytes[4]!, input.bytes[5]!] as [number, number, number, number]
+    const tuple = [
+      input.bytes[2]!,
+      input.bytes[3]!,
+      input.bytes[4]!,
+      input.bytes[5]!,
+    ] as [number, number, number, number]
     const value = createFloatFromTuple(tuple, options.roundingDecimals)
     const channels = [
       {
@@ -144,12 +149,42 @@ const handleDataMessage: Handler<TULIP2A2GChannels, A2GTULIP2DataMessageUplinkOu
     } satisfies A2GTULIP2DataMessageUplinkOutput
   }
 
-  const pressureTuple = [input.bytes[2]!, input.bytes[3]!, input.bytes[4]!, input.bytes[5]!] as [number, number, number, number]
-  const flowTuple = [input.bytes[6]!, input.bytes[7]!, input.bytes[8]!, input.bytes[9]!] as [number, number, number, number]
-  const input1Tuple = [input.bytes[10]!, input.bytes[11]!, input.bytes[12]!, input.bytes[13]!] as [number, number, number, number]
-  const input2Tuple = [input.bytes[14]!, input.bytes[15]!, input.bytes[16]!, input.bytes[17]!] as [number, number, number, number]
-  const input3Tuple = [input.bytes[18]!, input.bytes[19]!, input.bytes[20]!, input.bytes[21]!] as [number, number, number, number]
-  const input4Tuple = [input.bytes[22]!, input.bytes[23]!, input.bytes[24]!, input.bytes[25]!] as [number, number, number, number]
+  const pressureTuple = [
+    input.bytes[2]!,
+    input.bytes[3]!,
+    input.bytes[4]!,
+    input.bytes[5]!,
+  ] as [number, number, number, number]
+  const flowTuple = [
+    input.bytes[6]!,
+    input.bytes[7]!,
+    input.bytes[8]!,
+    input.bytes[9]!,
+  ] as [number, number, number, number]
+  const input1Tuple = [
+    input.bytes[10]!,
+    input.bytes[11]!,
+    input.bytes[12]!,
+    input.bytes[13]!,
+  ] as [number, number, number, number]
+  const input2Tuple = [
+    input.bytes[14]!,
+    input.bytes[15]!,
+    input.bytes[16]!,
+    input.bytes[17]!,
+  ] as [number, number, number, number]
+  const input3Tuple = [
+    input.bytes[18]!,
+    input.bytes[19]!,
+    input.bytes[20]!,
+    input.bytes[21]!,
+  ] as [number, number, number, number]
+  const input4Tuple = [
+    input.bytes[22]!,
+    input.bytes[23]!,
+    input.bytes[24]!,
+    input.bytes[25]!,
+  ] as [number, number, number, number]
 
   const pressureValue = createFloatFromTuple(pressureTuple, options.roundingDecimals)
   const flowValue = createFloatFromTuple(flowTuple, options.roundingDecimals)
@@ -246,7 +281,9 @@ const handleDeviceAlarmMessage: Handler<TULIP2A2GChannels, A2GTULIP2DeviceAlarms
 
   const deviceAlarms = Object.fromEntries(
     DEVICE_ALARM_FLAGS.map(({ name, mask, byteIndex }) => {
-      const source = byteIndex === 2 ? alarmByte1 : alarmByte2
+      const source = byteIndex === 2
+        ? alarmByte1
+        : alarmByte2
       return [name, (source & mask) === mask]
     }),
   ) as A2GTULIP2DeviceAlarmsUplinkOutput['data']['deviceAlarms']

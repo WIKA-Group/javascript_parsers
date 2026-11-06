@@ -28,7 +28,9 @@ function DownlinkInputSchema() {
       schema: createTULIP2DownlinkSchema(
         createTULIP2NETRIS2Channels(),
         NETRIS2_DOWNLINK_FEATURE_FLAGS,
-        [createDownlinkResetBatteryIndicatorSchema(NETRIS2_DOWNLINK_FEATURE_FLAGS)],
+        [
+          createDownlinkResetBatteryIndicatorSchema(NETRIS2_DOWNLINK_FEATURE_FLAGS),
+        ],
         NETRIS2_DOWNLINK_SPAN_LIMIT_FACTORS,
       ),
     },

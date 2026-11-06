@@ -1,5 +1,3 @@
-# GD20W Parser Quick Start
-
 ## Parser API
 
 All functions are pure (no global mutation) except `adjustMeasuringRange` which updates internal range configuration for subsequent decodes and encodes.
@@ -43,7 +41,7 @@ Channels that support adjusting the measurement range:
 type AdjustableChannelName = 'channel0' | 'channel1' | 'channel2' | 'channel3' | 'channel4' | 'channel5'
 ```
 
-#### Channel Configuration
+### Channel Configuration
 
 | Channel Name | Min Value | Max Value | Unit | Configurable |
 |-------------|-----------|-----------|------|--------------|

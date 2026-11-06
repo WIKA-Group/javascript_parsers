@@ -12,12 +12,14 @@
                   "enum": [
                     16,
                     17
-                  ]
+                  ],
+                  "type": "number"
                 },
                 "messageSubType": {
                   "enum": [
                     1
-                  ]
+                  ],
+                  "type": "number"
                 },
                 "measurements": {
                   "type": "array",
@@ -46,7 +48,8 @@
                               "enum": [
                                 "float - IEEE754",
                                 "uint16 - TULIP scale 2500 - 12500"
-                              ]
+                              ],
+                              "type": "string"
                             },
                             "valueAcquisitionError": {
                               "const": true
@@ -85,7 +88,8 @@
                               "enum": [
                                 "float - IEEE754",
                                 "uint16 - TULIP scale 2500 - 12500"
-                              ]
+                              ],
+                              "type": "string"
                             },
                             "valueAcquisitionError": {
                               "const": true
@@ -124,7 +128,8 @@
                               "enum": [
                                 "float - IEEE754",
                                 "uint16 - TULIP scale 2500 - 12500"
-                              ]
+                              ],
+                              "type": "string"
                             },
                             "valueAcquisitionError": {
                               "const": false
@@ -166,7 +171,8 @@
                               "enum": [
                                 "float - IEEE754",
                                 "uint16 - TULIP scale 2500 - 12500"
-                              ]
+                              ],
+                              "type": "string"
                             },
                             "valueAcquisitionError": {
                               "const": false
@@ -214,7 +220,8 @@
                             "enum": [
                               "float - IEEE754",
                               "uint16 - TULIP scale 2500 - 12500"
-                            ]
+                            ],
+                            "type": "string"
                           },
                           "valueAcquisitionError": {
                             "const": true
@@ -253,7 +260,8 @@
                             "enum": [
                               "float - IEEE754",
                               "uint16 - TULIP scale 2500 - 12500"
-                            ]
+                            ],
+                            "type": "string"
                           },
                           "valueAcquisitionError": {
                             "const": true
@@ -292,7 +300,8 @@
                             "enum": [
                               "float - IEEE754",
                               "uint16 - TULIP scale 2500 - 12500"
-                            ]
+                            ],
+                            "type": "string"
                           },
                           "valueAcquisitionError": {
                             "const": false
@@ -334,7 +343,8 @@
                             "enum": [
                               "float - IEEE754",
                               "uint16 - TULIP scale 2500 - 12500"
-                            ]
+                            ],
+                            "type": "string"
                           },
                           "valueAcquisitionError": {
                             "const": false
@@ -384,13 +394,15 @@
                 "messageType": {
                   "enum": [
                     21
-                  ]
+                  ],
+                  "type": "number"
                 },
                 "messageSubType": {
                   "enum": [
                     1,
                     2
-                  ]
+                  ],
+                  "type": "number"
                 },
                 "configuration": {
                   "type": "object",
@@ -470,7 +482,8 @@
                               "enum": [
                                 "float - IEEE754",
                                 "uint16 - TULIP scale 2500 - 12500"
-                              ]
+                              ],
+                              "type": "string"
                             },
                             "processAlarmEnabled": {
                               "type": "object",
@@ -570,7 +583,8 @@
                               "enum": [
                                 "float - IEEE754",
                                 "uint16 - TULIP scale 2500 - 12500"
-                              ]
+                              ],
+                              "type": "string"
                             },
                             "processAlarmEnabled": {
                               "type": "object",
@@ -664,12 +678,14 @@
                 "messageType": {
                   "enum": [
                     21
-                  ]
+                  ],
+                  "type": "number"
                 },
                 "messageSubType": {
                   "enum": [
                     3
-                  ]
+                  ],
+                  "type": "number"
                 },
                 "configuration": {
                   "type": "object",
@@ -700,7 +716,8 @@
                                 "Entire configuration discarded because no answer from the cloud",
                                 "Missing frame",
                                 "Frame rejected - frame number already received"
-                              ]
+                              ],
+                              "type": "string"
                             }
                           },
                           "required": [
@@ -727,7 +744,8 @@
                               "Entire configuration discarded because no answer from the cloud",
                               "Missing frame",
                               "Frame rejected - frame number already received"
-                            ]
+                            ],
+                            "type": "string"
                           }
                         },
                         "required": [
@@ -768,12 +786,14 @@
                 "messageType": {
                   "enum": [
                     19
-                  ]
+                  ],
+                  "type": "number"
                 },
                 "messageSubType": {
                   "enum": [
                     3
-                  ]
+                  ],
+                  "type": "number"
                 },
                 "channelAlarms": {
                   "type": "array",
@@ -1052,12 +1072,14 @@
                 "messageType": {
                   "enum": [
                     19
-                  ]
+                  ],
+                  "type": "number"
                 },
                 "messageSubType": {
                   "enum": [
                     1
-                  ]
+                  ],
+                  "type": "number"
                 },
                 "communicationModuleAlarms": {
                   "type": "object",
@@ -1125,12 +1147,14 @@
                 "messageType": {
                   "enum": [
                     19
-                  ]
+                  ],
+                  "type": "number"
                 },
                 "messageSubType": {
                   "enum": [
                     2
-                  ]
+                  ],
+                  "type": "number"
                 },
                 "sensorAlarms": {
                   "type": "array",
@@ -1313,12 +1337,14 @@
                 "messageType": {
                   "enum": [
                     22
-                  ]
+                  ],
+                  "type": "number"
                 },
                 "messageSubType": {
                   "enum": [
                     1
-                  ]
+                  ],
+                  "type": "number"
                 },
                 "keepAliveData": {
                   "anyOf": [
@@ -1420,12 +1446,14 @@
                 "messageType": {
                   "enum": [
                     18
-                  ]
+                  ],
+                  "type": "number"
                 },
                 "messageSubType": {
                   "enum": [
                     1
-                  ]
+                  ],
+                  "type": "number"
                 },
                 "processAlarms": {
                   "type": "array",
@@ -1438,15 +1466,11 @@
                             "sensor": {
                               "const": "alarmFlags"
                             },
-                            "sensorId": {
-                              "const": null
-                            },
+                            "sensorId": {},
                             "channel": {
                               "const": "cmChipLowTemperature"
                             },
-                            "channelId": {
-                              "const": null
-                            },
+                            "channelId": {},
                             "channelName": {},
                             "alarmFlags": {
                               "type": "object",
@@ -1495,15 +1519,11 @@
                             "sensor": {
                               "const": "alarmFlags"
                             },
-                            "sensorId": {
-                              "const": null
-                            },
+                            "sensorId": {},
                             "channel": {
                               "const": "cmChipHighTemperature"
                             },
-                            "channelId": {
-                              "const": null
-                            },
+                            "channelId": {},
                             "channelName": {},
                             "alarmFlags": {
                               "type": "object",
@@ -1552,15 +1572,11 @@
                             "sensor": {
                               "const": "alarmFlags"
                             },
-                            "sensorId": {
-                              "const": null
-                            },
+                            "sensorId": {},
                             "channel": {
                               "const": "airTimeLimitation"
                             },
-                            "channelId": {
-                              "const": null
-                            },
+                            "channelId": {},
                             "channelName": {},
                             "alarmFlags": {
                               "type": "object",
@@ -1609,15 +1625,11 @@
                             "sensor": {
                               "const": "alarmFlags"
                             },
-                            "sensorId": {
-                              "const": null
-                            },
+                            "sensorId": {},
                             "channel": {
                               "const": "memoryError"
                             },
-                            "channelId": {
-                              "const": null
-                            },
+                            "channelId": {},
                             "channelName": {},
                             "alarmFlags": {
                               "type": "object",
@@ -1666,15 +1678,11 @@
                             "sensor": {
                               "const": "alarmFlags"
                             },
-                            "sensorId": {
-                              "const": null
-                            },
+                            "sensorId": {},
                             "channel": {
                               "const": "lowVoltage"
                             },
-                            "channelId": {
-                              "const": null
-                            },
+                            "channelId": {},
                             "channelName": {},
                             "alarmFlags": {
                               "type": "object",
@@ -1723,15 +1731,11 @@
                             "sensor": {
                               "const": "alarmFlags"
                             },
-                            "sensorId": {
-                              "const": null
-                            },
+                            "sensorId": {},
                             "channel": {
                               "const": "highVoltage"
                             },
-                            "channelId": {
-                              "const": null
-                            },
+                            "channelId": {},
                             "channelName": {},
                             "alarmFlags": {
                               "type": "object",
@@ -1780,15 +1784,11 @@
                             "sensor": {
                               "const": "registerConfig"
                             },
-                            "sensorId": {
-                              "const": null
-                            },
+                            "sensorId": {},
                             "channel": {
                               "const": "tulip3ConfigurationRegisters"
                             },
-                            "channelId": {
-                              "const": null
-                            },
+                            "channelId": {},
                             "channelName": {},
                             "alarmFlags": {
                               "type": "object",
@@ -1837,15 +1837,11 @@
                             "sensor": {
                               "const": "registerConfig"
                             },
-                            "sensorId": {
-                              "const": null
-                            },
+                            "sensorId": {},
                             "channel": {
                               "const": "tulip3IdentificationRegisters"
                             },
-                            "channelId": {
-                              "const": null
-                            },
+                            "channelId": {},
                             "channelName": {},
                             "alarmFlags": {
                               "type": "object",
@@ -1894,15 +1890,11 @@
                             "sensor": {
                               "const": "registerConfig"
                             },
-                            "sensorId": {
-                              "const": null
-                            },
+                            "sensorId": {},
                             "channel": {
                               "const": "communicationModuleSpecificConfigurationRegisters"
                             },
-                            "channelId": {
-                              "const": null
-                            },
+                            "channelId": {},
                             "channelName": {},
                             "alarmFlags": {
                               "type": "object",
@@ -1951,15 +1943,11 @@
                             "sensor": {
                               "const": "registerConfig"
                             },
-                            "sensorId": {
-                              "const": null
-                            },
+                            "sensorId": {},
                             "channel": {
                               "const": "communicationModuleSpecificIdentificationRegisters"
                             },
-                            "channelId": {
-                              "const": null
-                            },
+                            "channelId": {},
                             "channelName": {},
                             "alarmFlags": {
                               "type": "object",
@@ -2014,9 +2002,7 @@
                             "channel": {
                               "const": "alarmFlags"
                             },
-                            "channelId": {
-                              "const": null
-                            },
+                            "channelId": {},
                             "channelName": {},
                             "alarmFlags": {
                               "type": "object",
@@ -2071,9 +2057,7 @@
                             "channel": {
                               "const": "registerConfig"
                             },
-                            "channelId": {
-                              "const": null
-                            },
+                            "channelId": {},
                             "channelName": {},
                             "alarmFlags": {
                               "type": "object",
@@ -2187,9 +2171,7 @@
                             "channel": {
                               "const": "alarmFlags"
                             },
-                            "channelId": {
-                              "const": null
-                            },
+                            "channelId": {},
                             "channelName": {},
                             "alarmFlags": {
                               "type": "object",
@@ -2244,9 +2226,7 @@
                             "channel": {
                               "const": "registerConfig"
                             },
-                            "channelId": {
-                              "const": null
-                            },
+                            "channelId": {},
                             "channelName": {},
                             "alarmFlags": {
                               "type": "object",
@@ -2360,15 +2340,11 @@
                           "sensor": {
                             "const": "alarmFlags"
                           },
-                          "sensorId": {
-                            "const": null
-                          },
+                          "sensorId": {},
                           "channel": {
                             "const": "cmChipLowTemperature"
                           },
-                          "channelId": {
-                            "const": null
-                          },
+                          "channelId": {},
                           "channelName": {},
                           "alarmFlags": {
                             "type": "object",
@@ -2417,15 +2393,11 @@
                           "sensor": {
                             "const": "alarmFlags"
                           },
-                          "sensorId": {
-                            "const": null
-                          },
+                          "sensorId": {},
                           "channel": {
                             "const": "cmChipHighTemperature"
                           },
-                          "channelId": {
-                            "const": null
-                          },
+                          "channelId": {},
                           "channelName": {},
                           "alarmFlags": {
                             "type": "object",
@@ -2474,15 +2446,11 @@
                           "sensor": {
                             "const": "alarmFlags"
                           },
-                          "sensorId": {
-                            "const": null
-                          },
+                          "sensorId": {},
                           "channel": {
                             "const": "airTimeLimitation"
                           },
-                          "channelId": {
-                            "const": null
-                          },
+                          "channelId": {},
                           "channelName": {},
                           "alarmFlags": {
                             "type": "object",
@@ -2531,15 +2499,11 @@
                           "sensor": {
                             "const": "alarmFlags"
                           },
-                          "sensorId": {
-                            "const": null
-                          },
+                          "sensorId": {},
                           "channel": {
                             "const": "memoryError"
                           },
-                          "channelId": {
-                            "const": null
-                          },
+                          "channelId": {},
                           "channelName": {},
                           "alarmFlags": {
                             "type": "object",
@@ -2588,15 +2552,11 @@
                           "sensor": {
                             "const": "alarmFlags"
                           },
-                          "sensorId": {
-                            "const": null
-                          },
+                          "sensorId": {},
                           "channel": {
                             "const": "lowVoltage"
                           },
-                          "channelId": {
-                            "const": null
-                          },
+                          "channelId": {},
                           "channelName": {},
                           "alarmFlags": {
                             "type": "object",
@@ -2645,15 +2605,11 @@
                           "sensor": {
                             "const": "alarmFlags"
                           },
-                          "sensorId": {
-                            "const": null
-                          },
+                          "sensorId": {},
                           "channel": {
                             "const": "highVoltage"
                           },
-                          "channelId": {
-                            "const": null
-                          },
+                          "channelId": {},
                           "channelName": {},
                           "alarmFlags": {
                             "type": "object",
@@ -2702,15 +2658,11 @@
                           "sensor": {
                             "const": "registerConfig"
                           },
-                          "sensorId": {
-                            "const": null
-                          },
+                          "sensorId": {},
                           "channel": {
                             "const": "tulip3ConfigurationRegisters"
                           },
-                          "channelId": {
-                            "const": null
-                          },
+                          "channelId": {},
                           "channelName": {},
                           "alarmFlags": {
                             "type": "object",
@@ -2759,15 +2711,11 @@
                           "sensor": {
                             "const": "registerConfig"
                           },
-                          "sensorId": {
-                            "const": null
-                          },
+                          "sensorId": {},
                           "channel": {
                             "const": "tulip3IdentificationRegisters"
                           },
-                          "channelId": {
-                            "const": null
-                          },
+                          "channelId": {},
                           "channelName": {},
                           "alarmFlags": {
                             "type": "object",
@@ -2816,15 +2764,11 @@
                           "sensor": {
                             "const": "registerConfig"
                           },
-                          "sensorId": {
-                            "const": null
-                          },
+                          "sensorId": {},
                           "channel": {
                             "const": "communicationModuleSpecificConfigurationRegisters"
                           },
-                          "channelId": {
-                            "const": null
-                          },
+                          "channelId": {},
                           "channelName": {},
                           "alarmFlags": {
                             "type": "object",
@@ -2873,15 +2817,11 @@
                           "sensor": {
                             "const": "registerConfig"
                           },
-                          "sensorId": {
-                            "const": null
-                          },
+                          "sensorId": {},
                           "channel": {
                             "const": "communicationModuleSpecificIdentificationRegisters"
                           },
-                          "channelId": {
-                            "const": null
-                          },
+                          "channelId": {},
                           "channelName": {},
                           "alarmFlags": {
                             "type": "object",
@@ -2936,9 +2876,7 @@
                           "channel": {
                             "const": "alarmFlags"
                           },
-                          "channelId": {
-                            "const": null
-                          },
+                          "channelId": {},
                           "channelName": {},
                           "alarmFlags": {
                             "type": "object",
@@ -2993,9 +2931,7 @@
                           "channel": {
                             "const": "registerConfig"
                           },
-                          "channelId": {
-                            "const": null
-                          },
+                          "channelId": {},
                           "channelName": {},
                           "alarmFlags": {
                             "type": "object",
@@ -3109,9 +3045,7 @@
                           "channel": {
                             "const": "alarmFlags"
                           },
-                          "channelId": {
-                            "const": null
-                          },
+                          "channelId": {},
                           "channelName": {},
                           "alarmFlags": {
                             "type": "object",
@@ -3166,9 +3100,7 @@
                           "channel": {
                             "const": "registerConfig"
                           },
-                          "channelId": {
-                            "const": null
-                          },
+                          "channelId": {},
                           "channelName": {},
                           "alarmFlags": {
                             "type": "object",
@@ -3300,12 +3232,14 @@
                 "messageType": {
                   "enum": [
                     23
-                  ]
+                  ],
+                  "type": "number"
                 },
                 "messageSubType": {
                   "enum": [
                     1
-                  ]
+                  ],
+                  "type": "number"
                 },
                 "spontaneousDownlinkAnswer": {
                   "anyOf": [
@@ -3324,7 +3258,8 @@
                                   "enum": [
                                     1,
                                     2
-                                  ]
+                                  ],
+                                  "type": "number"
                                 }
                               },
                               "required": [
@@ -3342,7 +3277,8 @@
                                   "enum": [
                                     1,
                                     2
-                                  ]
+                                  ],
+                                  "type": "number"
                                 }
                               },
                               "required": [
@@ -3361,7 +3297,8 @@
                                     1,
                                     2,
                                     3
-                                  ]
+                                  ],
+                                  "type": "number"
                                 }
                               },
                               "required": [
@@ -3378,7 +3315,8 @@
                                 "subType": {
                                   "enum": [
                                     1
-                                  ]
+                                  ],
+                                  "type": "number"
                                 }
                               },
                               "required": [
@@ -3395,7 +3333,8 @@
                                 "subType": {
                                   "enum": [
                                     1
-                                  ]
+                                  ],
+                                  "type": "number"
                                 }
                               },
                               "required": [
@@ -3448,7 +3387,8 @@
                                   "enum": [
                                     1,
                                     2
-                                  ]
+                                  ],
+                                  "type": "number"
                                 }
                               },
                               "required": [
@@ -3466,7 +3406,8 @@
                                   "enum": [
                                     1,
                                     2
-                                  ]
+                                  ],
+                                  "type": "number"
                                 }
                               },
                               "required": [
@@ -3485,7 +3426,8 @@
                                     1,
                                     2,
                                     3
-                                  ]
+                                  ],
+                                  "type": "number"
                                 }
                               },
                               "required": [
@@ -3502,7 +3444,8 @@
                                 "subType": {
                                   "enum": [
                                     1
-                                  ]
+                                  ],
+                                  "type": "number"
                                 }
                               },
                               "required": [
@@ -3519,7 +3462,8 @@
                                 "subType": {
                                   "enum": [
                                     1
-                                  ]
+                                  ],
+                                  "type": "number"
                                 }
                               },
                               "required": [
@@ -3571,12 +3515,14 @@
                 "messageType": {
                   "enum": [
                     23
-                  ]
+                  ],
+                  "type": "number"
                 },
                 "messageSubType": {
                   "enum": [
                     2
-                  ]
+                  ],
+                  "type": "number"
                 }
               },
               "required": [
@@ -3604,14 +3550,16 @@
                 "messageType": {
                   "enum": [
                     20
-                  ]
+                  ],
+                  "type": "number"
                 },
                 "messageSubType": {
                   "enum": [
                     1,
                     2,
                     4
-                  ]
+                  ],
+                  "type": "number"
                 },
                 "identification": {
                   "type": "object",
@@ -3632,7 +3580,8 @@
                             "Mioty class Z",
                             "Mioty class A",
                             "Mioty class B"
-                          ]
+                          ],
+                          "type": "string"
                         },
                         "channelPlan": {
                           "type": "integer",
@@ -3753,12 +3702,14 @@
                             "measurand": {
                               "enum": [
                                 "Current"
-                              ]
+                              ],
+                              "type": "string"
                             },
                             "unit": {
                               "enum": [
                                 "mA"
-                              ]
+                              ],
+                              "type": "string"
                             },
                             "minMeasureRange": {
                               "type": "number"
@@ -3869,12 +3820,14 @@
                             "measurand": {
                               "enum": [
                                 "Current"
-                              ]
+                              ],
+                              "type": "string"
                             },
                             "unit": {
                               "enum": [
                                 "mA"
-                              ]
+                              ],
+                              "type": "string"
                             },
                             "minMeasureRange": {
                               "type": "number"
@@ -3942,12 +3895,14 @@
                 "messageType": {
                   "enum": [
                     20
-                  ]
+                  ],
+                  "type": "number"
                 },
                 "messageSubType": {
                   "enum": [
                     3
-                  ]
+                  ],
+                  "type": "number"
                 },
                 "identification": {
                   "type": "object",
@@ -3978,7 +3933,8 @@
                                 "Entire configuration discarded because no answer from the cloud",
                                 "Missing frame",
                                 "Frame rejected - frame number already received"
-                              ]
+                              ],
+                              "type": "string"
                             }
                           },
                           "required": [
@@ -4005,7 +3961,8 @@
                               "Entire configuration discarded because no answer from the cloud",
                               "Missing frame",
                               "Frame rejected - frame number already received"
-                            ]
+                            ],
+                            "type": "string"
                           }
                         },
                         "required": [
@@ -4056,7 +4013,8 @@
                   "enum": [
                     1,
                     2
-                  ]
+                  ],
+                  "type": "number"
                 },
                 "measurement": {
                   "type": "object",
@@ -4171,7 +4129,8 @@
                 "messageType": {
                   "enum": [
                     3
-                  ]
+                  ],
+                  "type": "number"
                 },
                 "processAlarms": {
                   "type": "array",
@@ -4194,13 +4153,15 @@
                             "enum": [
                               0,
                               1
-                            ]
+                            ],
+                            "type": "number"
                           },
                           "eventName": {
                             "enum": [
                               "triggered",
                               "disappeared"
-                            ]
+                            ],
+                            "type": "string"
                           },
                           "alarmType": {
                             "enum": [
@@ -4210,7 +4171,8 @@
                               3,
                               4,
                               5
-                            ]
+                            ],
+                            "type": "number"
                           },
                           "alarmTypeName": {
                             "enum": [
@@ -4220,7 +4182,8 @@
                               "rising slope",
                               "low threshold with delay",
                               "high threshold with delay"
-                            ]
+                            ],
+                            "type": "string"
                           },
                           "value": {
                             "type": "number"
@@ -4253,13 +4216,15 @@
                             "enum": [
                               0,
                               1
-                            ]
+                            ],
+                            "type": "number"
                           },
                           "eventName": {
                             "enum": [
                               "triggered",
                               "disappeared"
-                            ]
+                            ],
+                            "type": "string"
                           },
                           "alarmType": {
                             "enum": [
@@ -4269,7 +4234,8 @@
                               3,
                               4,
                               5
-                            ]
+                            ],
+                            "type": "number"
                           },
                           "alarmTypeName": {
                             "enum": [
@@ -4279,7 +4245,8 @@
                               "rising slope",
                               "low threshold with delay",
                               "high threshold with delay"
-                            ]
+                            ],
+                            "type": "string"
                           },
                           "value": {
                             "type": "number"
@@ -4330,7 +4297,8 @@
                 "messageType": {
                   "enum": [
                     4
-                  ]
+                  ],
+                  "type": "number"
                 },
                 "technicalAlarms": {
                   "type": "array",
@@ -4353,13 +4321,15 @@
                             "enum": [
                               0,
                               1
-                            ]
+                            ],
+                            "type": "number"
                           },
                           "eventName": {
                             "enum": [
                               "triggered",
                               "disappeared"
-                            ]
+                            ],
+                            "type": "string"
                           },
                           "causeOfFailure": {
                             "enum": [
@@ -4369,7 +4339,8 @@
                               3,
                               4,
                               5
-                            ]
+                            ],
+                            "type": "number"
                           },
                           "causeOfFailureName": {
                             "enum": [
@@ -4379,7 +4350,8 @@
                               "saturated low",
                               "saturated high",
                               "ADC communication error"
-                            ]
+                            ],
+                            "type": "string"
                           }
                         },
                         "required": [
@@ -4408,13 +4380,15 @@
                             "enum": [
                               0,
                               1
-                            ]
+                            ],
+                            "type": "number"
                           },
                           "eventName": {
                             "enum": [
                               "triggered",
                               "disappeared"
-                            ]
+                            ],
+                            "type": "string"
                           },
                           "causeOfFailure": {
                             "enum": [
@@ -4424,7 +4398,8 @@
                               3,
                               4,
                               5
-                            ]
+                            ],
+                            "type": "number"
                           },
                           "causeOfFailureName": {
                             "enum": [
@@ -4434,7 +4409,8 @@
                               "saturated low",
                               "saturated high",
                               "ADC communication error"
-                            ]
+                            ],
+                            "type": "string"
                           }
                         },
                         "required": [
@@ -4481,7 +4457,8 @@
                 "messageType": {
                   "enum": [
                     6
-                  ]
+                  ],
+                  "type": "number"
                 },
                 "configurationStatus": {
                   "type": "object",
@@ -4492,7 +4469,8 @@
                         48,
                         96,
                         112
-                      ]
+                      ],
+                      "type": "number"
                     },
                     "status": {
                       "enum": [
@@ -4500,7 +4478,8 @@
                         "configuration rejected",
                         "command successful",
                         "command failed"
-                      ]
+                      ],
+                      "type": "string"
                     }
                   },
                   "required": [
@@ -4540,7 +4519,8 @@
                 "messageType": {
                   "enum": [
                     7
-                  ]
+                  ],
+                  "type": "number"
                 },
                 "radioUnitIdentification": {
                   "type": "object",
@@ -4621,7 +4601,8 @@
                 "messageType": {
                   "enum": [
                     8
-                  ]
+                  ],
+                  "type": "number"
                 },
                 "deviceStatistic": {
                   "type": "object",

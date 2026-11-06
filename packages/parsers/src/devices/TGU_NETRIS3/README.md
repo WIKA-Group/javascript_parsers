@@ -2,7 +2,7 @@
 
 ![TGU_Netris3](../../../../../docs/public/TGU_Netris3.png)
 
-#### Description of the device
+## Description of the device
 
 The model TGU73.100 thermometer in combination with the model NETRIS®3 radio unit is used wherever web-based remote monitoring of the process temperature is desired in addition to on-site indication. For the operation of TGU73.100 the use of a thermowell is necessary.
 The model TGU73.100 combines a mechanical measuring system with electronic signal processing and is intended forthe connection to the WIKA radio unit model NETRIS®3.In this way, cloud-based process and plant monitoring can be realised in industrial applications.

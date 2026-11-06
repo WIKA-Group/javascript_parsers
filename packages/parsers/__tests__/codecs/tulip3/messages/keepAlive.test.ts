@@ -229,7 +229,14 @@ describe('tulip3 keep alive message decoding (0x16/0x01)', () => {
     })
 
     it('should handle undefined/null message type gracefully', () => {
-      const data = [undefined as any, 0x01, 0x60, 0x00, 0x02, 0x64]
+      const data = [
+        undefined as any,
+        0x01,
+        0x60,
+        0x00,
+        0x02,
+        0x64,
+      ]
 
       expect(() => decodeKeepAliveMessage(data)).toThrow(
         'Cannot read properties of undefined (reading \'toString\')',
@@ -240,14 +247,38 @@ describe('tulip3 keep alive message decoding (0x16/0x01)', () => {
   describe('bit field parsing', () => {
     it('should correctly parse all status bit combinations', () => {
       const testCases = [
-        { status: 0x00, expected: { mainPowered: false, ableToComputeBatteryLevel: false, hasCommunicationModuleRestarted: false } },
-        { status: 0x20, expected: { mainPowered: false, ableToComputeBatteryLevel: false, hasCommunicationModuleRestarted: true } },
-        { status: 0x40, expected: { mainPowered: false, ableToComputeBatteryLevel: true, hasCommunicationModuleRestarted: false } },
-        { status: 0x60, expected: { mainPowered: false, ableToComputeBatteryLevel: true, hasCommunicationModuleRestarted: true } },
-        { status: 0x80, expected: { mainPowered: true, ableToComputeBatteryLevel: false, hasCommunicationModuleRestarted: false } },
-        { status: 0xA0, expected: { mainPowered: true, ableToComputeBatteryLevel: false, hasCommunicationModuleRestarted: true } },
-        { status: 0xC0, expected: { mainPowered: true, ableToComputeBatteryLevel: true, hasCommunicationModuleRestarted: false } },
-        { status: 0xE0, expected: { mainPowered: true, ableToComputeBatteryLevel: true, hasCommunicationModuleRestarted: true } },
+        {
+          status: 0x00,
+          expected: { mainPowered: false, ableToComputeBatteryLevel: false, hasCommunicationModuleRestarted: false },
+        },
+        {
+          status: 0x20,
+          expected: { mainPowered: false, ableToComputeBatteryLevel: false, hasCommunicationModuleRestarted: true },
+        },
+        {
+          status: 0x40,
+          expected: { mainPowered: false, ableToComputeBatteryLevel: true, hasCommunicationModuleRestarted: false },
+        },
+        {
+          status: 0x60,
+          expected: { mainPowered: false, ableToComputeBatteryLevel: true, hasCommunicationModuleRestarted: true },
+        },
+        {
+          status: 0x80,
+          expected: { mainPowered: true, ableToComputeBatteryLevel: false, hasCommunicationModuleRestarted: false },
+        },
+        {
+          status: 0xA0,
+          expected: { mainPowered: true, ableToComputeBatteryLevel: false, hasCommunicationModuleRestarted: true },
+        },
+        {
+          status: 0xC0,
+          expected: { mainPowered: true, ableToComputeBatteryLevel: true, hasCommunicationModuleRestarted: false },
+        },
+        {
+          status: 0xE0,
+          expected: { mainPowered: true, ableToComputeBatteryLevel: true, hasCommunicationModuleRestarted: true },
+        },
       ]
 
       testCases.forEach(({ status, expected }) => {
@@ -280,15 +311,37 @@ describe('tulip3 keep alive message decoding (0x16/0x01)', () => {
   describe('revision counter endianness', () => {
     it('should correctly parse little-endian revision counter', () => {
       const testCases = [
-        { bytes: [0x00, 0x00], expected: 0 },
-        { bytes: [0x01, 0x00], expected: 256 },
-        { bytes: [0x00, 0x01], expected: 1 },
-        { bytes: [0x12, 0x34], expected: 4660 }, // 0x1234
-        { bytes: [0xFF, 0xFF], expected: 65535 },
+        {
+          bytes: [0x00, 0x00],
+          expected: 0,
+        },
+        {
+          bytes: [0x01, 0x00],
+          expected: 256,
+        },
+        {
+          bytes: [0x00, 0x01],
+          expected: 1,
+        },
+        {
+          bytes: [0x12, 0x34],
+          expected: 4660,
+        }, // 0x1234
+        {
+          bytes: [0xFF, 0xFF],
+          expected: 65535,
+        },
       ]
 
       testCases.forEach(({ bytes, expected }) => {
-        const data = [0x16, 0x01, 0x40, bytes[0]!, bytes[1]!, 0x50]
+        const data = [
+          0x16,
+          0x01,
+          0x40,
+          bytes[0]!,
+          bytes[1]!,
+          0x50,
+        ]
 
         const result = decodeKeepAliveMessage(data)
 

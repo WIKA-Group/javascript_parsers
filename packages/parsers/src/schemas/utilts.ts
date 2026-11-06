@@ -36,5 +36,7 @@ export function createParserDownlinkInputSchema(encodeEntries: {
     input: e.schema,
   }))
 
-  return v.object({ data: v.variant('protocol', inputSchemas) })
+  return v.object({
+    data: v.variant('protocol', inputSchemas),
+  })
 }

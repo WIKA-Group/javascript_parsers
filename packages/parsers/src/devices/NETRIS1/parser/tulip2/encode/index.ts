@@ -119,12 +119,16 @@ export function NETRIS1TULIP2EncodeHandler(formattedInput: NETRIS1Tulip2Downlink
   switch (formattedInput.deviceAction) {
     case 'resetToFactory': {
       const frame = encodeResetToFactory()
-      return allowMultiple ? formatMultipleDownlinkOutput([frame]) : formatDownlinkOutput(frame)
+      return allowMultiple
+        ? formatMultipleDownlinkOutput([frame])
+        : formatDownlinkOutput(frame)
     }
 
     case 'resetBatteryIndicator': {
       const frame = encodeResetBatteryIndicator(formattedInput)
-      return allowMultiple ? formatMultipleDownlinkOutput([frame]) : formatDownlinkOutput(frame)
+      return allowMultiple
+        ? formatMultipleDownlinkOutput([frame])
+        : formatDownlinkOutput(frame)
     }
 
     case 'getConfiguration':
@@ -214,8 +218,12 @@ function encodeGetConfiguration(input: NETRIS1TULIP2GetConfigurationAction, allo
     throw new Error('No get configuration commands were provided.')
   }
 
-  const configId = ('configurationId' in input ? input.configurationId : undefined) ?? NETRIS1_DEFAULT_CONFIGURATION_ID
-  const byteLimit = ('byteLimit' in input ? input.byteLimit : undefined) ?? Infinity
+  const configId = ('configurationId' in input
+    ? input.configurationId
+    : undefined) ?? NETRIS1_DEFAULT_CONFIGURATION_ID
+  const byteLimit = ('byteLimit' in input
+    ? input.byteLimit
+    : undefined) ?? Infinity
   const frame = buildDownlinkFrame(commands, {
     configId,
     maxConfigId: NETRIS1_DOWNLINK_FEATURE_FLAGS.maxConfigId,

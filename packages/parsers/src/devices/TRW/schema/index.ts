@@ -16,12 +16,14 @@ const TRW_DOWNLINK_FEATURE_FLAGS = {
 } as const
 
 function createTRWSchemaChannels() {
-  return [{
-    channelId: 0,
-    name: 'temperature',
-    start: 0 as number,
-    end: 10 as number,
-  }] as const satisfies TULIP2Channel[]
+  return [
+    {
+      channelId: 0,
+      name: 'temperature',
+      start: 0 as number,
+      end: 10 as number,
+    },
+  ] as const satisfies TULIP2Channel[]
 }
 
 export function createTRWUplinkOutputSchema() {
@@ -39,7 +41,10 @@ function DownlinkInputSchema() {
       schema: createTULIP2DownlinkSchema(
         createTRWSchemaChannels(),
         TRW_DOWNLINK_FEATURE_FLAGS,
-        [createTRWTULIP2GetConfigurationSchema(), createTRWTULIP2ResetBatterySchema()],
+        [
+          createTRWTULIP2GetConfigurationSchema(),
+          createTRWTULIP2ResetBatterySchema(),
+        ],
       ),
     },
     {

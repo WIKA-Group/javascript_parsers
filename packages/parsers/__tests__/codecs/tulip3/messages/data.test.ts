@@ -61,7 +61,16 @@ const testDeviceConfig = {
 describe('decodeDataMessage', () => {
   describe('valid data messages', () => {
     it('should parse a real message: 0x10 01 06 09 c5 0e 1b 29', () => {
-      const data = [0x10, 0x01, 0x06, 0x09, 0xC5, 0x0E, 0x1B, 0x29]
+      const data = [
+        0x10,
+        0x01,
+        0x06,
+        0x09,
+        0xC5,
+        0x0E,
+        0x1B,
+        0x29,
+      ]
       const result = decodeDataMessage(data, {
         sensor1: {
           channel1: {
@@ -119,7 +128,18 @@ describe('decodeDataMessage', () => {
     })
 
     it('should parse the provided example: 0x10 01 0E 0B B8 10 40 20 00 00', () => {
-      const data = [0x10, 0x01, 0x0E, 0x0B, 0xB8, 0x10, 0x40, 0x20, 0x00, 0x00]
+      const data = [
+        0x10,
+        0x01,
+        0x0E,
+        0x0B,
+        0xB8,
+        0x10,
+        0x40,
+        0x20,
+        0x00,
+        0x00,
+      ]
       const result = decodeDataMessage(data, testDeviceConfig)
       expect(result.data).toEqual({
         messageType: 0x10,
@@ -150,7 +170,20 @@ describe('decodeDataMessage', () => {
     })
 
     it('should parse multiple float measurements', () => {
-      const data = [0x10, 0x01, 0x00, 0x40, 0x20, 0x00, 0x00, 0x08, 0x40, 0x80, 0x00, 0x00]
+      const data = [
+        0x10,
+        0x01,
+        0x00,
+        0x40,
+        0x20,
+        0x00,
+        0x00,
+        0x08,
+        0x40,
+        0x80,
+        0x00,
+        0x00,
+      ]
       const result = decodeDataMessage(data, testDeviceConfig)
       expect(result.data).toEqual({
         messageType: 0x10,
@@ -202,7 +235,15 @@ describe('decodeDataMessage', () => {
     })
 
     it('should handle message type 0x11', () => {
-      const data = [0x11, 0x01, 0x00, 0x40, 0x20, 0x00, 0x00]
+      const data = [
+        0x11,
+        0x01,
+        0x00,
+        0x40,
+        0x20,
+        0x00,
+        0x00,
+      ]
       const result = decodeDataMessage(data, testDeviceConfig)
       expect(result.data).toEqual({
         messageType: 0x11,
@@ -225,14 +266,30 @@ describe('decodeDataMessage', () => {
 
   describe('error handling', () => {
     it('should throw TypeError for invalid message type', () => {
-      const data = [0x20, 0x01, 0x00, 0x40, 0x20, 0x00, 0x00]
+      const data = [
+        0x20,
+        0x01,
+        0x00,
+        0x40,
+        0x20,
+        0x00,
+        0x00,
+      ]
 
       expect(() => decodeDataMessage(data, testDeviceConfig)).toThrow(TypeError)
       expect(() => decodeDataMessage(data, testDeviceConfig)).toThrow('Invalid data message type: expected 0x10, 0x11 but got 0x20')
     })
 
     it('should throw TypeError for invalid sub message type', () => {
-      const data = [0x10, 0x02, 0x00, 0x40, 0x20, 0x00, 0x00]
+      const data = [
+        0x10,
+        0x02,
+        0x00,
+        0x40,
+        0x20,
+        0x00,
+        0x00,
+      ]
 
       expect(() => decodeDataMessage(data, testDeviceConfig)).toThrow(TypeError)
       expect(() => decodeDataMessage(data, testDeviceConfig)).toThrow('Unsupported data message subtype: 0x02. Allowed subtypes: 0x01')
@@ -248,7 +305,15 @@ describe('decodeDataMessage', () => {
 
     it('should throw TypeError for unsupported sensor/channel combination', () => {
       // Try to access sensor2/channel2 which doesn't exist in config
-      const data = [0x10, 0x01, 0x48, 0x40, 0x20, 0x00, 0x00] // sensor2 (01), channel2 (001), float (00)
+      const data = [
+        0x10,
+        0x01,
+        0x48,
+        0x40,
+        0x20,
+        0x00,
+        0x00,
+      ] // sensor2 (01), channel2 (001), float (00)
 
       expect(() => decodeDataMessage(data, testDeviceConfig)).toThrow(TypeError)
       expect(() => decodeDataMessage(data, testDeviceConfig)).toThrow('Measurement from sensor sensor2 channel channel2 is not supported by the device profile')
@@ -294,7 +359,15 @@ describe('decodeDataMessage', () => {
 
     it('should throw RangeError for float value out of configured range', () => {
       // Send a float value that's outside the configured min/max range
-      const data = [0x10, 0x01, 0x00, 0x43, 0x00, 0x00, 0x00] // 128.0, outside 0-100 range
+      const data = [
+        0x10,
+        0x01,
+        0x00,
+        0x43,
+        0x00,
+        0x00,
+        0x00,
+      ] // 128.0, outside 0-100 range
 
       expect(() => decodeDataMessage(data, testDeviceConfig)).toThrow(RangeError)
       expect(() => decodeDataMessage(data, testDeviceConfig)).toThrow('Measurement for sensor sensor1 channel channel1 is out of range')
@@ -332,29 +405,69 @@ describe('decodeDataMessage', () => {
       } as const satisfies TULIP3DeviceConfig
 
       // Test value below minimum for 4-20 range
-      const dataBelowMin = [0x10, 0x01, 0x00, 0x40, 0x40, 0x00, 0x00] // 3.0, below min 4
+      const dataBelowMin = [
+        0x10,
+        0x01,
+        0x00,
+        0x40,
+        0x40,
+        0x00,
+        0x00,
+      ] // 3.0, below min 4
       expect(() => decodeDataMessage(dataBelowMin, customConfig)).toThrow(RangeError)
       expect(() => decodeDataMessage(dataBelowMin, customConfig)).toThrow('Measurement for sensor sensor1 channel channel1 is out of range')
 
       // Test value above maximum for 4-20 range
-      const dataAboveMax = [0x10, 0x01, 0x00, 0x41, 0xA8, 0x00, 0x00] // 21.0, above max 20
+      const dataAboveMax = [
+        0x10,
+        0x01,
+        0x00,
+        0x41,
+        0xA8,
+        0x00,
+        0x00,
+      ] // 21.0, above max 20
       expect(() => decodeDataMessage(dataAboveMax, customConfig)).toThrow(RangeError)
       expect(() => decodeDataMessage(dataAboveMax, customConfig)).toThrow('Measurement for sensor sensor1 channel channel1 is out of range')
 
       // Test value below minimum for -45 to 110 range
-      const dataBelowMin2 = [0x10, 0x01, 0x08, 0xC2, 0x40, 0x00, 0x00] // -48.0, below min -45
+      const dataBelowMin2 = [
+        0x10,
+        0x01,
+        0x08,
+        0xC2,
+        0x40,
+        0x00,
+        0x00,
+      ] // -48.0, below min -45
       expect(() => decodeDataMessage(dataBelowMin2, customConfig)).toThrow(RangeError)
       expect(() => decodeDataMessage(dataBelowMin2, customConfig)).toThrow('Measurement for sensor sensor1 channel channel2 is out of range')
 
       // Test value above maximum for -45 to 110 range
-      const dataAboveMax2 = [0x10, 0x01, 0x08, 0x42, 0xE0, 0x00, 0x00] // 112.0, above max 110
+      const dataAboveMax2 = [
+        0x10,
+        0x01,
+        0x08,
+        0x42,
+        0xE0,
+        0x00,
+        0x00,
+      ] // 112.0, above max 110
       expect(() => decodeDataMessage(dataAboveMax2, customConfig)).toThrow(RangeError)
       expect(() => decodeDataMessage(dataAboveMax2, customConfig)).toThrow('Measurement for sensor sensor1 channel channel2 is out of range')
     })
 
     it('should throw RangeError for negative temperature below minimum', () => {
       // Test sensor1/channel3 which has -40 to 125 range
-      const data = [0x10, 0x01, 0x10, 0xC2, 0x30, 0x00, 0x00] // -44.0, below min -40
+      const data = [
+        0x10,
+        0x01,
+        0x10,
+        0xC2,
+        0x30,
+        0x00,
+        0x00,
+      ] // -44.0, below min -40
 
       expect(() => decodeDataMessage(data, testDeviceConfig)).toThrow(RangeError)
       expect(() => decodeDataMessage(data, testDeviceConfig)).toThrow('Measurement for sensor sensor1 channel channel3 is out of range')
@@ -362,7 +475,15 @@ describe('decodeDataMessage', () => {
 
     it('should throw RangeError for temperature above maximum', () => {
       // Test sensor1/channel3 which has -40 to 125 range
-      const data = [0x10, 0x01, 0x10, 0x42, 0xFE, 0x00, 0x00] // 127.0, above max 125
+      const data = [
+        0x10,
+        0x01,
+        0x10,
+        0x42,
+        0xFE,
+        0x00,
+        0x00,
+      ] // 127.0, above max 125
 
       expect(() => decodeDataMessage(data, testDeviceConfig)).toThrow(RangeError)
       expect(() => decodeDataMessage(data, testDeviceConfig)).toThrow('Measurement for sensor sensor1 channel channel3 is out of range')
@@ -372,12 +493,28 @@ describe('decodeDataMessage', () => {
       // Test sensor2/channel1 which has 0-50 range
 
       // Test negative value (below minimum)
-      const dataNegative = [0x10, 0x01, 0x40, 0xBF, 0x80, 0x00, 0x00] // -1.0, below min 0
+      const dataNegative = [
+        0x10,
+        0x01,
+        0x40,
+        0xBF,
+        0x80,
+        0x00,
+        0x00,
+      ] // -1.0, below min 0
       expect(() => decodeDataMessage(dataNegative, testDeviceConfig)).toThrow(RangeError)
       expect(() => decodeDataMessage(dataNegative, testDeviceConfig)).toThrow('Measurement for sensor sensor2 channel channel1 is out of range')
 
       // Test value above maximum
-      const dataAboveMax = [0x10, 0x01, 0x40, 0x42, 0x4C, 0x00, 0x00] // 51.0, above max 50
+      const dataAboveMax = [
+        0x10,
+        0x01,
+        0x40,
+        0x42,
+        0x4C,
+        0x00,
+        0x00,
+      ] // 51.0, above max 50
       expect(() => decodeDataMessage(dataAboveMax, testDeviceConfig)).toThrow(RangeError)
       expect(() => decodeDataMessage(dataAboveMax, testDeviceConfig)).toThrow('Measurement for sensor sensor2 channel channel1 is out of range')
     })
@@ -394,7 +531,15 @@ describe('decodeDataMessage', () => {
   describe('error measurements (NaN, 0xFFFF)', () => {
     it('should handle NaN float values as error measurements', () => {
       // IEEE754 NaN representation (e.g., 0x7FC00000)
-      const data = [0x10, 0x01, 0x00, 0x7F, 0xC0, 0x00, 0x00]
+      const data = [
+        0x10,
+        0x01,
+        0x00,
+        0x7F,
+        0xC0,
+        0x00,
+        0x00,
+      ]
 
       const result = decodeDataMessage(data, testDeviceConfig)
 
@@ -489,7 +634,15 @@ describe('decodeDataMessage', () => {
       } as const satisfies TULIP3DeviceConfig
       // sensor4=3 (11), channel8=7 (111), float=0 (00), reserved=0 (0)
       // Binary: 11 111 00 0 = 0xF8
-      const data = [0x10, 0x01, 0xF8, 0x40, 0x20, 0x00, 0x00]
+      const data = [
+        0x10,
+        0x01,
+        0xF8,
+        0x40,
+        0x20,
+        0x00,
+        0x00,
+      ]
       const result = decodeDataMessage(data, extendedConfig)
       expect(result.data).toEqual({
         messageType: 0x10,
@@ -620,7 +773,16 @@ describe('decodeDataMessage', () => {
         alarmFlags: createDefaultCommunicationModuleAlarmFlags(),
         registerConfig: completeCommunicationModuleRegisterConfig(),
       } as const satisfies TULIP3DeviceConfig
-      const data = [0x10, 0x01, 0x06, 0x1D, 0x4C, 0x0E, 0x27, 0x10]
+      const data = [
+        0x10,
+        0x01,
+        0x06,
+        0x1D,
+        0x4C,
+        0x0E,
+        0x27,
+        0x10,
+      ]
       const result = decodeDataMessage(data, customConfig)
       expect(result.data).toEqual({
         messageType: 0x10,
@@ -726,7 +888,15 @@ describe('decodeDataMessage', () => {
   describe('rounding and decimals', () => {
     // Use a float with repeating decimal representation in single-precision
     // 0x3EAAAAAB ~= 0.33333334 (single-precision)
-    const repeatingFloatData = [0x10, 0x01, 0x00, 0x3E, 0xAA, 0xAA, 0xAB]
+    const repeatingFloatData = [
+      0x10,
+      0x01,
+      0x00,
+      0x3E,
+      0xAA,
+      0xAA,
+      0xAB,
+    ]
 
     it('defaults to 4 decimal places for floats', () => {
       const result = decodeDataMessage(repeatingFloatData, testDeviceConfig)

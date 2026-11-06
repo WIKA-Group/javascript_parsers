@@ -123,7 +123,9 @@ export function intTuple4ToUInt32(data: [number, number, number, number]): numbe
  */
 export function intTuple1ToInt8(data: [number]): number {
   const value = data[0] & 0xFF
-  return value > 127 ? value - 256 : value
+  return value > 127
+    ? value - 256
+    : value
 }
 
 // ============================================================================

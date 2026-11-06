@@ -16,12 +16,16 @@ export function NETRISFTULIP2EncodeHandler(formattedInput: NetrisFTulip2Downlink
   switch (formattedInput.deviceAction) {
     case 'resetToFactory': {
       const frame = encodeResetToFactory()
-      return allowMultiple ? formatMultipleDownlinkOutput([frame]) : formatDownlinkOutput(frame)
+      return allowMultiple
+        ? formatMultipleDownlinkOutput([frame])
+        : formatDownlinkOutput(frame)
     }
 
     case 'resetBatteryIndicator': {
       const frame = encodeResetBatteryIndicator(formattedInput)
-      return allowMultiple ? formatMultipleDownlinkOutput([frame]) : formatDownlinkOutput(frame)
+      return allowMultiple
+        ? formatMultipleDownlinkOutput([frame])
+        : formatDownlinkOutput(frame)
     }
 
     case 'getConfiguration':
@@ -42,7 +46,9 @@ export function NETRISFTULIP2EncodeHandler(formattedInput: NetrisFTulip2Downlink
 }
 
 function encodeResetToFactory(): DownlinkFrame {
-  return buildNetrisFDownlinkFrame([buildResetFactoryCommand()], {
+  return buildNetrisFDownlinkFrame([
+    buildResetFactoryCommand(),
+  ], {
     configId: NETRISF_DEFAULT_CONFIGURATION_ID,
     maxConfigId: NETRISF_DOWNLINK_FEATURE_FLAGS.maxConfigId,
     byteLimit: Infinity,
@@ -51,7 +57,9 @@ function encodeResetToFactory(): DownlinkFrame {
 
 function encodeResetBatteryIndicator(input: NetrisFTULIP2ResetBatteryAction): DownlinkFrame {
   const configId = input.configurationId ?? NETRISF_DEFAULT_CONFIGURATION_ID
-  return buildNetrisFDownlinkFrame([buildResetBatteryCommand()], {
+  return buildNetrisFDownlinkFrame([
+    buildResetBatteryCommand(),
+  ], {
     configId,
     maxConfigId: NETRISF_DOWNLINK_FEATURE_FLAGS.maxConfigId,
     byteLimit: Infinity,

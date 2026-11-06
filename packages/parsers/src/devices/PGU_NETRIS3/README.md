@@ -2,7 +2,7 @@
 
 ![PGU_Netris3](../../../../../docs/public/PGU_Netris3.png)
 
-#### Description of the device
+## Description of the device
 
 The model PGU2x.100 pressure gauge in combination with the model NETRIS®3 radio unit is used wherever web-based remote monitoring of the process pressure is desired in addition to on-site indication.
 The model PGU2x.100 combines a mechanical measuring system with electronic signal processing and is intended for connection to the WIKA model NETRIS®3 radio unit. In this way, cloud based process and plant monitoring can be realised in industrial applications. Condition-based and preventive maintenance through centralised big data analysis is thus possible.

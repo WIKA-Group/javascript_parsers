@@ -15,12 +15,16 @@ export function GD20WTULIP2EncodeHandler(formattedInput: GD20WTulip2DownlinkInpu
   switch (formattedInput.deviceAction) {
     case 'resetToFactory': {
       const frame = encodeResetToFactory()
-      return allowMultiple ? formatMultipleDownlinkOutput([frame]) : formatDownlinkOutput(frame)
+      return allowMultiple
+        ? formatMultipleDownlinkOutput([frame])
+        : formatDownlinkOutput(frame)
     }
 
     case 'resetBatteryIndicator': {
       const frame = encodeResetBatteryIndicator(formattedInput)
-      return allowMultiple ? formatMultipleDownlinkOutput([frame]) : formatDownlinkOutput(frame)
+      return allowMultiple
+        ? formatMultipleDownlinkOutput([frame])
+        : formatDownlinkOutput(frame)
     }
 
     case 'getConfiguration':
@@ -41,7 +45,9 @@ export function GD20WTULIP2EncodeHandler(formattedInput: GD20WTulip2DownlinkInpu
 }
 
 function encodeResetToFactory(): number[] {
-  return buildDownlinkFrame([buildResetFactoryCommand()], {
+  return buildDownlinkFrame([
+    buildResetFactoryCommand(),
+  ], {
     configId: 0,
     maxConfigId: GD20W_DOWNLINK_FEATURE_FLAGS.maxConfigId,
     byteLimit: Infinity,
@@ -50,7 +56,9 @@ function encodeResetToFactory(): number[] {
 
 function encodeResetBatteryIndicator(input: GD20WTULIP2ResetBatteryAction): number[] {
   const configId = input.configurationId ?? GD20W_DEFAULT_CONFIGURATION_ID
-  return buildDownlinkFrame([buildResetBatteryCommand()], {
+  return buildDownlinkFrame([
+    buildResetBatteryCommand(),
+  ], {
     configId,
     maxConfigId: GD20W_DOWNLINK_FEATURE_FLAGS.maxConfigId,
     byteLimit: Infinity,

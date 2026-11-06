@@ -2,7 +2,7 @@
 
 ![A2G](../../../../../docs/public/A2G.png)
 
-#### Description of the device
+## Description of the device
 
 The model A2G-520 measures the pressure difference on components such as ventilators or pitot tubes, e.g. model A2G-FM, and calculates the air flow using the calibration factor (K factor). By selecting the respective component manufacturer in the menu, the correct calculation formula is automatically taken into account.
 

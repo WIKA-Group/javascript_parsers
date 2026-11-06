@@ -189,7 +189,9 @@ export function defineTULIP2Codec<const TChannels extends TULIP2Channel[], TName
       end: c.end,
       name: c.name,
       start: c.start,
-      ...(c.adjustMeasurementRangeDisallowed ? { adjustMeasurementRangeDisallowed: true as const } : {}),
+      ...(c.adjustMeasurementRangeDisallowed
+        ? { adjustMeasurementRangeDisallowed: true as const }
+        : {}),
     }))
   }
 
@@ -213,10 +215,14 @@ export function defineTULIP2Codec<const TChannels extends TULIP2Channel[], TName
   } as any
 
   if (options.encoderFactory) {
-    codec.encode = options.encoderFactory({ getChannels: () => options.channels }) as ReturnOfFactory<TEncoderFactory>
+    codec.encode = options.encoderFactory({
+      getChannels: () => options.channels,
+    }) as ReturnOfFactory<TEncoderFactory>
   }
   if (options.multipleEncodeFactory) {
-    codec.encodeMultiple = options.multipleEncodeFactory({ getChannels: () => options.channels }) as ReturnOfFactory<TMultipleEncoderFactory>
+    codec.encodeMultiple = options.multipleEncodeFactory({
+      getChannels: () => options.channels,
+    }) as ReturnOfFactory<TMultipleEncoderFactory>
   }
 
   return codec as TULIP2Codec<TChannels, TName, THandlers, TEncoderFactory, TMultipleEncoderFactory>

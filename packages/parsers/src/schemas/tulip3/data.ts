@@ -113,7 +113,9 @@ function createDataMessageUplinkOutputSchema<const TTULIP3DeviceConfig extends T
     messageType: [0x10, 0x11], // Data message types
     messageSubType: [0x01], // Data message subtype
     extension: {
-      measurements: v.tupleWithRest([createGeneralMeasurementSchema(config)], createGeneralMeasurementSchema(config)),
+      measurements: v.tupleWithRest([
+        createGeneralMeasurementSchema(config),
+      ], createGeneralMeasurementSchema(config)),
     },
   })
 }

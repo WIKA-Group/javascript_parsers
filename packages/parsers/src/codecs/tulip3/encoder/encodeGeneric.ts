@@ -176,7 +176,10 @@ export function encodeGetAlarmStatus<TConfig extends TULIP3DeviceConfig>(
     }
   }
 
-  return [...frame, ...targetBytes]
+  return [
+    ...frame,
+    ...targetBytes,
+  ]
 }
 
 // =============================================================================

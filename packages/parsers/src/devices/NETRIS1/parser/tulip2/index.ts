@@ -95,7 +95,9 @@ const handleProcessAlarmMessage: Handler<TULIP2NETRIS1Channels, NETRIS1TULIP2Pro
 
     const isSlope = alarmType === PROCESS_ALARM_TYPES['rising slope'] || alarmType === PROCESS_ALARM_TYPES['falling slope']
     const raw = (input.bytes[byteIndex + 1]! << 8) | input.bytes[byteIndex + 2]!
-    const value = isSlope ? slopeValueToValue(raw, options.channels[0]) : TULIPValueToValue(raw, options.channels[0])
+    const value = isSlope
+      ? slopeValueToValue(raw, options.channels[0])
+      : TULIPValueToValue(raw, options.channels[0])
 
     processAlarms.push({
       sensorId: 0,
@@ -153,11 +155,13 @@ const handleTechnicalAlarmMessage: Handler<TULIP2NETRIS1Channels, NETRIS1TULIP2T
     data: {
       messageType: 0x04,
       configurationId,
-      technicalAlarms: [{
-        sensorId: 0,
-        alarmType,
-        alarmTypeNames,
-      }] as NETRIS1TULIP2TechnicalAlarmsData,
+      technicalAlarms: [
+        {
+          sensorId: 0,
+          alarmType,
+          alarmTypeNames,
+        },
+      ] as NETRIS1TULIP2TechnicalAlarmsData,
     },
   }
 }
@@ -229,8 +233,18 @@ const handleDeviceIdentificationMessage: Handler<TULIP2NETRIS1Channels, NETRIS1T
   }
   const serialNumber = String.fromCharCode(...serialBytes.slice(0, lastNonZero + 1))
 
-  const measurementRangeStart = intTuple4ToFloat32WithThreshold([input.bytes[19]!, input.bytes[20]!, input.bytes[21]!, input.bytes[22]!])
-  const measurementRangeEnd = intTuple4ToFloat32WithThreshold([input.bytes[23]!, input.bytes[24]!, input.bytes[25]!, input.bytes[26]!])
+  const measurementRangeStart = intTuple4ToFloat32WithThreshold([
+    input.bytes[19]!,
+    input.bytes[20]!,
+    input.bytes[21]!,
+    input.bytes[22]!,
+  ])
+  const measurementRangeEnd = intTuple4ToFloat32WithThreshold([
+    input.bytes[23]!,
+    input.bytes[24]!,
+    input.bytes[25]!,
+    input.bytes[26]!,
+  ])
   const measurand = input.bytes[27]!
   const measurandName = (LPP_MEASURANDS_BY_ID as Record<number, string>)[measurand] ?? 'Unknown'
   const unit = input.bytes[28]!
@@ -321,7 +335,10 @@ const netris1EncoderFactory: EncoderFactory<NETRIS1Tulip2DownlinkInput> = (optio
   const featureFlags = NETRIS1_DOWNLINK_FEATURE_FLAGS
   return (input: NETRIS1Tulip2DownlinkInput) => {
     const channels = options.getChannels()
-    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, [createNETRIS1TULIP2GetConfigurationSchema(), createNETRIS1TULIP2ResetBatterySchema()])
+    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, [
+      createNETRIS1TULIP2GetConfigurationSchema(),
+      createNETRIS1TULIP2ResetBatterySchema(),
+    ])
     return NETRIS1TULIP2EncodeHandler(validated as NETRIS1Tulip2DownlinkInput)
   }
 }
@@ -330,7 +347,10 @@ const netris1MultipleEncodeFactory: MultipleEncoderFactory<NETRIS1Tulip2Downlink
   const featureFlags = NETRIS1_DOWNLINK_FEATURE_FLAGS
   return (input: NETRIS1Tulip2DownlinkInput) => {
     const channels = options.getChannels()
-    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, [createNETRIS1TULIP2GetConfigurationSchema(), createNETRIS1TULIP2ResetBatterySchema()])
+    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, [
+      createNETRIS1TULIP2GetConfigurationSchema(),
+      createNETRIS1TULIP2ResetBatterySchema(),
+    ])
     return NETRIS1TULIP2EncodeHandler(validated as NETRIS1Tulip2DownlinkInput, true)
   }
 }

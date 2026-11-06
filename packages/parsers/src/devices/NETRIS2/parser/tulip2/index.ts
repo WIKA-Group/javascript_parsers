@@ -199,7 +199,9 @@ const handleTechnicalAlarmMessage: Handler<TULIP2NETRIS2Channels, NETRIS2TULIP2T
     throw new Error(`Technical alarm message contains invalid bitMask: ${bitMask}, expected 0x01, 0x02, or 0x03`)
   }
 
-  const requiredBitMaskLength = bitMask === 0x03 ? 5 : 4
+  const requiredBitMaskLength = bitMask === 0x03
+    ? 5
+    : 4
 
   if (input.bytes.length < requiredBitMaskLength) {
     throw new Error(`Technical alarm message with bitMask ${bitMask} needs ${requiredBitMaskLength} bytes but got ${input.bytes.length}`)
@@ -226,7 +228,9 @@ const handleTechnicalAlarmMessage: Handler<TULIP2NETRIS2Channels, NETRIS2TULIP2T
       throw new Error(`Unknown causeOfFailure ${causeOfFailure} in technical alarm message for channel ${channelId}`)
     }
 
-    const channelName = channelId === 0 ? 'Electrical current1' : 'Electrical current2'
+    const channelName = channelId === 0
+      ? 'Electrical current1'
+      : 'Electrical current2'
 
     technicalAlarms.push({
       channelId,
@@ -243,7 +247,9 @@ const handleTechnicalAlarmMessage: Handler<TULIP2NETRIS2Channels, NETRIS2TULIP2T
   }
 
   if (bitMask === 0x02 || bitMask === 0x03) {
-    const byteIndex = bitMask === 0x03 ? 4 : 3
+    const byteIndex = bitMask === 0x03
+      ? 4
+      : 3
     processChannel(1, byteIndex)
   }
 
@@ -395,7 +401,9 @@ const netris2EncoderFactory: EncoderFactory<Netris2Tulip2DownlinkInput> = (optio
   const featureFlags = NETRIS2_DOWNLINK_FEATURE_FLAGS
   return (input: Netris2Tulip2DownlinkInput) => {
     const channels = options.getChannels()
-    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, [createDownlinkResetBatteryIndicatorSchema(featureFlags)], NETRIS2_DOWNLINK_SPAN_LIMIT_FACTORS)
+    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, [
+      createDownlinkResetBatteryIndicatorSchema(featureFlags),
+    ], NETRIS2_DOWNLINK_SPAN_LIMIT_FACTORS)
     return NETRIS2TULIP2EncodeHandler(validated)
   }
 }
@@ -404,7 +412,9 @@ const netris2MultipleEncodeFactory: MultipleEncoderFactory<Netris2Tulip2Downlink
   const featureFlags = NETRIS2_DOWNLINK_FEATURE_FLAGS
   return (input: Netris2Tulip2DownlinkInput) => {
     const channels = options.getChannels()
-    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, [createDownlinkResetBatteryIndicatorSchema(featureFlags)], NETRIS2_DOWNLINK_SPAN_LIMIT_FACTORS)
+    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, [
+      createDownlinkResetBatteryIndicatorSchema(featureFlags),
+    ], NETRIS2_DOWNLINK_SPAN_LIMIT_FACTORS)
     return NETRIS2TULIP2EncodeHandler(validated, true)
   }
 }

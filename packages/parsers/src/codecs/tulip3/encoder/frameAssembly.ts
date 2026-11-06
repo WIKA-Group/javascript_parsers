@@ -64,6 +64,11 @@ export function assembleWriteFrames(
       applyByte |= 0b10000000
     }
 
-    return [messageType, subMessageType, applyByte, ...payload]
+    return [
+      messageType,
+      subMessageType,
+      applyByte,
+      ...payload,
+    ]
   })
 }

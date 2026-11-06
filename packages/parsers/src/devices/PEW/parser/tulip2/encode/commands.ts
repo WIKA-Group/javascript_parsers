@@ -22,11 +22,19 @@ export function buildGetMainConfigCommand(): DownlinkCommand {
 }
 
 export function buildGetAlarmConfigCommand(channelId: 0 | 1): DownlinkCommand {
-  return [channelId === 0 ? PEW_COMMANDS.GET_PRESSURE_ALARM : PEW_COMMANDS.GET_TEMPERATURE_ALARM]
+  return [
+    channelId === 0
+      ? PEW_COMMANDS.GET_PRESSURE_ALARM
+      : PEW_COMMANDS.GET_TEMPERATURE_ALARM,
+  ]
 }
 
 export function buildGetPropertyCommand(channelId: 0 | 1): DownlinkCommand {
-  return [channelId === 0 ? PEW_COMMANDS.GET_PRESSURE_PROPERTY : PEW_COMMANDS.GET_TEMPERATURE_PROPERTY]
+  return [
+    channelId === 0
+      ? PEW_COMMANDS.GET_PRESSURE_PROPERTY
+      : PEW_COMMANDS.GET_TEMPERATURE_PROPERTY,
+  ]
 }
 
 // ─── Disable channel commands ───────────────────────────────────────────────────
@@ -107,7 +115,9 @@ export function buildPEWMainConfigCommand(config: PEWMainConfiguration | undefin
   // No data in advertising: 0 = BLE includes measurement data, 1 = BLE does not
   // isBLEEnabled: true -> data in advertising -> byte = 0
   // isBLEEnabled: false -> no data in advertising -> byte = 1
-  const bleAdvertisingFlag = config.isBLEEnabled === false ? 1 : 0
+  const bleAdvertisingFlag = config.isBLEEnabled === false
+    ? 1
+    : 0
   bytes.push(bleAdvertisingFlag)
 
   if (bytes.length > payloadLimit) {

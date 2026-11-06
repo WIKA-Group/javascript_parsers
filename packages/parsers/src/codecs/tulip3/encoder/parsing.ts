@@ -30,7 +30,9 @@ export function int8ToIntTuple1(value: number): [number] {
   if (value < -128 || value > 127 || !Number.isInteger(value)) {
     throw new TypeError(`Value must be an integer between -128 and 127, got: ${value}`)
   }
-  return [(value < 0 ? value + 256 : value) & 0xFF]
+  return [(value < 0
+    ? value + 256
+    : value) & 0xFF]
 }
 
 /**
@@ -95,7 +97,9 @@ export function numberToIntTuple4(value: number): [number, number, number, numbe
  * @returns Tuple containing exactly 1 byte (0 = false, 1 = true)
  */
 export function booleanToIntTuple1(value: boolean): [number] {
-  return [value ? 1 : 0]
+  return [
+    value ? 1 : 0,
+  ]
 }
 
 // ============================================================================
@@ -114,7 +118,9 @@ export function unitToIntTuple1(value: string): [number] {
   if (!entry) {
     throw new TypeError(`Unknown unit string: "${value}". Must be one of: ${Object.values(unitsLookup).join(', ')}`)
   }
-  return [Number.parseInt(entry[0], 10)]
+  return [
+    Number.parseInt(entry[0], 10),
+  ]
 }
 
 // ============================================================================
@@ -149,7 +155,9 @@ export function protocolDataTypeToIntTuple1(value: string): [number] {
   if (!entry) {
     throw new TypeError(`Unknown protocol data type: "${value}". Must be one of: ${Object.values(protocolDataTypeLookup).join(', ')}`)
   }
-  return [Number.parseInt(entry[0], 10)]
+  return [
+    Number.parseInt(entry[0], 10),
+  ]
 }
 
 /**

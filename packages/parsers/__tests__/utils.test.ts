@@ -93,7 +93,9 @@ describe('numbersToIntArray', () => {
   })
 
   it('should handle single number', () => {
-    expect(numbersToIntArray([{ value: 0xAB, bytes: 1 }])).toEqual([0xAB])
+    expect(numbersToIntArray([
+      { value: 0xAB, bytes: 1 },
+    ])).toEqual([0xAB])
   })
 
   it('should handle zero values', () => {

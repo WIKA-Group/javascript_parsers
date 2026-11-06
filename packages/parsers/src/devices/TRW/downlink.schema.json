@@ -549,7 +549,8 @@
                                           "enum": [
                                             "°C",
                                             "°F"
-                                          ]
+                                          ],
+                                          "type": "string"
                                         },
                                         "offset": {
                                           "type": "number"

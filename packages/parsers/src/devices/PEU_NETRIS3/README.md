@@ -2,7 +2,7 @@
 
 ![PEU_Netris3](../../../../../docs/public/PEU_Netris3.png)
 
-#### Description of the device
+## Description of the device
 
 The model PEU-2x in combination with the WIKA model NETRIS®3 radio unit is used wherever web-based remote monitoring of the process pressure of liquids and gases is desired. Typical applications are mobile parts of plants or remote measuring locations. The connection to NETRIS®3 allows for cloud-based process and plant monitoring in industrial applications.
 

@@ -6,53 +6,341 @@ import { FullConfigurationHexString } from '../constants/configuration'
 import { completeChannelRegisterConfig, completeCommunicationModuleRegisterConfig, completeSensorRegisterConfig } from '../presets'
 
 const sensor1channelConfig = {
-  channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel1', registerConfig: completeChannelRegisterConfig(), alarmFlags: {}, availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
-  channel2: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel2', registerConfig: completeChannelRegisterConfig(), alarmFlags: {}, availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
-  channel3: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel3', registerConfig: completeChannelRegisterConfig(), alarmFlags: {}, availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
-  channel4: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel4', registerConfig: completeChannelRegisterConfig(), alarmFlags: {}, availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
-  channel5: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel5', registerConfig: completeChannelRegisterConfig(), alarmFlags: {}, availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
-  channel6: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel6', registerConfig: completeChannelRegisterConfig(), alarmFlags: {}, availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
-  channel7: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel7', registerConfig: completeChannelRegisterConfig(), alarmFlags: {}, availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
-  channel8: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel8', registerConfig: completeChannelRegisterConfig(), alarmFlags: {}, availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
+  channel1: {
+    start: 0,
+    end: 100,
+    measurementTypes: [],
+    channelName: 'sensor1Channel1',
+    registerConfig: completeChannelRegisterConfig(),
+    alarmFlags: {},
+    availableUnits: ['°C'],
+    availableMeasurands: ['Temperature'],
+  },
+  channel2: {
+    start: 0,
+    end: 100,
+    measurementTypes: [],
+    channelName: 'sensor1Channel2',
+    registerConfig: completeChannelRegisterConfig(),
+    alarmFlags: {},
+    availableUnits: ['°C'],
+    availableMeasurands: ['Temperature'],
+  },
+  channel3: {
+    start: 0,
+    end: 100,
+    measurementTypes: [],
+    channelName: 'sensor1Channel3',
+    registerConfig: completeChannelRegisterConfig(),
+    alarmFlags: {},
+    availableUnits: ['°C'],
+    availableMeasurands: ['Temperature'],
+  },
+  channel4: {
+    start: 0,
+    end: 100,
+    measurementTypes: [],
+    channelName: 'sensor1Channel4',
+    registerConfig: completeChannelRegisterConfig(),
+    alarmFlags: {},
+    availableUnits: ['°C'],
+    availableMeasurands: ['Temperature'],
+  },
+  channel5: {
+    start: 0,
+    end: 100,
+    measurementTypes: [],
+    channelName: 'sensor1Channel5',
+    registerConfig: completeChannelRegisterConfig(),
+    alarmFlags: {},
+    availableUnits: ['°C'],
+    availableMeasurands: ['Temperature'],
+  },
+  channel6: {
+    start: 0,
+    end: 100,
+    measurementTypes: [],
+    channelName: 'sensor1Channel6',
+    registerConfig: completeChannelRegisterConfig(),
+    alarmFlags: {},
+    availableUnits: ['°C'],
+    availableMeasurands: ['Temperature'],
+  },
+  channel7: {
+    start: 0,
+    end: 100,
+    measurementTypes: [],
+    channelName: 'sensor1Channel7',
+    registerConfig: completeChannelRegisterConfig(),
+    alarmFlags: {},
+    availableUnits: ['°C'],
+    availableMeasurands: ['Temperature'],
+  },
+  channel8: {
+    start: 0,
+    end: 100,
+    measurementTypes: [],
+    channelName: 'sensor1Channel8',
+    registerConfig: completeChannelRegisterConfig(),
+    alarmFlags: {},
+    availableUnits: ['°C'],
+    availableMeasurands: ['Temperature'],
+  },
   alarmFlags: {},
   registerConfig: completeSensorRegisterConfig(),
 } as const satisfies TULIP3DeviceConfig['sensor1']
 
 const sensor2channelConfig = {
-  channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor2Channel1', registerConfig: completeChannelRegisterConfig(), alarmFlags: {}, availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
-  channel2: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor2Channel2', registerConfig: completeChannelRegisterConfig(), alarmFlags: {}, availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
-  channel3: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor2Channel3', registerConfig: completeChannelRegisterConfig(), alarmFlags: {}, availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
-  channel4: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor2Channel4', registerConfig: completeChannelRegisterConfig(), alarmFlags: {}, availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
-  channel5: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor2Channel5', registerConfig: completeChannelRegisterConfig(), alarmFlags: {}, availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
-  channel6: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor2Channel6', registerConfig: completeChannelRegisterConfig(), alarmFlags: {}, availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
-  channel7: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor2Channel7', registerConfig: completeChannelRegisterConfig(), alarmFlags: {}, availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
-  channel8: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor2Channel8', registerConfig: completeChannelRegisterConfig(), alarmFlags: {}, availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
+  channel1: {
+    start: 0,
+    end: 100,
+    measurementTypes: [],
+    channelName: 'sensor2Channel1',
+    registerConfig: completeChannelRegisterConfig(),
+    alarmFlags: {},
+    availableUnits: ['°C'],
+    availableMeasurands: ['Temperature'],
+  },
+  channel2: {
+    start: 0,
+    end: 100,
+    measurementTypes: [],
+    channelName: 'sensor2Channel2',
+    registerConfig: completeChannelRegisterConfig(),
+    alarmFlags: {},
+    availableUnits: ['°C'],
+    availableMeasurands: ['Temperature'],
+  },
+  channel3: {
+    start: 0,
+    end: 100,
+    measurementTypes: [],
+    channelName: 'sensor2Channel3',
+    registerConfig: completeChannelRegisterConfig(),
+    alarmFlags: {},
+    availableUnits: ['°C'],
+    availableMeasurands: ['Temperature'],
+  },
+  channel4: {
+    start: 0,
+    end: 100,
+    measurementTypes: [],
+    channelName: 'sensor2Channel4',
+    registerConfig: completeChannelRegisterConfig(),
+    alarmFlags: {},
+    availableUnits: ['°C'],
+    availableMeasurands: ['Temperature'],
+  },
+  channel5: {
+    start: 0,
+    end: 100,
+    measurementTypes: [],
+    channelName: 'sensor2Channel5',
+    registerConfig: completeChannelRegisterConfig(),
+    alarmFlags: {},
+    availableUnits: ['°C'],
+    availableMeasurands: ['Temperature'],
+  },
+  channel6: {
+    start: 0,
+    end: 100,
+    measurementTypes: [],
+    channelName: 'sensor2Channel6',
+    registerConfig: completeChannelRegisterConfig(),
+    alarmFlags: {},
+    availableUnits: ['°C'],
+    availableMeasurands: ['Temperature'],
+  },
+  channel7: {
+    start: 0,
+    end: 100,
+    measurementTypes: [],
+    channelName: 'sensor2Channel7',
+    registerConfig: completeChannelRegisterConfig(),
+    alarmFlags: {},
+    availableUnits: ['°C'],
+    availableMeasurands: ['Temperature'],
+  },
+  channel8: {
+    start: 0,
+    end: 100,
+    measurementTypes: [],
+    channelName: 'sensor2Channel8',
+    registerConfig: completeChannelRegisterConfig(),
+    alarmFlags: {},
+    availableUnits: ['°C'],
+    availableMeasurands: ['Temperature'],
+  },
   alarmFlags: {},
   registerConfig: completeSensorRegisterConfig(),
 } as const satisfies TULIP3DeviceConfig['sensor1']
 
 const sensor3channelConfig = {
-  channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor3Channel1', registerConfig: completeChannelRegisterConfig(), alarmFlags: {}, availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
-  channel2: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor3Channel2', registerConfig: completeChannelRegisterConfig(), alarmFlags: {}, availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
-  channel3: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor3Channel3', registerConfig: completeChannelRegisterConfig(), alarmFlags: {}, availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
-  channel4: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor3Channel4', registerConfig: completeChannelRegisterConfig(), alarmFlags: {}, availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
-  channel5: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor3Channel5', registerConfig: completeChannelRegisterConfig(), alarmFlags: {}, availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
-  channel6: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor3Channel6', registerConfig: completeChannelRegisterConfig(), alarmFlags: {}, availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
-  channel7: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor3Channel7', registerConfig: completeChannelRegisterConfig(), alarmFlags: {}, availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
-  channel8: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor3Channel8', registerConfig: completeChannelRegisterConfig(), alarmFlags: {}, availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
+  channel1: {
+    start: 0,
+    end: 100,
+    measurementTypes: [],
+    channelName: 'sensor3Channel1',
+    registerConfig: completeChannelRegisterConfig(),
+    alarmFlags: {},
+    availableUnits: ['°C'],
+    availableMeasurands: ['Temperature'],
+  },
+  channel2: {
+    start: 0,
+    end: 100,
+    measurementTypes: [],
+    channelName: 'sensor3Channel2',
+    registerConfig: completeChannelRegisterConfig(),
+    alarmFlags: {},
+    availableUnits: ['°C'],
+    availableMeasurands: ['Temperature'],
+  },
+  channel3: {
+    start: 0,
+    end: 100,
+    measurementTypes: [],
+    channelName: 'sensor3Channel3',
+    registerConfig: completeChannelRegisterConfig(),
+    alarmFlags: {},
+    availableUnits: ['°C'],
+    availableMeasurands: ['Temperature'],
+  },
+  channel4: {
+    start: 0,
+    end: 100,
+    measurementTypes: [],
+    channelName: 'sensor3Channel4',
+    registerConfig: completeChannelRegisterConfig(),
+    alarmFlags: {},
+    availableUnits: ['°C'],
+    availableMeasurands: ['Temperature'],
+  },
+  channel5: {
+    start: 0,
+    end: 100,
+    measurementTypes: [],
+    channelName: 'sensor3Channel5',
+    registerConfig: completeChannelRegisterConfig(),
+    alarmFlags: {},
+    availableUnits: ['°C'],
+    availableMeasurands: ['Temperature'],
+  },
+  channel6: {
+    start: 0,
+    end: 100,
+    measurementTypes: [],
+    channelName: 'sensor3Channel6',
+    registerConfig: completeChannelRegisterConfig(),
+    alarmFlags: {},
+    availableUnits: ['°C'],
+    availableMeasurands: ['Temperature'],
+  },
+  channel7: {
+    start: 0,
+    end: 100,
+    measurementTypes: [],
+    channelName: 'sensor3Channel7',
+    registerConfig: completeChannelRegisterConfig(),
+    alarmFlags: {},
+    availableUnits: ['°C'],
+    availableMeasurands: ['Temperature'],
+  },
+  channel8: {
+    start: 0,
+    end: 100,
+    measurementTypes: [],
+    channelName: 'sensor3Channel8',
+    registerConfig: completeChannelRegisterConfig(),
+    alarmFlags: {},
+    availableUnits: ['°C'],
+    availableMeasurands: ['Temperature'],
+  },
   alarmFlags: {},
   registerConfig: completeSensorRegisterConfig(),
 } as const satisfies TULIP3DeviceConfig['sensor1']
 
 const sensor4channelConfig = {
-  channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor4Channel1', registerConfig: completeChannelRegisterConfig(), alarmFlags: {}, availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
-  channel2: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor4Channel2', registerConfig: completeChannelRegisterConfig(), alarmFlags: {}, availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
-  channel3: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor4Channel3', registerConfig: completeChannelRegisterConfig(), alarmFlags: {}, availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
-  channel4: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor4Channel4', registerConfig: completeChannelRegisterConfig(), alarmFlags: {}, availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
-  channel5: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor4Channel5', registerConfig: completeChannelRegisterConfig(), alarmFlags: {}, availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
-  channel6: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor4Channel6', registerConfig: completeChannelRegisterConfig(), alarmFlags: {}, availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
-  channel7: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor4Channel7', registerConfig: completeChannelRegisterConfig(), alarmFlags: {}, availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
-  channel8: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor4Channel8', registerConfig: completeChannelRegisterConfig(), alarmFlags: {}, availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
+  channel1: {
+    start: 0,
+    end: 100,
+    measurementTypes: [],
+    channelName: 'sensor4Channel1',
+    registerConfig: completeChannelRegisterConfig(),
+    alarmFlags: {},
+    availableUnits: ['°C'],
+    availableMeasurands: ['Temperature'],
+  },
+  channel2: {
+    start: 0,
+    end: 100,
+    measurementTypes: [],
+    channelName: 'sensor4Channel2',
+    registerConfig: completeChannelRegisterConfig(),
+    alarmFlags: {},
+    availableUnits: ['°C'],
+    availableMeasurands: ['Temperature'],
+  },
+  channel3: {
+    start: 0,
+    end: 100,
+    measurementTypes: [],
+    channelName: 'sensor4Channel3',
+    registerConfig: completeChannelRegisterConfig(),
+    alarmFlags: {},
+    availableUnits: ['°C'],
+    availableMeasurands: ['Temperature'],
+  },
+  channel4: {
+    start: 0,
+    end: 100,
+    measurementTypes: [],
+    channelName: 'sensor4Channel4',
+    registerConfig: completeChannelRegisterConfig(),
+    alarmFlags: {},
+    availableUnits: ['°C'],
+    availableMeasurands: ['Temperature'],
+  },
+  channel5: {
+    start: 0,
+    end: 100,
+    measurementTypes: [],
+    channelName: 'sensor4Channel5',
+    registerConfig: completeChannelRegisterConfig(),
+    alarmFlags: {},
+    availableUnits: ['°C'],
+    availableMeasurands: ['Temperature'],
+  },
+  channel6: {
+    start: 0,
+    end: 100,
+    measurementTypes: [],
+    channelName: 'sensor4Channel6',
+    registerConfig: completeChannelRegisterConfig(),
+    alarmFlags: {},
+    availableUnits: ['°C'],
+    availableMeasurands: ['Temperature'],
+  },
+  channel7: {
+    start: 0,
+    end: 100,
+    measurementTypes: [],
+    channelName: 'sensor4Channel7',
+    registerConfig: completeChannelRegisterConfig(),
+    alarmFlags: {},
+    availableUnits: ['°C'],
+    availableMeasurands: ['Temperature'],
+  },
+  channel8: {
+    start: 0,
+    end: 100,
+    measurementTypes: [],
+    channelName: 'sensor4Channel8',
+    registerConfig: completeChannelRegisterConfig(),
+    alarmFlags: {},
+    availableUnits: ['°C'],
+    availableMeasurands: ['Temperature'],
+  },
   alarmFlags: {},
   registerConfig: completeSensorRegisterConfig(),
 } as const satisfies TULIP3DeviceConfig['sensor1']
@@ -992,10 +1280,12 @@ describe('configuration messages', () => {
           messageType: 0x15,
           messageSubType: 0x03,
           configuration: {
-            frames: [{
-              frameNumber: 0,
-              status: 'Configuration received and applied with success',
-            }],
+            frames: [
+              {
+                frameNumber: 0,
+                status: 'Configuration received and applied with success',
+              },
+            ],
             revisionCounter: 4,
             totalWrongFrames: 0,
           },
@@ -1019,10 +1309,12 @@ describe('configuration messages', () => {
           messageType: 0x15,
           messageSubType: 0x03,
           configuration: {
-            frames: [{
-              frameNumber: 0,
-              status: 'Configuration received but not applied',
-            }],
+            frames: [
+              {
+                frameNumber: 0,
+                status: 'Configuration received but not applied',
+              },
+            ],
           },
         },
       })
@@ -1138,13 +1430,31 @@ describe('validation and transformation after decode (tests for code below TODO)
       // contains sampling channel configuration, so we'll test with limited config
       const limitedConfig = {
         sensor1: {
-          channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel1', registerConfig: completeChannelRegisterConfig(), alarmFlags: {}, availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
+          channel1: {
+            start: 0,
+            end: 100,
+            measurementTypes: [],
+            channelName: 'sensor1Channel1',
+            registerConfig: completeChannelRegisterConfig(),
+            alarmFlags: {},
+            availableUnits: ['°C'],
+            availableMeasurands: ['Temperature'],
+          },
           alarmFlags: {},
           registerConfig: completeSensorRegisterConfig(),
         },
-        sensor2: { alarmFlags: {}, registerConfig: completeSensorRegisterConfig() },
-        sensor3: { alarmFlags: {}, registerConfig: completeSensorRegisterConfig() },
-        sensor4: { alarmFlags: {}, registerConfig: completeSensorRegisterConfig() },
+        sensor2: {
+          alarmFlags: {},
+          registerConfig: completeSensorRegisterConfig(),
+        },
+        sensor3: {
+          alarmFlags: {},
+          registerConfig: completeSensorRegisterConfig(),
+        },
+        sensor4: {
+          alarmFlags: {},
+          registerConfig: completeSensorRegisterConfig(),
+        },
         alarmFlags: {},
         registerConfig: completeCommunicationModuleRegisterConfig(),
       } as const satisfies TULIP3DeviceConfig
@@ -1186,7 +1496,16 @@ describe('validation and transformation after decode (tests for code below TODO)
       // Create a config with identification
       const configWithIdentification = {
         sensor1: {
-          channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel1', registerConfig: completeChannelRegisterConfig(), alarmFlags: {}, availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
+          channel1: {
+            start: 0,
+            end: 100,
+            measurementTypes: [],
+            channelName: 'sensor1Channel1',
+            registerConfig: completeChannelRegisterConfig(),
+            alarmFlags: {},
+            availableUnits: ['°C'],
+            availableMeasurands: ['Temperature'],
+          },
           alarmFlags: {},
           registerConfig: completeSensorRegisterConfig(),
         },
@@ -1218,7 +1537,10 @@ describe('validation and transformation after decode (tests for code below TODO)
   describe('specific edge cases for validation logic', () => {
     it('should handle config with empty sensor object', () => {
       const emptyConfig = {
-        sensor1: { alarmFlags: {}, registerConfig: completeSensorRegisterConfig() },
+        sensor1: {
+          alarmFlags: {},
+          registerConfig: completeSensorRegisterConfig(),
+        },
         alarmFlags: {},
         registerConfig: completeCommunicationModuleRegisterConfig(),
       } as const satisfies TULIP3DeviceConfig
@@ -1235,8 +1557,26 @@ describe('validation and transformation after decode (tests for code below TODO)
     it('should handle sparse channel configuration', () => {
       const sparseConfig = {
         sensor1: {
-          channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'First Channel', registerConfig: completeChannelRegisterConfig(), alarmFlags: {}, availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
-          channel8: { start: 0, end: 100, measurementTypes: [], channelName: 'Eighth Channel', registerConfig: completeChannelRegisterConfig(), alarmFlags: {}, availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
+          channel1: {
+            start: 0,
+            end: 100,
+            measurementTypes: [],
+            channelName: 'First Channel',
+            registerConfig: completeChannelRegisterConfig(),
+            alarmFlags: {},
+            availableUnits: ['°C'],
+            availableMeasurands: ['Temperature'],
+          },
+          channel8: {
+            start: 0,
+            end: 100,
+            measurementTypes: [],
+            channelName: 'Eighth Channel',
+            registerConfig: completeChannelRegisterConfig(),
+            alarmFlags: {},
+            availableUnits: ['°C'],
+            availableMeasurands: ['Temperature'],
+          },
           alarmFlags: {},
           registerConfig: completeSensorRegisterConfig(),
         },
@@ -1349,8 +1689,12 @@ describe('validation and transformation after decode (tests for code below TODO)
     describe('sensor validation', () => {
       it('should pass when all result sensors are in device configuration', () => {
         const result = {
-          sensor1: { channel1: { value: 25.5 } },
-          sensor2: { channel1: { value: 30.0 } },
+          sensor1: {
+            channel1: { value: 25.5 },
+          },
+          sensor2: {
+            channel1: { value: 30.0 },
+          },
         }
         const deviceConfig = {
           sensor1: sensor1channelConfig,
@@ -1368,7 +1712,9 @@ describe('validation and transformation after decode (tests for code below TODO)
       it('should ignore communicationModule when validating sensors', () => {
         const result = {
           communicationModule: { transmissionRateAlarmOff: 1 },
-          sensor1: { channel1: { value: 25.5 } },
+          sensor1: {
+            channel1: { value: 25.5 },
+          },
         }
         const deviceConfig = {
           sensor1: sensor1channelConfig,
@@ -1683,7 +2029,16 @@ describe('validation and transformation after decode (tests for code below TODO)
         }
         const deviceConfig = {
           sensor1: {
-            channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel1', registerConfig: completeChannelRegisterConfig(), alarmFlags: {}, availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
+            channel1: {
+              start: 0,
+              end: 100,
+              measurementTypes: [],
+              channelName: 'sensor1Channel1',
+              registerConfig: completeChannelRegisterConfig(),
+              alarmFlags: {},
+              availableUnits: ['°C'],
+              availableMeasurands: ['Temperature'],
+            },
             alarmFlags: {},
             registerConfig: completeSensorRegisterConfig(),
           },
@@ -1778,7 +2133,10 @@ describe('validation and transformation after decode (tests for code below TODO)
       it('should handle complex nested configuration structures', () => {
         const result = {
           sensor1: {
-            channel1: { value: 25.5, metadata: { timestamp: 1234567890 } },
+            channel1: {
+              value: 25.5,
+              metadata: { timestamp: 1234567890 },
+            },
             configuration: {
               samplingChannels: {
                 channel1: true,
@@ -1858,7 +2216,10 @@ describe('validation and transformation after decode (tests for code below TODO)
           },
         }
         const deviceConfig = {
-          sensor1: { alarmFlags: {}, registerConfig: completeSensorRegisterConfig() },
+          sensor1: {
+            alarmFlags: {},
+            registerConfig: completeSensorRegisterConfig(),
+          },
           alarmFlags: {},
           registerConfig: completeCommunicationModuleRegisterConfig(),
         }

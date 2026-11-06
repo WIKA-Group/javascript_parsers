@@ -47,7 +47,10 @@ export function decodeConfigurationResponse<TChannels extends TULIP2Channel[], T
   const { configurationId, statusDescription, status } = decodeMainConfigurationResponse(bytes, configurationStatusTypes)
 
   if (bytes.length <= 3 || bytes[3] === undefined || bytes[3] === null) {
-    return { configurationId, configurationStatus: { statusDescription, status } }
+    return {
+      configurationId,
+      configurationStatus: { statusDescription, status },
+    }
   }
 
   const commandTypeByte = bytes[3]

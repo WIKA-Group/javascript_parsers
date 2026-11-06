@@ -61,68 +61,154 @@ describe('defineParser', () => {
 
   it('should create a parser and decodeUplink with a matching codec', () => {
     const codec = new MockCodec({ name: 'codec1', channels: validChannels })
-    const parser = defineParser({ parserName: 'TestParser', codecs: [codec] })
-    const result = parser.decodeUplink({ bytes: [1, 2], fPort: 1, recvTime: new Date() })
+    const parser = defineParser({
+      parserName: 'TestParser',
+      codecs: [codec],
+    })
+    const result = parser.decodeUplink({
+      bytes: [1, 2],
+      fPort: 1,
+      recvTime: new Date(),
+    })
     expect(result).toEqual({ data: 'codec1' })
   })
 
   it('should throw error if no codec matches in decodeUplink', () => {
     const codec = new MockCodec({ name: 'codec1', channels: validChannels, canTryDecode: false })
-    const parser = defineParser({ parserName: 'TestParser', codecs: [codec] })
-    const result = parser.decodeUplink({ bytes: [1, 2], fPort: 1, recvTime: new Date() })
+    const parser = defineParser({
+      parserName: 'TestParser',
+      codecs: [codec],
+    })
+    const result = parser.decodeUplink({
+      bytes: [1, 2],
+      fPort: 1,
+      recvTime: new Date(),
+    })
     expect(result.errors![0]).toMatch(/No codec matched/)
   })
 
   it('should throw error if multiple codecs match and throwOnMultipleDecode is true', () => {
-    const codec1 = new MockCodec({ name: 'codec1', channels: validChannels, canTryDecode: () => true })
-    const codec2 = new MockCodec({ name: 'codec2', channels: validChannels, canTryDecode: () => true })
-    const parser = defineParser({ parserName: 'TestParser', codecs: [codec1, codec2], throwOnMultipleDecode: true })
-    const result = parser.decodeUplink({ bytes: [1, 2], fPort: 1, recvTime: new Date() })
+    const codec1 = new MockCodec({
+      name: 'codec1',
+      channels: validChannels,
+      canTryDecode: () => true,
+    })
+    const codec2 = new MockCodec({
+      name: 'codec2',
+      channels: validChannels,
+      canTryDecode: () => true,
+    })
+    const parser = defineParser({
+      parserName: 'TestParser',
+      codecs: [codec1, codec2],
+      throwOnMultipleDecode: true,
+    })
+    const result = parser.decodeUplink({
+      bytes: [1, 2],
+      fPort: 1,
+      recvTime: new Date(),
+    })
     expect(result.errors![0]).toMatch(/Multiple codecs matched/)
   })
 
   it('should return first matching codec if throwOnMultipleDecode is false', () => {
-    const codec1 = new MockCodec({ name: 'codec1', channels: validChannels, decodeResult: { data: 'first' }, canTryDecode: () => true })
-    const codec2 = new MockCodec({ name: 'codec2', channels: validChannels, decodeResult: { data: 'second' }, canTryDecode: () => true })
-    const parser = defineParser({ parserName: 'TestParser', codecs: [codec1, codec2], throwOnMultipleDecode: false })
-    const result = parser.decodeUplink({ bytes: [1, 2], fPort: 1, recvTime: new Date() })
+    const codec1 = new MockCodec({
+      name: 'codec1',
+      channels: validChannels,
+      decodeResult: { data: 'first' },
+      canTryDecode: () => true,
+    })
+    const codec2 = new MockCodec({
+      name: 'codec2',
+      channels: validChannels,
+      decodeResult: { data: 'second' },
+      canTryDecode: () => true,
+    })
+    const parser = defineParser({
+      parserName: 'TestParser',
+      codecs: [codec1, codec2],
+      throwOnMultipleDecode: false,
+    })
+    const result = parser.decodeUplink({
+      bytes: [1, 2],
+      fPort: 1,
+      recvTime: new Date(),
+    })
     expect(result).toEqual({ data: 'first' })
   })
 
   it('should return error for invalid input in decodeUplink', () => {
     const codec = new MockCodec({ name: 'codec1', channels: validChannels })
-    const parser = defineParser({ parserName: 'TestParser', codecs: [codec] })
+    const parser = defineParser({
+      parserName: 'TestParser',
+      codecs: [codec],
+    })
     // missing bytes
-    const result = parser.decodeUplink({ fPort: 1, recvTime: new Date() } as any)
+    const result = parser.decodeUplink({
+      fPort: 1,
+      recvTime: new Date(),
+    } as any)
     expect(result.errors![0]).toMatch(/Input is not valid/)
   })
 
   it('should decodeHexUplink and call decodeUplink', () => {
     const codec = new MockCodec({ name: 'codec1', channels: validChannels })
-    const parser = defineParser({ parserName: 'TestParser', codecs: [codec] })
+    const parser = defineParser({
+      parserName: 'TestParser',
+      codecs: [codec],
+    })
     // bytes: '0102' => [1,2]
-    const result = parser.decodeHexUplink({ bytes: '0102', fPort: 1, recvTime: new Date() })
+    const result = parser.decodeHexUplink({
+      bytes: '0102',
+      fPort: 1,
+      recvTime: new Date(),
+    })
     expect(result).toEqual({ data: 'codec1' })
   })
 
   it('should return error for invalid hex string in decodeHexUplink', () => {
     const codec = new MockCodec({ name: 'codec1', channels: validChannels })
-    const parser = defineParser({ parserName: 'TestParser', codecs: [codec] })
-    const result = parser.decodeHexUplink({ bytes: 'ZZZZ', fPort: 1, recvTime: new Date() })
+    const parser = defineParser({
+      parserName: 'TestParser',
+      codecs: [codec],
+    })
+    const result = parser.decodeHexUplink({
+      bytes: 'ZZZZ',
+      fPort: 1,
+      recvTime: new Date(),
+    })
     expect(result.errors![0]).toMatch(/not a valid hexadecimal/)
   })
 
   it('should encodeDownlink with correct codec', () => {
-    const codec = new MockCodec({ name: 'codec1', protocol: 'protocol1', channels: validChannels, encodeResult: [9, 8, 7] })
-    const parser = defineParser({ parserName: 'TestParser', codecs: [codec] })
-    const result = parser.encodeDownlink({ data: { protocol: 'protocol1', input: { foo: 1 } } })
+    const codec = new MockCodec({
+      name: 'codec1',
+      protocol: 'protocol1',
+      channels: validChannels,
+      encodeResult: [9, 8, 7],
+    })
+    const parser = defineParser({
+      parserName: 'TestParser',
+      codecs: [codec],
+    })
+    const result = parser.encodeDownlink({
+      data: {
+        protocol: 'protocol1',
+        input: { foo: 1 },
+      },
+    })
     expect(result).toEqual([9, 8, 7])
   })
 
   it('should throw error if encodeDownlink codec not found', () => {
     const codec = new MockCodec({ name: 'codec1', protocol: 'protocol1', channels: validChannels })
-    const parser = defineParser({ parserName: 'TestParser', codecs: [codec] })
-    const res = parser.encodeDownlink({ data: { protocol: 'notfound', input: {} } })
+    const parser = defineParser({
+      parserName: 'TestParser',
+      codecs: [codec],
+    })
+    const res = parser.encodeDownlink({
+      data: { protocol: 'notfound', input: {} },
+    })
     // here the res.errors should have one entry about codec not found
     expect(res.errors![0]).toMatch(/Codec with protocol notfound not found in parser/)
   })
@@ -130,7 +216,10 @@ describe('defineParser', () => {
   it('should call adjustMeasuringRange on all codecs', () => {
     const codec1 = new MockCodec({ name: 'codec1', channels: validChannels })
     const codec2 = new MockCodec({ name: 'codec2', channels: validChannels })
-    const parser = defineParser({ parserName: 'TestParser', codecs: [codec1, codec2] })
+    const parser = defineParser({
+      parserName: 'TestParser',
+      codecs: [codec1, codec2],
+    })
     parser.adjustMeasuringRange('A', { start: 10, end: 20 })
     expect(codec1.adjustMeasuringRange).toHaveBeenCalledWith('A', { start: 10, end: 20 })
     expect(codec2.adjustMeasuringRange).toHaveBeenCalledWith('A', { start: 10, end: 20 })
@@ -139,7 +228,10 @@ describe('defineParser', () => {
   it('should call adjustRoundingDecimals on all codecs', () => {
     const codec1 = new MockCodec({ name: 'codec1', channels: validChannels })
     const codec2 = new MockCodec({ name: 'codec2', channels: validChannels })
-    const parser = defineParser({ parserName: 'TestParser', codecs: [codec1, codec2] })
+    const parser = defineParser({
+      parserName: 'TestParser',
+      codecs: [codec1, codec2],
+    })
     parser.adjustRoundingDecimals(3)
     expect(codec1.adjustRoundingDecimals).toHaveBeenCalled()
     expect(codec2.adjustRoundingDecimals).toHaveBeenCalled()
@@ -147,7 +239,11 @@ describe('defineParser', () => {
 
   it('should handle roundingDecimals option', () => {
     const codec = new MockCodec({ name: 'codec1', channels: validChannels })
-    const parser = defineParser({ parserName: 'TestParser', codecs: [codec], roundingDecimals: 2 })
+    const parser = defineParser({
+      parserName: 'TestParser',
+      codecs: [codec],
+      roundingDecimals: 2,
+    })
     parser.adjustRoundingDecimals(5)
     expect(codec.adjustRoundingDecimals).toHaveBeenCalledWith(expect.any(Number))
   })
@@ -157,8 +253,15 @@ describe('defineParser', () => {
     codec.decode = () => {
       throw new Error('fail!')
     }
-    const parser = defineParser({ parserName: 'TestParser', codecs: [codec] })
-    const result = parser.decodeUplink({ bytes: [1, 2], fPort: 1, recvTime: new Date() })
+    const parser = defineParser({
+      parserName: 'TestParser',
+      codecs: [codec],
+    })
+    const result = parser.decodeUplink({
+      bytes: [1, 2],
+      fPort: 1,
+      recvTime: new Date(),
+    })
     expect(result.errors![0]).toMatch(/fail!/)
   })
 
@@ -168,14 +271,24 @@ describe('defineParser', () => {
       // eslint-disable-next-line no-throw-literal
       throw 123
     }
-    const parser = defineParser({ parserName: 'TestParser', codecs: [codec] })
-    const result = parser.decodeUplink({ bytes: [1, 2], fPort: 1, recvTime: new Date() })
+    const parser = defineParser({
+      parserName: 'TestParser',
+      codecs: [codec],
+    })
+    const result = parser.decodeUplink({
+      bytes: [1, 2],
+      fPort: 1,
+      recvTime: new Date(),
+    })
     expect(result.errors![0]).toMatch(/Unknown error/)
   })
 
   it('should return error for invalid input object in decodeHexUplink (coverage for lines 125-126)', () => {
     const codec = new MockCodec({ name: 'codec1', channels: validChannels })
-    const parser = defineParser({ parserName: 'TestParser', codecs: [codec] })
+    const parser = defineParser({
+      parserName: 'TestParser',
+      codecs: [codec],
+    })
     // missing bytes property, so input is invalid for createHexUplinkInputSchema
     const result = parser.decodeHexUplink({ fPort: 1 } as any)
     expect(result.errors![0]).toMatch(/Input is not valid/)
@@ -184,18 +297,29 @@ describe('defineParser', () => {
   describe('adjustMeasuringRange validation', () => {
     it('should throw error if channel does not exist', () => {
       const codec = new MockCodec({ name: 'codec1', channels: validChannels })
-      const parser = defineParser({ parserName: 'TestParser', codecs: [codec] })
+      const parser = defineParser({
+        parserName: 'TestParser',
+        codecs: [codec],
+      })
       expect(() => parser.adjustMeasuringRange('NonExistent' as any, { start: 0, end: 10 }))
         .toThrow('Channel NonExistent does not exist in parser TestParser. Cannot adjust measuring range.')
     })
 
     it('should throw error if channel exists but adjustment is disallowed', () => {
       const channels = [
-        { name: 'A', start: 0, end: 2, adjustMeasurementRangeDisallowed: true },
+        {
+          name: 'A',
+          start: 0,
+          end: 2,
+          adjustMeasurementRangeDisallowed: true,
+        },
         { name: 'B', start: 2, end: 4 },
       ]
       const codec = new MockCodec({ name: 'codec1', channels })
-      const parser = defineParser({ parserName: 'TestParser', codecs: [codec] })
+      const parser = defineParser({
+        parserName: 'TestParser',
+        codecs: [codec],
+      })
       expect(() => parser.adjustMeasuringRange('A' as any, { start: 0, end: 10 }))
         .toThrow('Channel A does not allow adjusting the measuring range in parser TestParser.')
     })
@@ -206,7 +330,10 @@ describe('defineParser', () => {
         { name: 'B', start: 2, end: 4 },
       ]
       const codec = new MockCodec({ name: 'codec1', channels })
-      const parser = defineParser({ parserName: 'TestParser', codecs: [codec] })
+      const parser = defineParser({
+        parserName: 'TestParser',
+        codecs: [codec],
+      })
       expect(() => parser.adjustMeasuringRange('A' as any, { start: 5, end: 15 }))
         .not
         .toThrow()
@@ -219,7 +346,10 @@ describe('defineParser', () => {
         { name: 'B', start: 2, end: 4 },
       ]
       const codec = new MockCodec({ name: 'codec1', channels })
-      const parser = defineParser({ parserName: 'TestParser', codecs: [codec] })
+      const parser = defineParser({
+        parserName: 'TestParser',
+        codecs: [codec],
+      })
       expect(() => parser.adjustMeasuringRange('A' as any, { start: 5, end: 15 }))
         .not
         .toThrow()
@@ -233,7 +363,10 @@ describe('defineParser', () => {
       ]
       const codec1 = new MockCodec({ name: 'codec1', channels })
       const codec2 = new MockCodec({ name: 'codec2', channels })
-      const parser = defineParser({ parserName: 'TestParser', codecs: [codec1, codec2] })
+      const parser = defineParser({
+        parserName: 'TestParser',
+        codecs: [codec1, codec2],
+      })
       parser.adjustMeasuringRange('B' as any, { start: 10, end: 20 })
       expect(codec1.adjustMeasuringRange).toHaveBeenCalledWith('B', { start: 10, end: 20 })
       expect(codec2.adjustMeasuringRange).toHaveBeenCalledWith('B', { start: 10, end: 20 })
@@ -241,7 +374,10 @@ describe('defineParser', () => {
 
     it('should not call adjustMeasuringRange on codecs if channel does not exist', () => {
       const codec = new MockCodec({ name: 'codec1', channels: validChannels })
-      const parser = defineParser({ parserName: 'TestParser', codecs: [codec] })
+      const parser = defineParser({
+        parserName: 'TestParser',
+        codecs: [codec],
+      })
       try {
         parser.adjustMeasuringRange('X' as any, { start: 0, end: 10 })
       }
@@ -252,9 +388,19 @@ describe('defineParser', () => {
     })
 
     it('should not call adjustMeasuringRange on codecs if adjustment is disallowed', () => {
-      const channels = [{ name: 'A', start: 0, end: 2, adjustMeasurementRangeDisallowed: true }]
+      const channels = [
+        {
+          name: 'A',
+          start: 0,
+          end: 2,
+          adjustMeasurementRangeDisallowed: true,
+        },
+      ]
       const codec = new MockCodec({ name: 'codec1', channels })
-      const parser = defineParser({ parserName: 'TestParser', codecs: [codec] })
+      const parser = defineParser({
+        parserName: 'TestParser',
+        codecs: [codec],
+      })
       try {
         parser.adjustMeasuringRange('A' as any, { start: 0, end: 10 })
       }

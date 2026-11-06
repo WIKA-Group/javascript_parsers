@@ -78,14 +78,21 @@ function createChannelPlanSchema() {
  * ```
  */
 function createConnectedSensorsSchema<const TConfig extends TULIP3DeviceConfig>(config: TConfig) {
-  const allSensors = ['sensor1', 'sensor2', 'sensor3', 'sensor4'] as const
+  const allSensors = [
+    'sensor1',
+    'sensor2',
+    'sensor3',
+    'sensor4',
+  ] as const
 
   type ExistingSensors = {
     [K in (typeof allSensors)[number]]: keyof TConfig extends K ? v.LiteralSchema<true, undefined> : v.LiteralSchema<false, undefined>
   }
 
   const connectedSensorObject = allSensors.reduce((acc, sensor) => {
-    acc[sensor] = (sensor in config ? v.literal(true) : v.literal(false)) as any
+    acc[sensor] = (sensor in config
+      ? v.literal(true)
+      : v.literal(false)) as any
     return acc
   }, {} as ExistingSensors)
   return v.object(connectedSensorObject)
@@ -104,14 +111,25 @@ function createConnectedSensorsSchema<const TConfig extends TULIP3DeviceConfig>(
  * ```
  */
 function createExistingChannelsSchema<const TConfig extends TULIP3SensorConfig>(config: TConfig) {
-  const allChannels = ['channel1', 'channel2', 'channel3', 'channel4', 'channel5', 'channel6', 'channel7', 'channel8'] as const
+  const allChannels = [
+    'channel1',
+    'channel2',
+    'channel3',
+    'channel4',
+    'channel5',
+    'channel6',
+    'channel7',
+    'channel8',
+  ] as const
 
   type ExistingChannels = {
     [K in (typeof allChannels)[number]]: keyof TConfig extends K ? v.LiteralSchema<true, undefined> : v.LiteralSchema<false, undefined>
   }
 
   const existingChannels = allChannels.reduce((acc, channel) => {
-    acc[channel] = (channel in config ? v.literal(true) : v.literal(false)) as any
+    acc[channel] = (channel in config
+      ? v.literal(true)
+      : v.literal(false)) as any
     return acc
   }, {} as ExistingChannels)
 

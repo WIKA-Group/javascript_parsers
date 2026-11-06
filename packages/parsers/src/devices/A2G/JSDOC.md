@@ -1,5 +1,3 @@
-# A2G Parser Quick Start
-
 ## Parser API
 
 All functions are pure (no global mutation) except `adjustRoundingDecimals`, which updates internal rounding configuration for subsequent decodes.

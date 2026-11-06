@@ -346,7 +346,9 @@ function createSensorWriteSingleSchema<const TConfig extends TULIP3SensorConfig>
       return acc
 
     const channel = channelConfig as TULIP3ChannelConfig
-    acc[channelKey as keyof typeof acc] = v.optional(v.object({ identification: createChannelIdentificationWriteSchema(channel) })) as any
+    acc[channelKey as keyof typeof acc] = v.optional(v.object({
+      identification: createChannelIdentificationWriteSchema(channel),
+    })) as any
 
     return acc
   }, {} as MappedChannelsForSensorWriteSingle<TConfig>)
@@ -356,7 +358,9 @@ function createSensorWriteSingleSchema<const TConfig extends TULIP3SensorConfig>
       return acc
 
     const channel = channelConfig as TULIP3ChannelConfig
-    acc[channelKey as keyof typeof acc] = v.optional(v.object({ configuration: createChannelConfigurationWriteSchema(channel) })) as any
+    acc[channelKey as keyof typeof acc] = v.optional(v.object({
+      configuration: createChannelConfigurationWriteSchema(channel),
+    })) as any
 
     return acc
   }, {} as MappedChannelsForSensorWriteSingleConfiguration<TConfig>)

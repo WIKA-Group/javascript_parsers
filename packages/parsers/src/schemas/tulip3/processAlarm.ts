@@ -110,7 +110,9 @@ function createProcessAlarmUplinkOutputSchema<const TTULIP3DeviceConfig extends 
     messageType: [0x12],
     messageSubType: [0x01],
     extension: {
-      processAlarms: v.tupleWithRest([v.union(createProcessAlarmEntrySchemas(config))], v.union(createProcessAlarmEntrySchemas(config))),
+      processAlarms: v.tupleWithRest([
+        v.union(createProcessAlarmEntrySchemas(config)),
+      ], v.union(createProcessAlarmEntrySchemas(config))),
     },
   })
 }

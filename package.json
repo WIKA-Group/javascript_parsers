@@ -3,7 +3,6 @@
   "type": "module",
   "version": "1.0.0",
   "private": "true",
-  "packageManager": "pnpm@10.29.2",
   "description": "WIKA LoRaWAN driver npm packaged",
   "author": "WIKA Alexander Wiegand SE & Co. KG",
   "license": "MIT",
@@ -20,13 +19,13 @@
     "docs:preview": "vitepress preview docs"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^5.4.1",
+    "@antfu/eslint-config": "^10.0.0",
     "@vitest/coverage-v8": "^4.0.18",
     "@vitest/ui": "^4.0.18",
     "consola": "^3.4.2",
-    "eslint": "^9.39.2",
-    "typescript": "^5.9.3",
-    "vitepress": "^1.6.4",
+    "eslint": "^10.13.0",
+    "typescript": "^6.0.3",
+    "vitepress": "2.0.0-alpha.21",
     "vitest": "^4.0.18"
   }
 }

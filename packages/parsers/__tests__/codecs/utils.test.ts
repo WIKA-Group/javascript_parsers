@@ -153,8 +153,12 @@ describe('checkCodecsValidity', () => {
   })
 
   it('should throw if any codec has invalid channel range', () => {
-    const valid = [{ name: 'A', start: 0, end: 2 }]
-    const invalid = [{ name: 'A', start: 2, end: 1 }]
+    const valid = [
+      { name: 'A', start: 0, end: 2 },
+    ]
+    const invalid = [
+      { name: 'A', start: 2, end: 1 },
+    ]
     const codecs = [
       new MockCodec('codec1', valid),
       new MockCodec('codec2', invalid),
@@ -163,7 +167,9 @@ describe('checkCodecsValidity', () => {
   })
 
   it('should throw if codec names are not unique', () => {
-    const channels = [{ name: 'A', start: 0, end: 2 }]
+    const channels = [
+      { name: 'A', start: 0, end: 2 },
+    ]
     const codecs = [
       new MockCodec('dup', channels),
       new MockCodec('dup', channels),
@@ -172,8 +178,13 @@ describe('checkCodecsValidity', () => {
   })
 
   it('should throw if a codec has extra channels', () => {
-    const base = [{ name: 'A', start: 0, end: 2 }]
-    const extra = [{ name: 'A', start: 0, end: 2 }, { name: 'B', start: 2, end: 4 }]
+    const base = [
+      { name: 'A', start: 0, end: 2 },
+    ]
+    const extra = [
+      { name: 'A', start: 0, end: 2 },
+      { name: 'B', start: 2, end: 4 },
+    ]
     const codecs = [
       new MockCodec('codec1', base),
       new MockCodec('codec2', extra),
@@ -182,8 +193,13 @@ describe('checkCodecsValidity', () => {
   })
 
   it('should throw if a codec is missing channels', () => {
-    const base = [{ name: 'A', start: 0, end: 2 }, { name: 'B', start: 2, end: 4 }]
-    const missing = [{ name: 'A', start: 0, end: 2 }]
+    const base = [
+      { name: 'A', start: 0, end: 2 },
+      { name: 'B', start: 2, end: 4 },
+    ]
+    const missing = [
+      { name: 'A', start: 0, end: 2 },
+    ]
     const codecs = [
       new MockCodec('codec1', base),
       new MockCodec('codec2', missing),
@@ -192,8 +208,12 @@ describe('checkCodecsValidity', () => {
   })
 
   it('should throw if channel ranges are inconsistent across codecs', () => {
-    const ch1 = [{ name: 'A', start: 0, end: 2 }]
-    const ch2 = [{ name: 'A', start: 1, end: 3 }]
+    const ch1 = [
+      { name: 'A', start: 0, end: 2 },
+    ]
+    const ch2 = [
+      { name: 'A', start: 1, end: 3 },
+    ]
     const codecs = [
       new MockCodec('codec1', ch1),
       new MockCodec('codec2', ch2),
@@ -202,8 +222,14 @@ describe('checkCodecsValidity', () => {
   })
 
   it('should not throw for multiple codecs with channels in different order', () => {
-    const ch1 = [{ name: 'A', start: 0, end: 2 }, { name: 'B', start: 2, end: 4 }]
-    const ch2 = [{ name: 'B', start: 2, end: 4 }, { name: 'A', start: 0, end: 2 }]
+    const ch1 = [
+      { name: 'A', start: 0, end: 2 },
+      { name: 'B', start: 2, end: 4 },
+    ]
+    const ch2 = [
+      { name: 'B', start: 2, end: 4 },
+      { name: 'A', start: 0, end: 2 },
+    ]
     const codecs = [
       new MockCodec('codec1', ch1),
       new MockCodec('codec2', ch2),
@@ -213,7 +239,12 @@ describe('checkCodecsValidity', () => {
 
   it('should return channel adjustment permissions map', () => {
     const channels: Channel[] = [
-      { name: 'A', start: 0, end: 2, adjustMeasurementRangeDisallowed: true },
+      {
+        name: 'A',
+        start: 0,
+        end: 2,
+        adjustMeasurementRangeDisallowed: true,
+      },
       { name: 'B', start: 2, end: 4 }, // undefined, treated as false
       { name: 'C', start: 4, end: 6 }, // explicitly omitted
     ] as const
@@ -229,8 +260,12 @@ describe('checkCodecsValidity', () => {
   })
 
   it('should treat undefined adjustMeasurementRangeDisallowed as false', () => {
-    const ch1 = [{ name: 'A', start: 0, end: 2 }] // undefined
-    const ch2 = [{ name: 'A', start: 0, end: 2 }] // also undefined
+    const ch1 = [
+      { name: 'A', start: 0, end: 2 },
+    ] // undefined
+    const ch2 = [
+      { name: 'A', start: 0, end: 2 },
+    ] // also undefined
     const codecs = [
       new MockCodec('codec1', ch1),
       new MockCodec('codec2', ch2),
@@ -240,8 +275,17 @@ describe('checkCodecsValidity', () => {
   })
 
   it('should throw if adjustMeasurementRangeDisallowed is inconsistent across codecs', () => {
-    const ch1 = [{ name: 'A', start: 0, end: 2, adjustMeasurementRangeDisallowed: true }]
-    const ch2 = [{ name: 'A', start: 0, end: 2 }] // undefined -> false
+    const ch1 = [
+      {
+        name: 'A',
+        start: 0,
+        end: 2,
+        adjustMeasurementRangeDisallowed: true,
+      },
+    ]
+    const ch2 = [
+      { name: 'A', start: 0, end: 2 },
+    ] // undefined -> false
     const codecs = [
       new MockCodec('codec1', ch1 as any),
       new MockCodec('codec2', ch2),
@@ -252,8 +296,17 @@ describe('checkCodecsValidity', () => {
   })
 
   it('should throw if adjustMeasurementRangeDisallowed is inconsistent (true vs undefined)', () => {
-    const ch1 = [{ name: 'A', start: 0, end: 2, adjustMeasurementRangeDisallowed: true }]
-    const ch2 = [{ name: 'A', start: 0, end: 2 }] // undefined -> false
+    const ch1 = [
+      {
+        name: 'A',
+        start: 0,
+        end: 2,
+        adjustMeasurementRangeDisallowed: true,
+      },
+    ]
+    const ch2 = [
+      { name: 'A', start: 0, end: 2 },
+    ] // undefined -> false
     const codecs = [
       new MockCodec('codec1', ch1 as any),
       new MockCodec('codec2', ch2),
@@ -264,8 +317,22 @@ describe('checkCodecsValidity', () => {
   })
 
   it('should not throw if all codecs agree on adjustMeasurementRangeDisallowed', () => {
-    const ch1 = [{ name: 'A', start: 0, end: 2, adjustMeasurementRangeDisallowed: true }]
-    const ch2 = [{ name: 'A', start: 0, end: 2, adjustMeasurementRangeDisallowed: true }]
+    const ch1 = [
+      {
+        name: 'A',
+        start: 0,
+        end: 2,
+        adjustMeasurementRangeDisallowed: true,
+      },
+    ]
+    const ch2 = [
+      {
+        name: 'A',
+        start: 0,
+        end: 2,
+        adjustMeasurementRangeDisallowed: true,
+      },
+    ]
     const codecs = [
       new MockCodec('codec1', ch1 as any),
       new MockCodec('codec2', ch2 as any),
@@ -276,7 +343,12 @@ describe('checkCodecsValidity', () => {
   it('should return correct permissions for multiple channels with mixed settings', () => {
     const channels = [
       { name: 'temp', start: -40, end: 125 },
-      { name: 'humidity', start: 0, end: 100, adjustMeasurementRangeDisallowed: true },
+      {
+        name: 'humidity',
+        start: 0,
+        end: 100,
+        adjustMeasurementRangeDisallowed: true,
+      },
       { name: 'pressure', start: 0, end: 1000 },
     ]
     const codecs = [

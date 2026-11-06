@@ -2,7 +2,7 @@
 
 ![PEW](../../../../../docs/public/PEW.png)
 
-#### Description of the device
+## Description of the device
 
 The model PEW-1x00 is a radio-based pressure sensor for monitoring liquids and gases. It uses the licence-free LoRaWAN® and Bluetooth® radio standards and is used, for example, on mobile equipment and remote measuring points. Thanks to intelligent measurement and transmission control and a replaceable battery, the sensor can be operated for years without maintenance.
 The intelligent configuration allows measurement and transmission intervals that are dependent on the measured value. In addition, the sensor can measure continuously without transmitting every measured value. This means: high safety with low data and energy consumption. All data is available digitally in a cost-efficient way and allows automated analyses.

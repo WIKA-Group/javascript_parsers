@@ -2,7 +2,7 @@
 
 ![NETRIS_F](../../../../../docs/public/NETRIS_F.png)
 
-#### Description of the device
+## Description of the device
 
 Strain transducers have been designed for applications in which there is a need to measure the deformation due to external forces acting on existing components. The transducer is simply screwed to the component. After the adjustment, the unit has the features of a force transducer.
 The strain transducer is fastened with four screws to an area

@@ -91,7 +91,9 @@ export function defineParser<const TParserOptions extends ParserOptions>(options
 
   function createError(message: string): GenericUplinkOutputFailure {
     return {
-      errors: [addPrefixToMessage(message)],
+      errors: [
+        addPrefixToMessage(message),
+      ],
     }
   }
 
@@ -180,7 +182,9 @@ export function defineParser<const TParserOptions extends ParserOptions>(options
 
   function encodeDownlink(input: EncodeInput<TParserOptions['codecs'][number]>): DownlinkOutput {
     try {
-      const payload = 'data' in input ? input.data : input
+      const payload = 'data' in input
+        ? input.data
+        : input
       const codec = codecs.find(c => c.protocol === payload.protocol)
       if (!codec) {
         throw new Error(`Codec with protocol ${payload.protocol} not found in parser. Available protocols: ${codecs.map(c => c.protocol).join(', ')}`)
@@ -200,7 +204,9 @@ export function defineParser<const TParserOptions extends ParserOptions>(options
 
   function encodeMultipleDownlinks(input: EncodeMultipleInput<TParserOptions['codecs'][number]>): MultipleDownlinkOutput {
     try {
-      const payload = 'data' in input ? input.data : input
+      const payload = 'data' in input
+        ? input.data
+        : input
       const codec = codecs.find(c => c.protocol === payload.protocol)
       if (!codec) {
         throw new Error(`Codec with protocol ${payload.protocol} not found in parser. Available protocols: ${codecs.map(c => c.protocol).join(', ')}`)

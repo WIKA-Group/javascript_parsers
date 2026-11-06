@@ -83,7 +83,9 @@ export function consolidateCommands(
 
   // For READ mode: wireSize is always 2 bytes, so we can consolidate up to MAX_SIZE (31)
   // For WRITE mode: wireSize = 2 + data, so we must respect maxDataSize from payload constraints
-  const effectiveMaxDataSize = mode === 'read' ? MAX_SIZE : Math.min(maxDataSize, MAX_SIZE)
+  const effectiveMaxDataSize = mode === 'read'
+    ? MAX_SIZE
+    : Math.min(maxDataSize, MAX_SIZE)
 
   // Sort commands by address
   const sorted = [...commands].sort((a, b) => a.address - b.address)
@@ -92,7 +94,11 @@ export function consolidateCommands(
   let currentBlock: ConsolidatedBlock = {
     address: sorted[0]!.address,
     size: sorted[0]!.size,
-    ...(mode === 'write' ? { value: [...(sorted[0] as WriteRegisterCommand).value] } : {}),
+    ...(mode === 'write'
+      ? {
+          value: [...(sorted[0] as WriteRegisterCommand).value],
+        }
+      : {}),
   }
 
   for (let i = 1; i < sorted.length; i++) {
@@ -113,7 +119,11 @@ export function consolidateCommands(
       currentBlock = {
         address: command.address,
         size: command.size,
-        ...(mode === 'write' ? { value: [...(command as WriteRegisterCommand).value] } : {}),
+        ...(mode === 'write'
+          ? {
+              value: [...(command as WriteRegisterCommand).value],
+            }
+          : {}),
       }
     }
   }
@@ -138,7 +148,10 @@ export function blockToBytes(mode: 'read' | 'write', block: ConsolidatedBlock): 
     return [...header]
   }
   else {
-    return [...header, ...block.value!]
+    return [
+      ...header,
+      ...block.value!,
+    ]
   }
 }
 

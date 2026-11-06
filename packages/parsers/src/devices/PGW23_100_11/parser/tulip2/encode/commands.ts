@@ -77,7 +77,9 @@ export function buildPGWProcessAlarmCommands(config: SharedProcessAlarmConfig | 
     return []
   }
 
-  return [buildPGWProcessAlarmBytes(config.channel0)]
+  return [
+    buildPGWProcessAlarmBytes(config.channel0),
+  ]
 }
 
 function buildPGWProcessAlarmBytes(channelConfig: true | SharedProcessAlarmConfig['channel0']): number[] {

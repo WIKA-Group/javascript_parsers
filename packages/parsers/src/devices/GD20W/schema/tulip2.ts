@@ -97,10 +97,22 @@ function createDeviceAlarmsSchema() {
 function createMainConfigurationSchema() {
   return v.object({
     mainConfiguration: v.object({
-      acquisitionTimeAlarmsOff: v.union([v.literal('unauthorized'), v.number()]),
-      publicationTimeFactorAlarmsOff: v.union([v.literal('unauthorized'), v.number()]),
-      acquisitionTimeAlarmsOn: v.union([v.literal('unauthorized'), v.number()]),
-      publicationTimeFactorAlarmsOn: v.union([v.literal('unauthorized'), v.number()]),
+      acquisitionTimeAlarmsOff: v.union([
+        v.literal('unauthorized'),
+        v.number(),
+      ]),
+      publicationTimeFactorAlarmsOff: v.union([
+        v.literal('unauthorized'),
+        v.number(),
+      ]),
+      acquisitionTimeAlarmsOn: v.union([
+        v.literal('unauthorized'),
+        v.number(),
+      ]),
+      publicationTimeFactorAlarmsOn: v.union([
+        v.literal('unauthorized'),
+        v.number(),
+      ]),
     }),
   })
 }

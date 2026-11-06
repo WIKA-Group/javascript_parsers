@@ -98,7 +98,12 @@ export function buildNetris3ProcessAlarmCommands(
     }
 
     const channelConfig = config[key as keyof SharedProcessAlarmConfig]!
-    const bytes = [commandBytes.setProcessAlarm, 0x00, channelIndex, ...buildNetris3ProcessAlarmBytes(channelConfig)]
+    const bytes = [
+      commandBytes.setProcessAlarm,
+      0x00,
+      channelIndex,
+      ...buildNetris3ProcessAlarmBytes(channelConfig),
+    ]
     commands.push(bytes)
   })
 

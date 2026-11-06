@@ -25,7 +25,9 @@ export function getRoundingDecimals(roundingDecimals: number | undefined, curren
   if (roundingDecimals === Infinity) {
     return Infinity
   }
-  return Math.floor(roundingDecimals) >= 0 ? Math.floor(roundingDecimals) : fallbackDecimals
+  return Math.floor(roundingDecimals) >= 0
+    ? Math.floor(roundingDecimals)
+    : fallbackDecimals
 }
 
 /**
@@ -96,7 +98,9 @@ export function numberToIntArray(value: number, byteLength: number): number[] {
 export function hexStringToIntArray(hexString: string): number[] | null {
   // Remove spaces and optional '0x' prefix
   let adjustedString = hexString.replaceAll(' ', '')
-  adjustedString = adjustedString.startsWith('0x') ? adjustedString.slice(2) : adjustedString
+  adjustedString = adjustedString.startsWith('0x')
+    ? adjustedString.slice(2)
+    : adjustedString
 
   // Validate that the string contains only valid hexadecimal characters
   const schema = v.pipe(v.string(), v.hexadecimal())
@@ -237,7 +241,9 @@ export function numberToHexString(num: number): string {
  * roundValue(1.005, 2) // Returns: 1.01
  */
 export function roundValue(value: number, decimals?: number): number {
-  decimals = typeof decimals === 'number' ? Math.min(Math.max(0, Math.floor(decimals)), 100) : undefined
+  decimals = typeof decimals === 'number'
+    ? Math.min(Math.max(0, Math.floor(decimals)), 100)
+    : undefined
 
   if (Number.isInteger(value)) {
     return value

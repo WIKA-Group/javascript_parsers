@@ -2,7 +2,7 @@
 
 ![TRU_Netris3](../../../../../docs/public/TRU_Netris3.png)
 
-#### Description of the device
+## Description of the device
 
 The model TRU miniature resistance thermometer in combination with the model NETRIS®3 radio unit is used wherever web-based remote monitoring of the process pressure is desired. Condition-based and preventive maintenance through centralised big data analysis is thus possible.
 Resistance thermometers in this series can be installed directly into the process or combined with a large number of thermowell designs. Surface temperature measurements, e.g. on a tubeskin, can be performed using a tightening strap.The instruments are intrinsically safe and suitable for use in hazardous areas.

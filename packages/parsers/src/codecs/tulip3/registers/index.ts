@@ -165,9 +165,11 @@ export function evaluateRegisterBlocks<TRes extends Record<string, any> = Record
           `Unknown register address 0x${address.toString(16)} in lookup table. `
           + `This indicates an invalid message sent from the device. `
           + `This register was expected during parsing of block starting at 0x${startRegisterAddress.toString(16)}. `
-          + `This ${address === startRegisterAddress ? 'is the first register in the block' : 'is not the first register in the block'}. `
-          + `Starting address: 0x${startRegisterAddress.toString(16)}. `
-          + `Available addresses in lookup: [${Object.keys(lookup).map(k => `0x${Number(k).toString(16)}`).join(', ')}]. `,
+          + `This ${address === startRegisterAddress
+            ? 'is the first register in the block'
+            : 'is not the first register in the block'}. `
+            + `Starting address: 0x${startRegisterAddress.toString(16)}. `
+            + `Available addresses in lookup: [${Object.keys(lookup).map(k => `0x${Number(k).toString(16)}`).join(', ')}]. `,
         )
       }
 
@@ -202,7 +204,9 @@ export function evaluateRegisterBlocks<TRes extends Record<string, any> = Record
         set(result, entry.path, entry.parsing(registerValue))
       }
       catch (error) {
-        const originalError = error instanceof Error ? error.message : String(error)
+        const originalError = error instanceof Error
+          ? error.message
+          : String(error)
         throw new Error(
           `Failed to parse register 0x${(address - entry.size).toString(16)} (${entry.path}): ${originalError}. `
           + `Register data: [${registerValue.map(b => `0x${b.toString(16).padStart(2, '0')}`).join(', ')}] `

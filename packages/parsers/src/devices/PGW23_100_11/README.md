@@ -2,7 +2,7 @@
 
 ![PGW](../../../../../docs/public/PGW.png)
 
-#### Description of the device
+## Description of the device
 
 Wherever the process pressure has to be indicated locally and, at the same time, centralised, web-based remote monitoring is required, this IIoT-capable measuring instrument finds its use.
 The all welded and robust Bourdon tube measuring system produces a pointer rotation proportional to the pressure. The process pressure is indicated continuously by the pointer on the dial. The measuring electronics convert the pointer rotation into an electronic signal, which is further transmitted via the radio module and the antenna.

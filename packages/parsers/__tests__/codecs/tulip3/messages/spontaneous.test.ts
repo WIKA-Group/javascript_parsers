@@ -112,12 +112,24 @@ describe('tulip3 spontaneous downlink answer message decoding (0x17/0x01)', () =
 
   describe('edge cases', () => {
     it('should throw error for undefined/null message type gracefully', () => {
-      const data = [undefined as any, 0x01, 0x10, 0x01, 0x00]
+      const data = [
+        undefined as any,
+        0x01,
+        0x10,
+        0x01,
+        0x00,
+      ]
       expect(() => decodeSpontaneousGenericDownlinkAnswerMessage(data)).toThrow('Cannot read properties of undefined (reading \'toString\')')
     })
 
     it('should throw error for undefined/null sub message type gracefully', () => {
-      const data = [0x17, undefined as any, 0x10, 0x01, 0x00]
+      const data = [
+        0x17,
+        undefined as any,
+        0x10,
+        0x01,
+        0x00,
+      ]
       expect(() => decodeSpontaneousGenericDownlinkAnswerMessage(data)).toThrow('Unsupported spontaneous downlink answer message subtype: 0x00. Allowed subtypes: 0x01')
     })
   })

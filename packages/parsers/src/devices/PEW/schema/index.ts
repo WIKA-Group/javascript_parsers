@@ -24,7 +24,11 @@ function DownlinkInputSchema() {
       schema: createTULIP2DownlinkSchema(
         createTULIP2PEWChannels(),
         PEW_DOWNLINK_FEATURE_FLAGS,
-        [createDownlinkResetBatteryIndicatorSchema(PEW_DOWNLINK_FEATURE_FLAGS), createPEWTULIP2DropConfigurationSchema(), createPEWTULIP2GetConfigurationSchema()],
+        [
+          createDownlinkResetBatteryIndicatorSchema(PEW_DOWNLINK_FEATURE_FLAGS),
+          createPEWTULIP2DropConfigurationSchema(),
+          createPEWTULIP2GetConfigurationSchema(),
+        ],
       ),
     },
     {

@@ -43,7 +43,9 @@ const pgwEncoderFactory: EncoderFactory<PGWTulip2DownlinkInput> = (options) => {
   const featureFlags = PGW_DOWNLINK_FEATURE_FLAGS
   return (input: PGWTulip2DownlinkInput) => {
     const channels = options.getChannels()
-    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, [createDownlinkResetBatteryIndicatorSchema(featureFlags)])
+    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, [
+      createDownlinkResetBatteryIndicatorSchema(featureFlags),
+    ])
     return PGWTULIP2EncodeHandler(validated as PGWTulip2DownlinkInput)
   }
 }
@@ -52,7 +54,9 @@ const pgwMultipleEncodeFactory: MultipleEncoderFactory<PGWTulip2DownlinkInput> =
   const featureFlags = PGW_DOWNLINK_FEATURE_FLAGS
   return (input: PGWTulip2DownlinkInput) => {
     const channels = options.getChannels()
-    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, [createDownlinkResetBatteryIndicatorSchema(featureFlags)])
+    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, [
+      createDownlinkResetBatteryIndicatorSchema(featureFlags),
+    ])
     return PGWTULIP2EncodeHandler(validated as PGWTulip2DownlinkInput, true)
   }
 }
@@ -119,7 +123,9 @@ const handleProcessAlarmMessage: Handler<TULIP2PGWChannels, PGW23_100_11TULIP2Pr
     const event = (descriptor & 0x80) >> 7
     const rawValue = (input.bytes[byteIndex + 1]! << 8) | input.bytes[byteIndex + 2]!
     const isSlope = alarmType === PROCESS_ALARM_TYPES['falling slope'] || alarmType === PROCESS_ALARM_TYPES['rising slope']
-    const value = roundValue(isSlope ? slopeValueToValue(rawValue, channel) : TULIPValueToValue(rawValue, channel), options.roundingDecimals)
+    const value = roundValue(isSlope
+      ? slopeValueToValue(rawValue, channel)
+      : TULIPValueToValue(rawValue, channel), options.roundingDecimals)
 
     processAlarms.push({
       channelId,
@@ -262,7 +268,9 @@ const handleDeviceIdentificationMessage: Handler<TULIP2PGWChannels, PGW23_100_11
 
   const configurationId = input.bytes[1]!
   const productId = input.bytes[2]!
-  const productIdName = productId === 10 ? PGW23_100_11_NAME : `${productId}`
+  const productIdName = productId === 10
+    ? PGW23_100_11_NAME
+    : `${productId}`
 
   const wirelessModuleFirmwareVersion = `${(input.bytes[3]! >> 4) & 0x0F}.${input.bytes[3]! & 0x0F}.${input.bytes[4]!}`
   const wirelessModuleHardwareVersion = `${(input.bytes[5]! >> 4) & 0x0F}.${input.bytes[5]! & 0x0F}.${input.bytes[6]!}`

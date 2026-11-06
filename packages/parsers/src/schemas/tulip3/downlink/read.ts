@@ -439,7 +439,9 @@ function createSensorReadSingleSchema<const TConfig extends TULIP3SensorConfig>(
       return acc
 
     const channel = channelConfig as TULIP3ChannelConfig
-    acc[channelKey as keyof typeof acc] = v.optional(v.object({ identification: createChannelIdentificationReadSchema(channel) })) as any
+    acc[channelKey as keyof typeof acc] = v.optional(v.object({
+      identification: createChannelIdentificationReadSchema(channel),
+    })) as any
 
     return acc
   }, {} as MappedChannelsForSensorReadSingle<TConfig>)
@@ -449,7 +451,9 @@ function createSensorReadSingleSchema<const TConfig extends TULIP3SensorConfig>(
       return acc
 
     const channel = channelConfig as TULIP3ChannelConfig
-    acc[channelKey as keyof typeof acc] = v.optional(v.object({ configuration: createChannelConfigurationReadSchema(channel) })) as any
+    acc[channelKey as keyof typeof acc] = v.optional(v.object({
+      configuration: createChannelConfigurationReadSchema(channel),
+    })) as any
 
     return acc
   }, {} as MappedChannelsForSensorReadSingleConfiguration<TConfig>)
@@ -529,8 +533,12 @@ function createReadInputDataSingleSchema<const TConfig extends TULIP3DeviceConfi
 
   return v.object({
     communicationModule: v.optional(v.union([
-      v.object({ identification: createCommunicationModuleIdentificationReadSchema(config) }),
-      v.object({ configuration: createCommunicationModuleConfigurationReadSchema(config) }),
+      v.object({
+        identification: createCommunicationModuleIdentificationReadSchema(config),
+      }),
+      v.object({
+        configuration: createCommunicationModuleConfigurationReadSchema(config),
+      }),
     ])),
     ...sensorsObj,
   } as const)

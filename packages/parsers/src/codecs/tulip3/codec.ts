@@ -151,7 +151,9 @@ export function defineTULIP3Codec<const TDeviceProfile extends TULIP3DeviceProfi
           name: channelConfig.channelName,
           start: channelConfig.start,
           end: channelConfig.end,
-          ...(channelConfig.adjustMeasurementRangeDisallowed === true ? { adjustMeasurementRangeDisallowed: true as const } : {}),
+          ...(channelConfig.adjustMeasurementRangeDisallowed === true
+            ? { adjustMeasurementRangeDisallowed: true as const }
+            : {}),
         })
       })
     })

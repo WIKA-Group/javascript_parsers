@@ -1,5 +1,3 @@
-# PEW Parser Quick Start
-
 ## Parser API
 
 All functions are pure (no global mutation) except `adjustMeasuringRange` which updates internal range configuration for subsequent decodes.

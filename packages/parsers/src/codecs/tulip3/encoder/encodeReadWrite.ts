@@ -238,7 +238,9 @@ export function encodeReadWriteFactory<const TTULIP3DeviceConfig extends TULIP3D
           cCommands.push({
             address: 0x000,
             size: 4,
-            value: isReadMode ? undefined : uint32ToIntTuple4(cmConfig.measuringPeriodAlarmOff as any),
+            value: isReadMode
+              ? undefined
+              : uint32ToIntTuple4(cmConfig.measuringPeriodAlarmOff as any),
           })
         }
 
@@ -246,7 +248,9 @@ export function encodeReadWriteFactory<const TTULIP3DeviceConfig extends TULIP3D
           cCommands.push({
             address: 0x004,
             size: 4,
-            value: isReadMode ? undefined : uint32ToIntTuple4(cmConfig.measuringPeriodAlarmOn as any),
+            value: isReadMode
+              ? undefined
+              : uint32ToIntTuple4(cmConfig.measuringPeriodAlarmOn as any),
           })
         }
 
@@ -254,7 +258,9 @@ export function encodeReadWriteFactory<const TTULIP3DeviceConfig extends TULIP3D
           cCommands.push({
             address: 0x008,
             size: 2,
-            value: isReadMode ? undefined : uint16ToIntTuple2(cmConfig.transmissionRateAlarmOff as any),
+            value: isReadMode
+              ? undefined
+              : uint16ToIntTuple2(cmConfig.transmissionRateAlarmOff as any),
           })
         }
 
@@ -262,7 +268,9 @@ export function encodeReadWriteFactory<const TTULIP3DeviceConfig extends TULIP3D
           cCommands.push({
             address: 0x00A,
             size: 2,
-            value: isReadMode ? undefined : uint16ToIntTuple2(cmConfig.transmissionRateAlarmOn as any),
+            value: isReadMode
+              ? undefined
+              : uint16ToIntTuple2(cmConfig.transmissionRateAlarmOn as any),
           })
         }
 
@@ -288,7 +296,9 @@ export function encodeReadWriteFactory<const TTULIP3DeviceConfig extends TULIP3D
           cCommands.push({
             address: 0x010,
             size: 1,
-            value: isReadMode ? undefined : int8ToIntTuple1(cmConfig.overTemperatureCmChip as any),
+            value: isReadMode
+              ? undefined
+              : int8ToIntTuple1(cmConfig.overTemperatureCmChip as any),
           })
         }
 
@@ -296,7 +306,9 @@ export function encodeReadWriteFactory<const TTULIP3DeviceConfig extends TULIP3D
           cCommands.push({
             address: 0x011,
             size: 1,
-            value: isReadMode ? undefined : int8ToIntTuple1(cmConfig.underTemperatureCmChip as any),
+            value: isReadMode
+              ? undefined
+              : int8ToIntTuple1(cmConfig.underTemperatureCmChip as any),
           })
         }
 
@@ -304,7 +316,9 @@ export function encodeReadWriteFactory<const TTULIP3DeviceConfig extends TULIP3D
           cCommands.push({
             address: 0x012,
             size: 1,
-            value: isReadMode ? undefined : uint8ToIntTuple1(cmConfig.downlinkAnswerTimeout as any),
+            value: isReadMode
+              ? undefined
+              : uint8ToIntTuple1(cmConfig.downlinkAnswerTimeout as any),
           })
         }
 
@@ -312,7 +326,9 @@ export function encodeReadWriteFactory<const TTULIP3DeviceConfig extends TULIP3D
           cCommands.push({
             address: 0x013,
             size: 1,
-            value: isReadMode ? undefined : uint8ToIntTuple1(cmConfig.fetchAdditionalDownlinkTimeInterval as any),
+            value: isReadMode
+              ? undefined
+              : uint8ToIntTuple1(cmConfig.fetchAdditionalDownlinkTimeInterval as any),
           })
         }
 
@@ -320,7 +336,9 @@ export function encodeReadWriteFactory<const TTULIP3DeviceConfig extends TULIP3D
           cCommands.push({
             address: 0x014,
             size: 1,
-            value: isReadMode ? undefined : booleanToIntTuple1(cmConfig.enableBleAdvertising as any),
+            value: isReadMode
+              ? undefined
+              : booleanToIntTuple1(cmConfig.enableBleAdvertising as any),
           })
         }
       }
@@ -329,7 +347,12 @@ export function encodeReadWriteFactory<const TTULIP3DeviceConfig extends TULIP3D
     // ========================================================================
     // SENSOR REGISTERS
     // ========================================================================
-    const sensors = ['sensor1', 'sensor2', 'sensor3', 'sensor4'] as const
+    const sensors = [
+      'sensor1',
+      'sensor2',
+      'sensor3',
+      'sensor4',
+    ] as const
 
     sensors.forEach((sensorKey, index) => {
       const sensorNum = index + 1
@@ -415,7 +438,9 @@ export function encodeReadWriteFactory<const TTULIP3DeviceConfig extends TULIP3D
             cCommands.push({
               address: sensorConfigBase + 0x00,
               size: 1,
-              value: isReadMode ? undefined : sampleChannelsToIntTuple1(sensorConfig.samplingChannels as any),
+              value: isReadMode
+                ? undefined
+                : sampleChannelsToIntTuple1(sensorConfig.samplingChannels as any),
             })
           }
 
@@ -423,7 +448,9 @@ export function encodeReadWriteFactory<const TTULIP3DeviceConfig extends TULIP3D
             cCommands.push({
               address: sensorConfigBase + 0x01,
               size: 2,
-              value: isReadMode ? undefined : uint16ToIntTuple2(sensorConfig.bootTime as any),
+              value: isReadMode
+                ? undefined
+                : uint16ToIntTuple2(sensorConfig.bootTime as any),
             })
           }
 
@@ -431,7 +458,9 @@ export function encodeReadWriteFactory<const TTULIP3DeviceConfig extends TULIP3D
             cCommands.push({
               address: sensorConfigBase + 0x03,
               size: 2,
-              value: isReadMode ? undefined : uint16ToIntTuple2(sensorConfig.communicationTimeout as any),
+              value: isReadMode
+                ? undefined
+                : uint16ToIntTuple2(sensorConfig.communicationTimeout as any),
             })
           }
 
@@ -439,7 +468,9 @@ export function encodeReadWriteFactory<const TTULIP3DeviceConfig extends TULIP3D
             cCommands.push({
               address: sensorConfigBase + 0x05,
               size: 1,
-              value: isReadMode ? undefined : uint8ToIntTuple1(sensorConfig.communicationRetryCount as any),
+              value: isReadMode
+                ? undefined
+                : uint8ToIntTuple1(sensorConfig.communicationRetryCount as any),
             })
           }
         }
@@ -447,7 +478,16 @@ export function encodeReadWriteFactory<const TTULIP3DeviceConfig extends TULIP3D
         // ====================================================================
         // CHANNEL REGISTERS
         // ====================================================================
-        const channels = ['channel1', 'channel2', 'channel3', 'channel4', 'channel5', 'channel6', 'channel7', 'channel8'] as const
+        const channels = [
+          'channel1',
+          'channel2',
+          'channel3',
+          'channel4',
+          'channel5',
+          'channel6',
+          'channel7',
+          'channel8',
+        ] as const
 
         channels.forEach((channelKey, channelIndex) => {
           const channelNum = channelIndex + 1
@@ -475,7 +515,9 @@ export function encodeReadWriteFactory<const TTULIP3DeviceConfig extends TULIP3D
                 iCommands.push({
                   address: channelIdBase + 0x01,
                   size: 1,
-                  value: isReadMode ? undefined : unitToIntTuple1(channelId.unit as any),
+                  value: isReadMode
+                    ? undefined
+                    : unitToIntTuple1(channelId.unit as any),
                 })
               }
 
@@ -529,7 +571,9 @@ export function encodeReadWriteFactory<const TTULIP3DeviceConfig extends TULIP3D
                 iCommands.push({
                   address: channelIdBase + 0x14,
                   size: 4,
-                  value: isReadMode ? undefined : float32ToIntTuple4(channelId.offset as any),
+                  value: isReadMode
+                    ? undefined
+                    : float32ToIntTuple4(channelId.offset as any),
                 })
               }
 
@@ -538,7 +582,9 @@ export function encodeReadWriteFactory<const TTULIP3DeviceConfig extends TULIP3D
                 iCommands.push({
                   address: channelIdBase + 0x18,
                   size: 4,
-                  value: isReadMode ? undefined : float32ToIntTuple4(channelId.gain as any),
+                  value: isReadMode
+                    ? undefined
+                    : float32ToIntTuple4(channelId.gain as any),
                 })
               }
 
@@ -560,7 +606,9 @@ export function encodeReadWriteFactory<const TTULIP3DeviceConfig extends TULIP3D
                 cCommands.push({
                   address: channelConfigBase + 0x00,
                   size: 1,
-                  value: isReadMode ? undefined : protocolDataTypeToIntTuple1(channelConfig.protocolDataType as any),
+                  value: isReadMode
+                    ? undefined
+                    : protocolDataTypeToIntTuple1(channelConfig.protocolDataType as any),
                 })
               }
 
@@ -568,7 +616,9 @@ export function encodeReadWriteFactory<const TTULIP3DeviceConfig extends TULIP3D
                 cCommands.push({
                   address: channelConfigBase + 0x01,
                   size: 1,
-                  value: isReadMode ? undefined : processAlarmEnabledToIntTuple1(channelConfig.processAlarmEnabled as any),
+                  value: isReadMode
+                    ? undefined
+                    : processAlarmEnabledToIntTuple1(channelConfig.processAlarmEnabled as any),
                 })
               }
 
@@ -576,7 +626,9 @@ export function encodeReadWriteFactory<const TTULIP3DeviceConfig extends TULIP3D
                 cCommands.push({
                   address: channelConfigBase + 0x02,
                   size: 4,
-                  value: isReadMode ? undefined : float32ToIntTuple4(channelConfig.processAlarmDeadBand as any),
+                  value: isReadMode
+                    ? undefined
+                    : float32ToIntTuple4(channelConfig.processAlarmDeadBand as any),
                 })
               }
 
@@ -584,7 +636,9 @@ export function encodeReadWriteFactory<const TTULIP3DeviceConfig extends TULIP3D
                 cCommands.push({
                   address: channelConfigBase + 0x06,
                   size: 4,
-                  value: isReadMode ? undefined : float32ToIntTuple4(channelConfig.lowThresholdAlarmValue as any),
+                  value: isReadMode
+                    ? undefined
+                    : float32ToIntTuple4(channelConfig.lowThresholdAlarmValue as any),
                 })
               }
 
@@ -592,7 +646,9 @@ export function encodeReadWriteFactory<const TTULIP3DeviceConfig extends TULIP3D
                 cCommands.push({
                   address: channelConfigBase + 0x0A,
                   size: 4,
-                  value: isReadMode ? undefined : float32ToIntTuple4(channelConfig.highThresholdAlarmValue as any),
+                  value: isReadMode
+                    ? undefined
+                    : float32ToIntTuple4(channelConfig.highThresholdAlarmValue as any),
                 })
               }
 
@@ -600,7 +656,9 @@ export function encodeReadWriteFactory<const TTULIP3DeviceConfig extends TULIP3D
                 cCommands.push({
                   address: channelConfigBase + 0x0E,
                   size: 4,
-                  value: isReadMode ? undefined : float32ToIntTuple4(channelConfig.fallingSlopeAlarmValue as any),
+                  value: isReadMode
+                    ? undefined
+                    : float32ToIntTuple4(channelConfig.fallingSlopeAlarmValue as any),
                 })
               }
 
@@ -608,7 +666,9 @@ export function encodeReadWriteFactory<const TTULIP3DeviceConfig extends TULIP3D
                 cCommands.push({
                   address: channelConfigBase + 0x12,
                   size: 4,
-                  value: isReadMode ? undefined : float32ToIntTuple4(channelConfig.risingSlopeAlarmValue as any),
+                  value: isReadMode
+                    ? undefined
+                    : float32ToIntTuple4(channelConfig.risingSlopeAlarmValue as any),
                 })
               }
 
@@ -616,7 +676,9 @@ export function encodeReadWriteFactory<const TTULIP3DeviceConfig extends TULIP3D
                 cCommands.push({
                   address: channelConfigBase + 0x16,
                   size: 4,
-                  value: isReadMode ? undefined : float32ToIntTuple4(channelConfig.lowThresholdWithDelayAlarmValue as any),
+                  value: isReadMode
+                    ? undefined
+                    : float32ToIntTuple4(channelConfig.lowThresholdWithDelayAlarmValue as any),
                 })
               }
 
@@ -624,7 +686,9 @@ export function encodeReadWriteFactory<const TTULIP3DeviceConfig extends TULIP3D
                 cCommands.push({
                   address: channelConfigBase + 0x1A,
                   size: 2,
-                  value: isReadMode ? undefined : uint16ToIntTuple2(channelConfig.lowThresholdWithDelayAlarmDelay as any),
+                  value: isReadMode
+                    ? undefined
+                    : uint16ToIntTuple2(channelConfig.lowThresholdWithDelayAlarmDelay as any),
                 })
               }
 
@@ -632,7 +696,9 @@ export function encodeReadWriteFactory<const TTULIP3DeviceConfig extends TULIP3D
                 cCommands.push({
                   address: channelConfigBase + 0x1C,
                   size: 4,
-                  value: isReadMode ? undefined : float32ToIntTuple4(channelConfig.highThresholdWithDelayAlarmValue as any),
+                  value: isReadMode
+                    ? undefined
+                    : float32ToIntTuple4(channelConfig.highThresholdWithDelayAlarmValue as any),
                 })
               }
 
@@ -640,7 +706,9 @@ export function encodeReadWriteFactory<const TTULIP3DeviceConfig extends TULIP3D
                 cCommands.push({
                   address: channelConfigBase + 0x20,
                   size: 2,
-                  value: isReadMode ? undefined : uint16ToIntTuple2(channelConfig.highThresholdWithDelayAlarmDelay as any),
+                  value: isReadMode
+                    ? undefined
+                    : uint16ToIntTuple2(channelConfig.highThresholdWithDelayAlarmDelay as any),
                 })
               }
             }

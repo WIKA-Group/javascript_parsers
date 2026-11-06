@@ -2,7 +2,14 @@ import { NETRIS2_NAME } from '..'
 import { createDefaultChannelAlarmFlags, createDefaultCommunicationModuleAlarmFlags, createDefaultSensorAlarmFlags, defineAlarmFlags, pickAlarmFlags } from '../../../../codecs/tulip3/messages/deviceAlarm'
 import { defineChannelConfigurationRegisters, defineChannelIdentificationRegisters, defineCommunicationModuleConfigurationRegisters, defineCommunicationModuleIdentificationRegisters, defineSensorConfigurationRegisters, defineSensorIdentificationRegisters, defineTULIP3DeviceProfile } from '../../../../codecs/tulip3/profile'
 
-const netris2CommunicationModuleAlarmFlags = pickAlarmFlags(createDefaultCommunicationModuleAlarmFlags(), ['cmChipLowTemperature', 'cmChipHighTemperature', 'airTimeLimitation', 'memoryError', 'lowVoltage', 'highVoltage'])
+const netris2CommunicationModuleAlarmFlags = pickAlarmFlags(createDefaultCommunicationModuleAlarmFlags(), [
+  'cmChipLowTemperature',
+  'cmChipHighTemperature',
+  'airTimeLimitation',
+  'memoryError',
+  'lowVoltage',
+  'highVoltage',
+])
 
 const netris2SensorAlarmFlags = defineAlarmFlags(pickAlarmFlags(createDefaultSensorAlarmFlags(), ['sensorCommunicationError', 'sensorInternalError']), {
   sensorIdentificationError: 0b1000_0000_0000_0000,

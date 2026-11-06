@@ -823,7 +823,8 @@
                                         "unit": {
                                           "enum": [
                                             "mA"
-                                          ]
+                                          ],
+                                          "type": "string"
                                         },
                                         "offset": {
                                           "type": "number"
@@ -884,7 +885,8 @@
                                           "enum": [
                                             "float - IEEE754",
                                             "uint16 - TULIP scale 2500 - 12500"
-                                          ]
+                                          ],
+                                          "type": "string"
                                         },
                                         "processAlarmEnabled": {
                                           "type": "object",
@@ -980,7 +982,8 @@
                                         "unit": {
                                           "enum": [
                                             "mA"
-                                          ]
+                                          ],
+                                          "type": "string"
                                         },
                                         "offset": {
                                           "type": "number"
@@ -1041,7 +1044,8 @@
                                           "enum": [
                                             "float - IEEE754",
                                             "uint16 - TULIP scale 2500 - 12500"
-                                          ]
+                                          ],
+                                          "type": "string"
                                         },
                                         "processAlarmEnabled": {
                                           "type": "object",

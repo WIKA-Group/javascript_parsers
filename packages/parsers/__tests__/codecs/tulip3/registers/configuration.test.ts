@@ -170,13 +170,30 @@ describe('tULIP3 configuration register generation', () => {
       })
 
       // All sensors should now be present with registers
-      const sensor1Range = { start: getSensorConfigAddress(1, 0), end: getSensorConfigAddress(1, 0) + 493 - 1 }
-      const sensor2Range = { start: getSensorConfigAddress(2, 0), end: getSensorConfigAddress(2, 0) + 493 - 1 }
-      const sensor3Range = { start: getSensorConfigAddress(3, 0), end: getSensorConfigAddress(3, 0) + 493 - 1 }
-      const sensor4Range = { start: getSensorConfigAddress(4, 0), end: getSensorConfigAddress(4, 0) + 493 - 1 }
+      const sensor1Range = {
+        start: getSensorConfigAddress(1, 0),
+        end: getSensorConfigAddress(1, 0) + 493 - 1,
+      }
+      const sensor2Range = {
+        start: getSensorConfigAddress(2, 0),
+        end: getSensorConfigAddress(2, 0) + 493 - 1,
+      }
+      const sensor3Range = {
+        start: getSensorConfigAddress(3, 0),
+        end: getSensorConfigAddress(3, 0) + 493 - 1,
+      }
+      const sensor4Range = {
+        start: getSensorConfigAddress(4, 0),
+        end: getSensorConfigAddress(4, 0) + 493 - 1,
+      }
 
       // Check that each sensor has at least some registers defined
-      ;[sensor1Range, sensor2Range, sensor3Range, sensor4Range].forEach(({ start }, index) => {
+      ;[
+        sensor1Range,
+        sensor2Range,
+        sensor3Range,
+        sensor4Range,
+      ].forEach(({ start }, index) => {
         const sensorNum = index + 1
         expect(lookup[start]).toBeDefined() // First register of each sensor should be present
         // @ts-expect-error - may not exist when registers are disabled
@@ -285,7 +302,19 @@ describe('tULIP3 configuration register generation', () => {
       const lookup = createConfigurationRegisterLookup(completeTULIP3DeviceConfig())
 
       // CM block should be continuous (except RFU)
-      const cmRegisters = [0x000, 0x004, 0x008, 0x00A, 0x00C, 0x00E, 0x010, 0x011, 0x012, 0x013, 0x014]
+      const cmRegisters = [
+        0x000,
+        0x004,
+        0x008,
+        0x00A,
+        0x00C,
+        0x00E,
+        0x010,
+        0x011,
+        0x012,
+        0x013,
+        0x014,
+      ]
       cmRegisters.forEach((addr) => {
         expect(lookup[addr]).toBeDefined()
       })
@@ -298,7 +327,19 @@ describe('tULIP3 configuration register generation', () => {
       })
 
       // Channel blocks should be continuous (except RFU and gaps)
-      const channelOffsets = [0x00, 0x01, 0x02, 0x06, 0x0A, 0x0E, 0x12, 0x16, 0x1A, 0x1C, 0x20]
+      const channelOffsets = [
+        0x00,
+        0x01,
+        0x02,
+        0x06,
+        0x0A,
+        0x0E,
+        0x12,
+        0x16,
+        0x1A,
+        0x1C,
+        0x20,
+      ]
       ;[1, 2].forEach((channelNum) => {
         const channelBaseAddr = getChannelConfigAddress(1, channelNum, 0)
         channelOffsets.forEach((offset) => {
@@ -338,7 +379,16 @@ describe('tULIP3 configuration register generation', () => {
     it('should have register guards for CM registers when registerConfig flags are disabled', () => {
       const configWithDisabledCMFlags: TULIP3DeviceConfig = {
         sensor1: {
-          channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel1', registerConfig: completeChannelRegisterConfig(), alarmFlags: createDefaultChannelAlarmFlags(), availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
+          channel1: {
+            start: 0,
+            end: 100,
+            measurementTypes: [],
+            channelName: 'sensor1Channel1',
+            registerConfig: completeChannelRegisterConfig(),
+            alarmFlags: createDefaultChannelAlarmFlags(),
+            availableUnits: ['°C'],
+            availableMeasurands: ['Temperature'],
+          },
           alarmFlags: createDefaultSensorAlarmFlags(),
           registerConfig: completeSensorRegisterConfig(),
         },
@@ -374,7 +424,16 @@ describe('tULIP3 configuration register generation', () => {
     it('should have register guards for sensor registers when sensor registerConfig flags are disabled', () => {
       const configWithDisabledSensorFlags: TULIP3DeviceConfig = {
         sensor1: {
-          channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel1', registerConfig: completeChannelRegisterConfig(), alarmFlags: createDefaultChannelAlarmFlags(), availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
+          channel1: {
+            start: 0,
+            end: 100,
+            measurementTypes: [],
+            channelName: 'sensor1Channel1',
+            registerConfig: completeChannelRegisterConfig(),
+            alarmFlags: createDefaultChannelAlarmFlags(),
+            availableUnits: ['°C'],
+            availableMeasurands: ['Temperature'],
+          },
           alarmFlags: createDefaultSensorAlarmFlags(),
           registerConfig: {
             tulip3ConfigurationRegisters: {
@@ -386,7 +445,22 @@ describe('tULIP3 configuration register generation', () => {
           },
         },
         alarmFlags: createDefaultCommunicationModuleAlarmFlags(),
-        registerConfig: { tulip3ConfigurationRegisters: { measuringPeriodAlarmOff: true, measuringPeriodAlarmOn: true, transmissionRateAlarmOff: true, transmissionRateAlarmOn: true, overVoltageThreshold: true, underVoltageThreshold: true, overTemperatureCmChip: true, underTemperatureCmChip: true, downlinkAnswerTimeout: true, fetchAdditionalDownlinkTimeInterval: true, enableBleAdvertising: true }, tulip3IdentificationRegisters: {} },
+        registerConfig: {
+          tulip3ConfigurationRegisters: {
+            measuringPeriodAlarmOff: true,
+            measuringPeriodAlarmOn: true,
+            transmissionRateAlarmOff: true,
+            transmissionRateAlarmOn: true,
+            overVoltageThreshold: true,
+            underVoltageThreshold: true,
+            overTemperatureCmChip: true,
+            underTemperatureCmChip: true,
+            downlinkAnswerTimeout: true,
+            fetchAdditionalDownlinkTimeInterval: true,
+            enableBleAdvertising: true,
+          },
+          tulip3IdentificationRegisters: {},
+        },
       }
 
       const lookup = createConfigurationRegisterLookup(configWithDisabledSensorFlags)
@@ -427,10 +501,35 @@ describe('tULIP3 configuration register generation', () => {
             availableMeasurands: ['Temperature'],
           },
           alarmFlags: createDefaultSensorAlarmFlags(),
-          registerConfig: { tulip3ConfigurationRegisters: { samplingChannels: true, bootTime: true, communicationTimeout: true, communicationRetryCount: true }, tulip3IdentificationRegisters: {}, sensorSpecificConfigurationRegisters: {}, sensorSpecificIdentificationRegisters: {} },
+          registerConfig: {
+            tulip3ConfigurationRegisters: {
+              samplingChannels: true,
+              bootTime: true,
+              communicationTimeout: true,
+              communicationRetryCount: true,
+            },
+            tulip3IdentificationRegisters: {},
+            sensorSpecificConfigurationRegisters: {},
+            sensorSpecificIdentificationRegisters: {},
+          },
         },
         alarmFlags: createDefaultCommunicationModuleAlarmFlags(),
-        registerConfig: { tulip3ConfigurationRegisters: { measuringPeriodAlarmOff: true, measuringPeriodAlarmOn: true, transmissionRateAlarmOff: true, transmissionRateAlarmOn: true, overVoltageThreshold: true, underVoltageThreshold: true, overTemperatureCmChip: true, underTemperatureCmChip: true, downlinkAnswerTimeout: true, fetchAdditionalDownlinkTimeInterval: true, enableBleAdvertising: true }, tulip3IdentificationRegisters: {} },
+        registerConfig: {
+          tulip3ConfigurationRegisters: {
+            measuringPeriodAlarmOff: true,
+            measuringPeriodAlarmOn: true,
+            transmissionRateAlarmOff: true,
+            transmissionRateAlarmOn: true,
+            overVoltageThreshold: true,
+            underVoltageThreshold: true,
+            overTemperatureCmChip: true,
+            underTemperatureCmChip: true,
+            downlinkAnswerTimeout: true,
+            fetchAdditionalDownlinkTimeInterval: true,
+            enableBleAdvertising: true,
+          },
+          tulip3IdentificationRegisters: {},
+        },
       }
 
       const lookup = createConfigurationRegisterLookup(configWithDisabledChannelFlags)
@@ -454,7 +553,16 @@ describe('tULIP3 configuration register generation', () => {
       // Test with some flags enabled and some disabled
       const mixedConfig: TULIP3DeviceConfig = {
         sensor1: {
-          channel1: { start: 0, end: 100, measurementTypes: [], channelName: 'sensor1Channel1', registerConfig: completeChannelRegisterConfig(), alarmFlags: createDefaultChannelAlarmFlags(), availableUnits: ['°C'], availableMeasurands: ['Temperature'] },
+          channel1: {
+            start: 0,
+            end: 100,
+            measurementTypes: [],
+            channelName: 'sensor1Channel1',
+            registerConfig: completeChannelRegisterConfig(),
+            alarmFlags: createDefaultChannelAlarmFlags(),
+            availableUnits: ['°C'],
+            availableMeasurands: ['Temperature'],
+          },
           alarmFlags: createDefaultSensorAlarmFlags(),
           registerConfig: completeSensorRegisterConfig(),
         },

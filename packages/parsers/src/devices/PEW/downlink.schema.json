@@ -787,7 +787,8 @@
                                             "psi",
                                             "MPa",
                                             "bar"
-                                          ]
+                                          ],
+                                          "type": "string"
                                         },
                                         "offset": {
                                           "type": "number"
@@ -812,7 +813,8 @@
                                         "unit": {
                                           "enum": [
                                             "°C"
-                                          ]
+                                          ],
+                                          "type": "string"
                                         },
                                         "offset": {
                                           "type": "number"

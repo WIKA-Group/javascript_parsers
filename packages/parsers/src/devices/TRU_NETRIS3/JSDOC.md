@@ -1,5 +1,3 @@
-# TRU + Netris3 Parser Quick Start
-
 ## Parser API
 
 All functions are pure (no global mutation) except `adjustMeasuringRange` which updates internal range configuration for subsequent decodes.
@@ -43,7 +41,7 @@ Channels that support adjusting the measurement range:
 type AdjustableChannelName = 'temperature'
 ```
 
-#### Channel Configuration
+### Channel Configuration
 
 | Channel Name | Min Value | Max Value | Unit | Configurable |
 |-------------|-----------|-----------|------|--------------|

@@ -7,7 +7,9 @@ export const A2G_NAME = 'A2G'
 export function useParser() {
   return defineParser({
     parserName: A2G_NAME,
-    codecs: [createTULIP2A2GCodec()],
+    codecs: [
+      createTULIP2A2GCodec(),
+    ],
   })
 }
 

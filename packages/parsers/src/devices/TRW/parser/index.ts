@@ -8,7 +8,10 @@ export const TRW_NAME = 'TRW'
 export function useParser() {
   return defineParser({
     parserName: TRW_NAME,
-    codecs: [createTULIP2TRWCodec(), createTULIP3TRWCodec()],
+    codecs: [
+      createTULIP2TRWCodec(),
+      createTULIP3TRWCodec(),
+    ],
   })
 }
 

@@ -17,7 +17,8 @@
                   "enum": [
                     1,
                     2
-                  ]
+                  ],
+                  "type": "number"
                 },
                 "measurements": {
                   "type": "object",
@@ -35,7 +36,8 @@
                               3,
                               4,
                               5
-                            ]
+                            ],
+                            "type": "number"
                           },
                           "channelName": {
                             "enum": [
@@ -45,7 +47,8 @@
                               "channel3",
                               "channel4",
                               "channel5"
-                            ]
+                            ],
+                            "type": "string"
                           },
                           "value": {
                             "type": "number"
@@ -95,7 +98,8 @@
                 "messageType": {
                   "enum": [
                     3
-                  ]
+                  ],
+                  "type": "number"
                 },
                 "processAlarms": {
                   "type": "array",
@@ -110,7 +114,8 @@
                           3,
                           4,
                           5
-                        ]
+                        ],
+                        "type": "number"
                       },
                       "channelName": {
                         "enum": [
@@ -120,7 +125,8 @@
                           "channel3",
                           "channel4",
                           "channel5"
-                        ]
+                        ],
+                        "type": "string"
                       },
                       "alarmType": {
                         "enum": [
@@ -130,7 +136,8 @@
                           3,
                           4,
                           5
-                        ]
+                        ],
+                        "type": "number"
                       },
                       "alarmTypeName": {
                         "enum": [
@@ -140,19 +147,22 @@
                           "rising slope",
                           "low threshold with delay",
                           "high threshold with delay"
-                        ]
+                        ],
+                        "type": "string"
                       },
                       "event": {
                         "enum": [
                           0,
                           1
-                        ]
+                        ],
+                        "type": "number"
                       },
                       "eventName": {
                         "enum": [
                           "triggered",
                           "disappeared"
-                        ]
+                        ],
+                        "type": "string"
                       },
                       "value": {
                         "type": "number"
@@ -201,7 +211,8 @@
                 "messageType": {
                   "enum": [
                     4
-                  ]
+                  ],
+                  "type": "number"
                 },
                 "sensorTechnicalAlarms": {
                   "type": "array",
@@ -216,7 +227,8 @@
                           3,
                           4,
                           5
-                        ]
+                        ],
+                        "type": "number"
                       },
                       "channelName": {
                         "enum": [
@@ -226,7 +238,8 @@
                           "channel3",
                           "channel4",
                           "channel5"
-                        ]
+                        ],
+                        "type": "string"
                       },
                       "alarmType": {
                         "enum": [
@@ -238,7 +251,8 @@
                           6,
                           7,
                           10
-                        ]
+                        ],
+                        "type": "number"
                       },
                       "alarmDescription": {
                         "enum": [
@@ -250,7 +264,8 @@
                           "liquefaction of SF6 detected (internal sensor)",
                           "gas density above upper limit (based on the full scale of the density measuring range in bar abs. at 20°C | 68°F)",
                           "recurring modbus communication error"
-                        ]
+                        ],
+                        "type": "string"
                       }
                     },
                     "required": [
@@ -293,7 +308,8 @@
                 "messageType": {
                   "enum": [
                     5
-                  ]
+                  ],
+                  "type": "number"
                 },
                 "deviceAlarms": {
                   "type": "array",
@@ -313,7 +329,8 @@
                           13,
                           14,
                           15
-                        ]
+                        ],
+                        "type": "number"
                       },
                       "alarmDescription": {
                         "enum": [
@@ -328,7 +345,8 @@
                           "device specific alarm",
                           "device specific alarm",
                           "device specific alarm"
-                        ]
+                        ],
+                        "type": "string"
                       }
                     },
                     "required": [
@@ -369,7 +387,8 @@
                 "messageType": {
                   "enum": [
                     6
-                  ]
+                  ],
+                  "type": "number"
                 },
                 "configurationStatus": {
                   "anyOf": [
@@ -385,7 +404,8 @@
                                 4,
                                 6,
                                 7
-                              ]
+                              ],
+                              "type": "number"
                             },
                             "statusDescription": {
                               "enum": [
@@ -394,7 +414,8 @@
                                 "configuration discarded",
                                 "command success",
                                 "command failed"
-                              ]
+                              ],
+                              "type": "string"
                             }
                           },
                           "required": [
@@ -527,7 +548,8 @@
                             4,
                             6,
                             7
-                          ]
+                          ],
+                          "type": "number"
                         },
                         "statusDescription": {
                           "enum": [
@@ -536,7 +558,8 @@
                             "configuration discarded",
                             "command success",
                             "command failed"
-                          ]
+                          ],
+                          "type": "string"
                         }
                       },
                       "required": [
@@ -578,7 +601,8 @@
                 "messageType": {
                   "enum": [
                     7
-                  ]
+                  ],
+                  "type": "number"
                 },
                 "deviceIdentification": {
                   "type": "object",
@@ -612,7 +636,8 @@
                                 23,
                                 24,
                                 25
-                              ]
+                              ],
+                              "type": "number"
                             },
                             "measurand": {
                               "enum": [
@@ -622,7 +647,8 @@
                                 "Density",
                                 "Density (gauge pressure at 20 °C)",
                                 "Density (absolute pressure at 20 °C)"
-                              ]
+                              ],
+                              "type": "string"
                             },
                             "unitId": {
                               "enum": [
@@ -637,7 +663,8 @@
                                 17,
                                 110,
                                 115
-                              ]
+                              ],
+                              "type": "number"
                             },
                             "unit": {
                               "enum": [
@@ -652,7 +679,8 @@
                                 "N/cm²",
                                 "kg/m³",
                                 "g/l"
-                              ]
+                              ],
+                              "type": "string"
                             }
                           },
                           "required": [
@@ -673,7 +701,8 @@
                                 23,
                                 24,
                                 25
-                              ]
+                              ],
+                              "type": "number"
                             },
                             "measurand": {
                               "enum": [
@@ -683,7 +712,8 @@
                                 "Density",
                                 "Density (gauge pressure at 20 °C)",
                                 "Density (absolute pressure at 20 °C)"
-                              ]
+                              ],
+                              "type": "string"
                             },
                             "unitId": {
                               "enum": [
@@ -698,7 +728,8 @@
                                 17,
                                 110,
                                 115
-                              ]
+                              ],
+                              "type": "number"
                             },
                             "unit": {
                               "enum": [
@@ -713,7 +744,8 @@
                                 "N/cm²",
                                 "kg/m³",
                                 "g/l"
-                              ]
+                              ],
+                              "type": "string"
                             }
                           },
                           "required": [
@@ -734,7 +766,8 @@
                                 23,
                                 24,
                                 25
-                              ]
+                              ],
+                              "type": "number"
                             },
                             "measurand": {
                               "enum": [
@@ -744,7 +777,8 @@
                                 "Density",
                                 "Density (gauge pressure at 20 °C)",
                                 "Density (absolute pressure at 20 °C)"
-                              ]
+                              ],
+                              "type": "string"
                             },
                             "unitId": {
                               "enum": [
@@ -759,7 +793,8 @@
                                 17,
                                 110,
                                 115
-                              ]
+                              ],
+                              "type": "number"
                             },
                             "unit": {
                               "enum": [
@@ -774,7 +809,8 @@
                                 "N/cm²",
                                 "kg/m³",
                                 "g/l"
-                              ]
+                              ],
+                              "type": "string"
                             }
                           },
                           "required": [
@@ -795,7 +831,8 @@
                                 23,
                                 24,
                                 25
-                              ]
+                              ],
+                              "type": "number"
                             },
                             "measurand": {
                               "enum": [
@@ -805,7 +842,8 @@
                                 "Density",
                                 "Density (gauge pressure at 20 °C)",
                                 "Density (absolute pressure at 20 °C)"
-                              ]
+                              ],
+                              "type": "string"
                             },
                             "unitId": {
                               "enum": [
@@ -820,7 +858,8 @@
                                 17,
                                 110,
                                 115
-                              ]
+                              ],
+                              "type": "number"
                             },
                             "unit": {
                               "enum": [
@@ -835,7 +874,8 @@
                                 "N/cm²",
                                 "kg/m³",
                                 "g/l"
-                              ]
+                              ],
+                              "type": "string"
                             }
                           },
                           "required": [
@@ -856,7 +896,8 @@
                                 23,
                                 24,
                                 25
-                              ]
+                              ],
+                              "type": "number"
                             },
                             "measurand": {
                               "enum": [
@@ -866,7 +907,8 @@
                                 "Density",
                                 "Density (gauge pressure at 20 °C)",
                                 "Density (absolute pressure at 20 °C)"
-                              ]
+                              ],
+                              "type": "string"
                             },
                             "unitId": {
                               "enum": [
@@ -881,7 +923,8 @@
                                 17,
                                 110,
                                 115
-                              ]
+                              ],
+                              "type": "number"
                             },
                             "unit": {
                               "enum": [
@@ -896,7 +939,8 @@
                                 "N/cm²",
                                 "kg/m³",
                                 "g/l"
-                              ]
+                              ],
+                              "type": "string"
                             }
                           },
                           "required": [
@@ -917,7 +961,8 @@
                                 23,
                                 24,
                                 25
-                              ]
+                              ],
+                              "type": "number"
                             },
                             "measurand": {
                               "enum": [
@@ -927,7 +972,8 @@
                                 "Density",
                                 "Density (gauge pressure at 20 °C)",
                                 "Density (absolute pressure at 20 °C)"
-                              ]
+                              ],
+                              "type": "string"
                             },
                             "unitId": {
                               "enum": [
@@ -942,7 +988,8 @@
                                 17,
                                 110,
                                 115
-                              ]
+                              ],
+                              "type": "number"
                             },
                             "unit": {
                               "enum": [
@@ -957,7 +1004,8 @@
                                 "N/cm²",
                                 "kg/m³",
                                 "g/l"
-                              ]
+                              ],
+                              "type": "string"
                             }
                           },
                           "required": [
@@ -1059,7 +1107,8 @@
                 "messageType": {
                   "enum": [
                     8
-                  ]
+                  ],
+                  "type": "number"
                 },
                 "batteryLevelIndicator": {
                   "type": "object",
@@ -1116,7 +1165,8 @@
                 "messageType": {
                   "enum": [
                     9
-                  ]
+                  ],
+                  "type": "number"
                 },
                 "channelRanges": {
                   "type": "object",

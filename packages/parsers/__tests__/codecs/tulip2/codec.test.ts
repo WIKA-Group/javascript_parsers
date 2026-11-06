@@ -10,8 +10,18 @@ describe('defineTULIP2Codec (non-decode methods)', () => {
   }
 
   const channels = [
-    { name: 'ch1', start: 0, end: 100, channelId: 0 },
-    { name: 'ch2', start: 10, end: 200, channelId: 1 },
+    {
+      name: 'ch1',
+      start: 0,
+      end: 100,
+      channelId: 0,
+    },
+    {
+      name: 'ch2',
+      start: 10,
+      end: 200,
+      channelId: 1,
+    },
   ]
 
   const codec = defineTULIP2Codec({
@@ -31,13 +41,25 @@ describe('defineTULIP2Codec (non-decode methods)', () => {
 
   it('canTryDecode returns true for valid prefixes', () => {
     for (let prefix = 0x00; prefix <= 0x09; ++prefix) {
-      expect(codec.canTryDecode({ bytes: [prefix, 0x00], fPort: 1, recvTime: new Date() })).toBe(true)
+      expect(codec.canTryDecode({
+        bytes: [prefix, 0x00],
+        fPort: 1,
+        recvTime: new Date(),
+      })).toBe(true)
     }
   })
 
   it('canTryDecode returns false for invalid prefix or empty bytes', () => {
-    expect(codec.canTryDecode({ bytes: [0x0A], fPort: 1, recvTime: new Date() })).toBe(false)
-    expect(codec.canTryDecode({ bytes: [], fPort: 1, recvTime: new Date() })).toBe(false)
+    expect(codec.canTryDecode({
+      bytes: [0x0A],
+      fPort: 1,
+      recvTime: new Date(),
+    })).toBe(false)
+    expect(codec.canTryDecode({
+      bytes: [],
+      fPort: 1,
+      recvTime: new Date(),
+    })).toBe(false)
   })
 
   it('getChannels returns all channels with correct info', () => {
@@ -56,9 +78,13 @@ describe('defineTULIP2Codec (non-decode methods)', () => {
 
   it('adjustRoundingDecimals updates rounding passed to handlers', () => {
     // call decode to read current roundingDecimals
-    expect((codec.decode as any)({ bytes: [0x00] })).toMatchObject({ rounding: 2 })
+    expect((codec.decode as any)({
+      bytes: [0x00],
+    })).toMatchObject({ rounding: 2 })
     codec.adjustRoundingDecimals(5)
-    expect((codec.decode as any)({ bytes: [0x00] })).toMatchObject({ rounding: 5 })
+    expect((codec.decode as any)({
+      bytes: [0x00],
+    })).toMatchObject({ rounding: 5 })
   })
 
   it('encode is the encode handler provided', () => {
@@ -74,15 +100,26 @@ describe('defineTULIP2Codec (decoding + validations)', () => {
   it('decode throws when no handler for first byte', () => {
     const codec = defineTULIP2Codec({
       deviceName: 'D',
-      channels: [{ name: 'c', start: 0, end: 1, channelId: 0 }],
-      handlers: { 0x00: (() => ({})) as any },
+      channels: [
+        {
+          name: 'c',
+          start: 0,
+          end: 1,
+          channelId: 0,
+        },
+      ],
+      handlers: {
+        0x00: (() => ({})) as any,
+      },
       encoderFactory: () => () => ({
         bytes: [0x00],
         fPort: 1,
       } satisfies DownlinkOutput),
     })
 
-    expect(() => (codec.decode as any)({ bytes: [0x01] })).toThrow(/No handler registered/)
+    expect(() => (codec.decode as any)({
+      bytes: [0x01],
+    })).toThrow(/No handler registered/)
   })
 
   it('throws when channel names are duplicated', () => {
@@ -90,8 +127,18 @@ describe('defineTULIP2Codec (decoding + validations)', () => {
       defineTULIP2Codec({
         deviceName: 'Dup',
         channels: [
-          { name: 'dup', start: 0, end: 10, channelId: 0 },
-          { name: 'dup', start: 0, end: 5, channelId: 1 },
+          {
+            name: 'dup',
+            start: 0,
+            end: 10,
+            channelId: 0,
+          },
+          {
+            name: 'dup',
+            start: 0,
+            end: 5,
+            channelId: 1,
+          },
         ],
         handlers: {},
         encoderFactory: () => () => ({
@@ -107,7 +154,14 @@ describe('defineTULIP2Codec (decoding + validations)', () => {
     const options = () =>
       defineTULIP2Codec({
         deviceName: 'BadRange',
-        channels: [{ name: 'bad', start: 10, end: 10, channelId: 0 }],
+        channels: [
+          {
+            name: 'bad',
+            start: 10,
+            end: 10,
+            channelId: 0,
+          },
+        ],
         handlers: {},
         encoderFactory: () => () => ({
           bytes: [0x00],

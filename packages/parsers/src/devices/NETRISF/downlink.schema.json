@@ -781,7 +781,8 @@
                                             "mg",
                                             "lb",
                                             "µeps"
-                                          ]
+                                          ],
+                                          "type": "string"
                                         },
                                         "offset": {
                                           "type": "number"
@@ -806,7 +807,8 @@
                                         "unit": {
                                           "enum": [
                                             "°C"
-                                          ]
+                                          ],
+                                          "type": "string"
                                         },
                                         "offset": {
                                           "type": "number"

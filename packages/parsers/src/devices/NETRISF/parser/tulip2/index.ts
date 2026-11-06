@@ -445,7 +445,9 @@ const handleConfigurationStatusMessage: Handler<NetrisFChannels, NetrisFTULIP2Co
       }
 
       const rawOffset = (input.bytes[6]! << 8) | input.bytes[7]!
-      const measurementOffset = rawOffset > 0x7FFF ? rawOffset - 0x10000 : rawOffset
+      const measurementOffset = rawOffset > 0x7FFF
+        ? rawOffset - 0x10000
+        : rawOffset
 
       commandResponse = {
         commandType: commandTypeByte as 0x60 | 0x61,
@@ -591,7 +593,10 @@ const netrisFEncoderFactory: EncoderFactory<NetrisFTulip2DownlinkInput> = (optio
   const featureFlags = NETRISF_DOWNLINK_FEATURE_FLAGS
   return (input: NetrisFTulip2DownlinkInput) => {
     const channels = options.getChannels()
-    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, [createDownlinkResetBatteryIndicatorSchema(featureFlags), createNetrisFTULIP2GetConfigurationSchema()])
+    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, [
+      createDownlinkResetBatteryIndicatorSchema(featureFlags),
+      createNetrisFTULIP2GetConfigurationSchema(),
+    ])
     return NETRISFTULIP2EncodeHandler(validated as NetrisFTulip2DownlinkInput)
   }
 }
@@ -600,7 +605,10 @@ const netrisFMultipleEncodeFactory: MultipleEncoderFactory<NetrisFTulip2Downlink
   const featureFlags = NETRISF_DOWNLINK_FEATURE_FLAGS
   return (input: NetrisFTulip2DownlinkInput) => {
     const channels = options.getChannels()
-    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, [createDownlinkResetBatteryIndicatorSchema(featureFlags), createNetrisFTULIP2GetConfigurationSchema()])
+    const validated = validateTULIP2DownlinkInput(input, channels, featureFlags, [
+      createDownlinkResetBatteryIndicatorSchema(featureFlags),
+      createNetrisFTULIP2GetConfigurationSchema(),
+    ])
     return NETRISFTULIP2EncodeHandler(validated as NetrisFTulip2DownlinkInput, true)
   }
 }

@@ -29,7 +29,10 @@ type LppMeasurandNameInput = typeof LPP_MEASURAND_NAMES_INPUT[keyof typeof LPP_M
 const HARDWARE_ASSEMBLY_TYPE_ID_LIST = Object.keys(HARDWARE_ASSEMBLY_TYPE_NAMES).map(Number)
 const HARDWARE_ASSEMBLY_TYPE_NAME_LIST = Object.values(HARDWARE_ASSEMBLY_TYPE_NAMES) as HardwareAssemblyTypeName[]
 const PRODUCT_SUB_ID_LIST = Object.keys(PRODUCT_SUB_ID_NAMES).map(Number)
-const PRODUCT_SUB_ID_NAME_LIST = [...Object.values(PRODUCT_SUB_ID_NAMES), 'Unknown'] as ProductSubIdName[]
+const PRODUCT_SUB_ID_NAME_LIST = [
+  ...Object.values(PRODUCT_SUB_ID_NAMES),
+  'Unknown',
+] as ProductSubIdName[]
 
 // Unit lists per measurand type
 const LPP_UNIT_ID_LIST_PRESSURE = Object.keys(LPP_UNIT_NAMES_PRESSURE).map(Number) as (keyof typeof LPP_UNIT_NAMES_PRESSURE)[]

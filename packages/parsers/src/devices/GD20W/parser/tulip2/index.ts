@@ -497,7 +497,10 @@ const gd20wEncoderFactory: EncoderFactory<GD20WTulip2DownlinkInput> = (options) 
       input,
       channels,
       featureFlags,
-      [createDownlinkResetBatteryIndicatorSchema(featureFlags), createGD20WTULIP2GetConfigurationSchema()],
+      [
+        createDownlinkResetBatteryIndicatorSchema(featureFlags),
+        createGD20WTULIP2GetConfigurationSchema(),
+      ],
     )
     return GD20WTULIP2EncodeHandler(validated as GD20WTulip2DownlinkInput)
   }
@@ -511,7 +514,10 @@ const gd20wMultipleEncodeFactory: MultipleEncoderFactory<GD20WTulip2DownlinkInpu
       input,
       channels,
       featureFlags,
-      [createDownlinkResetBatteryIndicatorSchema(featureFlags), createGD20WTULIP2GetConfigurationSchema()],
+      [
+        createDownlinkResetBatteryIndicatorSchema(featureFlags),
+        createGD20WTULIP2GetConfigurationSchema(),
+      ],
     )
     return GD20WTULIP2EncodeHandler(validated as GD20WTulip2DownlinkInput, true)
   }
@@ -588,10 +594,18 @@ function parseMainConfigurationData(input: { bytes: number[] }, warnings: string
   }
 
   return {
-    acquisitionTimeAlarmsOff: acquisitionTimeAlarmsOffValue === 0 ? 'unauthorized' : acquisitionTimeAlarmsOffValue,
-    publicationTimeFactorAlarmsOff: publicationTimeFactorAlarmsOffValue === 0 ? 'unauthorized' : publicationTimeFactorAlarmsOffValue,
-    acquisitionTimeAlarmsOn: acquisitionTimeAlarmsOnValue === 0 ? 'unauthorized' : acquisitionTimeAlarmsOnValue,
-    publicationTimeFactorAlarmsOn: publicationTimeFactorAlarmsOnValue === 0 ? 'unauthorized' : publicationTimeFactorAlarmsOnValue,
+    acquisitionTimeAlarmsOff: acquisitionTimeAlarmsOffValue === 0
+      ? 'unauthorized'
+      : acquisitionTimeAlarmsOffValue,
+    publicationTimeFactorAlarmsOff: publicationTimeFactorAlarmsOffValue === 0
+      ? 'unauthorized'
+      : publicationTimeFactorAlarmsOffValue,
+    acquisitionTimeAlarmsOn: acquisitionTimeAlarmsOnValue === 0
+      ? 'unauthorized'
+      : acquisitionTimeAlarmsOnValue,
+    publicationTimeFactorAlarmsOn: publicationTimeFactorAlarmsOnValue === 0
+      ? 'unauthorized'
+      : publicationTimeFactorAlarmsOnValue,
   }
 }
 
@@ -690,7 +704,9 @@ function checkSemVerVersions(semVers: string[]): string[] | null {
     }
   }
 
-  return warnings.length > 0 ? warnings : null
+  return warnings.length > 0
+    ? warnings
+    : null
 }
 
 function readFloat32(bytes: number[], start: number): number {

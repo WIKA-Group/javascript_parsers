@@ -50,7 +50,9 @@ export function parseFrameData(data: number[]): ConfigurationWriteRegisterData {
   const { frameNumber, status } = parseFrame(data[2]!, data[3]!)
 
   const frameData: ConfigurationWriteRegisterData = {
-    frames: [{ frameNumber, status }],
+    frames: [
+      { frameNumber, status },
+    ],
   }
 
   // Basic response - only mandatory fields present
@@ -182,11 +184,15 @@ export function validateMessageHeader<const TMessageType extends number, const T
 
   // Validate minimum message length
   if (data.length < minLength) {
-    const messageDesc = messageTypeName ? `${messageTypeName} message` : 'Message'
+    const messageDesc = messageTypeName
+      ? `${messageTypeName} message`
+      : 'Message'
     throw new RangeError(`${messageDesc} too short. Expected at least ${minLength} bytes but got ${data.length}`)
   }
 
-  const expectedMessageTypes = Array.isArray(expectedMessageType) ? expectedMessageType : [expectedMessageType]
+  const expectedMessageTypes = Array.isArray(expectedMessageType)
+    ? expectedMessageType
+    : [expectedMessageType]
 
   // Validate message type
   const messageType = data[0]! as TMessageType

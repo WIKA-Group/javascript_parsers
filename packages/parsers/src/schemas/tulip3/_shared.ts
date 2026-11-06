@@ -36,6 +36,8 @@ export function createWriteResponseDataSchema() {
   return v.object({
     revisionCounter: v.optional(v.number()),
     totalWrongFrames: v.optional(v.number()),
-    frames: v.tupleWithRest([createFrameSchema()], createFrameSchema()),
+    frames: v.tupleWithRest([
+      createFrameSchema(),
+    ], createFrameSchema()),
   })
 }

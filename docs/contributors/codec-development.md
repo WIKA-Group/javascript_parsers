@@ -73,8 +73,19 @@ Channels can optionally specify `adjustMeasurementRangeDisallowed: true` to prev
 
 ```typescript
 const channels = [
-  { name: 'pressure', start: 0, end: 100, channelId: 0 }, // Adjustable
-  { name: 'humidity', start: 0, end: 100, channelId: 1, adjustMeasurementRangeDisallowed: true }, // Fixed
+  {
+    name: 'pressure',
+    start: 0,
+    end: 100,
+    channelId: 0
+  }, // Adjustable
+  {
+    name: 'humidity',
+    start: 0,
+    end: 100,
+    channelId: 1,
+    adjustMeasurementRangeDisallowed: true
+  }, // Fixed
 ] as const
 ```
 
@@ -88,21 +99,44 @@ Use this flag for channels where the measuring range is constrained by hardware 
 ```typescript
 // ✅ VALID - Both codecs agree
 const codec1 = defineTULIP2Codec({
-  channels: [{ name: 'humidity', start: 0, end: 100, adjustMeasurementRangeDisallowed: true }],
+  channels: [
+    {
+      name: 'humidity',
+      start: 0,
+      end: 100,
+      adjustMeasurementRangeDisallowed: true
+    }
+  ],
   // ...
 })
 const codec2 = defineTULIP2Codec({
-  channels: [{ name: 'humidity', start: 0, end: 100, adjustMeasurementRangeDisallowed: true }],
+  channels: [
+    {
+      name: 'humidity',
+      start: 0,
+      end: 100,
+      adjustMeasurementRangeDisallowed: true
+    }
+  ],
   // ...
 })
 
 // ❌ INVALID - Inconsistent settings
 const codec1 = defineTULIP2Codec({
-  channels: [{ name: 'humidity', start: 0, end: 100, adjustMeasurementRangeDisallowed: true }],
+  channels: [
+    {
+      name: 'humidity',
+      start: 0,
+      end: 100,
+      adjustMeasurementRangeDisallowed: true
+    }
+  ],
   // ...
 })
 const codec2 = defineTULIP2Codec({
-  channels: [{ name: 'humidity', start: 0, end: 100 }], // undefined treated as false
+  channels: [
+    { name: 'humidity', start: 0, end: 100 }
+  ], // undefined treated as false
   // ...
 })
 // Throws: "Channel humidity has inconsistent adjustMeasurementRangeDisallowed settings"
@@ -209,7 +243,9 @@ The generics are intentionally strict today to guarantee type safety in the publ
      protocol: TULIP3_PROTOCOL
 
      // Consumers can then use
-     parser.encodeDownlink({ data: { protocol: TULIP3_PROTOCOL, input: { /* ... */ } } })
+     parser.encodeDownlink({
+       data: { protocol: TULIP3_PROTOCOL, input: { /* ... */ } }
+     })
      ```
    - Parser callers will use this `protocol` value in `encodeDownlink({ data: { protocol: TULIP3_PROTOCOL, input: {...} } })` to select the correct codec with full type safety and autocomplete.
    - Protect the encoder with validation so parser callers receive actionable errors.

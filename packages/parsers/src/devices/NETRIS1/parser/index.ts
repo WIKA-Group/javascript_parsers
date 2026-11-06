@@ -8,7 +8,10 @@ export const NETRIS1_NAME = 'NETRIS1'
 export function useParser() {
   return defineParser({
     parserName: NETRIS1_NAME,
-    codecs: [createTULIP2NETRIS1Codec(), createTULIP3NETRIS1Codec()],
+    codecs: [
+      createTULIP2NETRIS1Codec(),
+      createTULIP3NETRIS1Codec(),
+    ],
   })
 }
 

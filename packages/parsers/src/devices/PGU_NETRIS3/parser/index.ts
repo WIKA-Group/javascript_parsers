@@ -8,7 +8,10 @@ export const PGU_NETRIS3_NAME = 'PGU+NETRIS3'
 export function useParser() {
   return defineParser({
     parserName: PGU_NETRIS3_NAME,
-    codecs: [createPGUTULIP2Codec(), createTULIP3PGUCodec()],
+    codecs: [
+      createPGUTULIP2Codec(),
+      createTULIP3PGUCodec(),
+    ],
   })
 }
 

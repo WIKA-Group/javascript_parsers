@@ -2,7 +2,7 @@
 
 ![GD20W](../../../../../docs/public/GD20W.png)
 
-#### Description of the device
+## Description of the device
 
 In order to prevent system failures in switchgear and network outages, the permanent monitoring of the gas density is essential.
 

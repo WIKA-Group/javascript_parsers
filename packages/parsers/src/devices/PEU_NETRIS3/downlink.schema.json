@@ -684,7 +684,8 @@
                                             "psi",
                                             "MPa",
                                             "bar"
-                                          ]
+                                          ],
+                                          "type": "string"
                                         },
                                         "offset": {
                                           "type": "number"
@@ -711,7 +712,8 @@
                                             "°C",
                                             "°F",
                                             "K"
-                                          ]
+                                          ],
+                                          "type": "string"
                                         },
                                         "offset": {
                                           "type": "number"
