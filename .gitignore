@@ -6,5 +6,6 @@ rawParsers
 distParsers
 
 cache
+.mise/
 
 /parsers

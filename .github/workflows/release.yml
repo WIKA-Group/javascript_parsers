@@ -22,14 +22,16 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-
-      - name: Set node
-        uses: actions/setup-node@v4
+      - name: Cache mise downloads
+        uses: actions/cache@v6
         with:
-          node-version: lts/*
-          registry-url: https://registry.npmjs.org
+          path: ~/.cache/mise/downloads-cas
+          key: mise-downloads-${{ runner.os }}-${{ hashFiles('mise.lock') }}
+
+      - name: Install tools with mise
+        uses: jdx/mise-action@v5
+        with:
+          cache: false
 
       - name: Install deps
         run: pnpm install
