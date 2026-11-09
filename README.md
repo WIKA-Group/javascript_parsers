@@ -66,6 +66,9 @@ Distributed under the [MIT License](./LICENSE).
 
 ## Release Notes
 
+4.12.2
+- chore: deprecate npm package publishing and update documentation for GitHub Releases
+
 4.12.1
 - fix: update product ID for NETRIS_F to 18 in device identification and examples
 
