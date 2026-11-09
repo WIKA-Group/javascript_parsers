@@ -33,17 +33,17 @@ Choose the approach that best fits your Node-RED deployment model:
 
    Use the [WIKA IIoT Toolbox](https://wika-group.github.io/iiot_toolbox) to select your device, set measurement ranges, rounding, or other available options, test sample payloads, then export the already tailored parser file. This avoids manual editing inside Node-RED later. Like the prebuilt release files, the toolbox export places the same decoding helper functions globally.
 
-3. NPM package integration ([`@w2a-iiot/parsers`](https://www.npmjs.com/package/@w2a-iiot/parsers)):
+3. Legacy NPM package integration ([`@w2a-iiot/parsers`](https://www.npmjs.com/package/@w2a-iiot/parsers)):
 
-   Recommended if you control the filesystem (e.g. local install, Docker image you build, or a self‑managed server). Install the package in the Node-RED user directory and `import` it inside Function nodes. This is the most maintainable route when you handle multiple devices or want version pinning via `package.json`.
+   This package is no longer published. This route applies only to existing installations of previously published versions; for current parsers, use option 1 or 2.
 
-Environment note: For option 3 your Node-RED runtime must allow installing dependencies (e.g. `~/.node-red` or project mode). If you are using a managed/hosted platform without shell access, prefer options 1 or 2.
+Environment note: Existing option 3 installations require a Node-RED runtime that allows dependencies (e.g. `~/.node-red` or project mode). For managed/hosted platforms without shell access, use options 1 or 2.
 
 See the [devices overview](/devices/#npm-module-inclusion) for the exact factory function name. Only those factories listed in the documentation are considered supported.
 
 > Distribution difference summary:
 > - Releases / IIoT Toolbox export (options 1 & 2): Only decoding (and possible encoding / config) helper functions are provided globally (`decodeUplink`, `decodeHexUplink`, `decodeBase64Uplink`, `encodeDownlink` if supported, plus documented setters). There is NO factory function to instantiate, just call the helpers directly.
-> - NPM module (option 3): No global helpers are injected. You must import a factory (e.g. `import { NETRIS2Parser } from '@w2a-iiot/parsers'`), create a parser instance, then call instance methods: `parser.decodeUplink(...)`.
+> - Legacy NPM module (option 3): No global helpers are injected. Existing installations must import a factory (e.g. `import { NETRIS2Parser } from '@w2a-iiot/parsers'`), create a parser instance, then call instance methods: `parser.decodeUplink(...)`.
 
 ## Available APIs (Superset)
 
@@ -90,7 +90,7 @@ msg.payload = decoded
 return msg
 ```
 
-### Minimal Example (NPM Variant)
+### Minimal Example (Legacy NPM Variant)
 
 ```javascript
 // This code runs inside a Node-RED Function node.
@@ -118,7 +118,7 @@ Choose the decoding helper (`decodeUplink`, `decodeHexUplink`, `decodeBase64Upli
 
 ## Handling Multiple Devices
 
-When flows process different device types (NPM module scenario):
+When flows process different device types (legacy NPM module scenario):
 
 1. Detect the device (DevEUI / application tag / topic segment).
 2. Maintain a parser map keyed by an identifier.
@@ -175,4 +175,4 @@ See:
 
 ![Node-Red Flow Output](/Node-Red-Flow-Output.png)
 
-By following this pattern you can integrate any current or future WIKA parser version without rewriting the Node-RED flow, only the npm factory usage (when you choose the package route) and the set of helper functions exposed per device vary.
+By following this pattern you can integrate any current or future WIKA parser version without rewriting the Node-RED flow. Only the legacy npm factory usage (for existing package installations) and the set of helper functions exposed per device vary.

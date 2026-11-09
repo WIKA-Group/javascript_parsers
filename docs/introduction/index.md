@@ -14,7 +14,7 @@ See [here](/users/integration) for more information on how to use the parsers in
 
 - **Web applications**
 
-Another way the parsers are released is as an npm package. This allows you to easily integrate the parsers into your web applications. You can install the package via npm and use the parsers to decode uplink messages and encode downlink messages in your web application.
+The `@w2a-iiot/parsers` npm package was previously available for web applications, but it is no longer published. For current parser bundles, see [GitHub Releases](https://github.com/WIKA-Group/javascript_parsers/releases) page.
 
 The parsers are written without any native Node.js dependencies, which makes them suitable for use in web applications. You can include the parsers in your web application to decode uplink messages from WIKA IIoT sensors and devices and display the data in a user-friendly way.
 

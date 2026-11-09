@@ -6,6 +6,10 @@ If you clicked "Code" → "Download ZIP" on GitHub, **STOP**. That is the source
 Use one of the options below instead.
 :::
 
+::: warning NPM PACKAGE NO LONGER PUBLISHED
+The `@w2a-iiot/parsers` package is no longer published to npm. Download current parser bundles from [GitHub Releases](https://github.com/WIKA-Group/javascript_parsers/releases).
+:::
+
 Prebuilt parser bundles are available in two locations:
 
 ## WIKA IIoT Toolbox

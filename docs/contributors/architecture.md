@@ -9,7 +9,7 @@ This page explains how the parser monorepo is structured, how the modern 4.x.x c
   - `src/codecs/` for protocol implementations (TULIP2, TULIP3, and future generations).
   - `src/devices/<DEVICE>/` with device-specific driver code, fixtures, metadata, schemas, and tests.
   - `scripts/build.ts` and `scripts/schema.ts` to bundle releases and emit JSON schemas.
-- `packages/library/` → The published `@w2a-iiot/parsers` wrapper that exposes factory functions (for example `NETRIS2parser`) against the raw codecs.
+- `packages/library/` → The `@w2a-iiot/parsers` wrapper that exposes factory functions (for example `NETRIS2parser`) against the raw codecs. It is no longer published to npm.
 - `examples/` → Minimal server and web experiences that demonstrate how to embed the parsers.
 - `docs/` → This documentation site, published with VitePress.
 

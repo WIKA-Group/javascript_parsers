@@ -260,6 +260,6 @@ Only `NETRIS2` shipped a `3.x.x` parser. The upgrade is straightforward because 
 
 - If `adjustMeasuringRange` throws an “unknown channel” error, check the device documentation for the exact channel labels and ensure they match your case and spacing.
 
-## NPM package users
+## Legacy NPM package users
 
-All parsers in the npm package now use the `4.x.x` architecture. If you were previously using `3.x.x` parsers, follow the migration steps outlined above. The package is shipped with typed definitions, so you get compile-time validation when calling the helpers. Take a look at the type issues provided there if you run into problems.
+Previously published versions of the npm package use the `4.x.x` architecture. If you were using `3.x.x` parsers, follow the migration steps outlined above. The package includes typed definitions, so you get compile-time validation when calling the helpers. Take a look at the type issues provided there if you run into problems. The package is no longer published; current parser bundles are available from [GitHub Releases](https://github.com/WIKA-Group/javascript_parsers/releases).

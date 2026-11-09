@@ -8,7 +8,7 @@ WIKA LPWAN devices are supported to varying degrees depending on three factors:
 - Device capabilities and supported features
 - Device firmware
 
-This page summarizes the current regional availability of parser generations, a device-level support matrix and which parsers are included in the NPM module [`@w2a-iiot/parsers`](https://www.npmjs.com/package/@w2a-iiot/parsers).
+This page summarizes the current regional availability of parser generations, a device-level support matrix and which parsers were included in the module available under [GitHub Releases](https://github.com/WIKA-Group/javascript_parsers/releases).
 
 ## Regional availability
 
@@ -48,7 +48,7 @@ Note: region availability may change in the future, additional regions such as S
 
 ## NPM Module Inclusion
 
-Some parsers are available as part of the NPM module [`@w2a-iiot/parsers`](https://www.npmjs.com/package/@w2a-iiot/parsers).
+The `@w2a-iiot/parsers` package is no longer published to npm. This table is retained for existing installations of previously published versions.
 
 <!--@include: ../../packages/library/README.md#devices-table-->
 

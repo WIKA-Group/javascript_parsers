@@ -11,13 +11,13 @@ The guidance from [How It Works](./how-it-works.md) still applies: decode as clo
 - **Edge function or worker**. Run the parser within a CDN worker or edge runtime when you need geographic proximity to incoming traffic but still want managed infrastructure.
 - **Browser applications**. Useful for diagnostics, dashboards, or tooling where raw frames arrive via WebSocket or REST. Avoid embedding private credentials or exposing downlink endpoints directly in the browser.
 
-## Installing the runtime-agnostic package
+## Legacy npm package integration
 
-```bash
-npm install @w2a-iiot/parsers
-```
+::: warning NPM PACKAGE NO LONGER PUBLISHED
+The `@w2a-iiot/parsers` package is no longer published. The API examples below are for existing installations of previously published versions. For current parser bundles, see [GitHub Releases](https://github.com/WIKA-Group/javascript_parsers/releases).
+:::
 
-The library ships as an ES module. Import the device-specific factory function and instantiate it once per runtime instance. For example, the `NETRIS2` wrapper is exported as `NETRIS2Parser`.
+Previously published versions of the library ship as an ES module. Import the device-specific factory function and instantiate it once per runtime instance. For example, the `NETRIS2` wrapper is exported as `NETRIS2Parser`.
 
 ```typescript
 import { NETRIS2Parser } from '@w2a-iiot/parsers'

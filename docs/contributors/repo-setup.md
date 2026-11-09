@@ -71,7 +71,7 @@ The pnpm workspace is configured in `pnpm-workspace.yaml`, which scopes everythi
 | Path | Name | Purpose |
 | --- | --- | --- |
 | `packages/parsers` | `@w2a-iiot/raw-javascript-parsers` | Source of the device parsers used for building distribution bundles (raw JS codecs, device assets, schemas, tests). Contains scripts for building release artefacts and running schema generation. |
-| `packages/library` | `@w2a-iiot/parsers` | Typed library wrapper that exposes parser factory functions for application use. Built with `tsdown` and published separately. |
+| `packages/library` | `@w2a-iiot/parsers` | Typed library wrapper that exposes parser factory functions for application use. Built with `tsdown`; no longer published to npm. |
 | `examples/server`, `examples/web` | Example integrations | Minimal applications demonstrating how to host or embed parsers. Useful for manual testing or reference when integrating with third-party platforms. |
 
 When targeting a specific package, use pnpm filters. Examples:

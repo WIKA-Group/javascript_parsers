@@ -47,7 +47,7 @@ You can download prebuilt parsers from the [Downloads](/users/downloads) page. T
 
 ## Web and Server Applications
 
-The parsers are available as npm packages, which allows you to easily integrate them into your web or server applications.
+The parsers are available at [GitHub Releases](https://github.com/WIKA-Group/javascript_parsers/releases), which allows you to easily integrate them into your web or server applications.
 This package is actually a wrapper around the raw parsers, providing a simplified interface and a few additional features.
 
 You can install the package via npm and use the parsers to decode uplink messages and encode downlink messages in your application.
